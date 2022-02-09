@@ -1,0 +1,105 @@
+<div class="w-full max-w-3xl">
+
+    <!-- Form -->
+
+
+
+   <fuse-alert
+                class="mt-8 mb-3"
+                *ngIf="showAlert"
+                [appearance]="'outline'"
+                [showIcon]="false"
+                [type]="alert.type"
+                [@shake]="alert.type === 'error'">
+                {{alert.message}}
+            </fuse-alert>
+
+
+            <form [formGroup]="securityForm" #changePasswordNgForm="ngForm">
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Change your password</div>
+            <div class="text-secondary">You can only change your password twice within 24 hours!</div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Current password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Current password</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:key'"
+                        matPrefix></mat-icon>
+                    <input
+                        [formControlName]="'current_password'"
+                        type="password"
+                        matInput>
+                </mat-form-field>
+                <p class="alert alert-danger" *ngIf="securityForm.controls['current_password'].hasError('minlength')">
+                    Your Current password must be at least 8 characters long.
+                </p>
+            </div>
+            <!-- New password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>New password</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:key'"
+                        matPrefix></mat-icon>
+                    <input
+                        [formControlName]="'new_password'"
+                        type="password"
+                        matInput>
+                </mat-form-field>
+                <p class="alert alert-danger" *ngIf="securityForm.controls['new_password'].hasError('minlength')">
+                    Your New password must be at least 8 characters long.
+                </p>
+            </div>
+             <!-- confirm password -->
+             <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Confirm new password</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:key'"
+                        matPrefix></mat-icon>
+                    <input
+                        [formControlName]="'new_confirm_password'"
+                        type="password"
+                        (change)="onPasswordChange()"
+                        matInput>
+                </mat-form-field>
+                <p class="alert alert-danger" *ngIf="securityForm.controls['new_confirm_password'].hasError('incorrect')">
+                    The passwords do not match
+                </p>
+            </div>
+        </div>
+
+
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end mt-4">
+            <button
+                mat-stroked-button
+                type="button">
+                Cancel
+            </button>
+            <button
+            class="ml-4"
+            type="button"
+            mat-flat-button
+            [color]="'primary'"
+            [disabled]="securityForm.disabled"
+            (click)="changePassword()">
+            <span *ngIf="!securityForm.disabled">
+                Save
+            </span>
+            <mat-progress-spinner
+                *ngIf="securityForm.disabled"
+                [mode]="'indeterminate'"></mat-progress-spinner>
+        </button>
+        </div>
+    </form>
+</div>
