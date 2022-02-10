@@ -1,1 +1,86 @@
-<p>add-or-update-users works!</p>
+<form [formGroup]="storeUsers" #storeUsersNgForm="ngForm"
+    class="flex flex-col p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
+    <div class="flex flex-col gt-xs:flex-row">
+        <mat-form-field class="flex-auto gt-xs:pr-3">
+            <mat-label>Name: {{userById | json}}</mat-label>
+            <input matInput [formControlName]="'name'" [value]="userById?.name">
+            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+        </mat-form-field>
+        <mat-form-field class="flex-auto gt-xs:pr-3">
+            <mat-label>Email:</mat-label>
+            <input matInput [formControlName]="'email'" [value]="userById?.email">
+            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+        </mat-form-field>
+        <mat-form-field *ngIf="isAddMode" class="flex-auto gt-xs:pr-3">
+            <mat-label>Password:</mat-label>
+            <input matInput [formControlName]="'password'" [value]="userById?.password">
+            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+        </mat-form-field>
+        <div class="form-group mb-3">
+            <label for="">Department:</label>
+            <div>
+                <select class="form-select" aria-label="Default select example" [value]="userById?.department_id"  [formControlName]="'department_id'">
+                    <option *ngFor="let dep of departmentsList" [value]="dep.id">{{dep.name}} - {{dep.id}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group mb-3">
+            <label for="">Role:</label>
+            <div>
+                <select class="form-select" aria-label="Default select example" [value]="userById?.role_id"  [formControlName]="'role_id'">
+                    <option value="1" >Admin</option>
+                    <option value="2" >User</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <div class="dropzone" fileDragDrop (filesChangeEmiter)="onFileChange($event)">
+                <div class="text-wrapper">
+                    <div class="centered">
+
+                        <input type="file" name="file" id="file" (change)="onFileChange($event.target.files)">
+                        <label for="file"><span class="textLink">Select department image</span> or Drop it here!</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div *ngIf="url || file" [ngIfElse]="elseUrl">
+
+            <ng-template [ngIf]="!uploaded">
+                <mat-list>
+                    <h3 mat-subheader>Files</h3>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon>
+                            <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;"
+                                src="https://opus.devtaktika.com/storage/{{file}}" alt="">
+                        </mat-icon>
+                        <h4 mat-line></h4>
+                        <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>
+                        <mat-divider></mat-divider>
+                    </mat-list-item>
+                </mat-list>
+            </ng-template>
+            <ng-template [ngIf]="uploaded">
+                <mat-list>
+                    <h3 mat-subheader>Files</h3>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon>
+                            <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;" [src]='url' alt="">
+                        </mat-icon>
+                        <h4 mat-line></h4>
+                        <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>
+                        <mat-divider></mat-divider>
+                    </mat-list-item>
+                </mat-list>
+            </ng-template>
+        </div>
+        <ng-template #elseUrl>
+
+        </ng-template>
+
+    </div>
+    <button *ngIf="isAddMode" mat-raised-button color="primary" disabled={{storeUsersNgForm.invalid}}
+        (click)="storeUserSubmit()">Add User</button>
+    <button *ngIf="!isAddMode" mat-raised-button color="primary" (click)="editUserSubmit()">Edit User</button>
+</form>

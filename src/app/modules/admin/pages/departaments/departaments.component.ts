@@ -87,4 +87,6 @@ export class DepartamentsComponent implements OnInit {
         this.isUpdateMode = true;
         this.editAssetId = id;
     }
+
+
 }

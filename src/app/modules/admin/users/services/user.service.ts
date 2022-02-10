@@ -2,6 +2,7 @@ import { Users } from './../model/users';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
+import { Departments } from '../../pages/departaments/model/departments.model';
 
 @Injectable({
   providedIn: 'root'
@@ -64,4 +65,15 @@ _updateUser($id: number, data: any): Observable<Users>{
      )
     );
 }
+
+    _getDepartments(): Observable<Departments>{
+        return this.http.get<Departments>('https://opus.devtaktika.com/api/departments').pipe(
+            map((data: any) => data),
+        catchError((err) => {
+            console.error(err);
+            throw err;
+        }
+        )
+        );
+    }
 }
