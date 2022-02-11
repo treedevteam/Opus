@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, ParamMap, Route } from '@angular/router';
+import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
 
 import { FuseAlertType } from '@fuse/components/alert';
 import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
@@ -38,7 +38,8 @@ export class AddOrUpdateUsersComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _snackBar: MatSnackBar,
         private _route: ActivatedRoute,
-        private _usersService: UserService
+        private _usersService: UserService,
+        private _router: Router,
     ) { }
 
     ngOnInit(): void {
@@ -116,6 +117,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
             this._snackBar.open('Updated successfuly!', 'close', {
             duration: 3000,
         });
+        this._router.navigate(['/users']);
         },(err: any)=>{
             console.log(err);
         });

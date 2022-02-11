@@ -2,12 +2,12 @@
     class="flex flex-col p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
     <div class="flex flex-col gt-xs:flex-row">
         <mat-form-field class="flex-auto gt-xs:pr-3">
-            <mat-label>Name: {{userById | json}}</mat-label>
+            <mat-label>Location:</mat-label>
             <input matInput [formControlName]="'name'" [value]="userById?.name">
             <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
         </mat-form-field>
         <mat-form-field class="flex-auto gt-xs:pr-3">
-            <mat-label>Email:</mat-label>
+            <mat-label>Color:</mat-label>
             <input matInput [formControlName]="'email'" [value]="userById?.email">
             <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
         </mat-form-field>
@@ -19,7 +19,7 @@
         <div class="form-group mb-3">
             <label for="">Department:</label>
             <div>
-                <select class="form-select" aria-label="Default select example" [value]="userById?.department_id"  [formControlName]="'department_id'">
+                <select class="form-select" aria-label="Default select example" [value]="userById?.department_id"  [formControlName]="'department_id'" required>
                     <option *ngFor="let dep of departmentsList" [value]="dep.id">{{dep.name}} - {{dep.id}}</option>
                 </select>
             </div>
@@ -27,7 +27,7 @@
         <div class="form-group mb-3">
             <label for="">Role:</label>
             <div>
-                <select class="form-select" aria-label="Default select example" [value]="userById?.role_id"  [formControlName]="'role_id'">
+                <select class="form-select" aria-label="Default select example" [value]="userById?.role_id"  [formControlName]="'role_id'" required>
                     <option value="1" >Admin</option>
                     <option value="2" >User</option>
                 </select>
@@ -39,7 +39,8 @@
                     <div class="centered">
 
                         <input type="file" name="file" id="file" (change)="onFileChange($event.target.files)">
-                        <label for="file"><span class="textLink">Select department image</span> or Drop it here!</label>
+                        <label for="file"><span class="textLink"> <mat-icon svgIcon="heroicons_outline:cloud-upload"></mat-icon>Select User image</span> or Drop it here!</label>
+
                     </div>
                 </div>
             </div>

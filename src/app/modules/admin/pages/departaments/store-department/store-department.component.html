@@ -13,7 +13,7 @@
                         <div class="centered">
 
                             <input type="file" name="file" id="file" (change)="onFileChange($event.target.files)">
-                            <label for="file"><span class="textLink">Select department image</span> or Drop it here!</label>
+                            <label for="file"><span class="textLink"> <mat-icon svgIcon="heroicons_outline:cloud-upload"></mat-icon>Select department image</span> or Drop it here!</label>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
             </ng-template>
 
         </div>
-        <button *ngIf="isAddMode" mat-raised-button color="primary" [disabled]="storeDepartment.disabled"
+        <button *ngIf="isAddMode" mat-raised-button color="primary" disabled={{storeDepartmentNgForm.invalid}}
             (click)="storeDepartmentfunc()">Add Department</button>
         <button *ngIf="!isAddMode" mat-raised-button color="primary" [disabled]="storeDepartment.disabled"
             (click)="editDepartmentFunc()">Edit Department</button>

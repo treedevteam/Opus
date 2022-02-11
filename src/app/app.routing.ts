@@ -1,3 +1,4 @@
+import { LocationsModule } from './modules/admin/locations/locations.module';
 import { UsersComponent } from './modules/admin/users/users.component';
 import { DepartamentsModule } from './modules/admin/pages/departaments/departaments.module';
 import { Route } from '@angular/router';
@@ -84,6 +85,7 @@ export const appRoutes: Route[] = [
                 {path: 'departments', loadChildren: () => import('app/modules/admin/pages/departaments/departaments.module').then(m => m.DepartamentsModule)},
             ]},
             {path: 'users', loadChildren: () => import('app/modules/admin/users/users.module').then(m => m.UsersModule)},
+            {path: 'locations', loadChildren: () => import('app/modules/admin/locations/locations.module').then(m => m.LocationsModule)},
 
              // Error
              {path: 'error', children: [

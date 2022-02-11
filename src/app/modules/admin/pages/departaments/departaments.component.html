@@ -30,7 +30,7 @@
             <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row">
                   <app-store-department [count]="editAssetId" (parentFunction)='parentFunction($event)'></app-store-department>
             </div>
-            <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row">
+            <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row" style="height: fit-content; min-height: 500px;">
                 <div class="flex flex-col p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
 
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
