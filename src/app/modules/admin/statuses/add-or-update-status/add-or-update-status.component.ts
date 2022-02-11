@@ -1,22 +1,22 @@
-import { Component, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
-import { LocationsService } from '../services/locations.service';
+import { StatusService } from '../services/status.service';
 import { EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseAlertType } from '@fuse/components/alert';
-import { Location } from '../model/location';
+import { Status } from '../model/status';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { parseInt } from 'lodash';
 
 @Component({
-  selector: 'app-add-or-update-locations',
-  templateUrl: './add-or-update-locations.component.html',
-  styleUrls: ['./add-or-update-locations.component.scss']
+  selector: 'app-add-or-update-status',
+  templateUrl: './add-or-update-status.component.html',
+  styleUrls: ['./add-or-update-status.component.scss']
 })
-export class AddOrUpdateLocationsComponent implements OnInit {
+export class AddOrUpdateStatusComponent implements OnInit {
 
-    @ViewChild('storeLocationsNgForm') storeLocationsNgForm: NgForm;
+    @ViewChild('storeStatusNgForm') storeStatusNgForm: NgForm;
     @Output() parentFunction: EventEmitter<AddOrUpdate> = new EventEmitter();
     alert: { type: FuseAlertType; message: string } = {
         type   : 'success',
@@ -24,14 +24,14 @@ export class AddOrUpdateLocationsComponent implements OnInit {
     };
 
     isAddMode: boolean = true;
-    storeLocation: FormGroup;
-
-    locationById: Location;
+    storeStatus: FormGroup;
+    stautsId: number;
+    statusById: Status;
     randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
 
     constructor(
         private _formBuilder: FormBuilder,
-        private _locationsService: LocationsService,
+        private _statusService: StatusService,
         private _snackBar: MatSnackBar,
         private _route: ActivatedRoute,
 
@@ -40,18 +40,20 @@ export class AddOrUpdateLocationsComponent implements OnInit {
     ngOnInit(): void {
         this._route.paramMap.subscribe((params: ParamMap)=> {
             const id = params.get('id');
+            this.stautsId = parseInt(id);
             this.isAddMode = !id;
             if (!this.isAddMode) {
-                this.getLocationById(id);
+                this.getStatusById(id);
             }
         });
-        this.storeLocation = this._formBuilder.group({
+        this.storeStatus = this._formBuilder.group({
             name: ['', Validators.required],
             color: [this.randomColor, Validators.required],
         });
     }
-    storeDepartment(): any{
-        this._locationsService._addLocation(this.storeLocation.value).subscribe((res: any)=>{
+
+    storeStatusFunc(): any{
+        this._statusService._addStatus(this.storeStatus.value).subscribe((res: any)=>{
                 const d = new AddOrUpdate();
                 d.isUpdate = false;
                 d.data = res;
@@ -64,21 +66,21 @@ export class AddOrUpdateLocationsComponent implements OnInit {
         });
     }
 
-    getLocationById($id): void{
-        this._locationsService._getLocationById($id).subscribe((res: any)=>{
+    getStatusById($id): void{
+        this._statusService._getStatusById($id).subscribe((res: any)=>{
             console.log(res);
-            this.storeLocation.patchValue({
+            this.storeStatus.patchValue({
                 name: res.name,
                 color: res.color
                 });
-        this.locationById = res;
+        this.stautsId = res.id;
     },(err: any)=>{
         console.log(err);
     });
     }
 
-    editLocationSubmit(): void{
-        this._locationsService._updateLocations(this.storeLocation.value, this.locationById.id ).subscribe((res: any)=>{
+    editStatusSubmit(): void{
+        this._statusService._updateStatus(this.storeStatus.value, this.stautsId ).subscribe((res: any)=>{
             const d = new AddOrUpdate();
             d.isUpdate = true;
             d.data = res;

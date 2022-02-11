@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LocationsComponent } from './locations.component';
-import { AddOrUpdateLocationsComponent } from './add-or-update-locations/add-or-update-locations.component';
+import { PrioritiesComponent } from './priorities.component';
+import { AddOrUpdatePrioritiesComponent } from './add-or-update-priorities/add-or-update-priorities.component';
 import { Route, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -22,11 +22,11 @@ import {MatListModule} from '@angular/material/list';
 export const routes: Route[] = [
     {
         path     : '',
-        component: LocationsComponent
+        component: PrioritiesComponent
     },
     {
         path     : ':id',
-        component: LocationsComponent
+        component: PrioritiesComponent
     },
 
 ];
@@ -34,8 +34,8 @@ export const routes: Route[] = [
 
 @NgModule({
   declarations: [
-    LocationsComponent,
-    AddOrUpdateLocationsComponent
+    PrioritiesComponent,
+    AddOrUpdatePrioritiesComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -58,4 +58,4 @@ export const routes: Route[] = [
     MatListModule,
   ]
 })
-export class LocationsModule { }
+export class PrioritiesModule { }

@@ -1,4 +1,4 @@
-export class Location {
+export class Status {
     id: number;
     name: string;
     color: string;

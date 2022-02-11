@@ -6,13 +6,11 @@
             <!-- Breadcrumbs -->
             <div class="flex flex-wrap items-center font-medium">
                 <div>
-                    <a class="whitespace-nowrap text-primary-500">Users</a>
+                    <a class="whitespace-nowrap text-primary-500">Departments</a>
                 </div>
                 <div class="flex items-center ml-1 whitespace-nowrap">
-                    <mat-icon
-                        class="icon-size-5 text-secondary"
-                        [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                    <a class="ml-1 text-primary-500">Users</a>
+
+                    <a class="ml-1 text-primary-500">Departments</a>
                 </div>
             </div>
             <!-- Title -->
@@ -28,7 +26,7 @@
     <div class="flex flex-wrap w-full max-w-screen-xl mx-auto p-6 md:p-8">
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full mt-8">
             <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row">
-                  <app-add-or-update-users  (parentFunction)='parentFunction($event)'></app-add-or-update-users>
+                  <app-add-or-update-status (parentFunction)='parentFunction($event)'></app-add-or-update-status>
             </div>
             <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row" style="height: fit-content; min-height: 500px;">
                 <div class="flex flex-col p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
@@ -46,30 +44,15 @@
 
                     <!-- Name Column -->
                     <ng-container matColumnDef="name">
-                      <th mat-header-cell *matHeaderCellDef> Name </th>
+                      <th mat-header-cell *matHeaderCellDef> Name  </th>
                       <td mat-cell *matCellDef="let element"> {{element.name}}</td>
                     </ng-container>
-                     <!-- Email Column -->
-                     <ng-container matColumnDef="email">
-                        <th mat-header-cell *matHeaderCellDef> Email </th>
-                        <td mat-cell *matCellDef="let element"> {{element.email}}</td>
-                      </ng-container>
-                       <!-- Department Column -->
-                     <ng-container matColumnDef="department">
-                        <th mat-header-cell *matHeaderCellDef> Department </th>
-                        <td mat-cell *matCellDef="let element"> {{element.department_id}}</td>
-                      </ng-container>
-                        <!-- Role Column -->
-                        <ng-container matColumnDef="role">
-                            <th mat-header-cell *matHeaderCellDef> Role </th>
-                            <td mat-cell *matCellDef="let element"> {{element.role_id}}</td>
-                        </ng-container>
                     <!-- Weight Column -->
-                    <ng-container matColumnDef="image">
-                      <th mat-header-cell *matHeaderCellDef>Image</th>
+                    <ng-container matColumnDef="color">
+                      <th mat-header-cell *matHeaderCellDef>Color</th>
                       <td mat-cell *matCellDef="let element">
-                          <img style="width: 50px; height: 50px; border-radius: 50%; margin: 5px 0;" src="https://opus.devtaktika.com/storage/{{element.image}}" alt="">
-                        </td>
+                        <div class="relative flex flex-0 items-center justify-center w-8 h-8" style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0;"[ngStyle]="{'background-color': element.color}"><div class="text-on-primary">{{element.name.charAt(0)}}</div></div>
+                    </td>
                     </ng-container>
 
                     <!-- Symbol Column -->
@@ -84,8 +67,8 @@
 
                     <ng-container matColumnDef="delete">
                         <th mat-header-cell *matHeaderCellDef>Delete</th>
-                        <td mat-cell *matCellDef="let element; let i = index;">
-                        <button mat-mini-fab color="warn" (click)="deleteUser(element.id, i)" aria-label="Example icon button with a menu icon">
+                        <td mat-cell *matCellDef="let element; let i = index; ">
+                        <button mat-mini-fab color="warn" (click)="deleteStatus(element.id, i)" aria-label="Example icon button with a menu icon">
                             <mat-icon>delete</mat-icon>
                             </button>
                         </td>

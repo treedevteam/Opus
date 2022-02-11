@@ -3,27 +3,27 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { AddOrUpdate } from '../pages/departaments/model/add-or-update';
-import { Location } from './model/location';
-import { LocationsService } from './services/locations.service';
+import { Status } from './model/status';
+import { StatusService } from './services/status.service';
 const ELEMENT_DATA: Location[] = [
 ];
 @Component({
-  selector: 'app-locations',
-  templateUrl: './locations.component.html',
-  styleUrls: ['./locations.component.scss']
+  selector: 'app-status',
+  templateUrl: './status.component.html',
+  styleUrls: ['./status.component.scss']
 })
-export class LocationsComponent implements OnInit {
+export class StatusComponent implements OnInit {
     displayedColumns: string[] = ['position', 'name', 'color','edit', 'delete'];
     dataSource = ELEMENT_DATA;
     constructor(
-        private _locationService: LocationsService,
+        private _statusService: StatusService,
         private _fuseConfirmationService: FuseConfirmationService,
         private _snackBar: MatSnackBar,
         private _router: Router
     ) { }
 
     ngOnInit(): void {
-        this.getLocations();
+        this.getStatuses();
     }
     parentFunction(data: AddOrUpdate): void{
         console.log(data);
@@ -32,11 +32,11 @@ export class LocationsComponent implements OnInit {
             this.dataSource.unshift(data.data);
             this.dataSource = [...this.dataSource];
         }else{
-            this.getLocations();
+            this.getStatuses();
         }
     }
-    getLocations(): any{
-        this._locationService._getLocations().subscribe((res: any)=>{
+    getStatuses(): any{
+        this._statusService._getStatus().subscribe((res: any)=>{
             this.dataSource = res.data;
         },(err: any)=>{
             console.log(err);
@@ -46,13 +46,13 @@ export class LocationsComponent implements OnInit {
 
 
 
-    deleteLocation($id: number, $rowNumber: number): void{
+    deleteStatus($id: number, $rowNumber: number): void{
         const dialogRef = this._fuseConfirmationService.open();
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
             console.log(result);
             if(result === 'confirmed'){
-                this._locationService._deleteLocation($id).subscribe((res: any)=>{
+                this._statusService._deleteStatus($id).subscribe((res: any)=>{
                     this.dataSource.splice($rowNumber, 1);
                     this.dataSource = [...this.dataSource];
                     this._snackBar.open('Deleted successfuly!', 'close', {
@@ -66,7 +66,7 @@ export class LocationsComponent implements OnInit {
     }
 
     navigateTo(id: number): void{
-        this._router.navigate([`/locations/${id}`]);
+        this._router.navigate([`/status/${id}`]);
 
     }
 }

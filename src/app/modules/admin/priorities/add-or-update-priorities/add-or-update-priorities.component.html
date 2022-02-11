@@ -1,4 +1,4 @@
-<form [formGroup]="storeLocation" #storeLocationsNgForm="ngForm"
+<form [formGroup]="storePriority" #storePriorityNgForm="ngForm"
     class="flex flex-col p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
     <div class="flex flex-col gt-xs:flex-row">
         <mat-form-field class="flex-auto gt-xs:pr-3">
@@ -12,7 +12,7 @@
             <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
         </mat-form-field>
     </div>
-    <button *ngIf="isAddMode" mat-raised-button color="primary" disabled={{storeLocationsNgForm.invalid}}
-        (click)="storeDepartment()">Add Location</button>
-    <button *ngIf="!isAddMode" mat-raised-button color="primary" (click)="editLocationSubmit()">Edit Location</button>
+    <button *ngIf="isAddMode" mat-raised-button color="primary" disabled={{storePriorityNgForm.invalid}}
+        (click)="storePriorityFunc()">Add Priority</button>
+    <button *ngIf="!isAddMode" mat-raised-button color="primary" (click)="editPrioritySubmit()">Edit Priority</button>
 </form>

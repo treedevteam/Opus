@@ -1,17 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
-import { Location } from '../model/location';
+import { Status } from '../model/status';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocationsService {
+export class StatusService {
 
   constructor(private http: HttpClient) { }
 
-_addLocation(data: any): Observable<Location>{
-    return this.http.post<Location>('https://opus.devtaktika.com/api/location/store', data).pipe(
+_addStatus(data: any): Observable<Status>{
+    return this.http.post<Status>('https://opus.devtaktika.com/api/status/store', data).pipe(
         map((res: any) => res),
        catchError((err) => {
          console.error(err);
@@ -20,8 +20,8 @@ _addLocation(data: any): Observable<Location>{
      )
     );
 }
-  _getLocations(): Observable<Location>{
-    return this.http.get<Location>('https://opus.devtaktika.com/api/locations').pipe(
+  _getStatus(): Observable<Status>{
+    return this.http.get<Status>('https://opus.devtaktika.com/api/statuses').pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -31,8 +31,8 @@ _addLocation(data: any): Observable<Location>{
     );
   }
 
-  _getLocationById($id: any): Observable<Location>{
-    return this.http.get<Location>('https://opus.devtaktika.com/api/location/'+$id).pipe(
+  _getStatusById($id: any): Observable<Status>{
+    return this.http.get<Status>('https://opus.devtaktika.com/api/status/'+$id).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -42,8 +42,8 @@ _addLocation(data: any): Observable<Location>{
     );
   }
 
-  _deleteLocation($id): Observable<Location>{
-    return this.http.delete<Location>('https://opus.devtaktika.com/api/location/delete/'+$id).pipe(
+  _deleteStatus($id): Observable<Status>{
+    return this.http.delete<Status>('https://opus.devtaktika.com/api/status/delete/'+$id).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -53,8 +53,8 @@ _addLocation(data: any): Observable<Location>{
     );
   }
 
-  _updateLocations( datas: Location, $id: number,): Observable<Location>{
-    return this.http.post<Location>('https://opus.devtaktika.com/api/location/update/'+$id, datas).pipe(
+  _updateStatus( datas: Status, $id: number,): Observable<Status>{
+    return this.http.post<Status>('https://opus.devtaktika.com/api/status/update/'+$id, datas).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);

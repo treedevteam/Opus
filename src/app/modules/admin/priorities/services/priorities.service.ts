@@ -1,17 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
-import { Location } from '../model/location';
+import { Priorities } from '../model/priorities';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocationsService {
+export class PrioritiesService {
 
   constructor(private http: HttpClient) { }
 
-_addLocation(data: any): Observable<Location>{
-    return this.http.post<Location>('https://opus.devtaktika.com/api/location/store', data).pipe(
+_addPriority(data: any): Observable<Priorities>{
+    return this.http.post<Priorities>('https://opus.devtaktika.com/api/priority/store', data).pipe(
         map((res: any) => res),
        catchError((err) => {
          console.error(err);
@@ -20,8 +20,8 @@ _addLocation(data: any): Observable<Location>{
      )
     );
 }
-  _getLocations(): Observable<Location>{
-    return this.http.get<Location>('https://opus.devtaktika.com/api/locations').pipe(
+  _getPriorities(): Observable<Priorities>{
+    return this.http.get<Priorities>('https://opus.devtaktika.com/api/priorities').pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -31,8 +31,8 @@ _addLocation(data: any): Observable<Location>{
     );
   }
 
-  _getLocationById($id: any): Observable<Location>{
-    return this.http.get<Location>('https://opus.devtaktika.com/api/location/'+$id).pipe(
+  _getPriorityById($id: any): Observable<Priorities>{
+    return this.http.get<Priorities>('https://opus.devtaktika.com/api/priority/'+$id).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -42,8 +42,8 @@ _addLocation(data: any): Observable<Location>{
     );
   }
 
-  _deleteLocation($id): Observable<Location>{
-    return this.http.delete<Location>('https://opus.devtaktika.com/api/location/delete/'+$id).pipe(
+  _deletePriority($id): Observable<Priorities>{
+    return this.http.delete<Priorities>('https://opus.devtaktika.com/api/priority/delete/'+$id).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -53,8 +53,8 @@ _addLocation(data: any): Observable<Location>{
     );
   }
 
-  _updateLocations( datas: Location, $id: number,): Observable<Location>{
-    return this.http.post<Location>('https://opus.devtaktika.com/api/location/update/'+$id, datas).pipe(
+  _updatePriority( datas: Priorities, $id: number,): Observable<Priorities>{
+    return this.http.post<Priorities>('https://opus.devtaktika.com/api/priority/update/'+$id, datas).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);

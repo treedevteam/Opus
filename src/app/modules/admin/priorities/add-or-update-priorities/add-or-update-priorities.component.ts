@@ -1,22 +1,22 @@
-import { Component, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
-import { LocationsService } from '../services/locations.service';
+import { PrioritiesService } from '../services/priorities.service';
 import { EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseAlertType } from '@fuse/components/alert';
-import { Location } from '../model/location';
+import { Priorities } from '../model/priorities';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { parseInt } from 'lodash';
 
 @Component({
-  selector: 'app-add-or-update-locations',
-  templateUrl: './add-or-update-locations.component.html',
-  styleUrls: ['./add-or-update-locations.component.scss']
+  selector: 'app-add-or-update-priorities',
+  templateUrl: './add-or-update-priorities.component.html',
+  styleUrls: ['./add-or-update-priorities.component.scss']
 })
-export class AddOrUpdateLocationsComponent implements OnInit {
+export class AddOrUpdatePrioritiesComponent implements OnInit {
 
-    @ViewChild('storeLocationsNgForm') storeLocationsNgForm: NgForm;
+    @ViewChild('storePriorityNgForm') storePriorityNgForm: NgForm;
     @Output() parentFunction: EventEmitter<AddOrUpdate> = new EventEmitter();
     alert: { type: FuseAlertType; message: string } = {
         type   : 'success',
@@ -24,14 +24,14 @@ export class AddOrUpdateLocationsComponent implements OnInit {
     };
 
     isAddMode: boolean = true;
-    storeLocation: FormGroup;
-
-    locationById: Location;
+    storePriority: FormGroup;
+    priorityId: number;
+    priorityById: Priorities;
     randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
 
     constructor(
         private _formBuilder: FormBuilder,
-        private _locationsService: LocationsService,
+        private _priorityService: PrioritiesService,
         private _snackBar: MatSnackBar,
         private _route: ActivatedRoute,
 
@@ -42,16 +42,16 @@ export class AddOrUpdateLocationsComponent implements OnInit {
             const id = params.get('id');
             this.isAddMode = !id;
             if (!this.isAddMode) {
-                this.getLocationById(id);
+                this.getPriorityById(id);
             }
         });
-        this.storeLocation = this._formBuilder.group({
+        this.storePriority = this._formBuilder.group({
             name: ['', Validators.required],
             color: [this.randomColor, Validators.required],
         });
     }
-    storeDepartment(): any{
-        this._locationsService._addLocation(this.storeLocation.value).subscribe((res: any)=>{
+    storePriorityFunc(): any{
+        this._priorityService._addPriority(this.storePriority.value).subscribe((res: any)=>{
                 const d = new AddOrUpdate();
                 d.isUpdate = false;
                 d.data = res;
@@ -64,21 +64,22 @@ export class AddOrUpdateLocationsComponent implements OnInit {
         });
     }
 
-    getLocationById($id): void{
-        this._locationsService._getLocationById($id).subscribe((res: any)=>{
+    getPriorityById($id): void{
+        this._priorityService._getPriorityById($id).subscribe((res: any)=>{
             console.log(res);
-            this.storeLocation.patchValue({
+            this.storePriority.patchValue({
                 name: res.name,
                 color: res.color
                 });
-        this.locationById = res;
-    },(err: any)=>{
-        console.log(err);
-    });
+                this.priorityId = $id;
+        },(err: any)=>{
+            console.log(err);
+        });
     }
 
-    editLocationSubmit(): void{
-        this._locationsService._updateLocations(this.storeLocation.value, this.locationById.id ).subscribe((res: any)=>{
+    editPrioritySubmit(): void{
+        console.log(this.storePriority.value);
+        this._priorityService._updatePriority(this.storePriority.value, this.priorityId ).subscribe((res: any)=>{
             const d = new AddOrUpdate();
             d.isUpdate = true;
             d.data = res;
@@ -86,9 +87,9 @@ export class AddOrUpdateLocationsComponent implements OnInit {
             this._snackBar.open('Updated successfuly!', 'close', {
                 duration: 3000,
             });
-    },(err: any)=>{
-        console.log(err);
-    });
+        },(err: any)=>{
+            console.log(err);
+        });
     }
 
 }
