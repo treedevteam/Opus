@@ -1,4 +1,4 @@
-import { catchError, map, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, shareReplay, tap, combineLatest, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Departments } from '../model/departments.model';
@@ -7,35 +7,56 @@ import { Departments } from '../model/departments.model';
   providedIn: 'root'
 })
 export class DepartamentsService {
+    private addDepartmentSource$ = new BehaviorSubject<Departments>(null);
+    private updateDepartment$ = new BehaviorSubject<Departments>(null);
+    private deletedDepartment$ = new BehaviorSubject<number>(null);
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    getDepartmentsData$ = this.http.get<Departments[]>('https://opus.devtaktika.com/api/departments').pipe(
+        map((data: any): Departments[] => data.data),
+        // shareReplay(1),
+       catchError((err) => {
+         console.error(err);
+         throw err;
+       }
+     )
+    );
+    constructor(private http: HttpClient) { }
 
-  constructor(private http: HttpClient) { }
+    getAddedDepartment(): Observable<Departments>{
+        return this.addDepartmentSource$.asObservable();
+    }
 
-
+    getUpdatedDepartment(): Observable<Departments>{
+        return this.updateDepartment$.asObservable();
+    }
+    getDeletedDepartment(): Observable<number>{
+        return this.deletedDepartment$.asObservable();
+    }
     storeDepartment(form: any): Observable<Departments>{
         return this.http.post<Departments>('https://opus.devtaktika.com/api/department/store', form).pipe(
-            map((data: any) => data),
-        catchError((err) => {
-            console.error(err);
-            throw err;
-        }
+            // eslint-disable-next-line arrow-body-style
+            map((data: Departments) => {
+                this.addDepartmentSource$.next(data);
+                return data;
+            }),
+            catchError((err) => {
+                console.error(err);
+                throw err;
+            }
         )
         );
     }
 
-    getDepartments(): Observable<Departments>{
-        return this.http.get<Departments>('https://opus.devtaktika.com/api/departments').pipe(
-            map((data: any) => data),
-           catchError((err) => {
-             console.error(err);
-             throw err;
-           }
-         )
-        );
-    }
 
-    deleteDepartment($id: number): Observable<Departments>{
+
+
+
+    deleteDepartment($id: number): Observable<number>{
         return this.http.delete<Departments>('https://opus.devtaktika.com/api/department/delete/' + $id).pipe(
-            map((data: any) => data),
+            map((dataa: Departments) => {
+                this.deletedDepartment$.next($id);
+                return $id;
+            }),
            catchError((err) => {
              console.error(err);
              throw err;
@@ -54,9 +75,12 @@ export class DepartamentsService {
         );
     }
 
-    _updateDepartment($id: number, data: any): Observable<Departments>{
+    _updateDepartment( $id: number , data: any): Observable<Departments>{
         return this.http.post<Departments>('https://opus.devtaktika.com/api/department/update/' + $id, data).pipe(
-            map((res: any) => res),
+            map((dataa: Departments) => {
+                this.updateDepartment$.next(dataa);
+                return data;
+            }),
            catchError((err) => {
              console.error(err);
              throw err;

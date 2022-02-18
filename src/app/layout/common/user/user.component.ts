@@ -47,8 +47,7 @@ export class UserComponent implements OnInit, OnDestroy
         this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
-                this.user = user;
-
+                this.user =  JSON.parse(localStorage.getItem('user_info') ?? '');;
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -87,7 +86,10 @@ export class UserComponent implements OnInit, OnDestroy
             status
         }).subscribe();
     }
-
+    userLoginInfo(): void{
+        const userInfo = JSON.parse(localStorage.getItem('user_info') ?? '');
+        this.user.email = userInfo;
+    }
     /**
      * Sign out
      */

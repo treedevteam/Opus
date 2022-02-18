@@ -41,6 +41,12 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'heroicons_outline:view-grid-add',
         link : '/priorities'
+    },{
+        id   : 'tasks',
+        title: 'Tasks',
+        type : 'basic',
+        icon : 'heroicons_outline:check-circle',
+        link : '/tasks'
     }
 
 ];

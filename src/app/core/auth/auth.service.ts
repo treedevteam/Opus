@@ -97,7 +97,18 @@ export class AuthService
                 this._userService.user = response.user;
 
                 // Return a new observable with the response
-                return of(response);
+                return this._httpClient.get('https://opus.devtaktika.com/api/user').pipe(
+                    catchError(() =>
+                    // Return false
+                    of(false)
+                ),
+                    switchMap((res:
+                        any)=>{
+                        console.log(res.data);
+                        localStorage.setItem('user_info', JSON.stringify(res.data));
+                        return of(response);
+                    })
+                );
             })
         );
     }
@@ -110,13 +121,13 @@ export class AuthService
         // Renew token
         return this._httpClient.get('https://opus.devtaktika.com/api/user').pipe(
             catchError(() =>
-
             // Return false
             of(false)
         ),
             switchMap((res:
                 any)=>{
-                console.log(res);
+                console.log(res.data);
+                localStorage.setItem('user_info', JSON.stringify(res.data));
                 return of(true);
             })
         );
@@ -125,14 +136,13 @@ export class AuthService
     /**
      * Sign out
      */
-     signOut(): Observable<any>
+     signOut(): any
      {
-
         // Remove the access token from the local storage
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_info');
         // Set the authenticated flag to false
         this._authenticated = false;
-        return this._httpClient.post('https://opus.devtaktika.com/api/user/logout', null);
      }
 
     /**

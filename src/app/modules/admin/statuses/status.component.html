@@ -51,7 +51,7 @@
                     <ng-container matColumnDef="color">
                       <th mat-header-cell *matHeaderCellDef>Color</th>
                       <td mat-cell *matCellDef="let element">
-                        <div class="relative flex flex-0 items-center justify-center w-8 h-8" style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0;"[ngStyle]="{'background-color': element.color}"><div class="text-on-primary">{{element.name.charAt(0)}}</div></div>
+                        <div class="relative flex flex-0 items-center justify-center w-8 h-8" style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0;"[ngStyle]="{'background-color': element.color}"><div class={{wcHexIsLight(element.color)}}>{{element.name.charAt(0)}}</div></div>
                     </td>
                     </ng-container>
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -7,6 +7,7 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
     selector     : 'classy-layout',
@@ -18,6 +19,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     isScreenSmall: boolean;
     navigation: Navigation;
     user: User;
+    userInfo: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -29,7 +31,8 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
         private _navigationService: NavigationService,
         private _userService: UserService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _fuseNavigationService: FuseNavigationService
+        private _fuseNavigationService: FuseNavigationService,
+        private _authservice: AuthService
     )
     {
     }
@@ -55,6 +58,8 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        this.userLoginInfo();
+
         // Subscribe to navigation data
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -77,6 +82,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
                 // Check if the screen is small
                 this.isScreenSmall = !matchingAliases.includes('md');
             });
+        this.userLoginInfo();
     }
 
     /**
@@ -88,6 +94,8 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
+
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
@@ -108,5 +116,10 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
             // Toggle the opened status
             navigation.toggle();
         }
+    }
+
+    userLoginInfo(): void{
+        this.userInfo = JSON.parse(localStorage.getItem('user_info') ?? '');
+        console.log(this.userInfo);
     }
 }

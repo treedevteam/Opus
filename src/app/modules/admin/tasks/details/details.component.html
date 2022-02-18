@@ -1,0 +1,190 @@
+<div class="flex flex-auto">
+
+    <form
+        class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto"
+        [formGroup]="taskForm">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between -mt-3 -ml-4">
+
+            <!-- Mark as ... button -->
+            <button
+                class="pr-4 pl-3.5"
+                mat-button
+                (click)="toggleCompleted()">
+
+
+
+                <!-- Mark as incomplete -->
+                <ng-container>
+                    <div class="flex items-center justify-center">
+                        <mat-icon
+                            class="text-primary"
+                            [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                        <span class="ml-2 font-semibold">MARK AS INCOMPLETE</span>
+                    </div>
+                </ng-container>
+            </button>
+
+            <div class="flex items-center">
+                <!-- More menu -->
+                <button
+                    mat-icon-button
+                    [matMenuTriggerFor]="moreMenu">
+                    <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                </button>
+                <mat-menu #moreMenu="matMenu">
+                    <button
+                        mat-menu-item
+                        (click)="deleteTask()">
+                        <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                        <span>Delete task</span>
+                    </button>
+                </mat-menu>
+
+                <!-- Close button -->
+                <button
+                    mat-icon-button
+                    [routerLink]="['../']">
+                    <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+
+        </div>
+
+        <mat-divider class="mt-6 mb-8"></mat-divider>
+
+        <!-- Title -->
+        <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task title</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'title'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #titleField></textarea>
+            </mat-form-field>
+        </div>
+        <!-- deadline -->
+        <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task deadline</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'deadline'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #deadlineField></textarea>
+            </mat-form-field>
+        </div>
+        <!-- raport -->
+        <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task raport</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'raport'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #raportField></textarea>
+            </mat-form-field>
+        </div>
+        <!-- restrictions -->
+        <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task restrictions</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'restrictions'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #restrictionsField></textarea>
+            </mat-form-field>
+        </div>
+        <!-- description -->
+        <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task description</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'description'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #descriptionField></textarea>
+            </mat-form-field>
+        </div>
+        <!-- status -->
+        <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task status</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'status'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #statusField></textarea>
+            </mat-form-field>
+        </div>
+        <!-- priority -->
+        <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task priority</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'priority'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #priorityField></textarea>
+            </mat-form-field>
+        </div>
+        <!-- location -->
+        <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task location</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'location'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #locationField></textarea>
+            </mat-form-field>
+        </div>
+         <!-- user -->
+         <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task user</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'user'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #userField></textarea>
+            </mat-form-field>
+        </div>
+         <!-- has_expired -->
+         <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task has_expired</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'has_expired'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #has_expiredField></textarea>
+            </mat-form-field>
+        </div>
+         <!-- users_assigned -->
+         <div>
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Task users_assigned</mat-label>
+                <textarea
+                    matInput
+                    [formControlName]="'users_assigned'"
+                    [spellcheck]="false"
+                    matTextareaAutosize
+                    #users_assignedField></textarea>
+            </mat-form-field>
+        </div>
+    </form>
+</div>
