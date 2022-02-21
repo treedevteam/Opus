@@ -1,3 +1,4 @@
+import { Priorities } from './../../priorities/model/priorities';
 import { TasksService } from './../tasks.service';
 import { TasksListComponent } from './../list/list.component';
 import { Tag, Task, Task2 } from './../tasks.types';
@@ -11,6 +12,9 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { debounceTime, filter, Subject, takeUntil, tap } from 'rxjs';
 import { assign } from 'lodash-es';
 import * as moment from 'moment';
+import { Departments } from '../../pages/departaments/model/departments.model';
+import { Status } from '../../statuses/model/status';
+import { Location } from '../../locations/model/location';
 
 @Component({
     selector       : 'tasks-details',
@@ -25,11 +29,14 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild('titleField') private _titleField: ElementRef;
 
 
-
-
+    departments: Departments[];
+    priorities: Priorities[];
+    statuses: Status[];
+    locations: Location[];
 
     tags: Tag[];
     tagsEditMode: boolean = false;
+    filteredTags2: Departments[];
     filteredTags: Tag[];
     task: Task;
     task2: Task2;
@@ -65,6 +72,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     ngOnInit(): void
     {
+
+
         // Open the drawer
         this._tasksListComponent.matDrawer.open();
 
@@ -80,20 +89,49 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             priority     : [[]],
             location    : [0],
             user    : [0],
+            department_id: [''],
             has_expired    : [0],
             users_assigned    : [0]
         });
 
-        // Get the tags
-        this._tasksService.tags$
+        // Get the departmetns
+        this._tasksService.departments$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((departmetns: Departments[]) => {
+            this.departments = departmetns;
+            this.filteredTags2 = departmetns;
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
+            // Get the statuses
+        this._tasksService.getStatus$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((status: Status[]) => {
+            this.statuses = status;
+            console.log(status);
+
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
+
+            // Get the locations
+            this._tasksService.getLocation$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((tags: Tag[]) => {
-                this.tags = tags;
-                this.filteredTags = tags;
+            .subscribe((location: Location[]) => {
+                this.locations = location;
+                console.log(location);
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+
+            // Get the priorities
+        this._tasksService.getPriorities$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((priorities: Priorities[]) => {
+            this.priorities = priorities;
+            // Mark for check
+        });
 
         // Get the tasks
         this._tasksService.tasks$
@@ -127,7 +165,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         this._tasksService.taskById$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((task: Task2) => {
-            console.log(task, 'from get the task serasd');
 
 
             // Open the drawer in case it is closed
@@ -135,6 +172,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
             // Get the task
             this.task2 = task;
+            console.log(task);
+
 
             // Patch values to the form from the task
             this.taskForm.patchValue(task, {emitEvent: false});
@@ -316,7 +355,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         const value = event.target.value.toLowerCase();
 
         // Filter the tags
-        this.filteredTags = this.tags.filter(tag => tag.title.toLowerCase().includes(value));
+        this.filteredTags2 = this.departments.filter(tag => tag.name.toLowerCase().includes(value));
     }
 
     /**
@@ -423,11 +462,13 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     addTagToTask(tag: Tag): void
     {
+
+        this.task2.department_id = +tag.id;
         // Add the tag
-        this.task.tags.unshift(tag.id);
+        // this.task.tags.unshift(tag.id);
 
         // Update the task form
-        this.taskForm.get('tags').patchValue(this.task.tags);
+        // this.taskForm.get('tags').patchValue(this.task.tags);
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -457,9 +498,11 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     toggleTaskTag(tag: Tag): void
     {
-        if ( this.task.tags.includes(tag.id) )
+
+
+        if ( this.task2.department_id === +tag.id )
         {
-            this.deleteTagFromTask(tag);
+            // this.deleteTagFromTask(tag);
         }
         else
         {
@@ -485,7 +528,22 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     setTaskPriority(priority): void
     {
         // Set the value
+        this.task2.priority = priority;
         this.taskForm.get('priority').setValue(priority);
+    }
+
+    setTaskstatus(status): void
+    {
+        // Set the value
+        this.task2.status = status;
+        this.taskForm.get('status').setValue(status);
+    }
+
+    setTaskLocation(location): void
+    {
+        // Set the value
+        this.task2.location = location;
+        this.taskForm.get('location').setValue(location);
     }
 
     /**
@@ -493,7 +551,13 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     isOverdue(): boolean
     {
-        return moment(this.task.dueDate, moment.ISO_8601).isBefore(moment(), 'days');
+        return moment(this.task2.deadline, moment.ISO_8601).isBefore(moment(), 'days');
+    }
+    setDeadline(time: any): void
+    {
+         // Set the value
+         this.task2.deadline = time;
+         this.taskForm.get('deadline').setValue(time);
     }
 
     /**
@@ -553,6 +617,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             }
         });
+    }
+    changeSubmitEventTask(): void{
+        console.log(this.taskForm.value);
     }
 
     /**

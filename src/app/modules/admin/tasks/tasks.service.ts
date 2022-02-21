@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, shareReplay, switchMap, take, tap, throwError } from 'rxjs';
 import { Departments } from '../pages/departaments/model/departments.model';
 import { parseInt } from 'lodash';
+import { Priorities } from '../priorities/model/priorities';
+import { Location } from '../locations/model/location';
+import { Status } from '../statuses/model/status';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +17,12 @@ export class TasksService
 
     // Private
     private _tags: BehaviorSubject<Tag[] | null> = new BehaviorSubject(null);
+
+
     private _departments: BehaviorSubject<Departments[] | null> = new BehaviorSubject(null);
+    private _priorities: BehaviorSubject<Priorities[] | null> = new BehaviorSubject(null);
+    private _status: BehaviorSubject<Status[] | null> = new BehaviorSubject(null);
+    private _locations: BehaviorSubject<Location[] | null> = new BehaviorSubject(null);
 
 
     private _mytasks: BehaviorSubject<TaskWithDepartment[] | null> = new BehaviorSubject(null);
@@ -33,7 +41,7 @@ export class TasksService
             this._departments.next(data);
             return data;
         }),
-        // shareReplay(1),
+         shareReplay(1),
     );
     // eslint-disable-next-line @typescript-eslint/member-ordering
     getTasksData$ = this._httpClient.get<TaskWithDepartment[]>('https://opus.devtaktika.com/api/tasks/departments').pipe(
@@ -42,8 +50,39 @@ export class TasksService
             this._mytasks.next(data.data);
             return data.data;
         }),
-        // shareReplay(1),
+         shareReplay(1),
     );
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    getPriorities$ = this._httpClient.get<Priorities[]>('https://opus.devtaktika.com/api/priorities').pipe(
+        map((data: any): Priorities[] => {
+
+            this._priorities.next(data.data);
+            return data.data;
+        }),
+         shareReplay(1),
+    );
+
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    getStatus$ = this._httpClient.get<Status[]>('https://opus.devtaktika.com/api/statuses').pipe(
+        map((data: any): Status[] => {
+            this._status.next(data.data);
+            return data.data;
+        }),
+         shareReplay(1),
+    );
+
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    getLocation$ = this._httpClient.get<Location[]>('https://opus.devtaktika.com/api/locations').pipe(
+        map((data: any): Location[] => {
+            this._locations.next(data.data);
+            return data.data;
+        }),
+         shareReplay(1),
+    );
+
+
+
+
 
 
     /**
@@ -68,6 +107,19 @@ export class TasksService
     get departments$(): Observable<Departments[]>
     {
         return this._departments.asObservable();
+    }
+    get priorities$(): Observable<Priorities[]>
+    {
+        return this._priorities.asObservable();
+    }
+
+    get status$(): Observable<Status[]>
+    {
+        return this._status.asObservable();
+    }
+    get locations$(): Observable<Location[]>
+    {
+        return this._locations.asObservable();
     }
 
     /**

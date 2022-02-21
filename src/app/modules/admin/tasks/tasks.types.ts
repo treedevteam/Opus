@@ -1,7 +1,6 @@
 import { Departments } from '../pages/departaments/model/departments.model';
 import { Priorities } from '../priorities/model/priorities';
 import { Status } from '../statuses/model/status';
-import { Users } from '../users/model/users';
 
 export interface Tag
 {
@@ -21,6 +20,16 @@ export interface Task
     tags: string[];
     order: number;
 }
+export class Users {
+    id: number;
+    name: string;
+    email: string;
+    department: Departments;
+    role: number;
+    user_image: string;
+    last_seen: string;
+}
+
 
 export interface Task2
 {
@@ -30,10 +39,11 @@ export interface Task2
     deadline: string;
     restrictions: string;
     description: string ;
-    status: Status;
-    priority: Priorities;
-    location: Location;
+    status: number;
+    priority: number;
+    location: number;
     user: Users;
+    users_assigned: Users[];
     department_id: number;
     has_expired: boolean;
     department: string | null;
