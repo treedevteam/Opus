@@ -98,7 +98,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             priority     : [[]],
             location    : [0],
             user    : [0],
-            department_id: [[]],
+            department_id: [],
             has_expired    : [0],
             users_assigned    : [[]]
         });
@@ -289,6 +289,12 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     getAssignedUsers(ids): Users[]{
         return ids.map(res => this.usersList.find(x => x.id === res));
     }
+
+    getNameOfDepartmentbyId(): string{
+        const id = this.taskForm.get('department_id').value;
+        const item = this.departments.find(r => +r.id === +id).name;
+       return item;
+   }
     /**
      * Toggle the completed status
      */
