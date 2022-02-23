@@ -196,6 +196,21 @@ export class TasksService
      *
      * @param tag
      */
+
+     storeTask(form: any): Observable<Task2>{
+        return this._httpClient.post<Task2>('https://opus.devtaktika.com/api/task/store', form).pipe(
+            // eslint-disable-next-line arrow-body-style
+            map((data: Task2) => {
+                // this.task$.next(data);
+                return data;
+            }),
+            catchError((err) => {
+                console.error(err);
+                throw err;
+            }
+        )
+        );
+    }
     createTag(tag: Tag): Observable<Tag>
     {
         return this.tags$.pipe(
