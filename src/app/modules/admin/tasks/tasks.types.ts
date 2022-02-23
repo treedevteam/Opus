@@ -44,7 +44,7 @@ export interface Task2
     location: number;
     user: Users;
     users_assigned: Users[];
-    department_id: number;
+    department_id: number[];
     has_expired: boolean;
     department: string | null;
 }

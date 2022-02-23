@@ -23,13 +23,15 @@ import { SharedModule } from 'app/shared/shared.module';
 import { tasksRoutes } from './tasks.routing';
 import { TasksComponent } from './tasks.component';
 import { TasksDetailsComponent } from './details/details.component';
+import { StoreComponent } from './store/store.component';
 import { TasksListComponent } from './list/list.component';
 
 @NgModule({
     declarations: [
         TasksComponent,
         TasksDetailsComponent,
-        TasksListComponent
+        TasksListComponent,
+        StoreComponent
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),

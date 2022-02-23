@@ -113,7 +113,7 @@ export class TasksListComponent implements OnInit, OnDestroy
                         const menuItem = this._fuseNavigationService.getItem('apps.tasks', mainNavigation);
 
                         // Update the subtitle of the item
-                        menuItem.subtitle = this.tasksCount.incomplete + ' remaining tasks';
+                        // menuItem.subtitle = this.tasksCount.incomplete + ' remaining tasks';
 
                         // Refresh the navigation
                         mainNavigationComponent.refresh();
@@ -230,7 +230,9 @@ export class TasksListComponent implements OnInit, OnDestroy
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
-
+    // addTask(){
+    //     this._router
+    // }
 
     /**
      * Task dropped

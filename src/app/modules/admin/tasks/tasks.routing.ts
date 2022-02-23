@@ -4,6 +4,7 @@ import { TasksListComponent } from './list/list.component';
 import { TasksComponent } from './tasks.component';
 import {  TasksResolver, TasksTagsResolver, TasksTaskResolver } from './tasks.resolvers';
 import { Route } from '@angular/router';
+import { StoreComponent } from './store/store.component';
 
 export const tasksRoutes: Route[] = [
     {
@@ -26,6 +27,11 @@ export const tasksRoutes: Route[] = [
                         resolve      : {
                             task: TasksTaskResolver
                         },
+                        canDeactivate: [CanDeactivateTasksDetails]
+                    },
+                    {
+                        path         : 'add/new',
+                        component    : StoreComponent,
                         canDeactivate: [CanDeactivateTasksDetails]
                     }
                 ]

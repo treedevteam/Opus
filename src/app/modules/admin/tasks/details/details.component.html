@@ -53,13 +53,15 @@
             </div>
         </ng-container>
         <!-- Members -->
+
         <ng-container *ngIf="task2.users_assigned?.length">
             <div class="w-12 h-1 mt-6 border-t-2"></div>
             <div class="flex items-center mt-6 -space-x-1.5">
-                <ng-container *ngFor="let member of task2.users_assigned.slice(0, 5); trackBy: trackByFn">
-                    <img
+                <ng-container *ngFor="let member of getAssignedUsers(task2.users_assigned).slice(0, 5); trackBy: trackByFn">
+                    <img  [matTooltip]="member.name"
+                         [matTooltipPosition]="'above'"
                         class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                        [src]="'https://opus.devtaktika.com/storage/' + member.user_image"
+                        [src]="'https://opus.devtaktika.com/storage/' + member.image"
                         alt="Member avatar">
                 </ng-container>
                 <ng-container *ngIf="task2.users_assigned.length > 5">
@@ -71,6 +73,58 @@
                 </ng-container>
             </div>
         </ng-container>
+        <ng-container>
+                <div style="width: fit-content" (click)="openUsersPanel()"
+                    class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
+                     #usersPanelOrigin>
+                    <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                        [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                    <span class="ml-2 mr-1 text-md " style="color: #000;">Assign users</span>
+                </div>
+
+                  <!-- Tags panel -->
+                  <ng-template #usersPanel>
+                    <div class="w-60 rounded border shadow-md bg-card">
+                        <!-- Tags panel header -->
+                        <div class="flex items-center m-3 mr-2">
+                            <div class="flex items-center">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                <div class="ml-2">
+                                    <input class="w-full min-w-0 py-1 border-0" type="text"
+                                        placeholder="Enter user name" (input)="filterDepartments($event)"
+                                        (keydown)="filterTagsInputKeyDown($event)" [maxLength]="30" #newTagInput>
+                                </div>
+                            </div>
+                            <button class="ml-1" mat-icon-button (click)="toggleTagsEditMode()">
+                                <mat-icon class="icon-size-5"
+                                    [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                            </button>
+                        </div>
+                        <div class="flex flex-col max-h-64 py-2 border-t overflow-y-auto">
+                            <!-- Tags -->
+                            <ng-container *ngFor="let tag of filteredUsers; trackBy: trackByFn">
+                                <div class="flex items-center h-10 min-h-10 px-4 cursor-pointer hover:bg-hover"
+                                    (click)="toggleTaskUser(tag.id)" matRipple>
+                                    <mat-checkbox class="flex items-center h-10 min-h-10" [color]="'primary'">
+                                    </mat-checkbox>
+                                    <div class="ml-1">{{tag.name}}</div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </ng-template>
+        </ng-container>
+        <mat-menu #usersMenu="matMenu">
+            <!-- Low -->
+            <button *ngFor="let priority of priorities" mat-menu-item (click)="setTaskPriority(priority.id)">
+                <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+                    <span class="font-medium" [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
+                    <!-- <mat-icon
+                        class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+                        [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+                </span>
+            </button>
+        </mat-menu>
         <!-- Title -->
         <div class="mt-5">
             <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
@@ -79,104 +133,7 @@
                     #titleField></textarea>
             </mat-form-field>
         </div>
-        <!-- Tags -->
-        <div class="mt-8">
-            <div class="font-medium mb-1.5">Departments</div>
-            <div class="flex flex-wrap items-center -m-1.5">
-                <!-- Tags -->
-                <ng-container *ngIf="departments.length">
-                    <ng-container *ngFor="let department of departments; trackBy: trackByFn">
-                        <ng-container *ngIf="+task2.department_id===+department.id">
-                            <div
-                                class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
-                                <span class="text-md font-medium whitespace-nowrap">{{department.name}}</span>
-                            </div>
-                        </ng-container>
 
-
-                    </ng-container>
-                </ng-container>
-                <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
-                    (click)="openTagsPanel()" #tagsPanelOrigin>
-
-                    <ng-container *ngIf="departments.length">
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                        <span class="ml-1.5 text-md font-medium whitespace-nowrap">Edit</span>
-                    </ng-container>
-
-                    <ng-container *ngIf="!departments.length">
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                        <span class="ml-1.5 text-md font-medium whitespace-nowrap">Add</span>
-                    </ng-container>
-
-                    <!-- Tags panel -->
-                    <ng-template #tagsPanel>
-                        <div class="w-60 rounded border shadow-md bg-card">
-                            <!-- Tags panel header -->
-                            <div class="flex items-center m-3 mr-2">
-                                <div class="flex items-center">
-                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                                    <div class="ml-2">
-                                        <input class="w-full min-w-0 py-1 border-0" type="text"
-                                            placeholder="Enter tag name" (input)="filterTags($event)"
-                                            (keydown)="filterTagsInputKeyDown($event)" [maxLength]="30" #newTagInput>
-                                    </div>
-                                </div>
-                                <button class="ml-1" mat-icon-button (click)="toggleTagsEditMode()">
-                                    <mat-icon *ngIf="!tagsEditMode" class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                                    <mat-icon *ngIf="tagsEditMode" class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
-                                </button>
-                            </div>
-                            <div class="flex flex-col max-h-64 py-2 border-t overflow-y-auto">
-                                <!-- Tags -->
-                                <ng-container *ngIf="!tagsEditMode">
-                                    <ng-container *ngFor="let tag of filteredTags2; trackBy: trackByFn">
-                                        <div class="flex items-center h-10 min-h-10 px-4 cursor-pointer hover:bg-hover"
-                                            (click)="toggleTaskTag(tag)" matRipple>
-                                            <mat-checkbox class="flex items-center h-10 min-h-10" [color]="'primary'"
-                                                [checked]="+task2.department_id===+tag.id">
-                                            </mat-checkbox>
-                                            <div class="ml-1">{{tag.name}}</div>
-                                        </div>
-                                    </ng-container>
-                                </ng-container>
-                                <!-- Tags editing -->
-                                <ng-container *ngIf="tagsEditMode">
-                                    <div class="py-2 space-y-2">
-                                        <ng-container *ngFor="let tag of filteredTags2; trackBy: trackByFn">
-                                            <div class="flex items-center">
-                                                <mat-form-field
-                                                    class="fuse-mat-dense fuse-mat-no-subscript w-full mx-4">
-                                                    <input matInput [value]="tag.name"
-                                                        (input)="updateTagTitle(tag, $event)">
-                                                    <button mat-icon-button (click)="deleteTag(tag)" matSuffix>
-                                                        <mat-icon class="icon-size-5 ml-2"
-                                                            [svgIcon]="'heroicons_solid:trash'"></mat-icon>
-                                                    </button>
-                                                </mat-form-field>
-                                            </div>
-                                        </ng-container>
-                                    </div>
-                                </ng-container>
-                                <!-- Create tag -->
-                                <!-- <div
-                                    class="flex items-center h-10 min-h-10 -ml-0.5 pl-4 pr-3 leading-none cursor-pointer hover:bg-hover"
-                                    *ngIf="shouldShowCreateTagButton(newTagInput.value)"
-                                    (click)="createTag(newTagInput.value); newTagInput.value = ''"
-                                    matRipple>
-                                    <mat-icon
-                                        class="mr-2 icon-size-5"
-                                        [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                                    <div class="break-all">Create "<b>{{newTagInput.value}}</b>"</div>
-                                </div> -->
-                            </div>
-                        </div>
-                    </ng-template>
-                </div>
-            </div>
-        </div>
         <!-- Priority and Due date -->
         <div class="flex flex-wrap items-center mt-8">
 

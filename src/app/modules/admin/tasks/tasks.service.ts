@@ -7,6 +7,7 @@ import { parseInt } from 'lodash';
 import { Priorities } from '../priorities/model/priorities';
 import { Location } from '../locations/model/location';
 import { Status } from '../statuses/model/status';
+import { Users } from '../users/model/users';
 
 @Injectable({
     providedIn: 'root'
@@ -23,6 +24,7 @@ export class TasksService
     private _priorities: BehaviorSubject<Priorities[] | null> = new BehaviorSubject(null);
     private _status: BehaviorSubject<Status[] | null> = new BehaviorSubject(null);
     private _locations: BehaviorSubject<Location[] | null> = new BehaviorSubject(null);
+    private _users: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
 
 
     private _mytasks: BehaviorSubject<TaskWithDepartment[] | null> = new BehaviorSubject(null);
@@ -44,9 +46,16 @@ export class TasksService
          shareReplay(1),
     );
     // eslint-disable-next-line @typescript-eslint/member-ordering
+    getUsersData$ = this._httpClient.get<Users[]>('https://opus.devtaktika.com/api/users').pipe(
+        map((data: any): Users[] => {
+            this._users.next(data.data);
+            return data.data;
+        }),
+         shareReplay(1),
+    );
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     getTasksData$ = this._httpClient.get<TaskWithDepartment[]>('https://opus.devtaktika.com/api/tasks/departments').pipe(
         map((data: any): TaskWithDepartment[] => {
-
             this._mytasks.next(data.data);
             return data.data;
         }),
@@ -120,6 +129,10 @@ export class TasksService
     get locations$(): Observable<Location[]>
     {
         return this._locations.asObservable();
+    }
+    get users$(): Observable<Users[]>
+    {
+        return this._users.asObservable();
     }
 
     /**
