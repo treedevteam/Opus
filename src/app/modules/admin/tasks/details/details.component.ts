@@ -649,7 +649,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         // Set the value
         this.task2.location = location;
         this.taskForm.get('location').setValue(location);
-    }
+    } 
 
     /**
      * Check if the task is overdue or not
