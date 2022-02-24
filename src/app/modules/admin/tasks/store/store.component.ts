@@ -37,7 +37,7 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
     locations: Location[];
     public storeTask: any = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        department_id: [],
+        departments: [],
         priority:null,
         deadline: null,
         status:null,
@@ -101,7 +101,7 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
             priority: [[]],
             location: [0],
             user: [0],
-            department_id: [''],
+            departments: [[45,46]],
             has_expired: [0],
             users_assigned: [0]
         });
@@ -515,14 +515,14 @@ openUsersPanel(): void
      */
     addTagToTask(tag: number): void {
         console.log(tag);
-        if(!this.storeTask.department_id.includes(+tag)){
-            this.storeTask.department_id.push(+tag);
+        if(!this.storeTask.departments.includes(+tag)){
+            this.storeTask.departments.push(+tag);
         }else{
-            this.storeTask.department_id.splice(+this.storeTask.department_id.indexOf(tag), 1);
+            this.storeTask.departments.splice(+this.storeTask.departments.indexOf(tag), 1);
         }
 
-        this.taskForm.get('department_id').patchValue(this.storeTask.department_id);
-        console.log(this.storeTask.department_id);
+        this.taskForm.get('departments').patchValue('['+ this.storeTask.departments +']');
+        console.log(this.storeTask.departments);
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
@@ -538,11 +538,11 @@ openUsersPanel(): void
     }
     deleteTagFromTask(tag: Departments): void {
         // Remove the tag
-        this.task2.department_id.splice(this.task2.department_id.findIndex(item => +item === tag.id), 1);
-        const test = this.taskForm.get('department_id');
+        this.task2.departments.splice(this.task2.departments.findIndex(item => +item === tag.id), 1);
+        const test = this.taskForm.get('departments');
         console.log(test);
         // Update the task form
-        this.taskForm.get('department_id').patchValue(this.task.tags);
+        this.taskForm.get('departments').patchValue('['+ this.task.tags +']');
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -593,16 +593,17 @@ openUsersPanel(): void
      * Check if the task is overdue or not
      */
     isOverdue(): boolean {
+        console.log(this.storeTask.deadline);
         return moment(this.storeTask.deadline, moment.ISO_8601).isBefore(moment(), 'days');
     }
+
     setDeadline(time: any): void {
         // Set the value
         this.storeTask.deadline = time._d;
-
         console.log(time);
         console.log(this.storeTask.deadline);
-
-        this.taskForm.get('deadline').setValue(time._d);
+        const convert = time._i.year + "-" + time._i.month + "-" + time._i.date + "  00:00"
+        this.taskForm.get('deadline').setValue(convert);
     }
 
     /**
@@ -660,6 +661,13 @@ openUsersPanel(): void
     }
     changeSubmitEventTask(): void {
         console.log(this.taskForm.value);
+        console.log(this.taskForm.get('departments').value);
+        this._tasksService.storeTask(this.taskForm.value).subscribe(res=>{
+            console.log(res);
+            
+        },err=>{
+            console.log(err);
+        })
     }
 
     /**

@@ -98,7 +98,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             priority     : [[]],
             location    : [0],
             user    : [0],
-            department_id: [],
+            departments: [],
             has_expired    : [0],
             users_assigned    : [[]]
         });
@@ -291,7 +291,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     getNameOfDepartmentbyId(): string{
-        const id = this.taskForm.get('department_id').value;
+        const id = this.taskForm.get('departments').value;
         const item = this.departments.find(r => +r.id === +id).name;
        return item;
    }
@@ -567,18 +567,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     {
         console.log(tag);
 
-        console.log(this.taskForm.get('department_id').value);
-
-        // if(!this.taskForm.get('department_id').value){
-        //     this.storeTask.department_id.push(+tag);
-        // }else{
-        //     this.storeTask.department_id.splice(+this.storeTask.department_id.indexOf(tag), 1);
-        // }
-
-        // this.taskForm.get('department_id').patchValue(this.storeTask.department_id);
-        // console.log(this.storeTask.department_id);
-        // // Mark for check
-        // this._changeDetectorRef.markForCheck();
+        console.log(this.taskForm.get('departments').value);
     }
 
     /**
@@ -589,10 +578,10 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     deleteTagFromTask(tag: Tag): void
     {
         // Remove the tag
-        this.task2.department_id.splice(this.task2.department_id.findIndex(item => item === +tag.id), 1);
+        this.task2.departments.splice(this.task2.departments.findIndex(item => item === +tag.id), 1);
 
         // Update the task form
-        this.taskForm.get('department_id').patchValue(this.task2.department_id);
+        this.taskForm.get('departments').patchValue(this.task2.departments);
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -667,13 +656,15 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     isOverdue(): boolean
     {
+        console.log(this.task2.deadline);
+        
         return moment(this.task2.deadline, moment.ISO_8601).isBefore(moment(), 'days');
     }
     setDeadline(time: any): void
     {
-         // Set the value
-         this.task2.deadline = time;
-         this.taskForm.get('deadline').setValue(time);
+            this.task2.deadline = time._d;
+            const convert = time._i.year + "-" + time._i.month + "-" + time._i.date + "  00:00"
+            this.taskForm.get('deadline').setValue(convert);
     }
 
     /**
@@ -736,6 +727,12 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
     changeSubmitEventTask(): void{
         console.log(this.taskForm.value);
+        this._tasksService.updateTaskservice(this.taskForm.value, this.task2.id).subscribe(res=>{
+            console.log(res);
+            
+        },err=>{
+            console.log(err);
+        })
     }
 
     /**

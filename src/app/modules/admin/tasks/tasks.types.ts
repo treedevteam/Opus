@@ -24,7 +24,7 @@ export class Users {
     id: number;
     name: string;
     email: string;
-    department: Departments;
+    department_id: Departments;
     role: number;
     user_image: string;
     last_seen: string;
@@ -44,9 +44,9 @@ export interface Task2
     location: number;
     user: Users;
     users_assigned: Users[];
-    department_id: number[];
+    departments: number[];
     has_expired: boolean;
-    department: string | null;
+    // department: string | null;
 }
 
 export interface TaskWithDepartment{
