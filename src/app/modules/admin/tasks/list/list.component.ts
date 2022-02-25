@@ -34,7 +34,31 @@ export class TasksListComponent implements OnInit, OnDestroy
         incomplete: 0,
         total     : 0
     };
-    taskss: TaskWithDepartment[];
+     taskss: TaskWithDepartment[];
+
+
+    tasksData$ = combineLatest([
+        this._tasksService.getTasksData$,
+        this._tasksService.newTask$,
+        this._tasksService.taskUpdated$,
+    ],(g,p,u) => {
+        console.log(g);
+        console.log(u,'UUUUUUUUUU');
+        
+         if(p){
+             const departments_index =  g.findIndex(g => g.id === +p.departments)
+             g[departments_index].tasks.unshift(p);
+         }else if(u){
+            const departments_index =  g.findIndex(g => g.id === +u.departments)
+             const updatedTaskId = g[departments_index].tasks.findIndex(t => t.id === +u.id)
+             g[departments_index].tasks.splice(updatedTaskId,1,u);
+         }
+        //  this.taskss = g;
+       return g;
+     });
+
+
+
     // tasksaks = this._tasksService.tasksWithDepartment$;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -64,11 +88,6 @@ export class TasksListComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this._tasksService.getTaskById2('2');
-
-
-        this._tasksService.getTasksData$.subscribe((res)=>{
-            this.taskss = res;
-        });
 
         this._tasksService.getDepartmentsData$.subscribe((res: Departments[])=>{
             console.log(res);

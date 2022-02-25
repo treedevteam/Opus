@@ -29,6 +29,8 @@ export class TasksService
 
     private _mytasks: BehaviorSubject<TaskWithDepartment[] | null> = new BehaviorSubject(null);
     private _mytask: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
+    private _newtask: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
+    private _tasksupdated: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
 
 
 
@@ -122,6 +124,12 @@ export class TasksService
         return this._priorities.asObservable();
     }
 
+    get newTask$(): Observable<Task2>{
+        return this._newtask.asObservable();
+    }
+    get taskUpdated$(): Observable<Task2>{
+        return this._tasksupdated.asObservable();
+    }
     get status$(): Observable<Status[]>
     {
         return this._status.asObservable();
@@ -200,9 +208,9 @@ export class TasksService
      storeTask(form: any): Observable<Task2>{
         return this._httpClient.post<Task2>('https://opus.devtaktika.com/api/task/store', form).pipe(
             // eslint-disable-next-line arrow-body-style
-            map((data: Task2) => {
-                // this.task$.next(data);
-                return data;
+            map((data: any) => {
+                this._newtask.next(data.data);
+                return data.data;
             }),
             catchError((err) => {
                 console.error(err);
@@ -215,9 +223,11 @@ export class TasksService
     updateTaskservice(form: any, id: number): Observable<Task2>{
         return this._httpClient.post<Task2>('https://opus.devtaktika.com/api/task/' + id + '/update/admin', form).pipe(
             // eslint-disable-next-line arrow-body-style
-            map((data: Task2) => {
-                // this.task$.next(data);
-                return data;
+            map((data: any) => {
+                console.log(data.data, 'data.data updateTaskservice');
+                
+                  this._tasksupdated.next(data.data);
+                return data.data;
             }),
             catchError((err) => {
                 console.error(err);

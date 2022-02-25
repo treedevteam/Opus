@@ -593,7 +593,6 @@ openUsersPanel(): void
      * Check if the task is overdue or not
      */
     isOverdue(): boolean {
-        console.log(this.storeTask.deadline);
         return moment(this.storeTask.deadline, moment.ISO_8601).isBefore(moment(), 'days');
     }
 

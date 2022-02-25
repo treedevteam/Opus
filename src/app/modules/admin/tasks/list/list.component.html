@@ -64,7 +64,7 @@
                     </div>
                 </div>
                     <div>
-                            <ng-container *ngFor="let task of taskss; let first = first; trackBy: trackByFn">
+                            <ng-container *ngFor="let task of tasksData$ | async; let first = first; trackBy: trackByFn">
                                 <div
                                     [id]="'task-' + 2"
                                     class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover border-t h-12 text-lg font-semibold bg-gray-50 dark:bg-transparent ng-star-inserted mt-5"

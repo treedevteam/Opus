@@ -656,13 +656,11 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     isOverdue(): boolean
     {
-        console.log(this.task2.deadline);
-        
         return moment(this.task2.deadline, moment.ISO_8601).isBefore(moment(), 'days');
     }
     setDeadline(time: any): void
     {
-            this.task2.deadline = time._d;
+            this.task2.deadline = time;
             const convert = time._i.year + "-" + time._i.month + "-" + time._i.date + "  00:00"
             this.taskForm.get('deadline').setValue(convert);
     }
