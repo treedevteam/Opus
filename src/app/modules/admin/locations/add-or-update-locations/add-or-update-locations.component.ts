@@ -66,7 +66,6 @@ export class AddOrUpdateLocationsComponent implements OnInit {
 
     getLocationById($id): void{
         this._locationsService._getLocationById($id).subscribe((res: any)=>{
-            console.log(res);
             this.storeLocation.patchValue({
                 name: res.name,
                 color: res.color

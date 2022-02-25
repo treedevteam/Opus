@@ -25,6 +25,7 @@ import { TasksComponent } from './tasks.component';
 import { TasksDetailsComponent } from './details/details.component';
 import { StoreComponent } from './store/store.component';
 import { TasksListComponent } from './list/list.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
     declarations: [
@@ -53,7 +54,8 @@ import { TasksListComponent } from './list/list.component';
         MatSidenavModule,
         MatTooltipModule,
         FuseFindByKeyPipeModule,
-        SharedModule
+        SharedModule,
+        MatProgressSpinnerModule
     ],
     providers   : [
         {

@@ -26,8 +26,6 @@ export class StatusComponent implements OnInit {
         this.getStatuses();
     }
     parentFunction(data: AddOrUpdate): void{
-        console.log(data);
-        console.log(data,'parentFunction');
         if(!data.isUpdate){
             this.dataSource.unshift(data.data);
             this.dataSource = [...this.dataSource];
@@ -37,7 +35,7 @@ export class StatusComponent implements OnInit {
     }
     getStatuses(): any{
         this._statusService._getStatus().subscribe((res: any)=>{
-            this.dataSource = res.data;
+            this.dataSource = res;
         },(err: any)=>{
             console.log(err);
         });
@@ -61,7 +59,6 @@ export class StatusComponent implements OnInit {
         const dialogRef = this._fuseConfirmationService.open();
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
             if(result === 'confirmed'){
                 this._statusService._deleteStatus($id).subscribe((res: any)=>{
                     this.dataSource.splice($rowNumber, 1);

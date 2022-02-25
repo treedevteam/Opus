@@ -72,7 +72,6 @@ export class StoreDepartmentComponent implements OnChanges,OnInit {
         this._snackBar.open('Successfully upload!', 'Close', {
           duration: 2000,
         });
-        console.log(this.file);
 
 
 
@@ -103,8 +102,6 @@ export class StoreDepartmentComponent implements OnChanges,OnInit {
         const result = Object.assign({}, this.storeDepartment.value);
         formData.append('name', this.storeDepartment.get('name').value);
         formData.append('image', this.file);
-        console.log(this.file);
-        console.log(this.file);
         this.departmentService.storeDepartment(formData).subscribe((res: any)=>{
             const d = new AddOrUpdate();
             d.isUpdate = false;

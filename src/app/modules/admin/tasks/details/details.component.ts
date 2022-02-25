@@ -53,6 +53,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _tagsPanelOverlayRef: OverlayRef;
     private _usersPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    loadingSpinerUpdate=false;
 
     /**
      * Constructor
@@ -62,7 +63,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
-        private _renderer2: Renderer2,
         private _router: Router,
         private _tasksListComponent: TasksListComponent,
         private _tasksService: TasksService,
@@ -118,7 +118,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((usersList: Users[]) => {
             this.usersList = usersList;
-            console.log(this.usersList);
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
@@ -127,7 +126,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((status: Status[]) => {
             this.statuses = status;
-            console.log(status);
 
             // Mark for check
             this._changeDetectorRef.markForCheck();
@@ -138,8 +136,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((location: Location[]) => {
                 this.locations = location;
-                console.log(location);
-
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -191,7 +187,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
             // Get the task
             this.task2 = task;
-            console.log(task);
 
 
             // Patch values to the form from the task
@@ -565,9 +560,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     addTagToTask(tag: Tag): void
     {
-        console.log(tag);
 
-        console.log(this.taskForm.get('departments').value);
     }
 
     /**
@@ -599,6 +592,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     addUsersToTask(userId: number): void{
+        debugger;
         const usersAssigned = this.taskForm.get('users_assigned').value;
         const index = usersAssigned.findIndex(object => +object === +userId);
         if (index === -1) {
@@ -606,8 +600,11 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         }else{
             usersAssigned.splice(index,1);
         }
-        this.taskForm.get('users_assigned').setValue(usersAssigned);
+       
+        
+        this.taskForm.get('users_assigned').patchValue(usersAssigned);
         console.log(this.taskForm.get('users_assigned').value);
+        
     }
 
     toggleTaskUser(user: number): void
@@ -680,7 +677,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 }
             }
         });
-
+        // console.log(this.task2);
+        
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
 
@@ -688,34 +686,14 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             if ( result === 'confirmed' )
             {
 
-                // Get the current task's id
-                const id = this.task.id;
-
-                // Get the next/previous task's id
-                const currentTaskIndex = this.tasks.findIndex(item => item.id === id);
-                const nextTaskIndex = currentTaskIndex + ((currentTaskIndex === (this.tasks.length - 1)) ? -1 : 1);
-                const nextTaskId = (this.tasks.length === 1 && this.tasks[0].id === id) ? null : this.tasks[nextTaskIndex].id;
-
                 // Delete the task
-                this._tasksService.deleteTask(id)
-                    .subscribe((isDeleted) => {
-
-                        // Return if the task wasn't deleted...
-                        if ( !isDeleted )
-                        {
-                            return;
-                        }
-
-                        // Navigate to the next task if available
-                        if ( nextTaskId )
-                        {
-                            this._router.navigate(['../', nextTaskId], {relativeTo: this._activatedRoute});
-                        }
-                        // Otherwise, navigate to the parent
-                        else
-                        {
-                            this._router.navigate(['../'], {relativeTo: this._activatedRoute});
-                        }
+                this._tasksService.deleteTask(this.task2.id, +this.task2.departments)
+                    .subscribe((res) => {
+                        console.log(res,'deletedTask');
+                        this._router.navigate(['../tasks']);
+                    },err=>{
+                        console.log(err);
+                        
                     });
 
                 // Mark for check
@@ -724,15 +702,12 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
     }
     changeSubmitEventTask(): void{
-        console.log(this.taskForm.value);
+        this.taskForm.get('users_assigned').patchValue("[" + this.taskForm.get('users_assigned').value +"]");
         this._tasksService.updateTaskservice(this.taskForm.value, this.task2.id).subscribe(res=>{
-            console.log(res);
-            
+
         },err=>{
-            console.log(err);
         })
     }
-
     /**
      * Track by function for ngFor loops
      *

@@ -86,7 +86,6 @@ export class AuthService
 
         return this._httpClient.post('https://opus.devtaktika.com/oauth/token', credentials).pipe(
             switchMap((response: any) => {
-                console.log(response);
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
 
@@ -104,7 +103,6 @@ export class AuthService
                 ),
                     switchMap((res:
                         any)=>{
-                        console.log(res.data);
                         localStorage.setItem('user_info', JSON.stringify(res.data));
                         return of(response);
                     })
@@ -126,7 +124,6 @@ export class AuthService
         ),
             switchMap((res:
                 any)=>{
-                console.log(res.data);
                 localStorage.setItem('user_info', JSON.stringify(res.data));
                 return of(true);
             })

@@ -81,7 +81,6 @@ export class DepartamentsComponent implements OnInit {
 
         this.getDepartments$.subscribe((res: any)=>{
             this.dataSource = res;
-            // console.log(res);
         },(err: any)=>{
             console.log(err);
         });
@@ -91,7 +90,6 @@ export class DepartamentsComponent implements OnInit {
         const dialogRef = this._fuseConfirmationService.open();
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
             if(result === 'confirmed'){
                 this.departmentService.deleteDepartment(id).subscribe((res: any)=>{
                     this.openSnackBar('Department deleted successfully!');

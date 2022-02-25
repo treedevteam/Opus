@@ -63,7 +63,6 @@ export class AuthSignInComponent implements OnInit
      */
     signIn(): void
     {
-        console.log(this.signInForm.value);
 
         // Return if the form is invalid
         if ( this.signInForm.invalid )
@@ -94,7 +93,6 @@ export class AuthSignInComponent implements OnInit
 
                 },
                 (response) => {
-                    console.log(response);
 
                     // Re-enable the form
                     this.signInForm.enable();

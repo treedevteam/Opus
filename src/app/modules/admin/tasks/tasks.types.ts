@@ -43,7 +43,7 @@ export interface Task2
     priority: number;
     location: number;
     user: Users;
-    users_assigned: Users[];
+    users_assigned: number[];
     departments: number[];
     has_expired: boolean;
     // department: string | null;

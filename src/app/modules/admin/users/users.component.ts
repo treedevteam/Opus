@@ -27,7 +27,6 @@ export class UsersComponent implements OnInit {
     }
 
     parentFunction(data: AddOrUpdate): void{
-        console.log(data,'parentFunction');
         if(!data.isUpdate){
             this.dataSource.unshift(data.data);
             this.dataSource = [...this.dataSource];
@@ -37,8 +36,7 @@ export class UsersComponent implements OnInit {
     }
     getUsers(): any{
         return this._usersService.getUsers().subscribe((res: any)=>{
-            console.log(res);
-            this.dataSource = res.data;
+            this.dataSource = res;
         },(err: any)=>{
             console.log(err);
         });
@@ -48,7 +46,6 @@ export class UsersComponent implements OnInit {
         const dialogRef = this.fuseConfirmationService.open();
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
             if(result === 'confirmed'){
                 this._usersService.deleteUser($userId).subscribe((res: any)=>{
                 this.dataSource.splice($rowNumber, 1);

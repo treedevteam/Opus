@@ -65,7 +65,6 @@ export class AddOrUpdateUsersComponent implements OnInit {
         this._snackBar.open('Successfully upload!', 'Close', {
           duration: 2000,
         });
-        console.log(this.file);
         const reader = new FileReader();
         reader.readAsDataURL(pFileList[0]);
         reader.onload = (event): any => {
@@ -150,9 +149,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
             this.storeUsers.patchValue({
                 name: res.name, email: res.email,department_id:res.department_id,role_id:res.role_id,file:res.image
                 });
-            console.log(res);
             this.file = res.image;
-            console.log(this.storeUsers.value);
 
         },(err: any)=>{
             console.log(err);

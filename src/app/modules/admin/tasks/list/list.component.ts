@@ -41,19 +41,31 @@ export class TasksListComponent implements OnInit, OnDestroy
         this._tasksService.getTasksData$,
         this._tasksService.newTask$,
         this._tasksService.taskUpdated$,
-    ],(g,p,u) => {
+        this._tasksService.deletedTask$
+    ],(g,p,u,d) => {
+        debugger;
         console.log(g);
-        console.log(u,'UUUUUUUUUU');
-        
+        console.log(p,'p');
+        console.log(u,'u');
+        console.log(d,'d');
          if(p){
-             const departments_index =  g.findIndex(g => g.id === +p.departments)
-             g[departments_index].tasks.unshift(p);
+             p.forEach(element => {
+             const departments_index =  g.findIndex(g => g.id === +element.departments)
+             g[departments_index].tasks.unshift(element);
+             });
          }else if(u){
             const departments_index =  g.findIndex(g => g.id === +u.departments)
              const updatedTaskId = g[departments_index].tasks.findIndex(t => t.id === +u.id)
              g[departments_index].tasks.splice(updatedTaskId,1,u);
+         }else if(d){
+            const departments_index =  g.findIndex(g => g.id === +d.departments)
+            const deletedTask = g[departments_index].tasks.findIndex(t => t.id === +d.id)
+            g[departments_index].tasks.splice(deletedTask,1);
          }
-        //  this.taskss = g;
+         p = null;
+         u = null;
+         d = null
+        //  this._tasksService.newTask$ = null
        return g;
      });
 
@@ -90,7 +102,6 @@ export class TasksListComponent implements OnInit, OnDestroy
         this._tasksService.getTaskById2('2');
 
         this._tasksService.getDepartmentsData$.subscribe((res: Departments[])=>{
-            console.log(res);
             // this.getDepartments = res;
         });
 

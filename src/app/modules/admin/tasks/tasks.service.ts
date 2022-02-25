@@ -29,8 +29,9 @@ export class TasksService
 
     private _mytasks: BehaviorSubject<TaskWithDepartment[] | null> = new BehaviorSubject(null);
     private _mytask: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
-    private _newtask: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
+    private _newtask: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
     private _tasksupdated: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
+    private _deletedtasks: BehaviorSubject<any> = new BehaviorSubject(null);
 
 
 
@@ -50,8 +51,8 @@ export class TasksService
     // eslint-disable-next-line @typescript-eslint/member-ordering
     getUsersData$ = this._httpClient.get<Users[]>('https://opus.devtaktika.com/api/users').pipe(
         map((data: any): Users[] => {
-            this._users.next(data.data);
-            return data.data;
+            this._users.next(data);
+            return data;
         }),
          shareReplay(1),
     );
@@ -67,8 +68,8 @@ export class TasksService
     getPriorities$ = this._httpClient.get<Priorities[]>('https://opus.devtaktika.com/api/priorities').pipe(
         map((data: any): Priorities[] => {
 
-            this._priorities.next(data.data);
-            return data.data;
+            this._priorities.next(data);
+            return data;
         }),
          shareReplay(1),
     );
@@ -76,8 +77,8 @@ export class TasksService
     // eslint-disable-next-line @typescript-eslint/member-ordering
     getStatus$ = this._httpClient.get<Status[]>('https://opus.devtaktika.com/api/statuses').pipe(
         map((data: any): Status[] => {
-            this._status.next(data.data);
-            return data.data;
+            this._status.next(data);
+            return data;
         }),
          shareReplay(1),
     );
@@ -85,8 +86,8 @@ export class TasksService
     // eslint-disable-next-line @typescript-eslint/member-ordering
     getLocation$ = this._httpClient.get<Location[]>('https://opus.devtaktika.com/api/locations').pipe(
         map((data: any): Location[] => {
-            this._locations.next(data.data);
-            return data.data;
+            this._locations.next(data);
+            return data;
         }),
          shareReplay(1),
     );
@@ -124,8 +125,11 @@ export class TasksService
         return this._priorities.asObservable();
     }
 
-    get newTask$(): Observable<Task2>{
+    get newTask$(): Observable<Task2[]>{
         return this._newtask.asObservable();
+    }
+    get deletedTask$(): Observable<any>{
+        return this._deletedtasks.asObservable();
     }
     get taskUpdated$(): Observable<Task2>{
         return this._tasksupdated.asObservable();
@@ -205,8 +209,8 @@ export class TasksService
      * @param tag
      */
 
-     storeTask(form: any): Observable<Task2>{
-        return this._httpClient.post<Task2>('https://opus.devtaktika.com/api/task/store', form).pipe(
+     storeTask(form: any): Observable<Task2[]>{
+        return this._httpClient.post<Task2[]>('https://opus.devtaktika.com/api/task/store', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
                 this._newtask.next(data.data);
@@ -224,8 +228,6 @@ export class TasksService
         return this._httpClient.post<Task2>('https://opus.devtaktika.com/api/task/' + id + '/update/admin', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
-                console.log(data.data, 'data.data updateTaskservice');
-                
                   this._tasksupdated.next(data.data);
                 return data.data;
             }),
@@ -485,24 +487,15 @@ export class TasksService
      *
      * @param id
      */
-    deleteTask(id: string): Observable<boolean>
+    deleteTask(id: number, departments: number): Observable<any>
     {
         return this.tasks$.pipe(
             take(1),
-            switchMap(tasks => this._httpClient.delete('api/apps/tasks/task', {params: {id}}).pipe(
+            switchMap(tasks => this._httpClient.delete('https://opus.devtaktika.com/api/task/delete/'+id,).pipe(
                 map((isDeleted: boolean) => {
-
-                    // Find the index of the deleted task
-                    const index = tasks.findIndex(item => item.id === id);
-
-                    // Delete the task
-                    tasks.splice(index, 1);
-
-                    // Update the tasks
-                    this._tasks.next(tasks);
-
-                    // Return the deleted status
-                    return isDeleted;
+                    const test = {id:id, departments: departments}
+                    this._deletedtasks.next(test);
+                    return test;
                 })
             ))
         );
