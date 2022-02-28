@@ -94,7 +94,11 @@ export class TasksService
 
 
 
-
+    setNullBehaviourSubject(): void{
+        this._newtask.next(null);
+        this._tasksupdated.next(null);
+        this._deletedtasks.next(null);
+    }
 
 
     /**
@@ -213,6 +217,7 @@ export class TasksService
         return this._httpClient.post<Task2[]>('https://opus.devtaktika.com/api/task/store', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
+                this.setNullBehaviourSubject();
                 this._newtask.next(data.data);
                 return data.data;
             }),
@@ -228,7 +233,8 @@ export class TasksService
         return this._httpClient.post<Task2>('https://opus.devtaktika.com/api/task/' + id + '/update/admin', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
-                  this._tasksupdated.next(data.data);
+                this._newtask.next(null);
+                this._tasksupdated.next(data.data);
                 return data.data;
             }),
             catchError((err) => {
@@ -494,6 +500,7 @@ export class TasksService
             switchMap(tasks => this._httpClient.delete('https://opus.devtaktika.com/api/task/delete/'+id,).pipe(
                 map((isDeleted: boolean) => {
                     const test = {id:id, departments: departments}
+                    this.setNullBehaviourSubject();
                     this._deletedtasks.next(test);
                     return test;
                 })

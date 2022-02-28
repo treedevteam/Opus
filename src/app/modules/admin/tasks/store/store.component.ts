@@ -273,7 +273,6 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getAssignedUsers(ids): Users[]{
-        debugger;
         return ids.map(res => this.usersList.find(x => x.id === res));
     }
     /**
@@ -515,7 +514,7 @@ openUsersPanel(): void
             this.storeTask.departments.splice(+this.storeTask.departments.indexOf(tag), 1);
         }
 
-        this.taskForm.get('departments').patchValue('['+ this.storeTask.departments +']');
+        this.taskForm.get('departments').patchValue( this.storeTask.departments);
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
@@ -534,7 +533,7 @@ openUsersPanel(): void
         this.task2.departments.splice(this.task2.departments.findIndex(item => +item === tag.id), 1);
         const test = this.taskForm.get('departments');
         // Update the task form
-        this.taskForm.get('departments').patchValue('['+ this.task.tags +']');
+        this.taskForm.get('departments').patchValue(this.task.tags);
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -548,6 +547,21 @@ openUsersPanel(): void
     toggleTaskTag(tag: number): void {
         this.addTagToTask(tag);
     }
+
+
+    // isDepartmentSelected(id: number): boolean{
+    //     debugger;
+    //     const departmentsAssigned = this.taskForm.get('departments').value;
+    //     const index = departmentsAssigned.findIndex(object => +object === +id);
+    //     console.log(departmentsAssigned);
+    //     console.log(index);
+        
+    //     if (index === -1) {
+    //         return false;
+    //     }else{
+    //         return true;
+    //     }
+    // }
 
     /**
      * Should the create tag button be visible
@@ -649,6 +663,7 @@ openUsersPanel(): void
     //     });
     // }
     changeSubmitEventTask(): void {
+        this.taskForm.get('departments').patchValue('['+ this.storeTask.departments +']');
         this._tasksService.storeTask(this.taskForm.value).subscribe(res=>{
             
         },err=>{

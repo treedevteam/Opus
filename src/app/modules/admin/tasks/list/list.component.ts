@@ -62,10 +62,6 @@ export class TasksListComponent implements OnInit, OnDestroy
             const deletedTask = g[departments_index].tasks.findIndex(t => t.id === +d.id)
             g[departments_index].tasks.splice(deletedTask,1);
          }
-         p = null;
-         u = null;
-         d = null
-        //  this._tasksService.newTask$ = null
        return g;
      });
 

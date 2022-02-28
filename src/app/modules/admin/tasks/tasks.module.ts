@@ -55,7 +55,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
         MatTooltipModule,
         FuseFindByKeyPipeModule,
         SharedModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
     ],
     providers   : [
         {

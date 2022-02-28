@@ -592,7 +592,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     addUsersToTask(userId: number): void{
-        debugger;
         const usersAssigned = this.taskForm.get('users_assigned').value;
         const index = usersAssigned.findIndex(object => +object === +userId);
         if (index === -1) {
@@ -605,6 +604,16 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         this.taskForm.get('users_assigned').patchValue(usersAssigned);
         console.log(this.taskForm.get('users_assigned').value);
         
+    }
+
+    isUserSelected(id: number): boolean{
+        const usersAssigned = this.taskForm.get('users_assigned').value;
+        const index = usersAssigned.findIndex(object => +object === +id);
+        if (index === -1) {
+            return false;
+        }else{
+            return true;
+        }
     }
 
     toggleTaskUser(user: number): void
