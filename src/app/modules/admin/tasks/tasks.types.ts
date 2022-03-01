@@ -55,3 +55,12 @@ export interface TaskWithDepartment{
     tasks: Task2[];
 }
 
+export interface TaskLogs{
+    message?: string;
+    created_at: string;
+    type:{
+        name: string;
+        image: string;
+    }
+}
+

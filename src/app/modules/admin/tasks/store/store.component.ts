@@ -605,7 +605,7 @@ openUsersPanel(): void
     setDeadline(time: any): void {
         // Set the value
         this.storeTask.deadline = time._d;
-        const convert = time._i.year + "-" + time._i.month + "-" + time._i.date + "  00:00"
+        const convert = time._i.year + "/" + time._i.month + "/" + time._i.date + "  00:00"
         this.taskForm.get('deadline').setValue(convert);
     }
 

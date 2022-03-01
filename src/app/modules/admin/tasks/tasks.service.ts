@@ -1,4 +1,4 @@
-import { Tag, Task, Task2, TaskWithDepartment } from './tasks.types';
+import { Tag, Task, Task2, TaskLogs, TaskWithDepartment } from './tasks.types';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, shareReplay, switchMap, take, tap, throwError } from 'rxjs';
@@ -32,6 +32,7 @@ export class TasksService
     private _newtask: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
     private _tasksupdated: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
     private _deletedtasks: BehaviorSubject<any> = new BehaviorSubject(null);
+    private _tagsLogs: BehaviorSubject<TaskLogs[] | null> = new BehaviorSubject(null);
 
 
 
@@ -52,6 +53,15 @@ export class TasksService
     getUsersData$ = this._httpClient.get<Users[]>('https://opus.devtaktika.com/api/users').pipe(
         map((data: any): Users[] => {
             this._users.next(data);
+            return data;
+        }),
+         shareReplay(1),
+    );
+
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    getTasksLogsData$ = this._httpClient.get<TaskLogs[]>('https://opus.devtaktika.com/api/logs/').pipe(
+        map((data: any): TaskLogs[] => {
+            this._tagsLogs.next(data);
             return data;
         }),
          shareReplay(1),
@@ -150,6 +160,10 @@ export class TasksService
     {
         return this._users.asObservable();
     }
+    get tagsLogs$(): Observable<TaskLogs[]>
+    {
+        return this._tagsLogs.asObservable();
+    }
 
     /**
      * Getter for task
@@ -244,6 +258,20 @@ export class TasksService
         )
         );
     }
+
+
+    getTasksLogs(id): Observable<TaskLogs[]> {
+        return this._httpClient.get<TaskLogs[]>('https://opus.devtaktika.com/api/logs/'+ id).pipe(
+            map((data: any): TaskLogs[] => {
+                this._tagsLogs.next(data.data);
+                console.log(data,'https://opus.devtaktika.com/api/logs/');
+                return data.data;
+            }),
+             shareReplay(1),
+        );
+      } 
+
+
     createTag(tag: Tag): Observable<Tag>
     {
         return this.tags$.pipe(

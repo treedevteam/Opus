@@ -26,13 +26,15 @@ import { TasksDetailsComponent } from './details/details.component';
 import { StoreComponent } from './store/store.component';
 import { TasksListComponent } from './list/list.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-
+import { TasksLogsComponent } from './tasks-logs/tasks-logs.component';
+import {MatTabsModule} from '@angular/material/tabs';
 @NgModule({
     declarations: [
         TasksComponent,
         TasksDetailsComponent,
         TasksListComponent,
-        StoreComponent
+        StoreComponent,
+        TasksLogsComponent
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),
@@ -56,6 +58,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
         FuseFindByKeyPipeModule,
         SharedModule,
         MatProgressSpinnerModule,
+        MatTabsModule
     ],
     providers   : [
         {

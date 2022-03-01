@@ -11,9 +11,9 @@ export class DepartamentsService {
     private updateDepartment$ = new BehaviorSubject<Departments>(null);
     private deletedDepartment$ = new BehaviorSubject<number>(null);
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getDepartmentsData$ = this.http.get<Departments[]>('https://opus.devtaktika.com/api/departments').pipe(
-        map((data: any): Departments[] => data.data),
-        // shareReplay(1),
+    getDepartmentsData$ = this.http.get<Departments[]>('https://opus.devtaktika.com/api/departments/all').pipe(
+        map((data: any): Departments[] => data),
+        shareReplay(1),
        catchError((err) => {
          console.error(err);
          throw err;

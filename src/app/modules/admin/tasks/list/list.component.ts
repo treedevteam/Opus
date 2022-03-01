@@ -20,9 +20,6 @@ export class TasksListComponent implements OnInit, OnDestroy
 {
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
 
-
-
-
      getDepartments: Departments[];
     drawerMode: 'side' | 'over';
     selectedTask: Task;
@@ -43,7 +40,6 @@ export class TasksListComponent implements OnInit, OnDestroy
         this._tasksService.taskUpdated$,
         this._tasksService.deletedTask$
     ],(g,p,u,d) => {
-        debugger;
         console.log(g);
         console.log(p,'p');
         console.log(u,'u');
@@ -95,7 +91,7 @@ export class TasksListComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        this._tasksService.getTaskById2('2');
+        // this._tasksService.getTaskById2('2');
 
         this._tasksService.getDepartmentsData$.subscribe((res: Departments[])=>{
             // this.getDepartments = res;

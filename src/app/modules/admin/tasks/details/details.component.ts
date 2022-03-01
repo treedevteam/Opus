@@ -20,6 +20,7 @@ import { Users } from '../../users/model/users';
 @Component({
     selector       : 'tasks-details',
     templateUrl    : './details.component.html',
+    styleUrls      : ['./details.component.scss'],
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -713,7 +714,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     changeSubmitEventTask(): void{
         this.taskForm.get('users_assigned').patchValue("[" + this.taskForm.get('users_assigned').value +"]");
         this._tasksService.updateTaskservice(this.taskForm.value, this.task2.id).subscribe(res=>{
-
+            this._router.navigateByUrl('/tasks')
         },err=>{
         })
     }

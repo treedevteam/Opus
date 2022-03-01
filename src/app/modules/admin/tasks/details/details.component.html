@@ -1,327 +1,345 @@
-<div class="flex flex-auto">
-
-    <form class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto" [formGroup]="taskForm">
-
-        <!-- Header -->
-        <div class="flex items-center justify-between -mt-3 -ml-4">
-
-            <!-- Mark as ... button -->
-            <button class="pr-4 pl-3.5" mat-button (click)="toggleCompleted()">
+<div class="flex flex-col flex-auto p-6 pt-5 sm:p-8 sm:pt-10 w-full ">
+     <!-- Header -->
+     <div class="flex items-center justify-between -mt-3 -ml-4">
+        
+        <!-- Mark as ... button -->
+        <button class="pr-4 pl-3.5" mat-button (click)="toggleCompleted()">
 
 
 
-                <!-- Mark as incomplete -->
-                <ng-container>
-                    <div class="flex items-center justify-center">
-                        <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-                        <span class="ml-2 font-semibold">MARK AS INCOMPLETE</span>
-                    </div>
-                </ng-container>
-            </button>
-
-            <div class="flex items-center">
-                <!-- More menu -->
-                <button mat-icon-button [matMenuTriggerFor]="moreMenu">
-                    <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
-                </button>
-                <mat-menu #moreMenu="matMenu">
-                    <button mat-menu-item (click)="deleteTask()">
-                        <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                        <span>Delete task</span>
-                    </button>
-                </mat-menu>
-
-                <!-- Close button -->
-                <button mat-icon-button [routerLink]="['../']">
-                    <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
-                </button>
-            </div>
-
-        </div>
-
-        <mat-divider class="mt-6"></mat-divider>
-
-        <ng-container>
-            <div class="w-12 h-1 mt-4 "></div>
-            <div class="flex items-center -space-x-1.5">
-                <ng-container>
-                    <img class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover mr-5"
-                        [src]="'https://opus.devtaktika.com/storage/' + task2.user.user_image" alt="Member avatar"  [matTooltip]="task2.user.name" [matTooltipPosition]="'above'">
-                    <span>- Created by</span>
-
-                </ng-container>
-            </div>
-        </ng-container>
-        <!-- Members -->
-
-        <ng-container class="mt-5" *ngIf="task2.users_assigned?.length">
-            <div class="w-12 h-1 mt-6 border-t-2"></div>
-            <div class="flex items-center mt-6 -space-x-1.5">
-                <ng-container
-                    *ngFor="let member of getAssignedUsers(task2.users_assigned).slice(0, 5); trackBy: trackByFn">
-                    <img [matTooltip]="member.name" [matTooltipPosition]="'above'"
-                        class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                        [src]="'https://opus.devtaktika.com/storage/' + member.image" alt="Member avatar">
-                </ng-container>
-                <ng-container *ngIf="task2.users_assigned.length > 5">
-                    <div
-                        class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500">
-                        <div class="text-md font-semibold">
-                            +{{ task2.users_assigned.slice(5).length }}
-                        </div>
-                    </div>
-                </ng-container>
-            </div>
-        </ng-container>
-        <ng-container>
-            <div style="width: fit-content" (click)="openUsersPanel()"
-                class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
-                #usersPanelOrigin>
-                <mat-icon class="icon-size-5 text-current" style="color: #000;"
-                    [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                <span class="ml-2 mr-1 text-md " style="color: #000;">Assign users</span>
-            </div>
-
-            <!-- Tags panel -->
-            <ng-template #usersPanel>
-                <div class="w-60 rounded border shadow-md bg-card">
-                    <!-- Tags panel header -->
-                    <div class="flex items-center m-3 mr-2">
-                        <div class="flex items-center">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                            <div class="ml-2">
-                                <input class="w-full min-w-0 py-1 border-0" type="text" placeholder="Enter user name"
-                                    (input)="filterDepartments($event)" (keydown)="filterTagsInputKeyDown($event)"
-                                    [maxLength]="30" #newTagInput>
-                            </div>
-                        </div>
-                        <button class="ml-1" mat-icon-button (click)="toggleTagsEditMode()">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                        </button>
-                    </div>
-                    <div class="flex flex-col max-h-64 py-2 border-t overflow-y-auto">
-                        <!-- Tags -->
-                        <ng-container *ngFor="let tag of filteredUsers; trackBy: trackByFn">
-                            <div class="flex items-center h-10 min-h-10 px-4 cursor-pointer hover:bg-hover"
-                                (click)="toggleTaskUser(tag.id)" matRipple>
-                                <mat-checkbox  class="flex items-center h-10 min-h-10" [color]="'primary'" aria-checked="true">
-                                </mat-checkbox>
-                                <div class="ml-1">{{tag.name}}</div>
-                            </div>
-                        </ng-container>
-                    </div>
+            <!-- Mark as incomplete -->
+            <ng-container>
+                <div class="flex items-center justify-center">
+                    <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                    <span class="ml-2 font-semibold">MARK AS INCOMPLETE</span>
                 </div>
-            </ng-template>
-        </ng-container>
-        <mat-menu #usersMenu="matMenu">
-            <!-- Low -->
-            <button *ngFor="let priority of priorities" mat-menu-item (click)="setTaskPriority(priority.id)">
-                <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
-                    <span class="font-medium" [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
-                    <!-- <mat-icon
-                        class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
-                        [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
-                </span>
+            </ng-container>
+        </button>
+
+        <div class="flex items-center">
+            <!-- More menu -->
+            <button mat-icon-button [matMenuTriggerFor]="moreMenu">
+                <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
             </button>
-        </mat-menu>
-        <!-- Title -->
-        <div class="mt-5">
-            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-                <mat-label>Task title</mat-label>
-                <textarea matInput [formControlName]="'title'" [spellcheck]="false" matTextareaAutosize
-                    #titleField></textarea>
-            </mat-form-field>
+            <mat-menu #moreMenu="matMenu">
+                <button mat-menu-item (click)="deleteTask()">
+                    <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                    <span>Delete task</span>
+                </button>
+            </mat-menu>
+
+            <!-- Close button -->
+            <button mat-icon-button [routerLink]="['../']">
+                <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+            </button>
         </div>
 
-        <!-- DEPARTMETNS -->
-        <div class="mt-8">
-            <div class="font-medium mb-1.5">Departments</div>
-            <div class="flex flex-wrap items-center -m-1.5">
-                <!-- Tags -->
-                        <div
-                            class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
-                            <span
-                                class="text-md font-medium whitespace-nowrap">{{getNameOfDepartmentbyId()}}</span>
-                        </div>
-            </div>
-        </div>
-
-
-
-
-        <!-- Priority and Due date -->
-        <div class="flex flex-wrap items-center mt-8">
-
-            <!-- Priority -->
-            <div>
-                <div class="font-medium">Priority</div>
-
-
-                <!-- Low -->
-                <ng-container *ngFor="let pri of priorities; trackBy: trackByFn">
-                    <ng-container *ngIf="+pri.id === +task2.priority">
-                        <div [ngStyle]="{'background-color': pri.color + '80'}"
-                            class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 dark:text-gray-100"
-                            [matMenuTriggerFor]="priorityMenu">
-                            <mat-icon class="icon-size-5 text-current" style="color: #000;"
-                                [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
-                            <span class="ml-2 mr-1 text-md " style="color: #000;">{{pri.name}}</span>
+    </div>
+    <mat-divider class="mt-6"></mat-divider>
+</div>
+<mat-tab-group class="mt-5">
+    <mat-tab label="Edit Task" class="overflow-y-auto "> 
+        <div class="flex flex-auto">
+            <div class="flex flex-col flex-auto p-6 pt-5 sm:p-8 sm:pt-10 w-full ">
+                <form class="" [formGroup]="taskForm">
+        
+                   
+        
+                    <ng-container>
+                        <div class="w-12 h-1 mt-4 "></div>
+                        <div class="flex items-center -space-x-1.5">
+                            <ng-container>
+                                <img class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover mr-5"
+                                    [src]="'https://opus.devtaktika.com/storage/' + task2.user.user_image" alt="Member avatar"
+                                    [matTooltip]="task2.user.name" [matTooltipPosition]="'above'">
+                                <span>- Created by</span>
+        
+                            </ng-container>
                         </div>
                     </ng-container>
-                </ng-container>
-                <ng-container *ngIf="!+task2.priority">
-                    <div class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
-                        [matMenuTriggerFor]="priorityMenu">
-                        <mat-icon class="icon-size-5 text-current" style="color: #000;"
-                            [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
-                        <span class="ml-2 mr-1 text-md " style="color: #000;">Choose priority</span>
-                    </div>
-                </ng-container>
-                <mat-menu #priorityMenu="matMenu">
-                    <!-- Low -->
-                    <button *ngFor="let priority of priorities" mat-menu-item (click)="setTaskPriority(priority.id)">
-                        <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
-                            <span class="font-medium" [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
-                            <!-- <mat-icon
+                    <!-- Members -->
+        
+                    <ng-container class="mt-5" *ngIf="task2.users_assigned?.length">
+                        <div class="w-12 h-1 mt-6 border-t-2"></div>
+                        <div class="flex items-center mt-6 -space-x-1.5">
+                            <ng-container
+                                *ngFor="let member of getAssignedUsers(task2.users_assigned).slice(0, 5); trackBy: trackByFn">
+                                <img [matTooltip]="member.name" [matTooltipPosition]="'above'"
+                                    class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                                    [src]="'https://opus.devtaktika.com/storage/' + member.image" alt="Member avatar">
+                            </ng-container>
+                            <ng-container *ngIf="task2.users_assigned.length > 5">
+                                <div
+                                    class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500">
+                                    <div class="text-md font-semibold">
+                                        +{{ task2.users_assigned.slice(5).length }}
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                    <ng-container>
+                        <div style="width: fit-content" (click)="openUsersPanel()"
+                            class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
+                            #usersPanelOrigin>
+                            <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                            <span class="ml-2 mr-1 text-md " style="color: #000;">Assign users</span>
+                        </div>
+        
+                        <!-- Tags panel -->
+                        <ng-template #usersPanel>
+                            <div class="w-60 rounded border shadow-md bg-card">
+                                <!-- Tags panel header -->
+                                <div class="flex items-center m-3 mr-2">
+                                    <div class="flex items-center">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                        <div class="ml-2">
+                                            <input class="w-full min-w-0 py-1 border-0" type="text"
+                                                placeholder="Enter user name" (input)="filterDepartments($event)"
+                                                (keydown)="filterTagsInputKeyDown($event)" [maxLength]="30" #newTagInput>
+                                        </div>
+                                    </div>
+                                    <button class="ml-1" mat-icon-button (click)="toggleTagsEditMode()">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                    </button>
+                                </div>
+                                <div class="flex flex-col max-h-64 py-2 border-t">
+                                    <!-- Tags -->
+                                    <ng-container *ngFor="let tag of filteredUsers; trackBy: trackByFn">
+                                        <div class="flex items-center h-10 min-h-10 px-4 cursor-pointer hover:bg-hover"
+                                            (click)="toggleTaskUser(tag.id)" matRipple>
+                                            <mat-checkbox class="flex items-center h-10 min-h-10" [color]="'primary'"
+                                                aria-checked="true">
+                                            </mat-checkbox>
+                                            <div class="ml-1">{{tag.name}}</div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                    <mat-menu #usersMenu="matMenu">
+                        <!-- Low -->
+                        <button *ngFor="let priority of priorities" mat-menu-item (click)="setTaskPriority(priority.id)">
+                            <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+                                <span class="font-medium" [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
+                                <!-- <mat-icon
                                 class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
                                 [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
-                        </span>
-                    </button>
-                </mat-menu>
-            </div>
-
-            <!-- Due date -->
-            <div class="ml-6">
-                <div class="font-medium">Due date</div>
-                <div class="relative flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer"
-                    [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !task2.deadline,
-                                'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task2.deadline && !isOverdue(),
-                                'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task2.deadline && isOverdue()}" (click)="dueDatePicker.open()">
-                    <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
-                    <span class="ml-2 text-md font-medium">
-                        <ng-container *ngIf="task2.deadline">{{task2.deadline | date:'longDate'}}</ng-container>
-                        <ng-container *ngIf="!task2.deadline">Not set</ng-container>
-                    </span>
-                    <mat-form-field
-                        class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
-                        <input matInput [formControlName]="'deadline'" [matDatepicker]="dueDatePicker">
-                        <mat-datepicker #dueDatePicker>
-                            <mat-datepicker-actions>
-                                <!-- <button
-                                    mat-button
-                                    (click)="taskForm.get('deadline').setValue(null)"
-                                    matDatepickerCancel>Clear
-                                </button> -->
-                                <button class="" mat-flat-button [color]="'primary'"
-                                    (click)="setDeadline(taskForm.get('deadline').value)" matDatepickerApply>Select
-                                </button>
-                            </mat-datepicker-actions>
-                        </mat-datepicker>
-                    </mat-form-field>
-                </div>
-            </div>
-
-        </div>
-
-
-        <!-- status and location -->
-        <div class="flex flex-wrap items-center mt-8">
-
-            <!-- status-->
-            <div class="mr-5">
-                <div class="font-medium">Status</div>
-                <!-- Low -->
-                <ng-container *ngFor="let status of statuses; trackBy: trackByFn">
-                    <ng-container *ngIf="+status.id === +task2.status">
-                        <div [ngStyle]="{'background-color': status.color + '80'}"
-                            class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 dark:text-gray-100"
-                            [matMenuTriggerFor]="stautsMenu">
-                            <mat-icon class="icon-size-5 text-current" style="color: #000;"
-                                [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
-                            <span class="ml-2 mr-1 text-md " style="color: #000;">{{status.name}}</span>
-                        </div>
-                    </ng-container>
-                </ng-container>
-                <ng-container *ngIf="!+task2.status">
-                    <div class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
-                        [matMenuTriggerFor]="stautsMenu">
-                        <mat-icon class="icon-size-5 text-current" style="color: #000;"
-                            [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
-                        <span class="ml-2 mr-1 text-md " style="color: #000;">Choose status</span>
+                            </span>
+                        </button>
+                    </mat-menu>
+                    <!-- Title -->
+                    <div class="mt-5">
+                        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                            <mat-label>Task title</mat-label>
+                            <textarea matInput [formControlName]="'title'" [spellcheck]="false" matTextareaAutosize
+                                #titleField></textarea>
+                        </mat-form-field>
                     </div>
-                </ng-container>
-                <mat-menu #stautsMenu="matMenu">
-                    <!-- Low -->
-                    <button *ngFor="let status of statuses" mat-menu-item (click)="setTaskstatus(status.id)">
-                        <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
-                            <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
-                            <!-- <mat-icon
-                        class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
-                        [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
-                        </span>
-                    </button>
-                </mat-menu>
-            </div>
-
-            <!-- location-->
-            <div>
-                <div class="font-medium">Location</div>
-                <!-- Low -->
-                <ng-container *ngFor="let location of locations; trackBy: trackByFn">
-                    <ng-container *ngIf="+location.id === +task2.location">
-                        <div [ngStyle]="{'background-color': location.color + '80'}"
-                            class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 dark:text-gray-100"
-                            [matMenuTriggerFor]="locationMenu">
-                            <mat-icon class="icon-size-5 text-current" style="color: #000;"
-                                [svgIcon]="'heroicons_outline:location-marker'"></mat-icon>
-                            <span class="ml-2 mr-1 text-md " style="color: #000;">{{location.name}}</span>
+        
+                    <!-- DEPARTMETNS -->
+                    <div class="mt-8">
+                        <div class="font-medium mb-1.5">Departments</div>
+                        <div class="flex flex-wrap items-center -m-1.5">
+                            <!-- Tags -->
+                            <div
+                                class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                <span class="text-md font-medium whitespace-nowrap">{{getNameOfDepartmentbyId()}}</span>
+                            </div>
                         </div>
-                    </ng-container>
-                </ng-container>
-                <mat-menu #locationMenu="matMenu">
-                    <!-- Low -->
-                    <button *ngFor="let location of locations" mat-menu-item (click)="setTaskLocation(location.id)">
-                        <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
-                            <span class="font-medium" [ngStyle]="{'color': location.color}">{{location.name}}</span>
-                            <!-- <mat-icon
-                    class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
-                    [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
-                        </span>
-                    </button>
-                </mat-menu>
+                    </div>
+        
+        
+        
+        
+                    <!-- Priority and Due date -->
+                    <div class="flex flex-wrap items-center mt-8">
+        
+                        <!-- Priority -->
+                        <div>
+                            <div class="font-medium">Priority</div>
+        
+        
+                            <!-- Low -->
+                            <ng-container *ngFor="let pri of priorities; trackBy: trackByFn">
+                                <ng-container *ngIf="+pri.id === +task2.priority">
+                                    <div [ngStyle]="{'background-color': pri.color + '80'}"
+                                        class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 dark:text-gray-100"
+                                        [matMenuTriggerFor]="priorityMenu">
+                                        <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                            [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+                                        <span class="ml-2 mr-1 text-md " style="color: #000;">{{pri.name}}</span>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="!+task2.priority">
+                                <div class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
+                                    [matMenuTriggerFor]="priorityMenu">
+                                    <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                        [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+                                    <span class="ml-2 mr-1 text-md " style="color: #000;">Choose priority</span>
+                                </div>
+                            </ng-container>
+                            <mat-menu #priorityMenu="matMenu">
+                                <!-- Low -->
+                                <button *ngFor="let priority of priorities" mat-menu-item
+                                    (click)="setTaskPriority(priority.id)">
+                                    <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+                                        <span class="font-medium" [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
+                                        <!-- <mat-icon
+                                        class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+                                        [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+                                    </span>
+                                </button>
+                            </mat-menu>
+                        </div>
+        
+                        <!-- Due date -->
+                        <div class="ml-6">
+                            <div class="font-medium">Due date</div>
+                            <div class="relative flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer"
+                                [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !task2.deadline,
+                                        'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task2.deadline && !isOverdue(),
+                                        'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task2.deadline && isOverdue()}" (click)="dueDatePicker.open()">
+                                <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+                                <span class="ml-2 text-md font-medium">
+                                    <ng-container *ngIf="task2.deadline">{{task2.deadline | date:'longDate'}}</ng-container>
+                                    <ng-container *ngIf="!task2.deadline">Not set</ng-container>
+                                </span>
+                                <mat-form-field
+                                    class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
+                                    <input matInput [formControlName]="'deadline'" [matDatepicker]="dueDatePicker">
+                                    <mat-datepicker #dueDatePicker>
+                                        <mat-datepicker-actions>
+                                            <!-- <button
+                                            mat-button
+                                            (click)="taskForm.get('deadline').setValue(null)"
+                                            matDatepickerCancel>Clear
+                                        </button> -->
+                                            <button class="" mat-flat-button [color]="'primary'"
+                                                (click)="setDeadline(taskForm.get('deadline').value)" matDatepickerApply>Select
+                                            </button>
+                                        </mat-datepicker-actions>
+                                    </mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+        
+                    </div>
+        
+        
+                    <!-- status and location -->
+                    <div class="flex flex-wrap items-center mt-8">
+        
+                        <!-- status-->
+                        <div class="mr-5">
+                            <div class="font-medium">Status</div>
+                            <!-- Low -->
+                            <ng-container *ngFor="let status of statuses; trackBy: trackByFn">
+                                <ng-container *ngIf="+status.id === +task2.status">
+                                    <div [ngStyle]="{'background-color': status.color + '80'}"
+                                        class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 dark:text-gray-100"
+                                        [matMenuTriggerFor]="stautsMenu">
+                                        <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                            [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
+                                        <span class="ml-2 mr-1 text-md " style="color: #000;">{{status.name}}</span>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="!+task2.status">
+                                <div class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
+                                    [matMenuTriggerFor]="stautsMenu">
+                                    <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                        [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
+                                    <span class="ml-2 mr-1 text-md " style="color: #000;">Choose status</span>
+                                </div>
+                            </ng-container>
+                            <mat-menu #stautsMenu="matMenu">
+                                <!-- Low -->
+                                <button *ngFor="let status of statuses" mat-menu-item (click)="setTaskstatus(status.id)">
+                                    <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+                                        <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
+                                        <!-- <mat-icon
+                                class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+                                [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+                                    </span>
+                                </button>
+                            </mat-menu>
+                        </div>
+        
+                        <!-- location-->
+                        <div>
+                            <div class="font-medium">Location</div>
+                            <!-- Low -->
+                            <ng-container *ngFor="let location of locations; trackBy: trackByFn">
+                                <ng-container *ngIf="+location.id === +task2.location">
+                                    <div [ngStyle]="{'background-color': location.color + '80'}"
+                                        class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 dark:text-gray-100"
+                                        [matMenuTriggerFor]="locationMenu">
+                                        <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                            [svgIcon]="'heroicons_outline:location-marker'"></mat-icon>
+                                        <span class="ml-2 mr-1 text-md " style="color: #000;">{{location.name}}</span>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <mat-menu #locationMenu="matMenu">
+                                <!-- Low -->
+                                <button *ngFor="let location of locations" mat-menu-item (click)="setTaskLocation(location.id)">
+                                    <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+                                        <span class="font-medium" [ngStyle]="{'color': location.color}">{{location.name}}</span>
+                                        <!-- <mat-icon
+                            class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+                            [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+                                    </span>
+                                </button>
+                            </mat-menu>
+                        </div>
+        
+                    </div>
+                    <!-- raport -->
+                    <div class="mt-8">
+                        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                            <mat-label>Task raport</mat-label>
+                            <textarea matInput [formControlName]="'raport'" [spellcheck]="false" matTextareaAutosize
+                                #raportField></textarea>
+                        </mat-form-field>
+                    </div>
+                    <!-- restrictions -->
+                    <div class="mt-5">
+                        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                            <mat-label>Task restrictions</mat-label>
+                            <textarea matInput [formControlName]="'restrictions'" [spellcheck]="false" matTextareaAutosize
+                                #restrictionsField></textarea>
+                        </mat-form-field>
+                    </div>
+                    <!-- description -->
+                    <div class="mt-5">
+                        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                            <mat-label>Task description</mat-label>
+                            <textarea matInput [formControlName]="'description'" [spellcheck]="false" matTextareaAutosize
+                                #descriptionField></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-5">
+                        <button mat-raised-button color="primary" (click)="changeSubmitEventTask()">
+                            <span class="mr-3">
+                                Save
+                            </span>
+                        </button>
+                    </div>
+                </form>
             </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Logs"> 
+        <div class="flex flex-auto">
+            <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
+                <app-tasks-logs></app-tasks-logs>
+            </div>
+        </div>    
+    </mat-tab>
+  </mat-tab-group>
 
-        </div>
-        <!-- raport -->
-        <div class="mt-8">
-            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-                <mat-label>Task raport</mat-label>
-                <textarea matInput [formControlName]="'raport'" [spellcheck]="false" matTextareaAutosize
-                    #raportField></textarea>
-            </mat-form-field>
-        </div>
-        <!-- restrictions -->
-        <div class="mt-5">
-            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-                <mat-label>Task restrictions</mat-label>
-                <textarea matInput [formControlName]="'restrictions'" [spellcheck]="false" matTextareaAutosize
-                    #restrictionsField></textarea>
-            </mat-form-field>
-        </div>
-        <!-- description -->
-        <div class="mt-5">
-            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-                <mat-label>Task description</mat-label>
-                <textarea matInput [formControlName]="'description'" [spellcheck]="false" matTextareaAutosize
-                    #descriptionField></textarea>
-            </mat-form-field>
-        </div>
-        <div class="mt-5">
-            <button mat-raised-button color="primary" (click)="changeSubmitEventTask()">
-                <span class="mr-3">
-                    Save
-                </span>
-            </button>
-        </div>
-        </form>
-</div>
+
