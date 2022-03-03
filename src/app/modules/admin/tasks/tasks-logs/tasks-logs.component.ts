@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
 import moment from 'moment';
-import { takeUntil } from 'rxjs';
+import { Observable, takeUntil } from 'rxjs';
 import { TasksService } from '../tasks.service';
 import { Task2, TaskLogs } from '../tasks.types';
 
@@ -12,27 +12,25 @@ import { Task2, TaskLogs } from '../tasks.types';
 })
 export class TasksLogsComponent implements OnInit {
   taskId: number;
-  taskLogsData: TaskLogs[];
+  taskLogsData$:Observable<TaskLogs[]>;
   constructor(private _tasksService: TasksService) { }
   test(){
     this._tasksService.taskById$
     .subscribe((task: Task2) => {
         this.taskId = task.id;
         console.log(this.taskId,'this.taskIdthis.taskIdthis.taskIdthis.taskId');
-        this._tasksService.getTasksLogs(this.taskId).subscribe(res=>{
-          console.log(res,'rerererererererererre');
-          this.taskLogsData = res;
-        })
+        this.taskLogsData$ =  this._tasksService.getTasksLogs(this.taskId);
     });
   }
-
+  
+  
   ngOnInit(): void {
 
 
     // this._tasksService.getTasksLogs(this.taskId);
     this.test();
 
-
+   
     // this._tasksService.tagsLogs$.subscribe((res: TaskLogs[])=>{
     //     this.taskLogsData = res;
     //     console.log(res, 'dasdasdasdasdasdasd');

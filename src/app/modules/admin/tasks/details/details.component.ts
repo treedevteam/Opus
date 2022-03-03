@@ -2,7 +2,7 @@ import { Priorities } from './../../priorities/model/priorities';
 import { TasksService } from './../tasks.service';
 import { TasksListComponent } from './../list/list.component';
 import { Tag, Task, Task2 } from './../tasks.types';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -16,6 +16,7 @@ import { Departments } from '../../pages/departaments/model/departments.model';
 import { Status } from '../../statuses/model/status';
 import { Location } from '../../locations/model/location';
 import { Users } from '../../users/model/users';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
     selector       : 'tasks-details',
@@ -24,15 +25,14 @@ import { Users } from '../../users/model/users';
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
+export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
 {
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
     @ViewChild('usersPanelOrigin') private _usersPanelOrigin: ElementRef;
     @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
     @ViewChild('usersPanel') private _usersPanel: TemplateRef<any>;
     @ViewChild('titleField') private _titleField: ElementRef;
-
-
+    @ViewChild("logsTab", { static: false }) demo3Tab: MatTabGroup;
     departments: Departments[];
     priorities: Priorities[];
     statuses: Status[];
@@ -54,7 +54,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _tagsPanelOverlayRef: OverlayRef;
     private _usersPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    loadingSpinerUpdate=false;
 
     /**
      * Constructor
@@ -72,17 +71,16 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     )
     {
     }
-
+    
+    
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
-
     /**
      * On init
      */
     ngOnInit(): void
     {
-
 
         // Open the drawer
         this._tasksListComponent.matDrawer.open();
@@ -108,6 +106,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         this._tasksService.departments$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((departmetns: Departments[]) => {
+            console.log(departmetns, "Deaprtments");
+            
             this.departments = departmetns;
             this.filteredTags2 = departmetns;
             // Mark for check
@@ -229,6 +229,15 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 this._titleField.nativeElement.focus();
             });
     }
+    ngOnChanges(): void {
+        console.log('changed');
+        
+        const tabGroup = this.demo3Tab;
+        if (!tabGroup || !(tabGroup instanceof MatTabGroup)) return;
+
+        const tabCount = tabGroup._tabs.length;
+        tabGroup.selectedIndex = 0;
+    }
 
     /**
      * After view init
@@ -303,6 +312,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         completedFormControl.setValue(!completedFormControl.value);
     }
 
+    
     /**
      * Open tags panel
      */
@@ -365,6 +375,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             }
         });
     }
+    addItem(newItem: string) {
+        alert('Detalis comp');
+      }
 
     openUsersPanel(): void
     {

@@ -59,13 +59,13 @@ export class TasksService
     );
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getTasksLogsData$ = this._httpClient.get<TaskLogs[]>('https://opus.devtaktika.com/api/logs/').pipe(
-        map((data: any): TaskLogs[] => {
-            this._tagsLogs.next(data);
-            return data;
-        }),
-         shareReplay(1),
-    );
+    // getTasksLogsData$ = this._httpClient.get<TaskLogs[]>('https://opus.devtaktika.com/api/logs/').pipe(
+    //     map((data: any): TaskLogs[] => {
+    //         this._tagsLogs.next(data);
+    //         return data;
+    //     }),
+    //      shareReplay(1),
+    // );
     // eslint-disable-next-line @typescript-eslint/member-ordering
     getTasksData$ = this._httpClient.get<TaskWithDepartment[]>('https://opus.devtaktika.com/api/tasks/departments').pipe(
         map((data: any): TaskWithDepartment[] => {
@@ -263,8 +263,7 @@ export class TasksService
     getTasksLogs(id): Observable<TaskLogs[]> {
         return this._httpClient.get<TaskLogs[]>('https://opus.devtaktika.com/api/logs/'+ id).pipe(
             map((data: any): TaskLogs[] => {
-                this._tagsLogs.next(data.data);
-                console.log(data,'https://opus.devtaktika.com/api/logs/');
+                this._tagsLogs.next(data.data)
                 return data.data;
             }),
              shareReplay(1),
@@ -504,7 +503,6 @@ export class TasksService
                                take(1),
                                filter(item => item && item.id === id),
                                tap(() => {
-
                                    // Update the task if it's selected
                                    this._task.next(updatedTask);
 

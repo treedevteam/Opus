@@ -20,7 +20,7 @@ export class TasksListComponent implements OnInit, OnDestroy
 {
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
 
-     getDepartments: Departments[];
+    getDepartments: Departments[];
     drawerMode: 'side' | 'over';
     selectedTask: Task;
     tags: Tag[];

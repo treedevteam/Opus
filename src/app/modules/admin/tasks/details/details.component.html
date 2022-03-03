@@ -1,7 +1,7 @@
 <div class="flex flex-col flex-auto p-6 pt-5 sm:p-8 sm:pt-10 w-full ">
-     <!-- Header -->
-     <div class="flex items-center justify-between -mt-3 -ml-4">
-        
+    <!-- Header -->
+    <div class="flex items-center justify-between -mt-3 -ml-4">
+
         <!-- Mark as ... button -->
         <button class="pr-4 pl-3.5" mat-button (click)="toggleCompleted()">
 
@@ -37,28 +37,24 @@
     </div>
     <mat-divider class="mt-6"></mat-divider>
 </div>
-<mat-tab-group class="mt-5">
-    <mat-tab label="Edit Task" class="overflow-y-auto "> 
+<mat-tab-group class="mt-5" #logsTab>
+    <mat-tab label="Edit Task" class="overflow-y-auto ">
         <div class="flex flex-auto">
-            <div class="flex flex-col flex-auto p-6 pt-5 sm:p-8 sm:pt-10 w-full ">
+            <div class="flex flex-col flex-auto  pt-0 sm:p-2 sm:pt-0 w-full ">
                 <form class="" [formGroup]="taskForm">
-        
-                   
-        
                     <ng-container>
                         <div class="w-12 h-1 mt-4 "></div>
                         <div class="flex items-center -space-x-1.5">
                             <ng-container>
                                 <img class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover mr-5"
-                                    [src]="'https://opus.devtaktika.com/storage/' + task2.user.user_image" alt="Member avatar"
-                                    [matTooltip]="task2.user.name" [matTooltipPosition]="'above'">
+                                    [src]="'https://opus.devtaktika.com/storage/' + task2.user.user_image"
+                                    alt="Member avatar" [matTooltip]="task2.user.name" [matTooltipPosition]="'above'">
                                 <span>- Created by</span>
-        
+
                             </ng-container>
                         </div>
                     </ng-container>
                     <!-- Members -->
-        
                     <ng-container class="mt-5" *ngIf="task2.users_assigned?.length">
                         <div class="w-12 h-1 mt-6 border-t-2"></div>
                         <div class="flex items-center mt-6 -space-x-1.5">
@@ -86,7 +82,7 @@
                                 [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                             <span class="ml-2 mr-1 text-md " style="color: #000;">Assign users</span>
                         </div>
-        
+
                         <!-- Tags panel -->
                         <ng-template #usersPanel>
                             <div class="w-60 rounded border shadow-md bg-card">
@@ -97,11 +93,13 @@
                                         <div class="ml-2">
                                             <input class="w-full min-w-0 py-1 border-0" type="text"
                                                 placeholder="Enter user name" (input)="filterDepartments($event)"
-                                                (keydown)="filterTagsInputKeyDown($event)" [maxLength]="30" #newTagInput>
+                                                (keydown)="filterTagsInputKeyDown($event)" [maxLength]="30"
+                                                #newTagInput>
                                         </div>
                                     </div>
                                     <button class="ml-1" mat-icon-button (click)="toggleTagsEditMode()">
-                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'">
+                                        </mat-icon>
                                     </button>
                                 </div>
                                 <div class="flex flex-col max-h-64 py-2 border-t">
@@ -121,7 +119,8 @@
                     </ng-container>
                     <mat-menu #usersMenu="matMenu">
                         <!-- Low -->
-                        <button *ngFor="let priority of priorities" mat-menu-item (click)="setTaskPriority(priority.id)">
+                        <button *ngFor="let priority of priorities" mat-menu-item
+                            (click)="setTaskPriority(priority.id)">
                             <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
                                 <span class="font-medium" [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
                                 <!-- <mat-icon
@@ -138,30 +137,29 @@
                                 #titleField></textarea>
                         </mat-form-field>
                     </div>
-        
+
                     <!-- DEPARTMETNS -->
                     <div class="mt-8">
                         <div class="font-medium mb-1.5">Departments</div>
                         <div class="flex flex-wrap items-center -m-1.5">
-                            <!-- Tags -->
                             <div
                                 class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
                                 <span class="text-md font-medium whitespace-nowrap">{{getNameOfDepartmentbyId()}}</span>
                             </div>
                         </div>
                     </div>
-        
-        
-        
-        
+
+
+
+
                     <!-- Priority and Due date -->
                     <div class="flex flex-wrap items-center mt-8">
-        
+
                         <!-- Priority -->
                         <div>
                             <div class="font-medium">Priority</div>
-        
-        
+
+
                             <!-- Low -->
                             <ng-container *ngFor="let pri of priorities; trackBy: trackByFn">
                                 <ng-container *ngIf="+pri.id === +task2.priority">
@@ -187,7 +185,8 @@
                                 <button *ngFor="let priority of priorities" mat-menu-item
                                     (click)="setTaskPriority(priority.id)">
                                     <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
-                                        <span class="font-medium" [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
+                                        <span class="font-medium"
+                                            [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
                                         <!-- <mat-icon
                                         class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
                                         [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
@@ -195,17 +194,20 @@
                                 </button>
                             </mat-menu>
                         </div>
-        
+
                         <!-- Due date -->
                         <div class="ml-6">
                             <div class="font-medium">Due date</div>
                             <div class="relative flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer"
                                 [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !task2.deadline,
                                         'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task2.deadline && !isOverdue(),
-                                        'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task2.deadline && isOverdue()}" (click)="dueDatePicker.open()">
-                                <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+                                        'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task2.deadline && isOverdue()}"
+                                (click)="dueDatePicker.open()">
+                                <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:calendar'">
+                                </mat-icon>
                                 <span class="ml-2 text-md font-medium">
-                                    <ng-container *ngIf="task2.deadline">{{task2.deadline | date:'longDate'}}</ng-container>
+                                    <ng-container *ngIf="task2.deadline">{{task2.deadline | date:'longDate'}}
+                                    </ng-container>
                                     <ng-container *ngIf="!task2.deadline">Not set</ng-container>
                                 </span>
                                 <mat-form-field
@@ -219,20 +221,21 @@
                                             matDatepickerCancel>Clear
                                         </button> -->
                                             <button class="" mat-flat-button [color]="'primary'"
-                                                (click)="setDeadline(taskForm.get('deadline').value)" matDatepickerApply>Select
+                                                (click)="setDeadline(taskForm.get('deadline').value)"
+                                                matDatepickerApply>Select
                                             </button>
                                         </mat-datepicker-actions>
                                     </mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
-        
+
                     </div>
-        
-        
+
+
                     <!-- status and location -->
                     <div class="flex flex-wrap items-center mt-8">
-        
+
                         <!-- status-->
                         <div class="mr-5">
                             <div class="font-medium">Status</div>
@@ -258,9 +261,11 @@
                             </ng-container>
                             <mat-menu #stautsMenu="matMenu">
                                 <!-- Low -->
-                                <button *ngFor="let status of statuses" mat-menu-item (click)="setTaskstatus(status.id)">
+                                <button *ngFor="let status of statuses" mat-menu-item
+                                    (click)="setTaskstatus(status.id)">
                                     <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
-                                        <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
+                                        <span class="font-medium"
+                                            [ngStyle]="{'color': status.color}">{{status.name}}</span>
                                         <!-- <mat-icon
                                 class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
                                 [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
@@ -268,7 +273,7 @@
                                 </button>
                             </mat-menu>
                         </div>
-        
+
                         <!-- location-->
                         <div>
                             <div class="font-medium">Location</div>
@@ -286,9 +291,11 @@
                             </ng-container>
                             <mat-menu #locationMenu="matMenu">
                                 <!-- Low -->
-                                <button *ngFor="let location of locations" mat-menu-item (click)="setTaskLocation(location.id)">
+                                <button *ngFor="let location of locations" mat-menu-item
+                                    (click)="setTaskLocation(location.id)">
                                     <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
-                                        <span class="font-medium" [ngStyle]="{'color': location.color}">{{location.name}}</span>
+                                        <span class="font-medium"
+                                            [ngStyle]="{'color': location.color}">{{location.name}}</span>
                                         <!-- <mat-icon
                             class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
                             [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
@@ -296,7 +303,7 @@
                                 </button>
                             </mat-menu>
                         </div>
-        
+
                     </div>
                     <!-- raport -->
                     <div class="mt-8">
@@ -310,16 +317,16 @@
                     <div class="mt-5">
                         <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
                             <mat-label>Task restrictions</mat-label>
-                            <textarea matInput [formControlName]="'restrictions'" [spellcheck]="false" matTextareaAutosize
-                                #restrictionsField></textarea>
+                            <textarea matInput [formControlName]="'restrictions'" [spellcheck]="false"
+                                matTextareaAutosize #restrictionsField></textarea>
                         </mat-form-field>
                     </div>
                     <!-- description -->
                     <div class="mt-5">
                         <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
                             <mat-label>Task description</mat-label>
-                            <textarea matInput [formControlName]="'description'" [spellcheck]="false" matTextareaAutosize
-                                #descriptionField></textarea>
+                            <textarea matInput [formControlName]="'description'" [spellcheck]="false"
+                                matTextareaAutosize #descriptionField></textarea>
                         </mat-form-field>
                     </div>
                     <div class="mt-5">
@@ -333,13 +340,11 @@
             </div>
         </div>
     </mat-tab>
-    <mat-tab label="Logs"> 
+    <mat-tab label="Logs">
         <div class="flex flex-auto">
             <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
-                <app-tasks-logs></app-tasks-logs>
+                <app-tasks-logs [id]="task2.id"></app-tasks-logs>
             </div>
-        </div>    
+        </div>
     </mat-tab>
-  </mat-tab-group>
-
-
+</mat-tab-group>
