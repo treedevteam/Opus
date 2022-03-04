@@ -286,8 +286,10 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     getNameOfDepartmentbyId(): string{
-        debugger;
         const id = this.taskForm.get('departments').value;
+        console.log(id,'this.departmentsid');
+        console.log(this.departments,"this.departments");
+        
         const item = this.departments.find(r => +r.id === +id).name;
        return item;
    }
