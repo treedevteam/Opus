@@ -14,6 +14,8 @@ export class TasksLogsComponent implements OnInit {
   taskId: number;
   taskLogsData$:Observable<TaskLogs[]>;
   constructor(private _tasksService: TasksService) { }
+
+  
   test(){
     this._tasksService.taskById$
     .subscribe((task: Task2) => {

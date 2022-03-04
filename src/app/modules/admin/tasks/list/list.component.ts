@@ -9,6 +9,7 @@ import { catchError, combineLatest, EMPTY, filter, fromEvent, map, shareReplay, 
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { Departments } from '../../pages/departaments/model/departments.model';
+import moment from 'moment';
 
 @Component({
     selector       : 'tasks-list',
@@ -21,6 +22,16 @@ export class TasksListComponent implements OnInit, OnDestroy
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
 
     getDepartments: Departments[];
+
+    DeaprtmentsData$ = this._tasksService.departments$;
+    statusData$ = this._tasksService.getStatus$;
+    
+
+    teststtststst:any[];
+   
+
+
+
     drawerMode: 'side' | 'over';
     selectedTask: Task;
     tags: Tag[];
@@ -40,10 +51,6 @@ export class TasksListComponent implements OnInit, OnDestroy
         this._tasksService.taskUpdated$,
         this._tasksService.deletedTask$
     ],(g,p,u,d) => {
-        console.log(g);
-        console.log(p,'p');
-        console.log(u,'u');
-        console.log(d,'d');
          if(p){
              p.forEach(element => {
              const departments_index =  g.findIndex(g => g.id === +element.departments)
@@ -61,7 +68,24 @@ export class TasksListComponent implements OnInit, OnDestroy
        return g;
      });
 
-
+     tasksWithStatusPriority$ = combineLatest([
+        this.tasksData$,
+        this._tasksService.getStatus$,
+        this._tasksService.getPriorities$
+      ]).pipe(
+        map(([tasksDepartment, statuses, priority]) =>
+        tasksDepartment.map(taskDepartment =>({
+            ...taskDepartment,
+            tasks: [
+                ...taskDepartment.tasks.map(res=>({
+                    ...res,
+                    status: statuses.find(s => +res.status === +s.id),
+                    priority: priority.find(p => +res.priority === +p.id),
+                })),
+            ]
+        }))),
+        shareReplay(1)
+      );
 
     // tasksaks = this._tasksService.tasksWithDepartment$;
 
@@ -91,12 +115,6 @@ export class TasksListComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        // this._tasksService.getTaskById2('2');
-
-        this._tasksService.getDepartmentsData$.subscribe((res: Departments[])=>{
-            // this.getDepartments = res;
-        });
-
         //Get the departments
         // Get the tags
         this._tasksService.tags$
@@ -203,7 +221,9 @@ export class TasksListComponent implements OnInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
-
+    isOverdue(data): boolean {
+        return moment(data, moment.ISO_8601).isBefore(moment(), 'days');
+    }
     /**
      * On backdrop clicked
      */

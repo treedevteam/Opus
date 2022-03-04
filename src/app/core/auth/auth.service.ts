@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, switchMap, throwError, tap, mapTo } from 'rxjs';
+import { catchError, Observable, of, switchMap, throwError, tap, mapTo, shareReplay } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 
@@ -125,8 +125,9 @@ export class AuthService
             switchMap((res:
                 any)=>{
                 localStorage.setItem('user_info', JSON.stringify(res.data));
+
                 return of(true);
-            })
+            }),shareReplay(1),
         );
         }
 

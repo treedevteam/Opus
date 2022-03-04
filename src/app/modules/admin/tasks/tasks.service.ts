@@ -42,7 +42,7 @@ export class TasksService
 
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getDepartmentsData$ = this._httpClient.get<Departments[]>('https://opus.devtaktika.com/api/departments/all').pipe(
+    getDepartmentsData$ = this._httpClient.get<Departments[]>('https://opus.devtaktika.com/api/departments').pipe(
         map((data: any): Departments[] => {
             this._departments.next(data);
             return data;
@@ -77,7 +77,6 @@ export class TasksService
     // eslint-disable-next-line @typescript-eslint/member-ordering
     getPriorities$ = this._httpClient.get<Priorities[]>('https://opus.devtaktika.com/api/priorities').pipe(
         map((data: any): Priorities[] => {
-
             this._priorities.next(data);
             return data;
         }),

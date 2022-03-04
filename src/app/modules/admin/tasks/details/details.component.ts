@@ -25,14 +25,13 @@ import { MatTabGroup } from '@angular/material/tabs';
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
+export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 {
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
     @ViewChild('usersPanelOrigin') private _usersPanelOrigin: ElementRef;
     @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
     @ViewChild('usersPanel') private _usersPanel: TemplateRef<any>;
     @ViewChild('titleField') private _titleField: ElementRef;
-    @ViewChild("logsTab", { static: false }) demo3Tab: MatTabGroup;
     departments: Departments[];
     priorities: Priorities[];
     statuses: Status[];
@@ -103,11 +102,10 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy, 
         });
 
         // Get the departmetns
-        this._tasksService.departments$
+        this._tasksService.getDepartmentsData$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((departmetns: Departments[]) => {
             console.log(departmetns, "Deaprtments");
-            
             this.departments = departmetns;
             this.filteredTags2 = departmetns;
             // Mark for check
@@ -142,7 +140,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy, 
             });
 
             // Get the priorities
-        this._tasksService.getPriorities$
+        this._tasksService.priorities$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((priorities: Priorities[]) => {
             this.priorities = priorities;
@@ -229,15 +227,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy, 
                 this._titleField.nativeElement.focus();
             });
     }
-    ngOnChanges(): void {
-        console.log('changed');
-        
-        const tabGroup = this.demo3Tab;
-        if (!tabGroup || !(tabGroup instanceof MatTabGroup)) return;
-
-        const tabCount = tabGroup._tabs.length;
-        tabGroup.selectedIndex = 0;
-    }
+  
 
     /**
      * After view init
@@ -296,6 +286,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy, 
     }
 
     getNameOfDepartmentbyId(): string{
+        debugger;
         const id = this.taskForm.get('departments').value;
         const item = this.departments.find(r => +r.id === +id).name;
        return item;

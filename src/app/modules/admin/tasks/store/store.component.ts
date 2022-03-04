@@ -273,7 +273,7 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getAssignedUsers(ids): Users[]{
-        return ids.map(res => this.usersList.find(x => x.id === res));
+        return ids.map(res => this.usersList.find(x => +x.id === +res));
     }
     /**
      * Open tags panel
@@ -604,8 +604,10 @@ openUsersPanel(): void
 
     setDeadline(time: any): void {
         // Set the value
+        console.log(time._i);
+        
         this.storeTask.deadline = time._d;
-        const convert = time._i.year + "/" + time._i.month + "/" + time._i.date + "  00:00"
+        const convert = time._i.year + "/" + (time._i.month + 1) + "/" + time._i.date + "  00:00"
         this.taskForm.get('deadline').setValue(convert);
     }
 
