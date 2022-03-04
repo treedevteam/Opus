@@ -53,6 +53,8 @@ export class TasksService
     getUsersData$ = this._httpClient.get<Users[]>('https://opus.devtaktika.com/api/users').pipe(
         map((data: any): Users[] => {
             this._users.next(data);
+            console.log(data);
+            
             return data;
         }),
          shareReplay(1),
@@ -70,6 +72,7 @@ export class TasksService
     getTasksData$ = this._httpClient.get<TaskWithDepartment[]>('https://opus.devtaktika.com/api/tasks/departments').pipe(
         map((data: any): TaskWithDepartment[] => {
             this._mytasks.next(data.data);
+            console.log(data.data);
             return data.data;
         }),
          shareReplay(1),

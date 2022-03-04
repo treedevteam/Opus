@@ -71,9 +71,10 @@ export class TasksListComponent implements OnInit, OnDestroy
      tasksWithStatusPriority$ = combineLatest([
         this.tasksData$,
         this._tasksService.getStatus$,
-        this._tasksService.getPriorities$
+        this._tasksService.getPriorities$,
+        this._tasksService.getUsersData$
       ]).pipe(
-        map(([tasksDepartment, statuses, priority]) =>
+        map(([tasksDepartment, statuses, priority,users]) =>
         tasksDepartment.map(taskDepartment =>({
             ...taskDepartment,
             tasks: [
@@ -81,6 +82,9 @@ export class TasksListComponent implements OnInit, OnDestroy
                     ...res,
                     status: statuses.find(s => +res.status === +s.id),
                     priority: priority.find(p => +res.priority === +p.id),
+                    users_assigned: res.users_assigned.map(u => (
+                        users.find(user => u === +user.id)
+                    ))
                 })),
             ]
         }))),
