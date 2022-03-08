@@ -52,7 +52,7 @@
 
                     </div>
                 </div>
-                <div>
+                <div style="min-width: 1000px;">
                     <ng-container
                         *ngFor="let task of this.tasksWithStatusPriority$ | async; let first = first; trackBy: trackByFn">
                         <div [id]="'task-' + 2"

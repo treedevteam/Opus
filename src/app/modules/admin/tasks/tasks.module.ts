@@ -58,7 +58,7 @@ import {MatTabsModule} from '@angular/material/tabs';
         FuseFindByKeyPipeModule,
         SharedModule,
         MatProgressSpinnerModule,
-        MatTabsModule
+        MatTabsModule,
     ],
     providers   : [
         {

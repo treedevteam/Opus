@@ -20,6 +20,7 @@ import { Users } from '../../users/model/users';
 @Component({
     selector: 'store-details',
     templateUrl: './store.component.html',
+    styleUrls      : ['./store.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -231,6 +232,15 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     closeDrawer(): Promise<MatDrawerToggleResult> {
         return this._tasksListComponent.matDrawer.close();
+    }
+
+    departmetnsCheck(user: any): boolean{
+      
+        if(this.taskForm.get('departments').value.includes(user)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -510,6 +520,7 @@ openUsersPanel(): void
     addTagToTask(tag: number): void {
         if(!this.storeTask.departments.includes(+tag)){
             this.storeTask.departments.push(+tag);
+            
         }else{
             this.storeTask.departments.splice(+this.storeTask.departments.indexOf(tag), 1);
         }

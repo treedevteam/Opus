@@ -16,7 +16,6 @@ import { Departments } from '../../pages/departaments/model/departments.model';
 import { Status } from '../../statuses/model/status';
 import { Location } from '../../locations/model/location';
 import { Users } from '../../users/model/users';
-import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
     selector       : 'tasks-details',
@@ -40,7 +39,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     filteredUsers: Users[];
     usersList: Users[];
     usersAssignedSelected: number[];
-
+    isXyzChecked = true; 
 
     tags: Tag[];
     tagsEditMode: boolean = false;
@@ -120,6 +119,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
+       
             // Get the statuses
         this._tasksService.getStatus$
         .pipe(takeUntil(this._unsubscribeAll))
@@ -186,7 +186,16 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
             // Get the task
             this.task2 = task;
-
+            console.log(this.task2,'this.task2');
+            
+            // this._tasksService.getUsersDepartment(+task.departments).pipe(takeUntil(this._unsubscribeAll))
+            // .subscribe((usersList: Users[]) => {
+            //     this.usersList = usersList;
+            //     console.log(this.usersList);
+                
+            //     // Mark for check
+            //     this._changeDetectorRef.markForCheck();
+            // });
 
             // Patch values to the form from the task
             this.taskForm.patchValue(task, {emitEvent: false});
@@ -194,6 +203,10 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
+
+       
+
+
 
         // Update task when there is a value change on the task form
         this.taskForm.valueChanges
@@ -287,9 +300,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
     getNameOfDepartmentbyId(): string{
         const id = this.taskForm.get('departments').value;
-        console.log(id,'this.departmentsid');
-        console.log(this.departments,"this.departments");
-        
         const item = this.departments.find(r => +r.id === +id).name;
        return item;
    }
@@ -305,7 +315,14 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         completedFormControl.setValue(!completedFormControl.value);
     }
 
-    
+    userCheck(user: any): boolean{
+      
+        if(this.task2.users_assigned.includes(user)){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * Open tags panel
      */
@@ -599,6 +616,10 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     addUsersToTask(userId: number): void{
+        this._tasksService.assignUserTask(this.task2.id, userId).subscribe(res=>{
+            console.log(res);
+        })
+
         const usersAssigned = this.taskForm.get('users_assigned').value;
         const index = usersAssigned.findIndex(object => +object === +userId);
         if (index === -1) {
@@ -606,8 +627,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         }else{
             usersAssigned.splice(index,1);
         }
-       
-        
         this.taskForm.get('users_assigned').patchValue(usersAssigned);
         console.log(this.taskForm.get('users_assigned').value);
         

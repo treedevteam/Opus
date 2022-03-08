@@ -103,7 +103,7 @@ export class TasksService
         }),
          shareReplay(1),
     );
-
+    
 
 
     setNullBehaviourSubject(): void{
@@ -204,6 +204,16 @@ export class TasksService
         );
     }
 
+    getUsersDepartment(depId: number): Observable<Users[]>
+    {
+        return this._httpClient.get<Users[]>('https://opus.devtaktika.com/api/users/department/' + depId).pipe(
+            map((data: any): Users[] => {
+                return data.data;
+            }),
+        );
+    }
+   
+
     // getDepartments(): Observable<Departments[]>
     // {
     //     return this._httpClient.get<Departments[]>('https://opus.devtaktika.com/api/departments').pipe(
@@ -245,6 +255,14 @@ export class TasksService
         );
     }
 
+    assignUserTask(taskId: number, userId: number): Observable<void>{
+        return this._httpClient.post<any>('https://opus.devtaktika.com/api/task/'+ taskId+'/'+ userId, null).pipe(
+            map((data: any): any => {
+                this._tasksupdated.next(data.data);
+                return data.data;
+            }),
+        );
+    }
     updateTaskservice(form: any, id: number): Observable<Task2>{
         return this._httpClient.post<Task2>('https://opus.devtaktika.com/api/task/' + id + '/update/admin', form).pipe(
             // eslint-disable-next-line arrow-body-style
