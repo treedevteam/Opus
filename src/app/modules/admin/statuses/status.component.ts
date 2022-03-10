@@ -5,6 +5,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { AddOrUpdate } from '../pages/departaments/model/add-or-update';
 import { Status } from './model/status';
 import { StatusService } from './services/status.service';
+import { combineLatest } from 'rxjs';
 const ELEMENT_DATA: Location[] = [
 ];
 @Component({
@@ -15,6 +16,8 @@ const ELEMENT_DATA: Location[] = [
 export class StatusComponent implements OnInit {
     displayedColumns: string[] = ['position', 'name', 'color','edit', 'delete'];
     dataSource = ELEMENT_DATA;
+
+   
     constructor(
         private _statusService: StatusService,
         private _fuseConfirmationService: FuseConfirmationService,
@@ -22,24 +25,35 @@ export class StatusComponent implements OnInit {
         private _router: Router
     ) { }
 
+    getstatuses$ = combineLatest([
+        this._statusService.getStatuses$,
+        this._statusService.addedStatus$,
+        this._statusService.updatedStatus$,
+        this._statusService.deletedStatus$
+    ],(g,p,u,d) => {
+        console.log(g,'g');
+        console.log(p,'p');
+        console.log(u,'u');
+        console.log(d,'d');
+         if(p){
+             g.unshift(p);
+         }else if(u){
+             const index = g.findIndex(x => x.id === u.id);
+             g.splice(index,1,u);
+         }else if(d){
+            const index = g.findIndex(x => x.id === d);
+            if (index > -1) {
+                g.splice(index, 1);
+              }
+         }
+       return g;
+     });
+
     ngOnInit(): void {
-        this.getStatuses();
+       
     }
-    parentFunction(data: AddOrUpdate): void{
-        if(!data.isUpdate){
-            this.dataSource.unshift(data.data);
-            this.dataSource = [...this.dataSource];
-        }else{
-            this.getStatuses();
-        }
-    }
-    getStatuses(): any{
-        this._statusService._getStatus().subscribe((res: any)=>{
-            this.dataSource = res;
-        },(err: any)=>{
-            console.log(err);
-        });
-    }
+    
+  
 
     wcHexIsLight(color: any): string {
         const hex = color.replace('#', '');
@@ -61,8 +75,6 @@ export class StatusComponent implements OnInit {
         dialogRef.afterClosed().subscribe((result) => {
             if(result === 'confirmed'){
                 this._statusService._deleteStatus($id).subscribe((res: any)=>{
-                    this.dataSource.splice($rowNumber, 1);
-                    this.dataSource = [...this.dataSource];
                     this._snackBar.open('Deleted successfuly!', 'close', {
                         duration: 3000,
                     });
@@ -74,7 +86,7 @@ export class StatusComponent implements OnInit {
     }
 
     navigateTo(id: number): void{
-        this._router.navigate([`/status/${id}`]);
+        this._router.navigate([`/statuses/${id}`]);
 
     }
 }

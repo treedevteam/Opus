@@ -22,6 +22,8 @@ export class DepartamentsService {
     );
     constructor(private http: HttpClient) { }
 
+
+    //GET
     getAddedDepartment(): Observable<Departments>{
         return this.addDepartmentSource$.asObservable();
     }
@@ -32,10 +34,16 @@ export class DepartamentsService {
     getDeletedDepartment(): Observable<number>{
         return this.deletedDepartment$.asObservable();
     }
+
+
+
+
+    // New Department
     storeDepartment(form: any): Observable<Departments>{
         return this.http.post<Departments>('https://opus.devtaktika.com/api/department/store', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: Departments) => {
+                this.resetObserv();
                 this.addDepartmentSource$.next(data);
                 return data;
             }),
@@ -48,12 +56,11 @@ export class DepartamentsService {
     }
 
 
-
-
-
+    //Delete Department
     deleteDepartment($id: number): Observable<number>{
         return this.http.delete<Departments>('https://opus.devtaktika.com/api/department/delete/' + $id).pipe(
             map((dataa: Departments) => {
+                this.resetObserv();
                 this.deletedDepartment$.next($id);
                 return $id;
             }),
@@ -64,6 +71,8 @@ export class DepartamentsService {
          )
         );
     }
+
+    // Department by id
     _getDepartamentByid($id: number): Observable<Departments>{
         return this.http.get<Departments>('https://opus.devtaktika.com/api/department/' + $id).pipe(
             map((data: any) => data),
@@ -75,9 +84,12 @@ export class DepartamentsService {
         );
     }
 
+
+    //Update Departemtn
     _updateDepartment( $id: number , data: any): Observable<Departments>{
         return this.http.post<Departments>('https://opus.devtaktika.com/api/department/update/' + $id, data).pipe(
             map((dataa: Departments) => {
+                this.resetObserv();
                 this.updateDepartment$.next(dataa);
                 return data;
             }),
@@ -87,5 +99,11 @@ export class DepartamentsService {
            }
          )
         );
+    }
+
+    resetObserv(): any{
+        this.deletedDepartment$.next(null);
+        this.updateDepartment$.next(null);
+        this.addDepartmentSource$.next(null);
     }
 }

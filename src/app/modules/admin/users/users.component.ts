@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
+import { combineLatest, map, Observable, shareReplay } from 'rxjs';
 import { Users } from './model/users';
 import { UserService } from './services/user.service';
 import { AddOrUpdate } from '../pages/departaments/model/add-or-update';
 import { Router } from '@angular/router';
+
 const ELEMENT_DATA: Users[] = [
 ];
 @Component({
@@ -21,7 +22,42 @@ export class UsersComponent implements OnInit {
         private _snackBar: MatSnackBar,
         private _router: Router,
         ) { }
+        getUsers$ = combineLatest([
+            this._usersService.getUsers$,
+            this._usersService.getAddedUser$,
+            this._usersService.getUpdatedUsers$,
+            this._usersService.getDeletedUsers$
+        ],(g,p,u,d) => {
+                if(p){
+                    g.unshift(p);
+                }else if(u){
+                    const index = g.findIndex(x => x.id === u.id);
+                    g.splice(index,1,u);
+                }else if(d){
+                const index = g.findIndex(x => x.id === d);
+                if (index > -1) {
+                    g.splice(index, 1);
+                    }
+                }
+            return g;
+            });
 
+
+        usersWithRoleDep$ = combineLatest([
+            this.getUsers$,
+            this._usersService._getDepartments(),
+            this._usersService._getRoles()
+          ]).pipe(
+            map(([users, departments, roles]) =>
+            users.map(user =>({
+                ...user,
+                department_id: departments.find(s => +user.department_id === +s.id),
+                role_id: roles.find(p => +user.role_id === +p.id),
+            }))),
+            shareReplay(1)
+          );
+
+          
     ngOnInit(): void {
         this.getUsers();
     }

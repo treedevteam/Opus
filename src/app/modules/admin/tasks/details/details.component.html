@@ -288,6 +288,14 @@
                                     </div>
                                 </ng-container>
                             </ng-container>
+                            <ng-container *ngIf="!+task2.location">
+                                <div class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
+                                    [matMenuTriggerFor]="locationMenu">
+                                    <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                        [svgIcon]="'heroicons_outline:location-marker'"></mat-icon>
+                                    <span class="ml-2 mr-1 text-md " style="color: #000;">Choose status</span>
+                                </div>
+                            </ng-container>
                             <mat-menu #locationMenu="matMenu">
                                 <!-- Low -->
                                 <button *ngFor="let location of locations" mat-menu-item

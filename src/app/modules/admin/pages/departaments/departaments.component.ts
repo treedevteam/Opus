@@ -13,8 +13,6 @@ import { DepartamentsService } from './services/departaments.service';
 
 
 
-const ELEMENT_DATA: Departments[] = [
-];
 
 @Component({
   selector: 'app-departaments',
@@ -22,17 +20,12 @@ const ELEMENT_DATA: Departments[] = [
   styleUrls: ['./departaments.component.scss']
 })
 export class DepartamentsComponent implements OnInit {
-
-    //getDepartments$ = this.departmentService.getDepartments$;
-
     showAlert: boolean = false;
     editAssetId: number;
     displayedColumns: string[] = ['position', 'name', 'image', 'actions'];
-    dataSource: any;
-
     isUpdateMode: boolean = false;
     id: number;
-
+    
     getDepartments$ = combineLatest([
         this.departmentService.getDepartmentsData$,
         this.departmentService.getAddedDepartment(),
@@ -63,29 +56,13 @@ export class DepartamentsComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.getDepartments();
     }
-
-
-
     parentFunction(data: AddOrUpdate): void{
     }
 
     openSnackBar(message: string): void{
         this._snackBar.open(message, 'Undo');
     }
-
-
-
-    getDepartments(): void{
-
-        this.getDepartments$.subscribe((res: any)=>{
-            this.dataSource = res;
-        },(err: any)=>{
-            console.log(err);
-        });
-    }
-
     deleteDepartment(id: number, rowIndex: number): void{
         const dialogRef = this._fuseConfirmationService.open();
         // Subscribe to afterClosed from the dialog reference
@@ -99,7 +76,6 @@ export class DepartamentsComponent implements OnInit {
             }
         });
     }
-
     navigateTo(id: number): void{
         this._router.navigate([`/pages/departments/${id}`]);
         this.isUpdateMode = true;

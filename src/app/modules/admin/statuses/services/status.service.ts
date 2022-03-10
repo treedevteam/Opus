@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable } from 'rxjs';
+import { catchError, map, Observable, BehaviorSubject } from 'rxjs';
 import { Status } from '../model/status';
 
 @Injectable({
@@ -8,11 +8,42 @@ import { Status } from '../model/status';
 })
 export class StatusService {
 
+  private addedStatus = new BehaviorSubject<Status>(null);
+  private updateStatus = new BehaviorSubject<Status>(null);
+  private deletedStatus = new BehaviorSubject<number>(null);
+
   constructor(private http: HttpClient) { }
+  getStatuses$ = this.http.get<Status[]>('https://opus.devtaktika.com/api/statuses').pipe(
+    map((data: any) :Status[] => data),
+   catchError((err) => {
+     console.error(err);
+     throw err;
+   }
+ )
+);
+
+get addedStatus$(): Observable<Status>
+{
+    return this.addedStatus.asObservable();
+}
+
+get updatedStatus$(): Observable<Status>
+{
+    return this.updateStatus.asObservable();
+}
+
+get deletedStatus$(): Observable<number>
+{
+    return this.deletedStatus.asObservable();
+}
 
 _addStatus(data: any): Observable<Status>{
     return this.http.post<Status>('https://opus.devtaktika.com/api/status/store', data).pipe(
-        map((res: any) => res),
+        map((res: any) => {
+          this.resetObserv();
+          this.addedStatus.next(res);
+          return res;
+        }),
        catchError((err) => {
          console.error(err);
          throw err;
@@ -44,7 +75,11 @@ _addStatus(data: any): Observable<Status>{
 
   _deleteStatus($id): Observable<Status>{
     return this.http.delete<Status>('https://opus.devtaktika.com/api/status/delete/'+$id).pipe(
-        map((data: any) => data),
+        map((data: any) => {
+          this.resetObserv();
+          this.deletedStatus.next($id);
+          return data;
+        }),
        catchError((err) => {
          console.error(err);
          throw err;
@@ -55,7 +90,11 @@ _addStatus(data: any): Observable<Status>{
 
   _updateStatus( datas: Status, $id: number,): Observable<Status>{
     return this.http.post<Status>('https://opus.devtaktika.com/api/status/update/'+$id, datas).pipe(
-        map((data: any) => data),
+        map((data: any) => {
+          this.resetObserv();
+          this.updateStatus.next(data);
+          return data;
+        }),
        catchError((err) => {
          console.error(err);
          throw err;
@@ -63,4 +102,10 @@ _addStatus(data: any): Observable<Status>{
      )
     );
   }
+
+  resetObserv(): any{
+    this.addedStatus.next(null);
+    this.updateStatus.next(null);
+    this.deletedStatus.next(null);
+}
 }

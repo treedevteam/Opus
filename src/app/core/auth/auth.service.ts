@@ -141,6 +141,7 @@ export class AuthService
         localStorage.removeItem('user_info');
         // Set the authenticated flag to false
         this._authenticated = false;
+        
      }
 
     /**

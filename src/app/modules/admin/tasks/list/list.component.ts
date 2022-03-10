@@ -53,8 +53,10 @@ export class TasksListComponent implements OnInit, OnDestroy
     ],(g,p,u,d) => {
          if(p){
              p.forEach(element => {
-             const departments_index =  g.findIndex(g => g.id === +element.departments)
-             g[departments_index].tasks.unshift(element);
+             const departments_index =  g.findIndex(g => g.id === +element.departments);
+             if(departments_index > -1){
+                 g[departments_index].tasks.unshift(element);
+             }
              });
          }else if(u){
             const departments_index =  g.findIndex(g => g.id === +u.departments)
@@ -62,8 +64,13 @@ export class TasksListComponent implements OnInit, OnDestroy
              g[departments_index].tasks.splice(updatedTaskId,1,u);
          }else if(d){
             const departments_index =  g.findIndex(g => g.id === +d.departments)
+            console.log( g[departments_index].tasks);
+
+            
             const deletedTask = g[departments_index].tasks.findIndex(t => t.id === +d.id)
-            g[departments_index].tasks.splice(deletedTask,1);
+            if(deletedTask > -1){
+                g[departments_index].tasks.splice(deletedTask,1);
+            }
          }
        return g;
      });

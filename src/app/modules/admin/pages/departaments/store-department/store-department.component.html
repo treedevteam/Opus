@@ -12,7 +12,7 @@
                     <div class="text-wrapper">
                         <div class="centered">
 
-                            <input type="file" name="file" id="file" (change)="onFileChange($event.target.files)">
+                            <input type="file" name="file" id="file" [formControlName]="'image'" (change)="onFileChange($event.target.files)">
                             <label for="file"><span class="textLink"> <mat-icon svgIcon="heroicons_outline:cloud-upload"></mat-icon>Select department image</span> or Drop it here!</label>
                         </div>
                     </div>
