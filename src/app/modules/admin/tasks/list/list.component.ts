@@ -14,6 +14,7 @@ import moment from 'moment';
 @Component({
     selector       : 'tasks-list',
     templateUrl    : './list.component.html',
+    styleUrls      : ['./list.component.css'],
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -64,9 +65,6 @@ export class TasksListComponent implements OnInit, OnDestroy
              g[departments_index].tasks.splice(updatedTaskId,1,u);
          }else if(d){
             const departments_index =  g.findIndex(g => g.id === +d.departments)
-            console.log( g[departments_index].tasks);
-
-            
             const deletedTask = g[departments_index].tasks.findIndex(t => t.id === +d.id)
             if(deletedTask > -1){
                 g[departments_index].tasks.splice(deletedTask,1);

@@ -103,7 +103,7 @@
                                         </ng-container>
                                         <!-- Users Assign -->
                                         <!-- Due date -->
-                                        <div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full "
+                                        <div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
                                             [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !tas.deadline,
                                                     'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': tas.deadline && !isOverdue(tas.deadline),
                                                     'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': tas.deadline && isOverdue(tas.deadline)}">
@@ -117,21 +117,26 @@
                                         </div>
                                         <!-- Priority -->
                                         <div [ngStyle]="{'background-color': tas.priority.color + '80'}"
-                                            class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full  text-gray-800 dark:text-gray-100"
+                                            class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full  text-gray-800 dark:text-gray-100 priority_class"
                                             *ngIf="tas.priority">
                                             <mat-icon class="icon-size-5 text-current" style="color: #000;"
                                                 [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
-                                            <span class="ml-2 mr-1 text-md "
-                                                style="color: #000;">{{tas.priority.name}}</span>
+                                                <div class="flex-auto mr-2 truncate">
+                                                    <span class="ml-2 mr-1 text-md" style="color: #000;">{{tas.priority.name}}</span>
+                                                </div>
+                                            
                                         </div>
                                         <!-- Priority -->
                                         <!-- Status -->
                                         <div [ngStyle]="{'background-color': tas.status.color + '80'}"
-                                            class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full text-gray-800 dark:text-gray-100"
+                                            class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full text-gray-800 dark:text-gray-100 priority_class"
                                             *ngIf="tas.status">
                                             <mat-icon class="icon-size-5 text-current" style="color: #000;"
                                                 [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
+                                                <div class="flex-auto mr-2 truncate">
+
                                             <span class="ml-2 mr-1 text-md" style="color: #000;">{{tas.status.name}}</span>
+                                            </div>
                                         </div>
                                         <!-- Status -->
                                     </div>
