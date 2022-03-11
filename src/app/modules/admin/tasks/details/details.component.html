@@ -62,7 +62,7 @@
                                 *ngFor="let member of getAssignedUsers(task2.users_assigned).slice(0, 5); trackBy: trackByFn">
                                 <img [matTooltip]="member.name" [matTooltipPosition]="'above'"
                                     class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                    [src]="'https://opus.devtaktika.com/storage/' + member.image" alt="Member avatar">
+                                    [src]="'https://opus.devtaktika.com/storage/' + member.user_image" alt="Member avatar">
                             </ng-container>
                             <ng-container *ngIf="task2.users_assigned.length > 5">
                                 <div
@@ -112,6 +112,7 @@
                                             <div class="ml-1">{{tag.name}}</div>
                                         </div>
                                     </ng-container>
+                                    <ng-container *ngIf="filteredUsers?.length === 0" class="pl-3">No result</ng-container>
                                 </div>
                             </div>
                         </ng-template>
@@ -138,15 +139,16 @@
                     </div>
 
                     <!-- DEPARTMETNS -->
-                    <div class="mt-8">
+                    <ng-template *ngIf="usersList">
                         <div class="font-medium mb-1.5">Departments</div>
-                        <div class="flex flex-wrap items-center -m-1.5">
-                            <div
-                                class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
-                                <span class="text-md font-medium whitespace-nowrap">{{getNameOfDepartmentbyId()}}</span>
+                            <div class="flex flex-wrap items-center -m-1.5">
+                                <div
+                                    class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                    <span class="text-md font-medium whitespace-nowrap">{{getNameOfDepartmentbyId()}}</span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                    </ng-template>
+                        
 
 
 

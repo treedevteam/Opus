@@ -112,13 +112,14 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
 
         // Get the departmetns
-        this._tasksService.getUsersData$
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((usersList: Users[]) => {
-            this.usersList = usersList;
-            // Mark for check
-            this._changeDetectorRef.markForCheck();
-        });
+        // this._tasksService.getUsersData$
+        // .pipe(takeUntil(this._unsubscribeAll))
+        // .subscribe((usersList: Users[]) => {
+        //     this.usersList = usersList;
+        //     // Mark for check
+        //     this._changeDetectorRef.markForCheck();
+        // });
+       
        
             // Get the statuses
         this._tasksService.getStatus$
@@ -187,7 +188,12 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             // Get the task
             this.task2 = task;
             console.log(this.task2,'this.task2');
-            
+
+
+            this._tasksService.getUsersDepartment(+this.task2.departments[0]).subscribe(res=>{
+                console.log(res,"USERAT E DEPARTAMENTAVE");
+                this.usersList = res;
+            })
             // this._tasksService.getUsersDepartment(+task.departments).pipe(takeUntil(this._unsubscribeAll))
             // .subscribe((usersList: Users[]) => {
             //     this.usersList = usersList;

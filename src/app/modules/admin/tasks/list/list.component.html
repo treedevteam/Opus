@@ -111,7 +111,7 @@
                                                 [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                                             <span class="ml-2 text-md font-medium">
                                                 <ng-container *ngIf="tas.deadline">{{tas.deadline |
-                                                    date:'LLL dd'}}</ng-container>
+                                                    date:'LLL dd yyyy'}}</ng-container>
                                                 <ng-container *ngIf="!tas.deadline">Not set</ng-container>
                                             </span>
                                         </div>
