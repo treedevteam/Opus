@@ -17,7 +17,7 @@ export class UserService {
 
 
 
-  getUsers$ = this.http.get<Users[]>('https://opus.devtaktika.com/api/users').pipe(
+  getUsers$ = this.http.get<Users[]>('http://127.0.0.1:8000/api/users').pipe(
       map((data: any) :Users[] => data),
     catchError((err) => {
       console.error(err);
@@ -43,7 +43,7 @@ export class UserService {
 
 
   storeUsers(form: any): Observable<Users>{
-    return this.http.post<Users>('https://opus.devtaktika.com/api/user/store', form).pipe(
+    return this.http.post<Users>('http://127.0.0.1:8000/api/user/store', form).pipe(
         map((data: any) => {
           this.addedUser$.next(data);
           return data;
@@ -57,7 +57,7 @@ export class UserService {
 }
 
 getUsers(): Observable<Users>{
-    return this.http.get<Users>('https://opus.devtaktika.com/api/users').pipe(
+    return this.http.get<Users>('http://127.0.0.1:8000/api/users').pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -68,7 +68,7 @@ getUsers(): Observable<Users>{
 }
 
 deleteUser($id: number): Observable<Users>{
-    return this.http.delete<Users>('https://opus.devtaktika.com/api/user/delete/' + $id).pipe(
+    return this.http.delete<Users>('http://127.0.0.1:8000/api/user/delete/' + $id).pipe(
         map((data: any) => {
           this.deletedUser$.next($id);
           return data;
@@ -81,7 +81,7 @@ deleteUser($id: number): Observable<Users>{
     );
 }
 _getUserByid($id: number): Observable<Users>{
-    return this.http.get<Users>('https://opus.devtaktika.com/api/user/' + $id).pipe(
+    return this.http.get<Users>('http://127.0.0.1:8000/api/user/' + $id).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -92,7 +92,7 @@ _getUserByid($id: number): Observable<Users>{
 }
 
 _updateUser($id: number, data: any): Observable<Users>{
-    return this.http.post<Users>('https://opus.devtaktika.com/api/user/update/' + $id, data).pipe(
+    return this.http.post<Users>('http://127.0.0.1:8000/api/user/update/' + $id, data).pipe(
         map((res: any) => {
           this.updateUser$.next(res);
           return res;
@@ -106,7 +106,7 @@ _updateUser($id: number, data: any): Observable<Users>{
 }
 
     _getDepartments(): Observable<Departments[]>{
-        return this.http.get<Departments[]>('https://opus.devtaktika.com/api/departments').pipe(
+        return this.http.get<Departments[]>('http://127.0.0.1:8000/api/departments').pipe(
             map((data: any) => data),
         catchError((err) => {
             console.error(err);
@@ -117,7 +117,7 @@ _updateUser($id: number, data: any): Observable<Users>{
     }
 
     _getRoles(): Observable<Roles[]>{
-      return this.http.get<Roles[]>('https://opus.devtaktika.com/api/roles').pipe(
+      return this.http.get<Roles[]>('http://127.0.0.1:8000/api/roles').pipe(
           map((data: any) => data),
       catchError((err) => {
           console.error(err);

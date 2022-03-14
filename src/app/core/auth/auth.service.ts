@@ -66,7 +66,7 @@ export class AuthService
 
     changepassword(credentials: { current_password: string; new_password: string; new_confirm_password: string }): Observable<any>
     {
-        return this._httpClient.post('https://opus.devtaktika.com/api/user/password', credentials);
+        return this._httpClient.post('http://127.0.0.1:8000/api/user/password', credentials);
     }
 
     /**
@@ -84,7 +84,7 @@ export class AuthService
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('https://opus.devtaktika.com/oauth/token', credentials).pipe(
+        return this._httpClient.post('http://127.0.0.1:8000/oauth/token', credentials).pipe(
             switchMap((response: any) => {
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
@@ -96,7 +96,7 @@ export class AuthService
                 this._userService.user = response.user;
 
                 // Return a new observable with the response
-                return this._httpClient.get('https://opus.devtaktika.com/api/user').pipe(
+                return this._httpClient.get('http://127.0.0.1:8000/api/user').pipe(
                     catchError(() =>
                     // Return false
                     of(false)
@@ -117,7 +117,7 @@ export class AuthService
     signInUsingToken(): Observable<any>
     {
         // Renew token
-        return this._httpClient.get('https://opus.devtaktika.com/api/user').pipe(
+        return this._httpClient.get('http://127.0.0.1:8000/api/user').pipe(
             catchError(() =>
             // Return false
             of(false)

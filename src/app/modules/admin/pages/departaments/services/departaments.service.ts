@@ -11,7 +11,7 @@ export class DepartamentsService {
     private updateDepartment$ = new BehaviorSubject<Departments>(null);
     private deletedDepartment$ = new BehaviorSubject<number>(null);
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getDepartmentsData$ = this.http.get<Departments[]>('https://opus.devtaktika.com/api/departments/all').pipe(
+    getDepartmentsData$ = this.http.get<Departments[]>('http://127.0.0.1:8000/api/departments/all').pipe(
         map((data: any): Departments[] => data),
         shareReplay(1),
        catchError((err) => {
@@ -40,7 +40,7 @@ export class DepartamentsService {
 
     // New Department
     storeDepartment(form: any): Observable<Departments>{
-        return this.http.post<Departments>('https://opus.devtaktika.com/api/department/store', form).pipe(
+        return this.http.post<Departments>('http://127.0.0.1:8000/api/department/store', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: Departments) => {
                 this.resetObserv();
@@ -58,7 +58,7 @@ export class DepartamentsService {
 
     //Delete Department
     deleteDepartment($id: number): Observable<number>{
-        return this.http.delete<Departments>('https://opus.devtaktika.com/api/department/delete/' + $id).pipe(
+        return this.http.delete<Departments>('http://127.0.0.1:8000/api/department/delete/' + $id).pipe(
             map((dataa: Departments) => {
                 this.resetObserv();
                 this.deletedDepartment$.next($id);
@@ -74,7 +74,7 @@ export class DepartamentsService {
 
     // Department by id
     _getDepartamentByid($id: number): Observable<Departments>{
-        return this.http.get<Departments>('https://opus.devtaktika.com/api/department/' + $id).pipe(
+        return this.http.get<Departments>('http://127.0.0.1:8000/api/department/' + $id).pipe(
             map((data: any) => data),
            catchError((err) => {
              console.error(err);
@@ -87,7 +87,7 @@ export class DepartamentsService {
 
     //Update Departemtn
     _updateDepartment( $id: number , data: any): Observable<Departments>{
-        return this.http.post<Departments>('https://opus.devtaktika.com/api/department/update/' + $id, data).pipe(
+        return this.http.post<Departments>('http://127.0.0.1:8000/api/department/update/' + $id, data).pipe(
             map((dataa: Departments) => {
                 this.resetObserv();
                 this.updateDepartment$.next(dataa);

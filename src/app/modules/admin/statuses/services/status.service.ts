@@ -13,7 +13,7 @@ export class StatusService {
   private deletedStatus = new BehaviorSubject<number>(null);
 
   constructor(private http: HttpClient) { }
-  getStatuses$ = this.http.get<Status[]>('https://opus.devtaktika.com/api/statuses').pipe(
+  getStatuses$ = this.http.get<Status[]>('http://127.0.0.1:8000/api/statuses').pipe(
     map((data: any) :Status[] => data),
    catchError((err) => {
      console.error(err);
@@ -38,7 +38,7 @@ get deletedStatus$(): Observable<number>
 }
 
 _addStatus(data: any): Observable<Status>{
-    return this.http.post<Status>('https://opus.devtaktika.com/api/status/store', data).pipe(
+    return this.http.post<Status>('http://127.0.0.1:8000/api/status/store', data).pipe(
         map((res: any) => {
           this.resetObserv();
           this.addedStatus.next(res);
@@ -52,7 +52,7 @@ _addStatus(data: any): Observable<Status>{
     );
 }
   _getStatus(): Observable<Status>{
-    return this.http.get<Status>('https://opus.devtaktika.com/api/statuses').pipe(
+    return this.http.get<Status>('http://127.0.0.1:8000/api/statuses').pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -63,7 +63,7 @@ _addStatus(data: any): Observable<Status>{
   }
 
   _getStatusById($id: any): Observable<Status>{
-    return this.http.get<Status>('https://opus.devtaktika.com/api/status/'+$id).pipe(
+    return this.http.get<Status>('http://127.0.0.1:8000/api/status/'+$id).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -74,7 +74,7 @@ _addStatus(data: any): Observable<Status>{
   }
 
   _deleteStatus($id): Observable<Status>{
-    return this.http.delete<Status>('https://opus.devtaktika.com/api/status/delete/'+$id).pipe(
+    return this.http.delete<Status>('http://127.0.0.1:8000/api/status/delete/'+$id).pipe(
         map((data: any) => {
           this.resetObserv();
           this.deletedStatus.next($id);
@@ -89,7 +89,7 @@ _addStatus(data: any): Observable<Status>{
   }
 
   _updateStatus( datas: Status, $id: number,): Observable<Status>{
-    return this.http.post<Status>('https://opus.devtaktika.com/api/status/update/'+$id, datas).pipe(
+    return this.http.post<Status>('http://127.0.0.1:8000/api/status/update/'+$id, datas).pipe(
         map((data: any) => {
           this.resetObserv();
           this.updateStatus.next(data);

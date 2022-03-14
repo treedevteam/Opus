@@ -11,7 +11,7 @@ export class LocationsService {
   constructor(private http: HttpClient) { }
 
 _addLocation(data: any): Observable<Location>{
-    return this.http.post<Location>('https://opus.devtaktika.com/api/location/store', data).pipe(
+    return this.http.post<Location>('http://127.0.0.1:8000/api/location/store', data).pipe(
         map((res: any) => res),
        catchError((err) => {
          console.error(err);
@@ -21,7 +21,7 @@ _addLocation(data: any): Observable<Location>{
     );
 }
   _getLocations(): Observable<Location>{
-    return this.http.get<Location>('https://opus.devtaktika.com/api/locations').pipe(
+    return this.http.get<Location>('http://127.0.0.1:8000/api/locations').pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -32,7 +32,7 @@ _addLocation(data: any): Observable<Location>{
   }
 
   _getLocationById($id: any): Observable<Location>{
-    return this.http.get<Location>('https://opus.devtaktika.com/api/location/'+$id).pipe(
+    return this.http.get<Location>('http://127.0.0.1:8000/api/location/'+$id).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -43,7 +43,7 @@ _addLocation(data: any): Observable<Location>{
   }
 
   _deleteLocation($id): Observable<Location>{
-    return this.http.delete<Location>('https://opus.devtaktika.com/api/location/delete/'+$id).pipe(
+    return this.http.delete<Location>('http://127.0.0.1:8000/api/location/delete/'+$id).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -54,7 +54,7 @@ _addLocation(data: any): Observable<Location>{
   }
 
   _updateLocations( datas: Location, $id: number,): Observable<Location>{
-    return this.http.post<Location>('https://opus.devtaktika.com/api/location/update/'+$id, datas).pipe(
+    return this.http.post<Location>('http://127.0.0.1:8000/api/location/update/'+$id, datas).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);

@@ -42,7 +42,7 @@ export class TasksService
 
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getDepartmentsData$ = this._httpClient.get<Departments[]>('https://opus.devtaktika.com/api/departments').pipe(
+    getDepartmentsData$ = this._httpClient.get<Departments[]>('http://127.0.0.1:8000/api/departments').pipe(
         map((data: any): Departments[] => {
             this._departments.next(data);
             return data;
@@ -50,7 +50,7 @@ export class TasksService
          shareReplay(1),
     );
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getUsersData$ = this._httpClient.get<Users[]>('https://opus.devtaktika.com/api/users').pipe(
+    getUsersData$ = this._httpClient.get<Users[]>('http://127.0.0.1:8000/api/users').pipe(
         map((data: any): Users[] => {
             this._users.next(data);
             console.log(data);
@@ -61,7 +61,7 @@ export class TasksService
     );
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    // getTasksLogsData$ = this._httpClient.get<TaskLogs[]>('https://opus.devtaktika.com/api/logs/').pipe(
+    // getTasksLogsData$ = this._httpClient.get<TaskLogs[]>('http://127.0.0.1:8000/api/logs/').pipe(
     //     map((data: any): TaskLogs[] => {
     //         this._tagsLogs.next(data);
     //         return data;
@@ -69,7 +69,7 @@ export class TasksService
     //      shareReplay(1),
     // );
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getTasksData$ = this._httpClient.get<TaskWithDepartment[]>('https://opus.devtaktika.com/api/tasks/departments').pipe(
+    getTasksData$ = this._httpClient.get<TaskWithDepartment[]>('http://127.0.0.1:8000/api/tasks/departments').pipe(
         map((data: any): TaskWithDepartment[] => {
             this._mytasks.next(data.data);
             console.log(data.data);
@@ -78,7 +78,7 @@ export class TasksService
          shareReplay(1),
     );
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getPriorities$ = this._httpClient.get<Priorities[]>('https://opus.devtaktika.com/api/priorities').pipe(
+    getPriorities$ = this._httpClient.get<Priorities[]>('http://127.0.0.1:8000/api/priorities').pipe(
         map((data: any): Priorities[] => {
             this._priorities.next(data);
             return data;
@@ -87,7 +87,7 @@ export class TasksService
     );
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getStatus$ = this._httpClient.get<Status[]>('https://opus.devtaktika.com/api/statuses').pipe(
+    getStatus$ = this._httpClient.get<Status[]>('http://127.0.0.1:8000/api/statuses').pipe(
         map((data: any): Status[] => {
             this._status.next(data);
             return data;
@@ -96,7 +96,7 @@ export class TasksService
     );
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getLocation$ = this._httpClient.get<Location[]>('https://opus.devtaktika.com/api/locations').pipe(
+    getLocation$ = this._httpClient.get<Location[]>('http://127.0.0.1:8000/api/locations').pipe(
         map((data: any): Location[] => {
             this._locations.next(data);
             return data;
@@ -206,7 +206,7 @@ export class TasksService
 
     getUsersDepartment(depId: number): Observable<Users[]>
     {
-        return this._httpClient.get<Users[]>('https://opus.devtaktika.com/api/users/department/' + depId).pipe(
+        return this._httpClient.get<Users[]>('http://127.0.0.1:8000/api/users/department/' + depId).pipe(
             map((data: any): Users[] => {
                 return data.data;
             }),
@@ -216,7 +216,7 @@ export class TasksService
 
     // getDepartments(): Observable<Departments[]>
     // {
-    //     return this._httpClient.get<Departments[]>('https://opus.devtaktika.com/api/departments').pipe(
+    //     return this._httpClient.get<Departments[]>('http://127.0.0.1:8000/api/departments').pipe(
     //         // eslint-disable-next-line arrow-body-style
     //         map((data: Departments[]) => {
     //         debugger;
@@ -240,7 +240,7 @@ export class TasksService
      */
 
      storeTask(form: any): Observable<Task2[]>{
-        return this._httpClient.post<Task2[]>('https://opus.devtaktika.com/api/task/store', form).pipe(
+        return this._httpClient.post<Task2[]>('http://127.0.0.1:8000/api/task/store', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
                 this.setNullBehaviourSubject();
@@ -256,7 +256,7 @@ export class TasksService
     }
 
     assignUserTask(taskId: number, userId: number): Observable<void>{
-        return this._httpClient.post<any>('https://opus.devtaktika.com/api/task/'+ taskId+'/'+ userId, null).pipe(
+        return this._httpClient.post<any>('http://127.0.0.1:8000/api/task/'+ taskId+'/'+ userId, null).pipe(
             map((data: any): any => {
                 this._tasksupdated.next(data.data);
                 return data.data;
@@ -264,7 +264,7 @@ export class TasksService
         );
     }
     updateTaskservice(form: any, id: number): Observable<Task2>{
-        return this._httpClient.post<Task2>('https://opus.devtaktika.com/api/task/' + id + '/update/admin', form).pipe(
+        return this._httpClient.post<Task2>('http://127.0.0.1:8000/api/task/' + id + '/update/admin', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
                 this._newtask.next(null);
@@ -281,7 +281,7 @@ export class TasksService
 
 
     getTasksLogs(id): Observable<TaskLogs[]> {
-        return this._httpClient.get<TaskLogs[]>('https://opus.devtaktika.com/api/logs/'+ id).pipe(
+        return this._httpClient.get<TaskLogs[]>('http://127.0.0.1:8000/api/logs/'+ id).pipe(
             map((data: any): TaskLogs[] => {
                 this._tagsLogs.next(data.data)
                 return data.data;
@@ -452,7 +452,7 @@ export class TasksService
     }
     getTaskById2(id: string): Observable<Task2>
     {
-        return this._httpClient.get<Task2>('https://opus.devtaktika.com/api/task/'+ id).pipe(
+        return this._httpClient.get<Task2>('http://127.0.0.1:8000/api/task/'+ id).pipe(
             map((data: any): Task2 => {
                 this._mytask.next(data.data);
                 console.log(data);
@@ -543,7 +543,7 @@ export class TasksService
     {
         return this.tasks$.pipe(
             take(1),
-            switchMap(tasks => this._httpClient.delete('https://opus.devtaktika.com/api/task/delete/'+id,).pipe(
+            switchMap(tasks => this._httpClient.delete('http://127.0.0.1:8000/api/task/delete/'+id,).pipe(
                 map((isDeleted: boolean) => {
                     const test = {id:id, departments: departments}
                     this.setNullBehaviourSubject();

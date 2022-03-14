@@ -85,7 +85,7 @@
                                         <div class="flex items-center justify-center inset-y-0 left-0 me-3">
                                             <img [matTooltip]="tas.user.name" [matTooltipPosition]="'above'"
                                                 style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
-                                                src="https://opus.devtaktika.com/storage/{{tas.user.user_image}}" alt="">
+                                                src="http://127.0.0.1:8000/storage/{{tas.user.user_image}}" alt="">
                                         </div>
                                         <!-- Task title -- link -->
                                         <a class="flex flex-auto items-center min-w-0 h-full pr-7" [routerLink]="tas.id">
@@ -99,7 +99,7 @@
                                             *ngFor="let item of tas.users_assigned">
                                             <img [matTooltip]="item.name" [matTooltipPosition]="'above'"
                                                 class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                                [src]="'https://opus.devtaktika.com/storage/' + item.image" alt="Member avatar">
+                                                [src]="'http://127.0.0.1:8000/storage/' + item.image" alt="Member avatar">
                                         </ng-container>
                                         <!-- Users Assign -->
                                         <!-- Due date -->
