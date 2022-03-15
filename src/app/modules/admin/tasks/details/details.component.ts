@@ -1,15 +1,15 @@
 import { Priorities } from './../../priorities/model/priorities';
 import { TasksService } from './../tasks.service';
 import { TasksListComponent } from './../list/list.component';
-import { Tag, Task, Task2 } from './../tasks.types';
+import { Tag, Task, Task2, TaskComment } from './../tasks.types';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { debounceTime, filter, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, debounceTime, filter, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import { assign } from 'lodash-es';
 import * as moment from 'moment';
 import { Departments } from '../../pages/departaments/model/departments.model';
@@ -36,6 +36,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     statuses: Status[];
     locations: Location[];
 
+
     filteredUsers: Users[];
     usersList: Users[];
     usersAssignedSelected: number[];
@@ -49,10 +50,43 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     task2: Task2;
     taskForm: FormGroup;
     tasks: Task[];
+
+
+    // taskComments$ = this._tasksService.taskComments$;
+
+
+
+
+    taskComments: TaskComment[];
     private _tagsPanelOverlayRef: OverlayRef;
     private _usersPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+    taskComments$ = combineLatest([
+        this._tasksService.taskComments$,
+        this._tasksService.taskComment$,
+        this._tasksService.getUsersData$,
+        this._tasksService.deletedComment$
+    ],(g,p,u,de) => {
+        if(p){
+            g.unshift(p);
+        }else if(de){
+            const index = g.findIndex(x => x.id === de);
+            if (index > -1) {
+                g.splice(index, 1);
+              }
+        }
+        let d = null;
+        if(g){
+            d = g.map(res=>({
+                ...res,
+                user_id: u.find(user => user.id === res.user_id)
+            }))
+        }
+        console.log(d);
+        return d?d : g;
+     })
+        
     /**
      * Constructor
      */
@@ -65,7 +99,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _tasksListComponent: TasksListComponent,
         private _tasksService: TasksService,
         private _overlay: Overlay,
-        private _viewContainerRef: ViewContainerRef
+        private _viewContainerRef: ViewContainerRef,
+        private route: ActivatedRoute
     )
     {
     }
@@ -97,9 +132,12 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             user    : [0],
             departments: [],
             has_expired    : [0],
-            users_assigned    : [[]]
+            users_assigned    : [[]],
+            newComment: ''
         });
 
+
+        
         // Get the departmetns
         this._tasksService.getDepartmentsData$
         .pipe(takeUntil(this._unsubscribeAll))
@@ -189,20 +227,14 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             this.task2 = task;
             console.log(this.task2,'this.task2');
 
-
-            this._tasksService.getUsersDepartment(+this.task2.departments[0]).subscribe(res=>{
-                console.log(res,"USERAT E DEPARTAMENTAVE");
+            console.log(this.task2);
+            this._tasksService.getUsersDepartment(+this.task2.departments).subscribe(res=>{
                 this.usersList = res;
             })
-            // this._tasksService.getUsersDepartment(+task.departments).pipe(takeUntil(this._unsubscribeAll))
-            // .subscribe((usersList: Users[]) => {
-            //     this.usersList = usersList;
-            //     console.log(this.usersList);
-                
-            //     // Mark for check
-            //     this._changeDetectorRef.markForCheck();
-            // });
 
+            this._tasksService.getTaskComments(+this.task2.id).subscribe(res=>{
+            });
+            
             // Patch values to the form from the task
             this.taskForm.patchValue(task, {emitEvent: false});
 
@@ -291,7 +323,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
+    addComment(): any{
 
+    }
     /**
      * Close the drawer
      */
@@ -748,6 +782,26 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             this._router.navigateByUrl('/tasks')
         },err=>{
         })
+    }
+
+    addCommentTask(){
+        this._tasksService.storeComment({text: this.taskForm.get('newComment').value,task_id:this.taskForm.get('id').value},).subscribe(res=>{
+            this.taskForm.get('newComment').setValue("");
+        })
+    }
+
+
+    deleteCommentclick(id: number): void{
+
+        const dialogRef = this._fuseConfirmationService.open();
+        // Subscribe to afterClosed from the dialog reference
+        dialogRef.afterClosed().subscribe((result) => {
+            if(result === 'confirmed'){
+                this._tasksService.deleteComment(id).subscribe(res=>{
+                    console.log(res);
+                })
+            }
+        });
     }
     /**
      * Track by function for ngFor loops

@@ -1,4 +1,4 @@
-import { Tag, Task, Task2, TaskLogs, TaskWithDepartment } from './tasks.types';
+import { Tag, Task, Task2, TaskLogs, TaskWithDepartment, TaskComment } from './tasks.types';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, shareReplay, switchMap, take, tap, throwError } from 'rxjs';
@@ -18,6 +18,11 @@ export class TasksService
 
     // Private
     private _tags: BehaviorSubject<Tag[] | null> = new BehaviorSubject(null);
+
+
+    private _taskComments: BehaviorSubject<TaskComment[] | null> = new BehaviorSubject(null);
+    private _taskComment: BehaviorSubject<TaskComment | null> = new BehaviorSubject(null);
+    private _deletedTaskComment: BehaviorSubject<number | null> = new BehaviorSubject(null);
 
 
     private _departments: BehaviorSubject<Departments[] | null> = new BehaviorSubject(null);
@@ -188,6 +193,21 @@ export class TasksService
         return this._mytask.asObservable();
     }
 
+    get taskComments$(): Observable<TaskComment[]>
+    {
+        return this._taskComments.asObservable();
+    }
+
+    get taskComment$(): Observable<TaskComment>
+    {
+        return this._taskComment.asObservable();
+    }
+    get deletedComment$(): Observable<number>
+    {
+        return this._deletedTaskComment.asObservable();
+    }
+
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -212,39 +232,19 @@ export class TasksService
             }),
         );
     }
-   
-
-    // getDepartments(): Observable<Departments[]>
-    // {
-    //     return this._httpClient.get<Departments[]>('http://127.0.0.1:8000/api/departments').pipe(
-    //         // eslint-disable-next-line arrow-body-style
-    //         map((data: Departments[]) => {
-    //         debugger;
-
-    //             this._departments.next(data);
-    //             console.log(data);
-    //             return data;
-    //         }),
-    //         catchError((err) => {
-    //             console.error(err);
-    //             throw err;
-    //         }
-    //     )
-    //     );
-    // }
 
     /**
      * Crate tag
      *
      * @param tag
      */
-
+  
      storeTask(form: any): Observable<Task2[]>{
         return this._httpClient.post<Task2[]>('http://127.0.0.1:8000/api/task/store', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
-                this.setNullBehaviourSubject();
                 this._newtask.next(data.data);
+                this.setNullBehaviourSubject();
                 return data.data;
             }),
             catchError((err) => {
@@ -259,6 +259,7 @@ export class TasksService
         return this._httpClient.post<any>('http://127.0.0.1:8000/api/task/'+ taskId+'/'+ userId, null).pipe(
             map((data: any): any => {
                 this._tasksupdated.next(data.data);
+                this.setNullBehaviourSubject();
                 return data.data;
             }),
         );
@@ -452,10 +453,12 @@ export class TasksService
     }
     getTaskById2(id: string): Observable<Task2>
     {
+        // this.getTaskComments(+id);
         return this._httpClient.get<Task2>('http://127.0.0.1:8000/api/task/'+ id).pipe(
             map((data: any): Task2 => {
                 this._mytask.next(data.data);
-                console.log(data);
+                // this.getTaskComments(+id)
+                // console.log(data);
                 return data;
             }),switchMap((task) => {
 
@@ -546,11 +549,73 @@ export class TasksService
             switchMap(tasks => this._httpClient.delete('http://127.0.0.1:8000/api/task/delete/'+id,).pipe(
                 map((isDeleted: boolean) => {
                     const test = {id:id, departments: departments}
-                    this.setNullBehaviourSubject();
                     this._deletedtasks.next(test);
+                    this.setNullBehaviourSubject();
                     return test;
                 })
             ))
         );
     }
+
+
+
+    //COMMENT
+    //get comments
+    getTaskComments(id: number): Observable<TaskComment[]>{
+        return this._httpClient.get<Users[]>('http://127.0.0.1:8000/api/comments/'+ id).pipe(
+        map((data: any): TaskComment[] => {
+            this._taskComments.next(data.data);
+            console.log(data);
+            return data.data;
+        }),
+         shareReplay(1),
+        );
+    }
+
+    //add comment
+    storeComment(comment: any): Observable<Task2[]>{
+        return this._httpClient.post<Task2[]>('http://127.0.0.1:8000/api/comment/store', comment).pipe(
+            map((data: any) => {
+                this._taskComment.next(data.data);
+                this._taskComment.next(null);
+                return data.data;
+            }),
+            catchError((err) => {
+                console.error(err);
+                throw err;
+            }
+        )
+        );
+    }
+
+    //delete comment
+    deleteComment(id: number): Observable<any>
+    {
+        return this.taskComments$.pipe(
+            take(1),
+            switchMap(tasks => this._httpClient.delete('http://127.0.0.1:8000/api/comment/delete/'+id,).pipe(
+                map((isDeleted: boolean) => {
+                    this._deletedTaskComment.next(id);
+                    this._deletedTaskComment.next(null);
+                    return id;
+                })
+            ))
+        );
+    }
+
+
+    setNullBehaviourSubjectComments(): void{
+        this._deletedTaskComment.next(null);
+        this._taskComment.next(null);
+    }
+
+    //COMMENT
+
+
+
+
+
+
+
+
 }

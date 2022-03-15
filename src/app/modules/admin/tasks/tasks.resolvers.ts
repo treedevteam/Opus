@@ -2,7 +2,7 @@ import { Tag, Task, Task2 } from './tasks.types';
 import { TasksService } from './tasks.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, mergeMapTo, Observable, throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -87,6 +87,7 @@ export class TasksTaskResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task2>
     {
+        
         return this._tasksService.getTaskById2(route.paramMap.get('id'))
             .pipe(
                 // Error here means the requested task is not available

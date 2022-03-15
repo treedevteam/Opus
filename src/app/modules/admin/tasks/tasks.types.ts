@@ -64,3 +64,13 @@ export interface TaskLogs{
     }
 }
 
+
+export interface TaskComment{
+    id: number;
+    text: string;
+    image: string;
+    is_his: boolean;
+    user_id: number;
+    created_at: string;
+}
+

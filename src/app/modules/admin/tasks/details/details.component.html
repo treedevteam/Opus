@@ -314,6 +314,80 @@
                         </div>
 
                     </div>
+
+                    <!-- comments -->
+                    <div class="flex items-end py-4 border-t mt-4">
+                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded fuse-mat-bold w-full">
+                            <textarea
+                                class="min-h-5 my-0 resize-none"
+                                style="margin: 11px 0 !important; padding: 0 !important;"
+                                [rows]="1"
+                                placeholder="Add comment..."
+                                matInput
+                                [formControlName]="'newComment'"
+                                #messageInput></textarea>
+                        </mat-form-field>
+                        <div class="flex items-center h-11 my-px ml-4">
+                            <button
+                            (click)="addCommentTask()"
+                                mat-icon-button>
+                                <mat-icon
+                                    class="rotate-90"
+                                    [svgIcon]="'heroicons_outline:paper-airplane'"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Message field -->
+                    <div class=" py-4 ">
+                            <!-- {{taskComments | json}} -->
+                            <ng-container *ngFor="let comment of taskComments$ | async">
+
+                                <div class="one_comment d-flex" *ngIf="!comment.is_his">
+                                    <img style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
+                                        src="http://127.0.0.1:8000/storage/{{comment.user_id.image}}" alt="">
+                                    <!-- {{comment.user | json}} -->
+                                    <div class=" px-3">
+                                        <h5 class="bold">{{comment.user_id.name}}</h5>
+                                        <div class="relative max-w-3/4 py-2 rounded-lg  ">
+                                            <!-- Speech bubble tail -->
+                                            <div class="absolute bottom-0 w-3 text-grey-500 -right-1 -mr-px mb-px " >
+                                            </div>
+                                            <!-- Message -->
+                                            <div class="leading-5 comment_text cursor-pointer" style="min-width: fit-content!important;">
+                                                {{comment.text}}
+                                            </div>
+                                        </div>
+                                        <div class="my-0.5 text-sm font-medium text-secondary mr-3"> {{comment.created_at | date :'short'}}</div>
+                                    </div>
+                                    <!-- Time -->
+                                </div>  
+                                <div class="flex flex-col items-end mt-3" *ngIf="comment.is_his">
+                                            <!-- Bubble -->
+                                    <div class="relative max-w-3/4 px-3 py-2 rounded-lg bg-blue-500 text-blue-50">
+                                        <!-- Speech bubble tail -->
+                                        <div class="absolute bottom-0 w-3 text-blue-500 -right-1 -mr-px mb-px" >
+                                        </div>
+                                        <!-- Message -->
+                                        <div class=" leading-5 cursor-pointer text_container">
+                                            {{comment.text}}
+                                            <mat-icon class="delete_icon" (click)="deleteCommentclick(comment.id)">delete</mat-icon>
+
+                                        </div>
+                                    </div>
+                                    <!-- Time -->
+                                    <div class="my-0.5 text-sm font-medium text-secondary mr-3" >
+                                        {{comment.created_at | date :'short'}}
+                                    </div>
+                                </div>
+                            </ng-container>
+                    <ng-template  #templateName>
+                        No comments...
+                    </ng-template>
+
+                    </div>
+                    
+                    <!-- comments -->
+
                     <!-- raport -->
                     <div class="mt-8">
                         <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
