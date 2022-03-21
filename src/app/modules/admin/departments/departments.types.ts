@@ -1,4 +1,4 @@
-export class Departments {
+export interface Departments{
     id: number;
     name: string;
     image: any;

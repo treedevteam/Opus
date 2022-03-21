@@ -2,18 +2,33 @@ import { Tag, Task, Task2, TaskLogs, TaskWithDepartment, TaskComment } from './t
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, shareReplay, switchMap, take, tap, throwError } from 'rxjs';
-import { Departments } from '../pages/departaments/model/departments.model';
 import { parseInt } from 'lodash';
 import { Priorities } from '../priorities/model/priorities';
 import { Location } from '../locations/model/location';
 import { Status } from '../statuses/model/status';
 import { Users } from '../users/model/users';
+import { Departments } from '../departments/departments.types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TasksService
 {
+
+
+    private _currentDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null); 
+    private _currentDepartmentTasks: BehaviorSubject<TaskWithDepartment | null> = new BehaviorSubject(null); 
+
+
+
+
+
+
+
+
+
+
+
 
 
     // Private
@@ -23,6 +38,9 @@ export class TasksService
     private _taskComments: BehaviorSubject<TaskComment[] | null> = new BehaviorSubject(null);
     private _taskComment: BehaviorSubject<TaskComment | null> = new BehaviorSubject(null);
     private _deletedTaskComment: BehaviorSubject<number | null> = new BehaviorSubject(null);
+
+
+    private _subtasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
 
 
     private _departments: BehaviorSubject<Departments[] | null> = new BehaviorSubject(null);
@@ -133,6 +151,24 @@ export class TasksService
     /**
      * Getter for tags
      */
+    get currentDepartment$(): Observable<Departments>{
+        return this._currentDepartment.asObservable();
+    }
+    get currentDepartmentTasks$(): Observable<TaskWithDepartment>{
+        return this._currentDepartmentTasks.asObservable();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     get tags$(): Observable<Tag[]>
     {
         return this._tags.asObservable();
@@ -170,6 +206,11 @@ export class TasksService
     get tagsLogs$(): Observable<TaskLogs[]>
     {
         return this._tagsLogs.asObservable();
+    }
+
+    get subtasks$(): Observable<Task2[]>
+    {
+        return this._subtasks.asObservable();
     }
 
     /**
@@ -614,8 +655,43 @@ export class TasksService
 
 
 
+    //Subtasks
+
+    getSubtasks(id: number): Observable<Task2[]>{
+        return this._httpClient.get<Task2[]>('http://127.0.0.1:8000/api/task/subtasks/'+ id).pipe(
+        map((data: any): Task2[] => {
+            this._subtasks.next(data.data);
+            return data.data;
+        }),
+         shareReplay(1),
+        );
+    }
 
 
+
+
+    getDepartment(id: number): Observable<Departments>{
+        return this._httpClient.get<Departments>('http://127.0.0.1:8000/api/department/'+ id).pipe(
+            map((data: any): Departments => {
+                this._currentDepartment.next(data);
+                console.log('DEPARTMENT BY ID');
+                return data;
+            }),
+             shareReplay(1),
+            );
+    }
+
+
+    getDepartmentTasks(id: number): Observable<TaskWithDepartment>{
+        return this._httpClient.get<TaskWithDepartment>('http://127.0.0.1:8000/api/department/'+id+'/tasks').pipe(
+            map((data: any): TaskWithDepartment => {
+                this._currentDepartmentTasks.next(data.data);
+                console.log(data,'DEPARTMENT tasks');
+                return data.data;
+            }),
+             shareReplay(1),
+            );
+    }
 
 
 }

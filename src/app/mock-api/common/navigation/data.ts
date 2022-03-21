@@ -9,11 +9,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         icon : 'dashboard',
         link : '/dashboard'
     },{
-        id   : 'department',
-        title: 'Department',
+        id   : 'departments',
+        title: 'Departments',
         type : 'basic',
         icon : 'heroicons_outline:color-swatch',
-        link : 'pages/departments'
+        link : 'departments'
     },{
         id   : 'users',
         title: 'Users',

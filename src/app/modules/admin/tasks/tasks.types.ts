@@ -1,4 +1,4 @@
-import { Departments } from '../pages/departaments/model/departments.model';
+import { Departments } from '../departments/departments.types';
 import { Priorities } from '../priorities/model/priorities';
 import { Status } from '../statuses/model/status';
 
@@ -46,7 +46,7 @@ export interface Task2
     users_assigned: number[];
     departments: number[];
     has_expired: boolean;
-    // department: string | null;
+    subtasks_count: number;
 }
 
 export interface TaskWithDepartment{

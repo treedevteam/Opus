@@ -4,7 +4,7 @@
 
         <!-- Drawer -->
         <mat-drawer class="w-full sm:w-128 dark:bg-gray-900" [mode]="drawerMode" [opened]="false" [position]="'end'"
-            [disableClose]="true" #matDrawer>
+            [disableClose]="false" #matDrawer>
             <router-outlet></router-outlet>
         </mat-drawer>
 
@@ -53,28 +53,34 @@
                     </div>
                 </div>
                 <div style="min-width: 1000px;">
-                    <ng-container
-                        *ngFor="let task of this.tasksWithStatusPriority$ | async; let first = first; trackBy: trackByFn">
+                    <div *ngIf="departmentTasksWithStatusPriority$ | async">
                         <div [id]="'task-' + 2"
                             class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover border-t h-12 text-lg font-semibold bg-gray-50 dark:bg-transparent ng-star-inserted mt-5"
-                            [class.border-t]="first">
+                            >
+
+                           
+
                             <!-- Task content -->
                             <div class="relative flex items-center h-full pl-10">
                                 <div class="flex flex-auto items-center min-w-0 h-full pr-7">
                                     <!-- Title & Placeholder -->
                                     <div class="flex-auto mr-2 truncate">
-                                        <span>{{task.name}}</span>
+                                        <span>{{(departmentTasksWithStatusPriority$ | async).name}}</span>
                                     </div>
 
                                 </div>
                             </div>
                         </div>
-                        <ng-container *ngFor="let tas of task.tasks; let first = first; trackBy: trackByFn">
+                        <ng-container *ngFor="let tas of (departmentTasksWithStatusPriority$ | async).tasks; let first = first; trackBy: trackByFn">
                                 <div [id]="'task-' + tas.id"
                                     class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted"
                                     [class.border-t]="first">
                                     <!-- Task content -->
-                                    <div class="relative flex items-center h-full pl-10">
+                                    <div class="relative flex items-center h-full pl-4">
+                                         <div class="subtasks" (click)="toggleTableRows(tas.id)" matBadgeColor="warn" [matBadge]="tas.subtasks_count" matBadgeSize="small" matBadgePosition="before">
+                                            <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+                                        </div>
+
                                         <!-- Selected indicator -->
                                         <div>
                                             <div
@@ -124,7 +130,6 @@
                                                 <div class="flex-auto mr-2 truncate">
                                                     <span class="ml-2 mr-1 text-md" style="color: #000;">{{tas.priority.name}}</span>
                                                 </div>
-                                            
                                         </div>
                                         <!-- Priority -->
                                         <!-- Status -->
@@ -134,16 +139,99 @@
                                             <mat-icon class="icon-size-5 text-current" style="color: #000;"
                                                 [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
                                                 <div class="flex-auto mr-2 truncate">
-
                                             <span class="ml-2 mr-1 text-md" style="color: #000;">{{tas.status.name}}</span>
                                             </div>
                                         </div>
                                         <!-- Status -->
                                     </div>
                                 </div>
+                                <div style="overflow: hidden;" class="subtask_list not_collapsed" [@detailExpand]="expandedSubtasks !== null && expandedSubtasks === tas.id ? 'expanded' : 'collapsed'" >
+                                        <div *ngIf="expandedSubtasks === tas.id">
+                                            <ng-container *ngFor="let subtaskTask of subtasksData$ | async; let first = first; trackBy: trackByFn">
+                                                <div [id]="'task-' + subtaskTask.id"
+                                                    class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted"
+                                                    [class.border-t]="first">
+                                                    <!-- Task content -->
+                                                    <div class="relative flex items-center h-full pl-4">
+                                                        <!-- Selected indicator -->
+                                                        <div>
+                                                            <div
+                                                                class="z-10 absolute -top-px right-0 -bottom-px flex flex-0 w-1 bg-primary">
+                                                            </div>
+                                                        </div>
+                                                        <!-- User -->
+                                                        <div class="flex items-center justify-center inset-y-0 left-0 me-3">
+                                                            <img [matTooltip]="subtaskTask.user.name" [matTooltipPosition]="'above'"
+                                                                style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
+                                                                src="http://127.0.0.1:8000/storage/{{subtaskTask.user.user_image}}" alt="">
+                                                        </div>
+                                                        <!-- Task title -- link -->
+                                                        <a class="flex flex-auto items-center min-w-0 h-full pr-7" [routerLink]="subtaskTask.id">
+                                                            <!-- Title & Placeholder -->
+                                                            <div class="flex-auto mr-2 truncate">
+                                                                <span>{{subtaskTask.title}}</span>
+                                                            </div>
+                                                        </a>
+                                                        <!-- Users Assign -->
+                                                        <ng-container
+                                                            *ngFor="let subtaskitem of subtaskTask.users_assigned">
+                                                            <img [matTooltip]="subtaskitem.name" [matTooltipPosition]="'above'"
+                                                                class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                                                                [src]="'http://127.0.0.1:8000/storage/' + subtaskitem.image" alt="Member avatar">
+                                                        </ng-container>
+                                                        <!-- Users Assign -->
+                                                        <!-- Due date -->
+                                                        <div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
+                                                            [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !subtaskTask.deadline,
+                                                                    'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': subtaskTask.deadline && !isOverdue(subtaskTask.deadline),
+                                                                    'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': subtaskTask.deadline && isOverdue(subtaskTask.deadline)}">
+                                                            <mat-icon class="icon-size-5 text-current"
+                                                                [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+                                                            <span class="ml-2 text-md font-medium">
+                                                                <ng-container *ngIf="subtaskTask.deadline">{{subtaskTask.deadline |
+                                                                    date:'LLL dd yyyy'}}</ng-container>
+                                                                <ng-container *ngIf="!subtaskTask.deadline">Not set</ng-container>
+                                                            </span>
+                                                        </div>
+                                                        <!-- Priority -->
+                                                        <div [ngStyle]="{'background-color': subtaskTask.priority.color + '80'}"
+                                                            class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full  text-gray-800 dark:text-gray-100 priority_class"
+                                                            *ngIf="subtaskTask.priority">
+                                                            <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                                                [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+                                                                <div class="flex-auto mr-2 truncate">
+                                                                    <span class="ml-2 mr-1 text-md" style="color: #000;">{{subtaskTask.priority.name}}</span>
+                                                                </div>
+                                                        </div>
+                                                        <!-- Priority -->
+                                                        <!-- Status -->
+                                                        <div [ngStyle]="{'background-color': subtaskTask.status.color + '80'}"
+                                                            class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full text-gray-800 dark:text-gray-100 priority_class"
+                                                            *ngIf="subtaskTask.status">
+                                                            <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                                                [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
+                                                                <div class="flex-auto mr-2 truncate">
+                                                            <span class="ml-2 mr-1 text-md" style="color: #000;">{{subtaskTask.status.name}}</span>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Status -->
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                        <ng-container *ngIf="tas.subtasks_count === 0">
+                                            <div class="py-3">
+                                                <button class="ml-3" mat-flat-button [color]="'primary'" routerLink="add/new"
+                                                    [matTooltip]="'Shortcut: Ctrl + /'">
+                                                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                                    <span class="ml-2 mr-1">Add Subtask</span>
+                                                </button>
+                                            </div>
+                                        </ng-container>
+                                </div>
                             </ng-container>
                         
-                    </ng-container>
+                        </div>
                 </div>
                 
 

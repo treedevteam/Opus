@@ -1,3 +1,14 @@
 .priority_class{
     width: 160px!important;
 }
+.subtasks mat-icon{
+    font-size: 18px;
+    margin-right: 5px;
+}
+.subtasks mat-icon:hover{
+    cursor: pointer;
+    color: blue;
+}
+.subtask_list{
+    padding-left: 40px;
+}

@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
 import { LocationsService } from '../services/locations.service';
 import { EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,6 +8,10 @@ import { Location } from '../model/location';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { parseInt } from 'lodash';
 
+class AddOrUpdate {
+    isUpdate?: boolean;
+    data: any;
+}
 @Component({
   selector: 'app-add-or-update-locations',
   templateUrl: './add-or-update-locations.component.html',

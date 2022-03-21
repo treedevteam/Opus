@@ -2,9 +2,13 @@ import { Route, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { AddOrUpdate } from '../pages/departaments/model/add-or-update';
 import { Location } from './model/location';
 import { LocationsService } from './services/locations.service';
+
+class AddOrUpdate {
+    isUpdate?: boolean;
+    data: any;
+}
 const ELEMENT_DATA: Location[] = [
 ];
 @Component({

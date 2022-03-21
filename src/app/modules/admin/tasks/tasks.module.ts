@@ -29,6 +29,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { TasksLogsComponent } from './tasks-logs/tasks-logs.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatBadgeModule} from '@angular/material/badge';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -60,7 +61,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         SharedModule,
         MatProgressSpinnerModule,
         MatTabsModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatBadgeModule
     ],
     providers   : [
         {

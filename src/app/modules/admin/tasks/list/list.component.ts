@@ -8,30 +8,33 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { catchError, combineLatest, EMPTY, filter, fromEvent, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
-import { Departments } from '../../pages/departaments/model/departments.model';
 import moment from 'moment';
-
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Departments } from '../../departments/departments.types';
+ 
 @Component({
     selector       : 'tasks-list',
     templateUrl    : './list.component.html',
     styleUrls      : ['./list.component.css'],
     encapsulation  : ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        trigger('detailExpand', [
+          state('collapsed', style({ height: '0px', minHeight: '0' })),
+          state('expanded', style({ height: '*' })),
+          transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+      ],
 })
 export class TasksListComponent implements OnInit, OnDestroy
 {
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
+    expandedSubtasks:number | null = null;
 
     getDepartments: Departments[];
 
     DeaprtmentsData$ = this._tasksService.departments$;
     statusData$ = this._tasksService.getStatus$;
-    
-
-    teststtststst:any[];
-   
-
-
 
     drawerMode: 'side' | 'over';
     selectedTask: Task;
@@ -47,43 +50,65 @@ export class TasksListComponent implements OnInit, OnDestroy
 
 
     tasksData$ = combineLatest([
-        this._tasksService.getTasksData$,
+        this._tasksService.currentDepartmentTasks$,
         this._tasksService.newTask$,
         this._tasksService.taskUpdated$,
         this._tasksService.deletedTask$
     ],(g,p,u,d) => {
          if(p){
              p.forEach(element => {
-             const departments_index =  g.findIndex(g => g.id === +element.departments);
-             if(departments_index > -1){
-                 g[departments_index].tasks.unshift(element);
-             }
+            //  const departments_index =  g.findIndex(g => g.id === +element.departments);
+             if(g.id === +element.departments){
+                    g.tasks.push(element);
+                }
              });
-         }else if(u){
-            const departments_index =  g.findIndex(g => g.id === +u.departments)
-             const updatedTaskId = g[departments_index].tasks.findIndex(t => t.id === +u.id)
-             g[departments_index].tasks.splice(updatedTaskId,1,u);
+         }
+         else if(u){
+            if(g.id === +u.departments){
+                const updatedTaskId = g.tasks.findIndex(t => t.id === +u.id)
+                if(updatedTaskId > -1){
+                g.tasks.splice(updatedTaskId,1,u);
+                }
+            }
          }else if(d){
-            const departments_index =  g.findIndex(g => g.id === +d.departments)
-            const deletedTask = g[departments_index].tasks.findIndex(t => t.id === +d.id)
-            if(deletedTask > -1){
-                g[departments_index].tasks.splice(deletedTask,1);
+            if(g.id === +d.departments){
+                const deletedTask = g.tasks.findIndex(t => t.id === +d.id)
+                if(deletedTask > -1){
+                    g.tasks.splice(deletedTask,1);
+                }
             }
          }
        return g;
      });
+    //  subtasksData$ = this._tasksService.subtasks$;
+     subtasksData$ = combineLatest([
+        this._tasksService.subtasks$,
+        this._tasksService.getStatus$,
+        this._tasksService.getPriorities$,
+        this._tasksService.getUsersData$
+      ]).pipe(
+        map(([subtasks, statuses, priority,users]) =>
+        subtasks.map(subtask =>({
+            ...subtask,
+            status: statuses.find(s => +subtask.status === +s.id),
+            priority: priority.find(p => +subtask.priority === +p.id),
+            users_assigned: subtask.users_assigned.map(u => (
+                users.find(user => u === +user.id)
+            ))
+        }))),
+        shareReplay(1)
+      );
 
-     tasksWithStatusPriority$ = combineLatest([
+     departmentTasksWithStatusPriority$ = combineLatest([
         this.tasksData$,
         this._tasksService.getStatus$,
         this._tasksService.getPriorities$,
         this._tasksService.getUsersData$
       ]).pipe(
-        map(([tasksDepartment, statuses, priority,users]) =>
-        tasksDepartment.map(taskDepartment =>({
-            ...taskDepartment,
+        map(([tasksDepartment, statuses, priority,users]) =>({
+            ...tasksDepartment,
             tasks: [
-                ...taskDepartment.tasks.map(res=>({
+                ...tasksDepartment.tasks.map(res=>({
                     ...res,
                     status: statuses.find(s => +res.status === +s.id),
                     priority: priority.find(p => +res.priority === +p.id),
@@ -92,10 +117,11 @@ export class TasksListComponent implements OnInit, OnDestroy
                     ))
                 })),
             ]
-        }))),
-        shareReplay(1)
-      );
-
+        })),
+        shareReplay(1),
+        tap(res=>console.log(res,"taskat me prioritet")
+        )
+        );
     // tasksaks = this._tasksService.tasksWithDepartment$;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -122,6 +148,22 @@ export class TasksListComponent implements OnInit, OnDestroy
     /**
      * On init
      */
+
+    htmlgeneration(id: number): void{
+        alert(id);
+    }
+
+
+    toggleTableRows(id: number) {
+        if(this.expandedSubtasks === id){
+            this.expandedSubtasks = null;
+        }else{
+            this._tasksService.getSubtasks(id).subscribe(res=>{
+                console.log(res);
+                this.expandedSubtasks = id;
+            });
+        }
+    }
     ngOnInit(): void
     {
         //Get the departments
@@ -300,6 +342,10 @@ export class TasksListComponent implements OnInit, OnDestroy
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
+    }
+
+    collapseSubTasks(id: number){
+        alert(id);
     }
 
     /**

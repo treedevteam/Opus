@@ -4,12 +4,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
 
 import { FuseAlertType } from '@fuse/components/alert';
-import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
+// import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
 import { UserService } from '../services/user.service';
 import { EventEmitter } from '@angular/core';
-import { Departments } from '../../pages/departaments/model/departments.model';
 import { parseInt } from 'lodash';
 import { Roles, Users } from '../model/users';
+import { Departments } from '../../departments/departments.types';
+export class AddOrUpdate {
+    isUpdate?: boolean;
+    data: any;
+}
 
 @Component({
   selector: 'app-add-or-update-users',

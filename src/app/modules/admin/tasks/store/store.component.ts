@@ -12,10 +12,10 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { debounceTime, filter, Subject, takeUntil, tap } from 'rxjs';
 import { assign } from 'lodash-es';
 import * as moment from 'moment';
-import { Departments } from '../../pages/departaments/model/departments.model';
 import { Status } from '../../statuses/model/status';
 import { Location } from '../../locations/model/location';
 import { Users } from '../../users/model/users';
+import { Departments } from '../../departments/departments.types';
 
 @Component({
     selector: 'store-details',
@@ -682,6 +682,12 @@ openUsersPanel(): void
         },err=>{
             console.log(err);
         })
+    }
+
+    navigateTo(): void{
+        debugger;
+        this.closeDrawer().then(() => true);
+        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }
 
     /**

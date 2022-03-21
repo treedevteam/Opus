@@ -2,7 +2,7 @@ import { Roles, Users } from './../model/users';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable } from 'rxjs';
-import { Departments } from '../../pages/departaments/model/departments.model';
+import { Departments } from '../../departments/departments.types';
 
 @Injectable({
   providedIn: 'root'

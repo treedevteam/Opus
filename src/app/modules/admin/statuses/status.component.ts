@@ -2,10 +2,11 @@ import { Route, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { AddOrUpdate } from '../pages/departaments/model/add-or-update';
 import { Status } from './model/status';
 import { StatusService } from './services/status.service';
 import { combineLatest } from 'rxjs';
+
+
 const ELEMENT_DATA: Location[] = [
 ];
 @Component({

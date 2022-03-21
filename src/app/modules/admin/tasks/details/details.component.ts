@@ -12,10 +12,10 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { combineLatest, debounceTime, filter, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import { assign } from 'lodash-es';
 import * as moment from 'moment';
-import { Departments } from '../../pages/departaments/model/departments.model';
 import { Status } from '../../statuses/model/status';
 import { Location } from '../../locations/model/location';
 import { Users } from '../../users/model/users';
+import { Departments } from '../../departments/departments.types';
 
 @Component({
     selector       : 'tasks-details',
@@ -35,8 +35,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     priorities: Priorities[];
     statuses: Status[];
     locations: Location[];
-
-
     filteredUsers: Users[];
     usersList: Users[];
     usersAssignedSelected: number[];
@@ -74,7 +72,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             const index = g.findIndex(x => x.id === de);
             if (index > -1) {
                 g.splice(index, 1);
-              }
+            }
         }
         let d = null;
         if(g){
@@ -662,7 +660,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
         const usersAssigned = this.taskForm.get('users_assigned').value;
         const index = usersAssigned.findIndex(object => +object === +userId);
-        if (index === -1) {
+        if (index < 0) {
             usersAssigned.push(userId);
         }else{
             usersAssigned.splice(index,1);
@@ -779,7 +777,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     changeSubmitEventTask(): void{
         this.taskForm.get('users_assigned').patchValue("[" + this.taskForm.get('users_assigned').value +"]");
         this._tasksService.updateTaskservice(this.taskForm.value, this.task2.id).subscribe(res=>{
-            this._router.navigateByUrl('/tasks')
+            this.closeDrawer().then(() => true);
+            this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+
         },err=>{
         })
     }
@@ -802,6 +802,11 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 })
             }
         });
+    }
+
+    navigateTo(): void{
+        this.closeDrawer().then(() => true);
+        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }
     /**
      * Track by function for ngFor loops

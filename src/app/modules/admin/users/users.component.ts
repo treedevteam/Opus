@@ -4,8 +4,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, map, Observable, shareReplay } from 'rxjs';
 import { Users } from './model/users';
 import { UserService } from './services/user.service';
-import { AddOrUpdate } from '../pages/departaments/model/add-or-update';
 import { Router } from '@angular/router';
+
+class AddOrUpdate {
+    isUpdate?: boolean;
+    data: any;
+}
 
 const ELEMENT_DATA: Users[] = [
 ];

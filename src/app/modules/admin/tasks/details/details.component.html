@@ -29,7 +29,7 @@
             </mat-menu>
 
             <!-- Close button -->
-            <button mat-icon-button [routerLink]="['../']">
+            <button mat-icon-button (click)="navigateTo()">
                 <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
             </button>
         </div>
@@ -55,7 +55,7 @@
                         </div>
                     </ng-container>
                     <!-- Members -->
-                    <ng-container class="mt-5" *ngIf="task2.users_assigned?.length">
+                    <ng-container class="mt-5" *ngIf="task2.users_assigned?.length && usersList?.length ">
                         <div class="w-12 h-1 mt-6 border-t-2"></div>
                         <div class="flex items-center mt-6 -space-x-1.5">
                             <ng-container
