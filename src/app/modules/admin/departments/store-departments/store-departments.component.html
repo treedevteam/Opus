@@ -42,13 +42,11 @@
                 <ng-template [ngIf]="uploaded">
                     <mat-list>
                         <h3 mat-subheader>Files</h3>
-                        <mat-list-item>
+                        <mat-list-item class="flex justify-between align-center">
                             <mat-icon mat-list-icon>
                                 <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;" [src]='url' alt="">
                             </mat-icon>
-                            <h4 mat-line></h4>
-                            <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>
-                            <mat-divider></mat-divider>
+                            <button mat-raised-button class="mb-4" color="warn" (click)="deleteFile()">Delete</button>
                         </mat-list-item>
                     </mat-list>
                 </ng-template>

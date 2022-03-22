@@ -84,7 +84,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         console.log(d);
         return d?d : g;
      })
-        
     /**
      * Constructor
      */
@@ -101,6 +100,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private route: ActivatedRoute
     )
     {
+        
     }
     
     
@@ -327,6 +327,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Close the drawer
      */
+
+    
+
     closeDrawer(): Promise<MatDrawerToggleResult>
     {
         return this._tasksListComponent.matDrawer.close();

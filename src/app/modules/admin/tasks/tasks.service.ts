@@ -151,6 +151,7 @@ export class TasksService
     /**
      * Getter for tags
      */
+    
     get currentDepartment$(): Observable<Departments>{
         return this._currentDepartment.asObservable();
     }

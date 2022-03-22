@@ -26,31 +26,27 @@
                 <div *ngIf="url || file" [ngIfElse]="elseUrl">
     
                     <ng-template [ngIf]="!uploaded">
-                        <mat-list>
-                            <h3 mat-subheader>Files</h3>
-                            <mat-list-item>
-                                <mat-icon mat-list-icon>
-                                    <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;"
-                                        src="http://127.0.0.1:8000/storage/{{file}}" alt="">
-                                </mat-icon>
-                                <h4 mat-line></h4>
-                                <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>
-                                <mat-divider></mat-divider>
-                            </mat-list-item>
-                        </mat-list>
+                        <h3 mat-subheader>Files</h3>
+                        <div class="mb-4" style="display: flex;align-items: center; justify-content: space-between;">
+                            <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;"
+                            src="http://127.0.0.1:8000/storage/{{file}}" alt="">
+                            <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>
+
+                        </div>
+                                
+                                
                     </ng-template>
                     <ng-template [ngIf]="uploaded">
-                        <mat-list>
                             <h3 mat-subheader>Files</h3>
-                            <mat-list-item>
-                                <mat-icon mat-list-icon>
-                                    <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;" [src]='url' alt="">
-                                </mat-icon>
-                                <h4 mat-line></h4>
+                            <div class="mb-4" style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                ">
+                                <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;" [src]='url' alt="">
                                 <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>
-                                <mat-divider></mat-divider>
-                            </mat-list-item>
-                        </mat-list>
+                            </div>
+                                
                     </ng-template>
                 </div>
                 <ng-template #elseUrl>

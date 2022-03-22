@@ -47,7 +47,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
   return departments;
 });
 
-  $departmetsWithUsers = combineLatest([
+  departmetsWithUsers$ = combineLatest([
     this.$departmets,
     this._deprtmentsService.getUsers()
   ]).pipe(

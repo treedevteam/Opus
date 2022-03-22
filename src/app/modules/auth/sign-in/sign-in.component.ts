@@ -45,12 +45,12 @@ export class AuthSignInComponent implements OnInit
     {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            username     : ['rijad.morina@gmail.com', [Validators.required, Validators.email]],
+            username     : ['rijad.morina@treedev.io', [Validators.required, Validators.email]],
             password     : ['12345678', [Validators.required, Validators.minLength(8)]],
             grant_type   : ['password'],
-            client_id    : ['1'],
+            client_id    : ['2'],
             scope        : [''],
-            client_secret: ['JCg3K6agkWktIsdohPPbz1LqB9XD8wOLbpFyPnTv']
+            client_secret: ['SwL6LNxmivQgLW8HTbsB7srxEQKzyNZecgSPpkJD']
         });
     }
 

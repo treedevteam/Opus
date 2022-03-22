@@ -315,6 +315,19 @@
 
                     </div>
 
+                    <!-- checklist -->
+                    <div class="col-md-12 align-items-center mt-5">
+                        <ul class="list-group">
+                            <li class="list-group-item" *ngFor="let item of checklist">
+                                <input type="checkbox" value="{{item.id}}" [checked]="item.isSelected"
+                     (change)="isAllSelected(item)"/>
+                                      {{item.value}}</li>
+                        </ul>
+                    </div>
+
+
+
+
                     <!-- comments -->
                     <div class="flex items-end py-4 border-t mt-4">
                         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded fuse-mat-bold w-full">
