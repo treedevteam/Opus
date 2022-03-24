@@ -20,7 +20,6 @@ export class TasksLogsComponent implements OnInit {
     this._tasksService.taskById$
     .subscribe((task: Task2) => {
         this.taskId = task.id;
-        console.log(this.taskId,'this.taskIdthis.taskIdthis.taskIdthis.taskId');
         this.taskLogsData$ =  this._tasksService.getTasksLogs(this.taskId);
     });
   }

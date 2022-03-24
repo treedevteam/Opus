@@ -306,8 +306,9 @@
                                         <span class="font-medium"
                                             [ngStyle]="{'color': location.color}">{{location.name}}</span>
                                         <!-- <mat-icon
-                            class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
-                            [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+                                                class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+                                                [svgIcon]="'heroicons_solid:arrow-narrow-down'">
+                                            </mat-icon> -->
                                     </span>
                                 </button>
                             </mat-menu>
@@ -318,10 +319,22 @@
                     <!-- checklist -->
                     <div class="col-md-12 align-items-center mt-5">
                         <ul class="list-group">
-                            <li class="list-group-item" *ngFor="let item of checklist">
-                                <input type="checkbox" value="{{item.id}}" [checked]="item.isSelected"
-                     (change)="isAllSelected(item)"/>
-                                      {{item.value}}</li>
+                            <li class="list-group-item checkListLi" style="display: flex;align-items: center;" *ngFor="let item of taskCheckList$ | async">
+                                <div class="flex" style="align-items: center;">
+                                    <input class="mr-3" type="checkbox" value="{{item.id}}" [checked]="item.value === 1"
+                                    (change)="isAllSelected(item)"/>
+                                    <p [ngStyle]="{'text-decoration': item.value === 1 ? 'line-through' : 'none'}" >{{item.text}}</p>
+                                </div>
+                                <mat-icon class="delete_iconChecklist" (click)="deleteCheckList(item.id)">delete</mat-icon>
+                            </li>
+                            <li class="" style="width: 100%;">
+                                <mat-form-field class="flex-auto" style="width: 100%;">
+                                    <input placeholder="Add an item" style="width: 100%;" matInput [formControlName]="'checklist'" >
+                                    <button mat-raised-button color="primary" (click)="addNewCheckList()" style="border-radius: 4px!important;">
+                                            add
+                                    </button>
+                                </mat-form-field>
+                            </li>
                         </ul>
                     </div>
 

@@ -11,6 +11,7 @@ import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/co
 import moment from 'moment';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Departments } from '../../departments/departments.types';
+import { TaskCheckList } from '../tasks.types';
  
 @Component({
     selector       : 'tasks-list',
@@ -41,12 +42,19 @@ export class TasksListComponent implements OnInit, OnDestroy
     tags: Tag[];
     tasks: Task[];
     myTask: TaskWithDepartment[];
+    checklistCount: any = {
+        completed : 0,
+        total     : 0
+    };
+
     tasksCount: any = {
         completed : 0,
         incomplete: 0,
         total     : 0
     };
-     taskss: TaskWithDepartment[];
+    taskss: TaskWithDepartment[];
+
+    
 
 
     tasksData$ = combineLatest([
@@ -80,6 +88,39 @@ export class TasksListComponent implements OnInit, OnDestroy
          }
        return g;
      });
+
+
+
+
+
+     tasksDataCheckList$= combineLatest([
+        this.tasksData$,
+        this._tasksService.newCheckList$,
+        this._tasksService.udatedCheckList$,
+        this._tasksService.deletedCheckList$
+    ],(tasksWithDepartment,newCL,updatedCL,deletedCL) => {
+            if(newCL){
+                tasksWithDepartment.tasks.find(t=>t.id === newCL.task_id)?.checklists.push(newCL);
+            }else if(updatedCL){
+                const taskIndex = tasksWithDepartment.tasks.findIndex(t=>t.id === updatedCL.task_id);
+                if(taskIndex > -1){
+                    const checkListIndex = tasksWithDepartment.tasks[taskIndex].checklists.findIndex(c => c.id === updatedCL.id);
+                    if(checkListIndex > -1){
+                        tasksWithDepartment.tasks[taskIndex].checklists.splice(checkListIndex,1,updatedCL);
+                    }
+                }
+            }else if(deletedCL){
+                const taskIndex = tasksWithDepartment.tasks.findIndex(t=>t.id === deletedCL.task_id);
+                const checkListIndex = tasksWithDepartment.tasks[taskIndex].checklists.findIndex(c => c.id === deletedCL.id);
+                if(checkListIndex > -1){
+                    tasksWithDepartment.tasks[taskIndex].checklists.splice(checkListIndex,1);
+                }
+            }
+        return tasksWithDepartment;
+    });
+
+
+
     //  subtasksData$ = this._tasksService.subtasks$;
      subtasksData$ = combineLatest([
         this._tasksService.subtasks$,
@@ -96,11 +137,13 @@ export class TasksListComponent implements OnInit, OnDestroy
                 users.find(user => u === +user.id)
             ))
         }))),
-        shareReplay(1)
+        shareReplay(1),
+        tap(res=>console.log(res)
+        )
       );
 
      departmentTasksWithStatusPriority$ = combineLatest([
-        this.tasksData$,
+        this.tasksDataCheckList$,
         this._tasksService.getStatus$,
         this._tasksService.getPriorities$,
         this._tasksService.getUsersData$
@@ -114,7 +157,12 @@ export class TasksListComponent implements OnInit, OnDestroy
                     priority: priority.find(p => +res.priority === +p.id),
                     users_assigned: res.users_assigned.map(u => (
                         users.find(user => u === +user.id)
-                    ))
+                    )),
+                    checkListInfo : {
+                        completed: res.checklists.filter(x => x.value === 1).length,
+                        total: res.checklists.length
+                    }
+                    
                 })),
             ]
         })),
@@ -166,6 +214,20 @@ export class TasksListComponent implements OnInit, OnDestroy
     }
     ngOnInit(): void
     {
+
+        this._tasksService.taskCheckList$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((checkList: TaskCheckList[])=>{
+                this.checklistCount.completed = checkList.filter(x => x.value === 1).length;
+                this.checklistCount.total = checkList.length;
+            });
+            // .subscribe((tasks: Task[]) => {
+            //     this.tasks = tasks;
+
+            //     // Update the counts
+            //     this.tasksCount.total = this.tasks.filter(task => task.type === 'task').length;
+            //     this.tasksCount.completed = this.tasks.filter(task => task.type === 'task' && task.completed).length;
+            //     this.tasksCount.incomplete = this.tasksCount.total - this.tasksCount.completed;
         //Get the departments
         // Get the tags
         this._tasksService.tags$

@@ -100,6 +100,17 @@
                                                 <span>{{tas.title}}</span>
                                             </div>
                                         </a>
+
+                                        <!-- Users Assign -->
+                                        <ng-container>
+                                            <div class="checkListTable mr-4"
+                                            [ngClass]="{
+                                                'checkListTablegrey': tas.checkListInfo.completed !== tas.checkListInfo.total || tas.checkListInfo.total === 0,
+                                                'checkListTablegreen': tas.checkListInfo.completed === tas.checkListInfo.total && tas.checkListInfo.total !== 0}">
+                                                <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
+                                                {{tas.checkListInfo.completed}}/{{tas.checkListInfo.total}}
+                                            </div>
+                                        </ng-container>
                                         <!-- Users Assign -->
                                         <ng-container
                                             *ngFor="let item of tas.users_assigned">
@@ -172,7 +183,7 @@
                                                                 <span>{{subtaskTask.title}}</span>
                                                             </div>
                                                         </a>
-                                                        <!-- Users Assign -->
+                                                        
                                                         <ng-container
                                                             *ngFor="let subtaskitem of subtaskTask.users_assigned">
                                                             <img [matTooltip]="subtaskitem.name" [matTooltipPosition]="'above'"

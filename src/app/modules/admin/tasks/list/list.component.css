@@ -12,3 +12,22 @@
 .subtask_list{
     padding-left: 40px;
 }
+
+.checkListTable{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 9px 10px;
+    border-radius: 25px;
+}
+
+.checkListTablegrey{
+    background-color: rgba(30, 41, 59,0.2)!important;
+}
+.checkListTablegreen{
+    background-color: #61bd4f;
+    color: #fff;
+}
+.checkListTablegreen mat-icon{
+    color: #fff;
+}

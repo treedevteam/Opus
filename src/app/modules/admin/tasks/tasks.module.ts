@@ -30,6 +30,7 @@ import { TasksLogsComponent } from './tasks-logs/tasks-logs.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatBadgeModule} from '@angular/material/badge';
+import { ChecklistModule } from 'angular-checklist';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -62,7 +63,8 @@ import {MatBadgeModule} from '@angular/material/badge';
         MatProgressSpinnerModule,
         MatTabsModule,
         MatSnackBarModule,
-        MatBadgeModule
+        MatBadgeModule,
+        ChecklistModule
     ],
     providers   : [
         {

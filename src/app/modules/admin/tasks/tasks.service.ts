@@ -1,4 +1,4 @@
-import { Tag, Task, Task2, TaskLogs, TaskWithDepartment, TaskComment } from './tasks.types';
+import { Tag, Task, Task2, TaskLogs, TaskWithDepartment, TaskComment, TaskCheckList } from './tasks.types';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, shareReplay, switchMap, take, tap, throwError } from 'rxjs';
@@ -8,6 +8,8 @@ import { Location } from '../locations/model/location';
 import { Status } from '../statuses/model/status';
 import { Users } from '../users/model/users';
 import { Departments } from '../departments/departments.types';
+
+
 
 @Injectable({
     providedIn: 'root'
@@ -34,14 +36,19 @@ export class TasksService
     // Private
     private _tags: BehaviorSubject<Tag[] | null> = new BehaviorSubject(null);
 
+    //checkList
+    private _taskCheckList: BehaviorSubject<TaskCheckList[] | null> = new BehaviorSubject(null);
+    private _udatedCheckList: BehaviorSubject<TaskCheckList | null> = new BehaviorSubject(null);
+    private _newCheckList: BehaviorSubject<TaskCheckList | null> = new BehaviorSubject(null);
+    private _deletedCheckList: BehaviorSubject<any | null> = new BehaviorSubject(null);
 
+    //Comments
     private _taskComments: BehaviorSubject<TaskComment[] | null> = new BehaviorSubject(null);
     private _taskComment: BehaviorSubject<TaskComment | null> = new BehaviorSubject(null);
     private _deletedTaskComment: BehaviorSubject<number | null> = new BehaviorSubject(null);
 
-
+    //subtask
     private _subtasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
-
 
     private _departments: BehaviorSubject<Departments[] | null> = new BehaviorSubject(null);
     private _priorities: BehaviorSubject<Priorities[] | null> = new BehaviorSubject(null);
@@ -49,7 +56,7 @@ export class TasksService
     private _locations: BehaviorSubject<Location[] | null> = new BehaviorSubject(null);
     private _users: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
 
-
+    //Tasks
     private _mytasks: BehaviorSubject<TaskWithDepartment[] | null> = new BehaviorSubject(null);
     private _mytask: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
     private _newtask: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
@@ -63,6 +70,28 @@ export class TasksService
     private _task: BehaviorSubject<Task | null> = new BehaviorSubject(null);
     private _tasks: BehaviorSubject<Task[] | null> = new BehaviorSubject(null);
 
+
+    taskCheckListservice$ = combineLatest([
+        this.taskCheckList$,
+        this.udatedCheckList$,
+        this.newCheckList$,
+        this.deletedCheckList$
+      ],(checklist,updatedcheck, addCheckList,deletedCheckList) => {
+        if(addCheckList){
+            checklist.push(addCheckList);
+        }else if(updatedcheck){
+          const checklistIndex = checklist.findIndex(d => d.id === updatedcheck.id);
+          if(checklistIndex > -1){
+            checklist.splice(checklistIndex,1,updatedcheck);
+          }
+        }else if(deletedCheckList){
+            const checklistIndex = checklist.findIndex(d => d.id === deletedCheckList.id);
+          if(checklistIndex > -1){
+            checklist.splice(checklistIndex,1);
+          }
+        }
+        return checklist;
+    });
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
     getDepartmentsData$ = this._httpClient.get<Departments[]>('http://127.0.0.1:8000/api/departments').pipe(
@@ -82,6 +111,9 @@ export class TasksService
         }),
          shareReplay(1),
     );
+
+
+
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
     // getTasksLogsData$ = this._httpClient.get<TaskLogs[]>('http://127.0.0.1:8000/api/logs/').pipe(
@@ -157,6 +189,21 @@ export class TasksService
     }
     get currentDepartmentTasks$(): Observable<TaskWithDepartment>{
         return this._currentDepartmentTasks.asObservable();
+    }
+
+    get taskCheckList$(): Observable<TaskCheckList[]>{
+        return this._taskCheckList.asObservable();
+    }
+
+    get udatedCheckList$(): Observable<TaskCheckList>{
+        return this._udatedCheckList.asObservable();
+    }
+
+    get newCheckList$(): Observable<TaskCheckList>{
+        return this._newCheckList.asObservable();
+    }
+    get deletedCheckList$(): Observable<any>{
+        return this._deletedCheckList.asObservable();
     }
 
 
@@ -286,6 +333,7 @@ export class TasksService
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
                 this._newtask.next(data.data);
+                console.log(data,"new taskkkkkkk");
                 this.setNullBehaviourSubject();
                 return data.data;
             }),
@@ -513,6 +561,17 @@ export class TasksService
         );
     }
 
+    getTaskCheckList(id: number): Observable<TaskCheckList[]>{
+        return this._httpClient.get<TaskCheckList[]>('http://127.0.0.1:8000/api/checklists/'+ id).pipe(
+            map((data: any): TaskCheckList[] => {
+                this._taskCheckList.next(data.data);
+                console.log(data);
+                return data.data;
+            }),
+             shareReplay(1),
+            );
+    }
+
     /**
      * Create task
      *
@@ -691,6 +750,38 @@ export class TasksService
                 return data.data;
             }),
              shareReplay(1),
+            );
+    }
+
+
+    editCheckList(form, id:number): Observable<TaskCheckList>{
+        return this._httpClient.post<TaskCheckList>('http://127.0.0.1:8000/api/checklist/update/'+id, form).pipe(
+            map((data: any): TaskCheckList => {
+                this._udatedCheckList.next({...data.data,task_id: form.task_id});
+                this._udatedCheckList.next(null);
+                return data.data;
+            }),
+            );
+    }
+
+    addNewCheckListItem(form: any): Observable<TaskCheckList>{
+        return this._httpClient.post<TaskCheckList>('http://127.0.0.1:8000/api/checklist/store', form).pipe(
+            map((data: any): TaskCheckList => {
+                console.log(form,"DSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                this._newCheckList.next({...data.data,task_id: form.task_id});
+                this._newCheckList.next(null);
+                return data.data;
+            }),
+            );
+    }
+
+    deletedCheckListItem(id: number, task_id): Observable<number>{
+        return this._httpClient.delete<number>('http://127.0.0.1:8000/api/checklist/delete/'+id).pipe(
+            map((data: any): number => {
+                this._deletedCheckList.next({id:id,task_id: task_id});
+                this._deletedCheckList.next(null);
+                return data;
+            }),
             );
     }
 

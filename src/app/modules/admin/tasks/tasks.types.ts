@@ -47,6 +47,7 @@ export interface Task2
     departments: number[];
     has_expired: boolean;
     subtasks_count: number;
+    checklists: TaskCheckList[]
 }
 
 export interface TaskWithDepartment{
@@ -62,6 +63,13 @@ export interface TaskLogs{
         name: string;
         image: string;
     }
+}
+
+export interface TaskCheckList{
+    id: number;
+    task_id: number;
+    text: string;
+    value: number;
 }
 
 

@@ -47,3 +47,24 @@ tasks-details{
     right: -22px !important;
     transition: opacity 0.3s;
 }
+
+
+.delete_iconChecklist{
+    opacity: 0;
+    font-size: 16px;
+    color: #fff;
+    background: #dc2626;
+    border-radius: 50%;
+    transition: opacity 0.3s;
+}
+.checkListLi{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.checkListLi:hover .delete_iconChecklist{
+    opacity: 1;
+    transition: opacity 0.3s;
+    z-index: 99999;
+    cursor: pointer;
+}

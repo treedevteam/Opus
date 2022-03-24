@@ -685,7 +685,6 @@ openUsersPanel(): void
     }
 
     navigateTo(): void{
-        debugger;
         this.closeDrawer().then(() => true);
         this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }

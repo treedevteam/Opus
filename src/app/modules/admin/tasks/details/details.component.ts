@@ -16,6 +16,7 @@ import { Status } from '../../statuses/model/status';
 import { Location } from '../../locations/model/location';
 import { Users } from '../../users/model/users';
 import { Departments } from '../../departments/departments.types';
+import { TaskCheckList } from '../tasks.types';
 
 @Component({
     selector       : 'tasks-details',
@@ -52,6 +53,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
     // taskComments$ = this._tasksService.taskComments$;
 
+    checkList: TaskCheckList[];
 
 
 
@@ -59,6 +61,15 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _tagsPanelOverlayRef: OverlayRef;
     private _usersPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    taskCheckList$ = this._tasksService.taskCheckListservice$
+
+    
+
+
+
+
+
 
     taskComments$ = combineLatest([
         this._tasksService.taskComments$,
@@ -70,9 +81,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             g.unshift(p);
         }else if(de){
             const index = g.findIndex(x => x.id === de);
-            if (index > -1) {
-                g.splice(index, 1);
-            }
+            if (index > -1) g.splice(index, 1);
         }
         let d = null;
         if(g){
@@ -100,7 +109,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private route: ActivatedRoute
     )
     {
-        
+       
     }
     
     
@@ -131,7 +140,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             departments: [],
             has_expired    : [0],
             users_assigned    : [[]],
-            newComment: ''
+            newComment: '',
+            checklist:''
         });
 
 
@@ -232,6 +242,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
             this._tasksService.getTaskComments(+this.task2.id).subscribe(res=>{
             });
+
+            this._tasksService.getTaskCheckList(+this.task2.id).subscribe(res=>{
+            });
             
             // Patch values to the form from the task
             this.taskForm.patchValue(task, {emitEvent: false});
@@ -328,7 +341,25 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      * Close the drawer
      */
 
-    
+     isAllSelected(item) {
+         this.taskCheckList$.subscribe(res=>{
+             this.checkList = res;
+         })
+        this.checkList.forEach(val => {
+          if (val.id === item.id) {
+                if(item.value){
+                    this._tasksService.editCheckList({value: 0, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe(res=>{
+                        console.log(res);
+                    });
+                }else{
+                    this._tasksService.editCheckList({value: 1, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe(res=>{
+                        console.log(res);
+                    });
+                }
+            };
+
+        });
+      }
 
     closeDrawer(): Promise<MatDrawerToggleResult>
     {
@@ -804,6 +835,18 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                     console.log(res);
                 })
             }
+        });
+    }
+
+    addNewCheckList(): void{
+        this._tasksService.addNewCheckListItem(
+            {text: this.taskForm.get('checklist').value, task_id: this.taskForm.get('id').value}
+            ).subscribe(()=> this.taskForm.get('checklist').setValue('')
+            )
+    }
+
+    deleteCheckList(id: number): void{
+        this._tasksService.deletedCheckListItem(id,this.taskForm.get('id').value).subscribe(()=>{
         });
     }
 
