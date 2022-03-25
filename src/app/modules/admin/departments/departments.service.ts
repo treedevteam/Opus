@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Departments } from './departments.types';
 import { BehaviorSubject, map, Observable, shareReplay } from 'rxjs';
 import { Users } from '../users/model/users';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepartmentsService {
+  apiUrl = environment.apiUrl;
 
   private _departments: BehaviorSubject<Departments[] | null> = new BehaviorSubject(null);
   private _department: BehaviorSubject<Departments | null> = new BehaviorSubject(null);
@@ -41,7 +43,7 @@ export class DepartmentsService {
   }
 
   getDepartments(): Observable<Departments[]>{
-    return this._httpClient.get<Departments[]>('http://127.0.0.1:8000/api/departments').pipe(
+    return this._httpClient.get<Departments[]>(this.apiUrl+'api/departments').pipe(
       map((data: any): Departments[] => {
           this._departments.next(data);
           console.log(data,"DEPARTMETS");
@@ -52,7 +54,7 @@ export class DepartmentsService {
   }
 
   getUsers(): Observable<Users[]>{
-    return this._httpClient.get<Users[]>('http://127.0.0.1:8000/api/users').pipe(
+    return this._httpClient.get<Users[]>(this.apiUrl+'api/users').pipe(
       map((data: any): Users[] => {
           return data;
       }),
@@ -61,7 +63,7 @@ export class DepartmentsService {
   }
 
   addDepartment(data: any): Observable<Departments>{
-    return this._httpClient.post<Departments>('http://127.0.0.1:8000/api/department/store', data).pipe(
+    return this._httpClient.post<Departments>(this.apiUrl+'api/department/store', data).pipe(
       map((res: any): Departments =>{
         this._newDepartment.next(res);
         this._newDepartment.next(null);
@@ -71,7 +73,7 @@ export class DepartmentsService {
   }
 
   updateDepartments(form: any, id: number): Observable<Departments>{
-    return this._httpClient.post<Departments>("http://127.0.0.1:8000/api/department/update/"+id, form).pipe(
+    return this._httpClient.post<Departments>(this.apiUrl+"api/department/update/"+id, form).pipe(
       map((res: any): Departments=>{
         this._updatedDepartment.next(res);
         this._updatedDepartment.next(null);
@@ -81,7 +83,7 @@ export class DepartmentsService {
   }
 
   deleteDepartment(id: number): Observable<number>{
-    return this._httpClient.delete<Number>("http://127.0.0.1:8000/api/department/delete/"+ id).pipe(
+    return this._httpClient.delete<Number>(this.apiUrl+"api/department/delete/"+ id).pipe(
       map((res: any): number =>{
         this._deletedDepartment.next(id);
         this._deletedDepartment.next(null);
@@ -91,7 +93,7 @@ export class DepartmentsService {
   }
 
   getDepartmentById(id: number): Observable<Departments>{
-    return this._httpClient.get<Departments>("http://127.0.0.1:8000/api/department/"+ id).pipe(
+    return this._httpClient.get<Departments>(this.apiUrl+"api/department/"+ id).pipe(
       map((res: any): Departments =>{
         return res;
       })

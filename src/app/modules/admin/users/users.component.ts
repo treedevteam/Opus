@@ -5,6 +5,7 @@ import { combineLatest, map, Observable, shareReplay } from 'rxjs';
 import { Users } from './model/users';
 import { UserService } from './services/user.service';
 import { Router } from '@angular/router';
+import { environment } from 'environments/environment';
 
 class AddOrUpdate {
     isUpdate?: boolean;
@@ -19,6 +20,8 @@ const ELEMENT_DATA: Users[] = [
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
+    apiUrl = environment.apiUrl;
+
     displayedColumns: string[] = ['position', 'name', 'email', 'department', 'role', 'image','edit', 'delete'];
     dataSource = ELEMENT_DATA;
     constructor(private _usersService: UserService,

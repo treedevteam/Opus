@@ -47,7 +47,7 @@
                         <div class="flex items-center -space-x-1.5">
                             <ng-container>
                                 <img class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover mr-5"
-                                    [src]="'http://127.0.0.1:8000/storage/' + task2.user.user_image"
+                                    [src]="apiUrl+ 'storage/' + task2.user.user_image"
                                     alt="Member avatar" [matTooltip]="task2.user.name" [matTooltipPosition]="'above'">
                                 <span>- Created by</span>
 
@@ -62,7 +62,7 @@
                                 *ngFor="let member of getAssignedUsers(task2.users_assigned).slice(0, 5); trackBy: trackByFn">
                                 <img [matTooltip]="member.name" [matTooltipPosition]="'above'"
                                     class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                    [src]="'http://127.0.0.1:8000/storage/' + member.user_image" alt="Member avatar">
+                                    [src]="apiUrl+'storage/' + member.user_image" alt="Member avatar">
                             </ng-container>
                             <ng-container *ngIf="task2.users_assigned.length > 5">
                                 <div
@@ -377,7 +377,7 @@
 
                                 <div class="one_comment d-flex" *ngIf="!comment.is_his">
                                     <img style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
-                                        src="http://127.0.0.1:8000/storage/{{comment.user_id.image}}" alt="">
+                                        src="{{apiUrl+ 'storage/'+comment.user_id.image}}" alt="">
                                     <!-- {{comment.user | json}} -->
                                     <div class=" px-3">
                                         <h5 class="bold">{{comment.user_id.name}}</h5>

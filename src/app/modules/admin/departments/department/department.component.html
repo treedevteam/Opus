@@ -25,7 +25,7 @@
                     <div class="flex justify-between items-center" style="width: 100%;">
 
                     <div class="flex items-center justify-center p-2 rounded-full bg-primary-50 text-primary-700 dark:bg-primary dark:text-on-primary">
-                        <img class="department_image" src="{{'http://127.0.0.1:8000/storage/' + department.image}}" alt="">
+                        <img class="department_image" src="{{apiUrl+'storage/' + department.image}}" alt="">
                         
                          
                        
@@ -54,7 +54,7 @@
                             <ng-container *ngFor="let member of department.users.slice(0, 5); trackBy: trackByFn">
                                 <img
                                     class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                    [src]="'http://127.0.0.1:8000/storage/' + member.image"
+                                    [src]="apiUrl+'storage/' + member.image"
                                     alt="Member avatar">
                             </ng-container>
                             <ng-container *ngIf="department.users.length > 5">

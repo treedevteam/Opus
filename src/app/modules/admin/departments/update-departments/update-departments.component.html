@@ -29,7 +29,7 @@
                         <h3 mat-subheader>Files</h3>
                         <div class="mb-4" style="display: flex;align-items: center; justify-content: space-between;">
                             <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;"
-                            src="http://127.0.0.1:8000/storage/{{file}}" alt="">
+                            src="{{apiUrl+ 'storage/'+file}}" alt="">
                             <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>
 
                         </div>

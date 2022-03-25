@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    url : 'tetete'
+    apiUrl: 'http://127.0.0.1:8000/'
 };
 
 /*

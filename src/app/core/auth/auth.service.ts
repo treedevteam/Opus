@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, switchMap, throwError, tap, mapTo, shareReplay } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class AuthService
@@ -69,7 +69,7 @@ export class AuthService
 
     changepassword(credentials: { current_password: string; new_password: string; new_confirm_password: string }): Observable<any>
     {
-        return this._httpClient.post('http://127.0.0.1:8000/api/user/password', credentials);
+        return this._httpClient.post(this.apiUrl+'api/user/password', credentials);
     }
 
     /**
@@ -80,14 +80,13 @@ export class AuthService
     signIn(credentials): Observable<any>
     {
 
-
         // Throw error, if the user is already logged in
         if ( this._authenticated )
         {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('http://127.0.0.1:8000/oauth/token', credentials).pipe(
+        return this._httpClient.post(this.apiUrl+'oauth/token', credentials).pipe(
             switchMap((response: any) => {
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
@@ -99,7 +98,7 @@ export class AuthService
                 this._userService.user = response.user;
 
                 // Return a new observable with the response
-                return this._httpClient.get('http://127.0.0.1:8000/api/user').pipe(
+                return this._httpClient.get(this.apiUrl+'api/user').pipe(
                     catchError(() =>
                     // Return false
                     of(false)
@@ -120,7 +119,7 @@ export class AuthService
     signInUsingToken(): Observable<any>
     {
         // Renew token
-        return this._httpClient.get('http://127.0.0.1:8000/api/user').pipe(
+        return this._httpClient.get(this.apiUrl+'api/user').pipe(
             catchError(() =>
             // Return false
             of(false)

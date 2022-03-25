@@ -12,6 +12,7 @@ import moment from 'moment';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Departments } from '../../departments/departments.types';
 import { TaskCheckList } from '../tasks.types';
+import { environment } from 'environments/environment';
  
 @Component({
     selector       : 'tasks-list',
@@ -29,6 +30,8 @@ import { TaskCheckList } from '../tasks.types';
 })
 export class TasksListComponent implements OnInit, OnDestroy
 {
+    apiUrl = environment.apiUrl;
+
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     expandedSubtasks:number | null = null;
 

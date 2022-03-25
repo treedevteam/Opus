@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { StoreDepartmentsComponent } from '../store-departments/store-departments.component';
 import { UpdateDepartmentsComponent } from '../update-departments/update-departments.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { environment } from 'environments/environment';
 
 
 @Component({
@@ -18,6 +19,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DepartmentComponent implements OnInit, OnDestroy {
+  apiUrl = environment.apiUrl;
 
 
   // Private

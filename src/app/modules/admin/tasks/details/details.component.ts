@@ -17,6 +17,7 @@ import { Location } from '../../locations/model/location';
 import { Users } from '../../users/model/users';
 import { Departments } from '../../departments/departments.types';
 import { TaskCheckList } from '../tasks.types';
+import { environment } from 'environments/environment';
 
 @Component({
     selector       : 'tasks-details',
@@ -27,6 +28,8 @@ import { TaskCheckList } from '../tasks.types';
 })
 export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 {
+    apiUrl = environment.apiUrl;
+
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
     @ViewChild('usersPanelOrigin') private _usersPanelOrigin: ElementRef;
     @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;

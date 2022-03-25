@@ -30,7 +30,7 @@
                     class="w-full h-full rounded-full"
                     style="object-fit: cover;"
                     *ngIf="userInfo?.user_image"
-                    src="http://127.0.0.1:8000/storage/{{userInfo?.user_image}}"
+                    src="{{apiUrl+ 'storage/'+userInfo?.user_image}}"
                     alt="User avatar">
                 <mat-icon
                     class="icon-size-24"

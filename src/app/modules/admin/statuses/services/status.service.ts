@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
 import { catchError, map, Observable, BehaviorSubject } from 'rxjs';
 import { Status } from '../model/status';
 
@@ -7,13 +8,14 @@ import { Status } from '../model/status';
   providedIn: 'root'
 })
 export class StatusService {
+  apiUrl = environment.apiUrl;
 
   private addedStatus = new BehaviorSubject<Status>(null);
   private updateStatus = new BehaviorSubject<Status>(null);
   private deletedStatus = new BehaviorSubject<number>(null);
 
   constructor(private http: HttpClient) { }
-  getStatuses$ = this.http.get<Status[]>('http://127.0.0.1:8000/api/statuses').pipe(
+  getStatuses$ = this.http.get<Status[]>(this.apiUrl+'api/statuses').pipe(
     map((data: any) :Status[] => data),
    catchError((err) => {
      console.error(err);
@@ -38,7 +40,7 @@ get deletedStatus$(): Observable<number>
 }
 
 _addStatus(data: any): Observable<Status>{
-    return this.http.post<Status>('http://127.0.0.1:8000/api/status/store', data).pipe(
+    return this.http.post<Status>(this.apiUrl+'api/status/store', data).pipe(
         map((res: any) => {
           this.resetObserv();
           this.addedStatus.next(res);
@@ -52,7 +54,7 @@ _addStatus(data: any): Observable<Status>{
     );
 }
   _getStatus(): Observable<Status>{
-    return this.http.get<Status>('http://127.0.0.1:8000/api/statuses').pipe(
+    return this.http.get<Status>(this.apiUrl+'api/statuses').pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -63,7 +65,7 @@ _addStatus(data: any): Observable<Status>{
   }
 
   _getStatusById($id: any): Observable<Status>{
-    return this.http.get<Status>('http://127.0.0.1:8000/api/status/'+$id).pipe(
+    return this.http.get<Status>(this.apiUrl+'api/status/'+$id).pipe(
         map((data: any) => data),
        catchError((err) => {
          console.error(err);
@@ -74,7 +76,7 @@ _addStatus(data: any): Observable<Status>{
   }
 
   _deleteStatus($id): Observable<Status>{
-    return this.http.delete<Status>('http://127.0.0.1:8000/api/status/delete/'+$id).pipe(
+    return this.http.delete<Status>(this.apiUrl+'api/status/delete/'+$id).pipe(
         map((data: any) => {
           this.resetObserv();
           this.deletedStatus.next($id);
@@ -89,7 +91,7 @@ _addStatus(data: any): Observable<Status>{
   }
 
   _updateStatus( datas: Status, $id: number,): Observable<Status>{
-    return this.http.post<Status>('http://127.0.0.1:8000/api/status/update/'+$id, datas).pipe(
+    return this.http.post<Status>(this.apiUrl+'api/status/update/'+$id, datas).pipe(
         map((data: any) => {
           this.resetObserv();
           this.updateStatus.next(data);

@@ -8,6 +8,7 @@ import { NavigationService } from 'app/core/navigation/navigation.service';
 import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { AuthService } from 'app/core/auth/auth.service';
+import { environment } from 'environments/environment';
 
 @Component({
     selector     : 'classy-layout',
@@ -16,6 +17,8 @@ import { AuthService } from 'app/core/auth/auth.service';
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy
 {
+    apiUrl = environment.apiUrl;
+
     isScreenSmall: boolean;
     navigation: Navigation;
     user: User;

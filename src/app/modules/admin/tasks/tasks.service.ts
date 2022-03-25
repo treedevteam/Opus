@@ -8,6 +8,7 @@ import { Location } from '../locations/model/location';
 import { Status } from '../statuses/model/status';
 import { Users } from '../users/model/users';
 import { Departments } from '../departments/departments.types';
+import { environment } from 'environments/environment';
 
 
 
@@ -16,6 +17,8 @@ import { Departments } from '../departments/departments.types';
 })
 export class TasksService
 {
+
+  apiUrl = environment.apiUrl;
 
 
     private _currentDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null); 
@@ -95,7 +98,7 @@ export class TasksService
     });
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getDepartmentsData$ = this._httpClient.get<Departments[]>('http://127.0.0.1:8000/api/departments').pipe(
+    getDepartmentsData$ = this._httpClient.get<Departments[]>(this.apiUrl+'api/departments').pipe(
         map((data: any): Departments[] => {
             this._departments.next(data);
             return data;
@@ -103,7 +106,7 @@ export class TasksService
          shareReplay(1),
     );
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getUsersData$ = this._httpClient.get<Users[]>('http://127.0.0.1:8000/api/users').pipe(
+    getUsersData$ = this._httpClient.get<Users[]>(this.apiUrl+'api/users').pipe(
         map((data: any): Users[] => {
             this._users.next(data);
             console.log(data);
@@ -117,7 +120,7 @@ export class TasksService
 
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    // getTasksLogsData$ = this._httpClient.get<TaskLogs[]>('http://127.0.0.1:8000/api/logs/').pipe(
+    // getTasksLogsData$ = this._httpClient.get<TaskLogs[]>(this.apiUrl+'api/logs/').pipe(
     //     map((data: any): TaskLogs[] => {
     //         this._tagsLogs.next(data);
     //         return data;
@@ -125,7 +128,7 @@ export class TasksService
     //      shareReplay(1),
     // );
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getTasksData$ = this._httpClient.get<TaskWithDepartment[]>('http://127.0.0.1:8000/api/tasks/departments').pipe(
+    getTasksData$ = this._httpClient.get<TaskWithDepartment[]>(this.apiUrl+'api/tasks/departments').pipe(
         map((data: any): TaskWithDepartment[] => {
             this._mytasks.next(data.data);
             console.log(data.data);
@@ -134,7 +137,7 @@ export class TasksService
          shareReplay(1),
     );
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getPriorities$ = this._httpClient.get<Priorities[]>('http://127.0.0.1:8000/api/priorities').pipe(
+    getPriorities$ = this._httpClient.get<Priorities[]>(this.apiUrl+'api/priorities').pipe(
         map((data: any): Priorities[] => {
             this._priorities.next(data);
             return data;
@@ -143,7 +146,7 @@ export class TasksService
     );
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getStatus$ = this._httpClient.get<Status[]>('http://127.0.0.1:8000/api/statuses').pipe(
+    getStatus$ = this._httpClient.get<Status[]>(this.apiUrl+'api/statuses').pipe(
         map((data: any): Status[] => {
             this._status.next(data);
             return data;
@@ -152,7 +155,7 @@ export class TasksService
     );
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    getLocation$ = this._httpClient.get<Location[]>('http://127.0.0.1:8000/api/locations').pipe(
+    getLocation$ = this._httpClient.get<Location[]>(this.apiUrl+'api/locations').pipe(
         map((data: any): Location[] => {
             this._locations.next(data);
             return data;
@@ -316,7 +319,7 @@ export class TasksService
 
     getUsersDepartment(depId: number): Observable<Users[]>
     {
-        return this._httpClient.get<Users[]>('http://127.0.0.1:8000/api/users/department/' + depId).pipe(
+        return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department/' + depId).pipe(
             map((data: any): Users[] => {
                 return data.data;
             }),
@@ -330,7 +333,7 @@ export class TasksService
      */
   
      storeTask(form: any): Observable<Task2[]>{
-        return this._httpClient.post<Task2[]>('http://127.0.0.1:8000/api/task/store', form).pipe(
+        return this._httpClient.post<Task2[]>(this.apiUrl+'api/task/store', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
                 this._newtask.next(data.data);
@@ -347,7 +350,7 @@ export class TasksService
     }
 
     assignUserTask(taskId: number, userId: number): Observable<void>{
-        return this._httpClient.post<any>('http://127.0.0.1:8000/api/task/'+ taskId+'/'+ userId, null).pipe(
+        return this._httpClient.post<any>(this.apiUrl+'api/task/'+ taskId+'/'+ userId, null).pipe(
             map((data: any): any => {
                 this._tasksupdated.next(data.data);
                 this.setNullBehaviourSubject();
@@ -356,7 +359,7 @@ export class TasksService
         );
     }
     updateTaskservice(form: any, id: number): Observable<Task2>{
-        return this._httpClient.post<Task2>('http://127.0.0.1:8000/api/task/' + id + '/update/admin', form).pipe(
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task/' + id + '/update/admin', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
                 this._newtask.next(null);
@@ -373,7 +376,7 @@ export class TasksService
 
 
     getTasksLogs(id): Observable<TaskLogs[]> {
-        return this._httpClient.get<TaskLogs[]>('http://127.0.0.1:8000/api/logs/'+ id).pipe(
+        return this._httpClient.get<TaskLogs[]>(this.apiUrl+'api/logs/'+ id).pipe(
             map((data: any): TaskLogs[] => {
                 this._tagsLogs.next(data.data)
                 return data.data;
@@ -545,7 +548,7 @@ export class TasksService
     getTaskById2(id: string): Observable<Task2>
     {
         // this.getTaskComments(+id);
-        return this._httpClient.get<Task2>('http://127.0.0.1:8000/api/task/'+ id).pipe(
+        return this._httpClient.get<Task2>(this.apiUrl+'api/task/'+ id).pipe(
             map((data: any): Task2 => {
                 this._mytask.next(data.data);
                 // this.getTaskComments(+id)
@@ -563,7 +566,7 @@ export class TasksService
     }
 
     getTaskCheckList(id: number): Observable<TaskCheckList[]>{
-        return this._httpClient.get<TaskCheckList[]>('http://127.0.0.1:8000/api/checklists/'+ id).pipe(
+        return this._httpClient.get<TaskCheckList[]>(this.apiUrl+'api/checklists/'+ id).pipe(
             map((data: any): TaskCheckList[] => {
                 this._taskCheckList.next(data.data);
                 console.log(data);
@@ -648,7 +651,7 @@ export class TasksService
     {
         return this.tasks$.pipe(
             take(1),
-            switchMap(tasks => this._httpClient.delete('http://127.0.0.1:8000/api/task/delete/'+id,).pipe(
+            switchMap(tasks => this._httpClient.delete(this.apiUrl+'api/task/delete/'+id,).pipe(
                 map((isDeleted: boolean) => {
                     const test = {id:id, departments: departments}
                     this._deletedtasks.next(test);
@@ -664,7 +667,7 @@ export class TasksService
     //COMMENT
     //get comments
     getTaskComments(id: number): Observable<TaskComment[]>{
-        return this._httpClient.get<Users[]>('http://127.0.0.1:8000/api/comments/'+ id).pipe(
+        return this._httpClient.get<Users[]>(this.apiUrl+'api/comments/'+ id).pipe(
         map((data: any): TaskComment[] => {
             this._taskComments.next(data.data);
             console.log(data);
@@ -676,7 +679,7 @@ export class TasksService
 
     //add comment
     storeComment(comment: any): Observable<Task2[]>{
-        return this._httpClient.post<Task2[]>('http://127.0.0.1:8000/api/comment/store', comment).pipe(
+        return this._httpClient.post<Task2[]>(this.apiUrl+'api/comment/store', comment).pipe(
             map((data: any) => {
                 this._taskComment.next(data.data);
                 this._taskComment.next(null);
@@ -695,7 +698,7 @@ export class TasksService
     {
         return this.taskComments$.pipe(
             take(1),
-            switchMap(tasks => this._httpClient.delete('http://127.0.0.1:8000/api/comment/delete/'+id,).pipe(
+            switchMap(tasks => this._httpClient.delete(this.apiUrl+'api/comment/delete/'+id,).pipe(
                 map((isDeleted: boolean) => {
                     this._deletedTaskComment.next(id);
                     this._deletedTaskComment.next(null);
@@ -719,7 +722,7 @@ export class TasksService
     //Subtasks
 
     getSubtasks(id: number): Observable<Task2[]>{
-        return this._httpClient.get<Task2[]>('http://127.0.0.1:8000/api/task/subtasks/'+ id).pipe(
+        return this._httpClient.get<Task2[]>(this.apiUrl+'api/task/subtasks/'+ id).pipe(
         map((data: any): Task2[] => {
             this._subtasks.next(data.data);
             return data.data;
@@ -732,7 +735,7 @@ export class TasksService
 
 
     getDepartment(id: number): Observable<Departments>{
-        return this._httpClient.get<Departments>('http://127.0.0.1:8000/api/department/'+ id).pipe(
+        return this._httpClient.get<Departments>(this.apiUrl+'api/department/'+ id).pipe(
             map((data: any): Departments => {
                 this._currentDepartment.next(data);
                 console.log('DEPARTMENT BY ID');
@@ -744,7 +747,7 @@ export class TasksService
 
 
     getDepartmentTasks(id: number): Observable<TaskWithDepartment>{
-        return this._httpClient.get<TaskWithDepartment>('http://127.0.0.1:8000/api/department/'+id+'/tasks').pipe(
+        return this._httpClient.get<TaskWithDepartment>(this.apiUrl+'api/department/'+id+'/tasks').pipe(
             map((data: any): TaskWithDepartment => {
                 this._currentDepartmentTasks.next(data.data);
                 console.log(data,'DEPARTMENT tasks');
@@ -756,7 +759,7 @@ export class TasksService
 
 
     editCheckList(form, id:number): Observable<TaskCheckList>{
-        return this._httpClient.post<TaskCheckList>('http://127.0.0.1:8000/api/checklist/update/'+id, form).pipe(
+        return this._httpClient.post<TaskCheckList>(this.apiUrl+'api/checklist/update/'+id, form).pipe(
             map((data: any): TaskCheckList => {
                 this._udatedCheckList.next({...data.data,task_id: form.task_id});
                 this._udatedCheckList.next(null);
@@ -766,7 +769,7 @@ export class TasksService
     }
 
     addNewCheckListItem(form: any): Observable<TaskCheckList>{
-        return this._httpClient.post<TaskCheckList>('http://127.0.0.1:8000/api/checklist/store', form).pipe(
+        return this._httpClient.post<TaskCheckList>(this.apiUrl+'api/checklist/store', form).pipe(
             map((data: any): TaskCheckList => {
                 console.log(form,"DSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                 this._newCheckList.next({...data.data,task_id: form.task_id});
@@ -777,7 +780,7 @@ export class TasksService
     }
 
     deletedCheckListItem(id: number, task_id): Observable<number>{
-        return this._httpClient.delete<number>('http://127.0.0.1:8000/api/checklist/delete/'+id).pipe(
+        return this._httpClient.delete<number>(this.apiUrl+'api/checklist/delete/'+id).pipe(
             map((data: any): number => {
                 this._deletedCheckList.next({id:id,task_id: task_id});
                 this._deletedCheckList.next(null);
