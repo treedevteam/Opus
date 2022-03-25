@@ -90,6 +90,7 @@ export class TasksService
             checklist.splice(checklistIndex,1);
           }
         }
+        
         return checklist;
     });
 

@@ -319,14 +319,19 @@
                     <!-- checklist -->
                     <div class="col-md-12 align-items-center mt-5">
                         <ul class="list-group">
-                            <li class="list-group-item checkListLi" style="display: flex;align-items: center;" *ngFor="let item of taskCheckList$ | async">
-                                <div class="flex" style="align-items: center;">
-                                    <input class="mr-3" type="checkbox" value="{{item.id}}" [checked]="item.value === 1"
-                                    (change)="isAllSelected(item)"/>
-                                    <p [ngStyle]="{'text-decoration': item.value === 1 ? 'line-through' : 'none'}" >{{item.text}}</p>
+                                <div class="w-full py-4" *ngIf="checkListtotal">
+                                    {{(checkListcompleted / checkListtotal) * 100 | number: '1.0-0'}}%
+                                    <mat-progress-bar mode="determinate" value="{{(checkListcompleted / checkListtotal) * 100}}"></mat-progress-bar>
                                 </div>
-                                <mat-icon class="delete_iconChecklist" (click)="deleteCheckList(item.id)">delete</mat-icon>
-                            </li>
+                                <li class="list-group-item checkListLi" style="display: flex;align-items: center;" *ngFor="let item of taskCheckList$ | async">
+                                    <div class="flex" style="align-items: center;">
+                                        <input class="mr-3" type="checkbox" value="{{item.id}}" [checked]="item.value === 1"
+                                        (change)="isAllSelected(item)"/>
+                                        <p [ngStyle]="{'text-decoration': item.value === 1 ? 'line-through' : 'none'}" >{{item.text}}</p>
+                                    </div>
+                                    <mat-icon class="delete_iconChecklist" (click)="deleteCheckList(item.id)">delete</mat-icon>
+                                </li>
+
                             <li class="" style="width: 100%;">
                                 <mat-form-field class="flex-auto" style="width: 100%;">
                                     <input placeholder="Add an item" style="width: 100%;" matInput [formControlName]="'checklist'" >
@@ -335,6 +340,7 @@
                                     </button>
                                 </mat-form-field>
                             </li>
+
                         </ul>
                     </div>
 
@@ -343,6 +349,7 @@
 
                     <!-- comments -->
                     <div class="flex items-end py-4 border-t mt-4">
+                        
                         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded fuse-mat-bold w-full">
                             <textarea
                                 class="min-h-5 my-0 resize-none"

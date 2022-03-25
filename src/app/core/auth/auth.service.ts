@@ -3,10 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, switchMap, throwError, tap, mapTo, shareReplay } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
+import { environment } from '../../../environments/environment.prod';
 
 @Injectable()
 export class AuthService
 {
+    private apiUrl = environment.apiUrl; 
+    
     private _authenticated: boolean = false;
 
     /**

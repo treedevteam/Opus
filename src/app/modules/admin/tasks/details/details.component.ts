@@ -50,7 +50,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     taskForm: FormGroup;
     tasks: Task[];
 
-
+    checkListtotal = 0
+    checkListcompleted = 0;
     // taskComments$ = this._tasksService.taskComments$;
 
     checkList: TaskCheckList[];
@@ -63,6 +64,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     taskCheckList$ = this._tasksService.taskCheckListservice$
+    
+     
+    
 
     
 
@@ -244,6 +248,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             });
 
             this._tasksService.getTaskCheckList(+this.task2.id).subscribe(res=>{
+                this.checkListtotal = res.length;
+                this.checkListcompleted = res.filter(x=> x.value === 1).length;
             });
             
             // Patch values to the form from the task
@@ -344,6 +350,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      isAllSelected(item) {
          this.taskCheckList$.subscribe(res=>{
              this.checkList = res;
+              this.checkListtotal = res.length;
+                this.checkListcompleted = res.filter(x=> x.value === 1).length;
+             console.log(res,"TETETETETETEETETETETETET");
          })
         this.checkList.forEach(val => {
           if (val.id === item.id) {

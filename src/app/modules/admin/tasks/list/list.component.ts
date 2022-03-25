@@ -148,7 +148,9 @@ export class TasksListComponent implements OnInit, OnDestroy
         this._tasksService.getPriorities$,
         this._tasksService.getUsersData$
       ]).pipe(
-        map(([tasksDepartment, statuses, priority,users]) =>({
+        map(([tasksDepartment, statuses, priority,users]) =>(
+            
+            {
             ...tasksDepartment,
             tasks: [
                 ...tasksDepartment.tasks.map(res=>({
