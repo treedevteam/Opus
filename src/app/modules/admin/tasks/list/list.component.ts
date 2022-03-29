@@ -1,5 +1,5 @@
 import { TasksService } from './../tasks.service';
-import { Tag, Task, TaskWithDepartment } from './../tasks.types';
+import { Tag, Task, Task2, TaskWithDepartment } from './../tasks.types';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Departments } from '../../departments/departments.types';
 import { TaskCheckList } from '../tasks.types';
 import { environment } from 'environments/environment';
+import { Status } from '../../statuses/model/status';
+import { Priorities } from '../../priorities/model/priorities';
+import { FormBuilder, FormGroup } from '@angular/forms';
  
 @Component({
     selector       : 'tasks-list',
@@ -31,6 +34,8 @@ import { environment } from 'environments/environment';
 export class TasksListComponent implements OnInit, OnDestroy
 {
     apiUrl = environment.apiUrl;
+    statusTask: Task2;
+    taskForm: FormGroup;
 
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     expandedSubtasks:number | null = null;
@@ -122,7 +127,8 @@ export class TasksListComponent implements OnInit, OnDestroy
         return tasksWithDepartment;
     });
 
-
+    statuses = this._tasksService.getStatus$
+    priority = this._tasksService.getPriorities$
 
     //  subtasksData$ = this._tasksService.subtasks$;
      subtasksData$ = combineLatest([
@@ -189,7 +195,9 @@ export class TasksListComponent implements OnInit, OnDestroy
         private _router: Router,
         private _tasksService: TasksService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _fuseNavigationService: FuseNavigationService
+        private _fuseNavigationService: FuseNavigationService,
+        private _formBuilder: FormBuilder,
+
     )
     {
     }
@@ -206,6 +214,18 @@ export class TasksListComponent implements OnInit, OnDestroy
         alert(id);
     }
 
+    triggerStatusMenu(task: Task2){
+        this.statusTask = task;
+    }
+
+    selectStatus(status: Status){
+        this._tasksService.updateTaskStatus(status.id, this.statusTask.id).subscribe(res=>{
+        })
+    }
+    selectPriority(priority: Priorities){
+        this._tasksService.updateTaskPriority(priority.id, this.statusTask.id).subscribe(res=>{
+        })
+    }
 
     toggleTableRows(id: number) {
         if(this.expandedSubtasks === id){
@@ -219,6 +239,9 @@ export class TasksListComponent implements OnInit, OnDestroy
     }
     ngOnInit(): void
     {
+        this.taskForm = this._formBuilder.group({
+            deadline    : [''],
+        });
 
         this._tasksService.taskCheckList$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -414,6 +437,12 @@ export class TasksListComponent implements OnInit, OnDestroy
     collapseSubTasks(id: number){
         alert(id);
     }
+
+    onOpenMenu(menu: any): void {
+        // menu doesn't have any openMenu() function 
+        // which is of course not a trigger object but a menu itself.
+        console.log(menu);
+     }
 
     /**
      * Track by function for ngFor loops

@@ -362,8 +362,8 @@ export class TasksService
         return this._httpClient.post<Task2>(this.apiUrl+'api/task/' + id + '/update/admin', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
-                this._newtask.next(null);
                 this._tasksupdated.next(data.data);
+                this._newtask.next(null);
                 return data.data;
             }),
             catchError((err) => {
@@ -569,7 +569,7 @@ export class TasksService
         return this._httpClient.get<TaskCheckList[]>(this.apiUrl+'api/checklists/'+ id).pipe(
             map((data: any): TaskCheckList[] => {
                 this._taskCheckList.next(data.data);
-                console.log(data);
+             
                 return data.data;
             }),
              shareReplay(1),
@@ -789,5 +789,34 @@ export class TasksService
             );
     }
 
+
+    updateTaskStatus(statusId: any, taskId:number): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task_status/' + taskId ,  {status: statusId}).pipe(
+            map((data: any) => {
+                this._tasksupdated.next(data.data);
+                this._newtask.next(null);
+                return data.data;
+            }),
+            catchError((err) => {
+                console.error(err);
+                throw err;
+            }
+        )
+        );
+    }
+    updateTaskPriority(priorityId: any, taskId:number): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task_priority/' + taskId ,  {priority: priorityId}).pipe(
+            map((data: any) => {
+                this._tasksupdated.next(data.data);
+                this._newtask.next(null);
+                return data.data;
+            }),
+            catchError((err) => {
+                console.error(err);
+                throw err;
+            }
+        )
+        );
+    }
 
 }

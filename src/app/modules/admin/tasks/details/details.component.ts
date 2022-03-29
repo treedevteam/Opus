@@ -280,7 +280,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             .subscribe((value) => {
 
                 // Update the task on the server
-                this._tasksService.updateTask(value.id, value).subscribe();
+                // this._tasksService.updateTask(value.id, value).subscribe();
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -808,8 +808,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 // Delete the task
                 this._tasksService.deleteTask(this.task2.id, +this.task2.departments)
                     .subscribe((res) => {
-                        console.log(res,'deletedTask');
-                        this._router.navigate(['../tasks']);
+                        this.closeDrawer().then(() => true);
+                        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
                     },err=>{
                         console.log(err);
                         

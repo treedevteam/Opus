@@ -116,7 +116,7 @@ export class AuthService
     /**
      * Sign in using the access token
      */
-    signInUsingToken(): Observable<any>
+    signInUsingToken(): Observable<boolean>
     {
         // Renew token
         return this._httpClient.get(this.apiUrl+'api/user').pipe(

@@ -123,7 +123,8 @@
                                         <div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
                                             [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !tas.deadline,
                                                     'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': tas.deadline && !isOverdue(tas.deadline),
-                                                    'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': tas.deadline && isOverdue(tas.deadline)}">
+                                                    'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': tas.deadline && isOverdue(tas.deadline)}"
+                                                     >
                                             <mat-icon class="icon-size-5 text-current"
                                                 [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                                             <span class="ml-2 text-md font-medium">
@@ -135,7 +136,7 @@
                                         <!-- Priority -->
                                         <div [ngStyle]="{'background-color': tas.priority.color + '80'}"
                                             class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full  text-gray-800 dark:text-gray-100 priority_class"
-                                            *ngIf="tas.priority">
+                                            *ngIf="tas.priority"  [matMenuTriggerFor]="priorityMenu" (click)="triggerStatusMenu(tas)">
                                             <mat-icon class="icon-size-5 text-current" style="color: #000;"
                                                 [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
                                                 <div class="flex-auto mr-2 truncate">
@@ -144,15 +145,16 @@
                                         </div>
                                         <!-- Priority -->
                                         <!-- Status -->
+
                                         <div [ngStyle]="{'background-color': tas.status.color + '80'}"
-                                            class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full text-gray-800 dark:text-gray-100 priority_class"
-                                            *ngIf="tas.status">
-                                            <mat-icon class="icon-size-5 text-current" style="color: #000;"
-                                                [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
-                                                <div class="flex-auto mr-2 truncate">
-                                            <span class="ml-2 mr-1 text-md" style="color: #000;">{{tas.status.name}}</span>
+                                                class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full text-gray-800 dark:text-gray-100 priority_class"
+                                                *ngIf="tas.status" [matMenuTriggerFor]="stautsMenu" (click)="triggerStatusMenu(tas)">
+                                                <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                                    [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
+                                                    <div class="flex-auto mr-2 truncate">
+                                                <span class="ml-2 mr-1 text-md" style="color: #000;">{{tas.status.name}}</span>
+                                                </div>
                                             </div>
-                                        </div>
                                         <!-- Status -->
                                     </div>
                                 </div>
@@ -251,5 +253,37 @@
         </mat-drawer-content>
 
     </mat-drawer-container>
+
+    <mat-menu #stautsMenu="matMenu">
+        <!-- Low -->
+        <button *ngFor="let status of statuses | async" mat-menu-item (click)="selectStatus(status)">
+            <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+                <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
+                <!-- <mat-icon
+            class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+            [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+            </span>
+        </button>
+    </mat-menu>
+
+
+    <mat-menu #priorityMenu="matMenu">
+        <!-- Low -->
+        <button *ngFor="let status of priority | async" mat-menu-item (click)="selectPriority(status)">
+            <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+                <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
+                <!-- <mat-icon
+            class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+            [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+            </span>
+        </button>
+    </mat-menu>
+    
+
+   
+
+    
+
+    
 
 </div>
