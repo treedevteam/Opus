@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                         </div>
-                        <ng-container *ngFor="let tas of (departmentTasksWithStatusPriority$ | async).tasks; let first = first; trackBy: trackByFn">
+                        <ng-container *ngFor="let tas of (departmentTasksWithStatusPriority$ | async).tasks; let index = index; let first = first; trackBy: trackByFn">
                                 <div [id]="'task-' + tas.id"
                                     class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted"
                                     [class.border-t]="first">
@@ -94,12 +94,24 @@
                                                 src="{{apiUrl+ 'storage/'+tas.user.user_image}}" alt="">
                                         </div>
                                         <!-- Task title -- link -->
-                                        <a class="flex flex-auto items-center min-w-0 h-full pr-7" [routerLink]="tas.id">
+                                        <div class="flex flex-auto items-center min-w-0 h-full pr-7" >
                                             <!-- Title & Placeholder -->
                                             <div class="flex-auto mr-2 truncate">
-                                                <span>{{tas.title}}</span>
+                                                <!-- ////////////////////// -->
+                                                <editable (update)="updateField(index, 'title',tas.id)" style="cursor: pointer;">
+                                                    <ng-template viewMode>
+                                                        <p [routerLink]="" style="padding: 10px;">
+                                                            {{tas.title}}{{tas.id}}
+                                                        </p>
+                                                    </ng-template>
+                                                    <ng-template editMode>
+                                                        <input style="padding: 5px; border: 1px dotted #00000070;" [formControl]="getControl(index, 'title')" focusable editableOnEnter>
+                                                    </ng-template>
+                                                </editable>
+                                                <!-- ////////////////////// -->
+                                                <!-- <span>{{tas.title}}</span> -->
                                             </div>
-                                        </a>
+                                        </div>
 
                                         <!-- Users Assign -->
                                         <ng-container>

@@ -5,7 +5,7 @@ import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDrawer } from '@angular/material/sidenav';
-import { catchError, combineLatest, EMPTY, filter, fromEvent, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, EMPTY, filter, fromEvent, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import moment from 'moment';
@@ -15,7 +15,7 @@ import { TaskCheckList } from '../tasks.types';
 import { environment } from 'environments/environment';
 import { Status } from '../../statuses/model/status';
 import { Priorities } from '../../priorities/model/priorities';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
  
 @Component({
     selector       : 'tasks-list',
@@ -31,6 +31,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
         ]),
       ],
 })
+
 export class TasksListComponent implements OnInit, OnDestroy
 {
     apiUrl = environment.apiUrl;
@@ -39,6 +40,7 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     expandedSubtasks:number | null = null;
+    controls: FormArray;
 
     getDepartments: Departments[];
 
@@ -130,6 +132,9 @@ export class TasksListComponent implements OnInit, OnDestroy
     statuses = this._tasksService.getStatus$
     priority = this._tasksService.getPriorities$
 
+    
+
+
     //  subtasksData$ = this._tasksService.subtasks$;
      subtasksData$ = combineLatest([
         this._tasksService.subtasks$,
@@ -181,6 +186,9 @@ export class TasksListComponent implements OnInit, OnDestroy
         tap(res=>console.log(res,"taskat me prioritet")
         )
         );
+
+
+        
     // tasksaks = this._tasksService.tasksWithDepartment$;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -209,6 +217,8 @@ export class TasksListComponent implements OnInit, OnDestroy
     /**
      * On init
      */
+
+    
 
     htmlgeneration(id: number): void{
         alert(id);
@@ -239,6 +249,20 @@ export class TasksListComponent implements OnInit, OnDestroy
     }
     ngOnInit(): void
     {
+        const toGroups = this._tasksService.$tasksPaDepartament.value
+        .map(entity => {
+            return new FormGroup({
+                title:  new FormControl(entity.title, Validators.required),
+              },{updateOn: "blur"});
+        })
+
+        this.controls = new FormArray(toGroups);
+        console.log(this.controls,"this.controls");
+
+        
+
+
+
         this.taskForm = this._formBuilder.group({
             deadline    : [''],
         });
@@ -443,6 +467,22 @@ export class TasksListComponent implements OnInit, OnDestroy
         // which is of course not a trigger object but a menu itself.
         console.log(menu);
      }
+
+
+    updateField(index, field,taskid) {
+        const control = this.getControl(index, field);
+        
+        if (control.valid) {
+            this._tasksService.updateTaskTitle(control.value, taskid).subscribe(res=>{
+                console.log(res);
+            })
+        }
+    }
+    
+      getControl(index, fieldName) {
+        const a  = this.controls.at(index).get(fieldName) as FormControl;
+        return this.controls.at(index).get(fieldName) as FormControl;
+      }
 
     /**
      * Track by function for ngFor loops

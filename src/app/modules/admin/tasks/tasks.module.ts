@@ -31,13 +31,23 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatBadgeModule} from '@angular/material/badge';
 import { ChecklistModule } from 'angular-checklist';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { EditableComponent } from './editable/editable.component';
+import { ViewModeDirective } from './editable/view-mode.directive';
+import { EditModeDirective } from './editable/edit-mode.directive';
+import { FocusableDirective } from './focusable.directive';
+import { EditableOnEnterDirective } from './editable/edit-on-enter.directive';
 @NgModule({
     declarations: [
         TasksComponent,
         TasksDetailsComponent,
         TasksListComponent,
         StoreComponent,
-        TasksLogsComponent
+        TasksLogsComponent,
+        EditableComponent,
+        ViewModeDirective,
+        EditModeDirective, 
+        FocusableDirective, 
+        EditableOnEnterDirective
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),

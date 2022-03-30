@@ -8,7 +8,7 @@ export class EditableOnEnterDirective {
   constructor(private editable: EditableComponent) {
   }
 
-  @HostListener('keyup.enter')
+  @HostListener('keyup.esc')
   onEnter() {
     this.editable.toViewMode();
   }

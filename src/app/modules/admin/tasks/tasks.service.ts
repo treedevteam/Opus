@@ -60,7 +60,8 @@ export class TasksService
     private _users: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
 
     //Tasks
-    private _mytasks: BehaviorSubject<TaskWithDepartment[] | null> = new BehaviorSubject(null);
+    $tasksPaDepartament : BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
+     _mytasks: BehaviorSubject<TaskWithDepartment[] | null> = new BehaviorSubject(null);
     private _mytask: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
     private _newtask: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
     private _tasksupdated: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
@@ -131,7 +132,6 @@ export class TasksService
     getTasksData$ = this._httpClient.get<TaskWithDepartment[]>(this.apiUrl+'api/tasks/departments').pipe(
         map((data: any): TaskWithDepartment[] => {
             this._mytasks.next(data.data);
-            console.log(data.data);
             return data.data;
         }),
          shareReplay(1),
@@ -750,6 +750,7 @@ export class TasksService
         return this._httpClient.get<TaskWithDepartment>(this.apiUrl+'api/department/'+id+'/tasks').pipe(
             map((data: any): TaskWithDepartment => {
                 this._currentDepartmentTasks.next(data.data);
+                this.$tasksPaDepartament.next(data.data.tasks);
                 console.log(data,'DEPARTMENT tasks');
                 return data.data;
             }),
@@ -806,6 +807,21 @@ export class TasksService
     }
     updateTaskPriority(priorityId: any, taskId:number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_priority/' + taskId ,  {priority: priorityId}).pipe(
+            map((data: any) => {
+                this._tasksupdated.next(data.data);
+                this._newtask.next(null);
+                return data.data;
+            }),
+            catchError((err) => {
+                console.error(err);
+                throw err;
+            }
+        )
+        );
+    }
+
+    updateTaskTitle(title: any, taskId:number): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task_title/' + taskId ,  {title: title}).pipe(
             map((data: any) => {
                 this._tasksupdated.next(data.data);
                 this._newtask.next(null);
