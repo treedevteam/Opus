@@ -20,8 +20,8 @@
 
                         <div class="text-4xl font-extrabold tracking-tight leading-none">Tasks</div>
                         <div class="ml-0.5 font-medium text-secondary">
-                            <span *ngIf="tasksCount.incomplete === 0">All tasks completed!</span>
-                            <span *ngIf="tasksCount.incomplete !== 0">{{tasksCount.incomplete}} remaining tasks</span>
+                            <!-- <span *ngIf="tasksCount.incomplete === 0">All tasks completed!</span>
+                            <span *ngIf="tasksCount.incomplete !== 0">{{tasksCount.incomplete}} remaining tasks</span> -->
                         </div>
                     </div>
                     <!-- Actions -->
@@ -96,20 +96,20 @@
                                         <!-- Task title -- link -->
                                         <div class="flex flex-auto items-center min-w-0 h-full pr-7" >
                                             <!-- Title & Placeholder -->
-                                            <div class="flex-auto mr-2 truncate">
+                                            <div class="flex-auto mr-2 editable_title_input">
                                                 <!-- ////////////////////// -->
-                                                <editable (update)="updateField(index, 'title',tas.id)" style="cursor: pointer;">
+                                                <editable  (update)="updateField(index, 'title',tas.id)" style="display: flex; align-items: center; width: fit-content;">
                                                     <ng-template viewMode>
-                                                        <p [routerLink]="" style="padding: 10px;">
-                                                            {{tas.title}}{{tas.id}}
-                                                        </p>
+                                                        <a [routerLink]="tas.id" class="title_task_rwo truncate">
+                                                            {{tas.title}}
+                                                        </a>
                                                     </ng-template>
                                                     <ng-template editMode>
                                                         <input style="padding: 5px; border: 1px dotted #00000070;" [formControl]="getControl(index, 'title')" focusable editableOnEnter>
                                                     </ng-template>
                                                 </editable>
                                                 <!-- ////////////////////// -->
-                                                <!-- <span>{{tas.title}}</span> -->
+                                                
                                             </div>
                                         </div>
 
@@ -124,19 +124,63 @@
                                             </div>
                                         </ng-container>
                                         <!-- Users Assign -->
-                                        <ng-container
-                                            *ngFor="let item of tas.users_assigned">
-                                            <img [matTooltip]="item.name" [matTooltipPosition]="'above'"
+                                        <div class="users_asiggn_task">
+                                            <span class="add_userToTasl" (click)="openUsersPanel(tas.users_assigned,tas.id)" #usersPanelOrigin>+</span>
+                                            <ng-container
+                                                *ngFor="let item of tas.users_assigned">
+                                                <img [matTooltip]="item.name" [matTooltipPosition]="'above'"
+                                                    class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                                                    [src]="apiUrl+ 'storage/' + item.image" alt="Member avatar">
+                                            </ng-container>
+                                            <div *ngIf="tas.users_assigned.length === 0" (click)="openUsersPanel(tas.users_assigned,tas.id)" #usersPanelOrigin>
+                                                <img
                                                 class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                                [src]="apiUrl+ 'storage/' + item.image" alt="Member avatar">
-                                        </ng-container>
+                                                src="assets/images/dapulse-person-column.svg" alt="Member avatar">
+                                            </div>
+
+                                            <!-- Tags panel -->
+                                          <!-- Tags panel -->
+                                            <ng-template #usersPanel>
+                                                <div class="w-60 rounded border shadow-md bg-card userListSelect">
+                                                    <!-- Tags panel header -->
+                                                    <div class="flex items-center m-3 mr-2">
+                                                        <div class="flex items-center">
+                                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                                            <div class="ml-2">
+                                                                <input class="w-full min-w-0 py-1 border-0" type="text"
+                                                                    placeholder="Enter user name" (input)="filterDepartments($event)"
+                                                                    (keydown)="filterTagsInputKeyDown($event)" [maxLength]="30"
+                                                                    #newTagInput>
+                                                            </div>
+                                                        </div>
+                                                        <button class="ml-1" mat-icon-button >
+                                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'">
+                                                            </mat-icon>
+                                                        </button>
+                                                    </div>
+                                                    <div class="flex flex-col max-h-64 py-2 border-t ">
+                                                        <!-- Tags -->
+                                                        <ng-container *ngFor="let tag of filteredUsers; trackBy: trackByFn">
+                                                            <div class="flex items-center h-10 min-h-10 px-4">
+                                                                <mat-checkbox class="flex items-center h-10 min-h-10" [color]="'primary'"
+                                                                [checked]="tag.checked" (change)="toggleTaskUser(tag.id)">
+                                                                </mat-checkbox>
+                                                                <div class="ml-1">{{tag.name}}</div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="filteredUsers?.length === 0" class="pl-3">No result</ng-container>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                        </div>
+
                                         <!-- Users Assign -->
                                         <!-- Due date -->
                                         <div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
                                             [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !tas.deadline,
                                                     'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': tas.deadline && !isOverdue(tas.deadline),
                                                     'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': tas.deadline && isOverdue(tas.deadline)}"
-                                                     >
+                                                    (click)="dueDatePicker.open()">
                                             <mat-icon class="icon-size-5 text-current"
                                                 [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                                             <span class="ml-2 text-md font-medium">
@@ -144,10 +188,28 @@
                                                     date:'LLL dd yyyy'}}</ng-container>
                                                 <ng-container *ngIf="!tas.deadline">Not set</ng-container>
                                             </span>
+
+                                            <mat-form-field
+                                                class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
+                                                <input matInput [formControl]="getControl(index, 'deadline')" [matDatepicker]="dueDatePicker">
+                                                <mat-datepicker #dueDatePicker>
+                                                    <mat-datepicker-actions>
+                                                        <!-- <button
+                                                        mat-button
+                                                        (click)="taskForm.get('deadline').setValue(null)"
+                                                        matDatepickerCancel>Clear
+                                                    </button> -->
+                                                        <button class="" mat-flat-button [color]="'primary'"
+                                                            (click)="updateField(index, 'deadline',tas.id)"
+                                                            matDatepickerApply>Select
+                                                        </button>
+                                                    </mat-datepicker-actions>
+                                                </mat-datepicker>
+                                            </mat-form-field>
                                         </div>
                                         <!-- Priority -->
                                         <div [ngStyle]="{'background-color': tas.priority.color + '80'}"
-                                            class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full  text-gray-800 dark:text-gray-100 priority_class"
+                                            class="flex items-center mt-1.5 px-4 leading-9 rounded-full  text-gray-800 dark:text-gray-100 priority_class"
                                             *ngIf="tas.priority"  [matMenuTriggerFor]="priorityMenu" (click)="triggerStatusMenu(tas)">
                                             <mat-icon class="icon-size-5 text-current" style="color: #000;"
                                                 [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
@@ -155,6 +217,15 @@
                                                     <span class="ml-2 mr-1 text-md" style="color: #000;">{{tas.priority.name}}</span>
                                                 </div>
                                         </div>
+
+                                         <ng-container *ngIf="!tas.priority" >
+                                            <div class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
+                                                [matMenuTriggerFor]="priorityMenu" (click)="triggerStatusMenu(tas)">
+                                                <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                                    [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+                                                <span class="ml-2 mr-1 text-md " style="color: #000;">Choose priority</span>
+                                            </div>
+                                        </ng-container> 
                                         <!-- Priority -->
                                         <!-- Status -->
 
@@ -168,11 +239,19 @@
                                                 </div>
                                             </div>
                                         <!-- Status -->
+                                        <ng-container *ngIf="!tas.status" >
+                                            <div class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100 priority_class"
+                                                [matMenuTriggerFor]="stautsMenu" (click)="triggerStatusMenu(tas)">
+                                                <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                                    [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
+                                                <span class="ml-2 mr-1 text-md " style="color: #000;">Choose status</span>
+                                            </div>
+                                        </ng-container> 
                                     </div>
                                 </div>
                                 <div style="overflow: hidden;" class="subtask_list not_collapsed" [@detailExpand]="expandedSubtasks !== null && expandedSubtasks === tas.id ? 'expanded' : 'collapsed'" >
                                         <div *ngIf="expandedSubtasks === tas.id">
-                                            <ng-container *ngFor="let subtaskTask of subtasksData$ | async; let first = first; trackBy: trackByFn">
+                                            <ng-container *ngFor="let subtaskTask of subtasksData$ | async; let index1 = index; let first = first; trackBy: trackByFn;">
                                                 <div [id]="'task-' + subtaskTask.id"
                                                     class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted"
                                                     [class.border-t]="first">
@@ -191,12 +270,24 @@
                                                                 src="{{apiUrl+'storage/'+subtaskTask.user.user_image}}" alt="">
                                                         </div>
                                                         <!-- Task title -- link -->
-                                                        <a class="flex flex-auto items-center min-w-0 h-full pr-7" [routerLink]="subtaskTask.id">
+                                                        <div class="flex flex-auto items-center min-w-0 h-full pr-7" >
                                                             <!-- Title & Placeholder -->
-                                                            <div class="flex-auto mr-2 truncate">
-                                                                <span>{{subtaskTask.title}}</span>
+                                                            <div class="flex-auto mr-2 editable_title_input">
+                                                                <!-- ////////////////////// -->
+                                                                <editable  (update)="updateSubtaskField(index1, 'title',subtaskTask.id)" style="display: flex; align-items: center; width: fit-content;">
+                                                                    <ng-template viewMode>
+                                                                        <a [routerLink]="subtaskTask.id" class="title_task_rwo truncate">
+                                                                            {{subtaskTask.title}}
+                                                                        </a>
+                                                                    </ng-template>
+                                                                    <ng-template editMode>
+                                                                        <input style="padding: 5px; border: 1px dotted #00000070;" [formControl]="getSubtaskControl(index1, 'title')" focusable editableOnEnter>
+                                                                    </ng-template>
+                                                                </editable>
+                                                                <!-- ////////////////////// -->
+                                                                
                                                             </div>
-                                                        </a>
+                                                        </div>
                                                         
                                                         <ng-container
                                                             *ngFor="let subtaskitem of subtaskTask.users_assigned">
@@ -209,7 +300,8 @@
                                                         <div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
                                                             [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !subtaskTask.deadline,
                                                                     'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': subtaskTask.deadline && !isOverdue(subtaskTask.deadline),
-                                                                    'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': subtaskTask.deadline && isOverdue(subtaskTask.deadline)}">
+                                                                    'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': subtaskTask.deadline && isOverdue(subtaskTask.deadline)}"
+                                                                    (click)="dueDatePicker1.open()">
                                                             <mat-icon class="icon-size-5 text-current"
                                                                 [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                                                             <span class="ml-2 text-md font-medium">
@@ -217,28 +309,63 @@
                                                                     date:'LLL dd yyyy'}}</ng-container>
                                                                 <ng-container *ngIf="!subtaskTask.deadline">Not set</ng-container>
                                                             </span>
+
+                                                            <mat-form-field
+                                                                class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
+                                                                <input matInput [formControl]="getSubtaskControl(index1, 'deadline')" [matDatepicker]="dueDatePicker1">
+                                                                <mat-datepicker #dueDatePicker1>
+                                                                    <mat-datepicker-actions>
+                                                                        <!-- <button
+                                                                        mat-button
+                                                                        (click)="taskForm.get('deadline').setValue(null)"
+                                                                        matDatepickerCancel>Clear
+                                                                    </button> -->
+                                                                        <button class="" mat-flat-button [color]="'primary'"
+                                                                            (click)="updateSubtaskField(index1, 'deadline',subtaskTask.id)"
+                                                                            matDatepickerApply>Select1
+                                                                        </button>
+                                                                    </mat-datepicker-actions>
+                                                                </mat-datepicker>
+                                                            </mat-form-field>
                                                         </div>
                                                         <!-- Priority -->
                                                         <div [ngStyle]="{'background-color': subtaskTask.priority.color + '80'}"
                                                             class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full  text-gray-800 dark:text-gray-100 priority_class"
-                                                            *ngIf="subtaskTask.priority">
+                                                            *ngIf="subtaskTask.priority" [matMenuTriggerFor]="subtaskPriorityMenu" (click)="triggerStatusSubtask(subtaskTask)">
                                                             <mat-icon class="icon-size-5 text-current" style="color: #000;"
                                                                 [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
                                                                 <div class="flex-auto mr-2 truncate">
                                                                     <span class="ml-2 mr-1 text-md" style="color: #000;">{{subtaskTask.priority.name}}</span>
                                                                 </div>
                                                         </div>
+                                                        <ng-container *ngIf="!subtaskTask.priority" >
+                                                            <div class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 priority_class dark:text-gray-100"
+                                                                [matMenuTriggerFor]="subtaskPriorityMenu" (click)="triggerStatusSubtask(subtaskTask)">
+                                                                <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                                                    [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+                                                                <span class="ml-2 mr-1 text-md " style="color: #000;">Choose priority</span>
+                                                            </div>
+                                                        </ng-container> 
                                                         <!-- Priority -->
                                                         <!-- Status -->
                                                         <div [ngStyle]="{'background-color': subtaskTask.status.color + '80'}"
                                                             class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full text-gray-800 dark:text-gray-100 priority_class"
-                                                            *ngIf="subtaskTask.status">
+                                                            *ngIf="subtaskTask.status" [matMenuTriggerFor]="subtaskStautsMenu" (click)="triggerStatusSubtask(subtaskTask)">
                                                             <mat-icon class="icon-size-5 text-current" style="color: #000;"
                                                                 [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
                                                                 <div class="flex-auto mr-2 truncate">
                                                             <span class="ml-2 mr-1 text-md" style="color: #000;">{{subtaskTask.status.name}}</span>
                                                             </div>
                                                         </div>
+
+                                                        <ng-container *ngIf="!subtaskTask.status" >
+                                                            <div class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full cursor-pointer text-gray-800 priority_class bg-gray-100 dark:text-gray-100"
+                                                                [matMenuTriggerFor]="subtaskStautsMenu" (click)="triggerStatusSubtask(subtaskTask)">
+                                                                <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                                                                [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
+                                                                <span class="ml-2 mr-1 text-md " style="color: #000;">Choose status</span>
+                                                            </div>
+                                                        </ng-container>
                                                         <!-- Status -->
                                                     </div>
                                                 </div>
@@ -246,15 +373,16 @@
                                         </div>
                                         <ng-container *ngIf="tas.subtasks_count === 0">
                                             <div class="py-3">
-                                                <button class="ml-3" mat-flat-button [color]="'primary'" routerLink="add/new"
-                                                    [matTooltip]="'Shortcut: Ctrl + /'">
-                                                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                                                    <span class="ml-2 mr-1">Add Subtask</span>
-                                                </button>
+                                                No subtasks created
                                             </div>
                                         </ng-container>
+                                        <app-store-task-row 
+                                        [taskId]="tas.id"></app-store-task-row>
                                 </div>
                             </ng-container>
+                            
+                            <app-store-task-row></app-store-task-row>
+                            
                         
                         </div>
                 </div>
@@ -279,6 +407,20 @@
     </mat-menu>
 
 
+    <mat-menu #subtaskStautsMenu="matMenu">
+        <!-- Low -->
+        <button *ngFor="let status of statuses | async" mat-menu-item (click)="subtaskSelectStatus(status)">
+            <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+                <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
+                <!-- <mat-icon
+            class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+            [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+            </span>
+        </button>
+    </mat-menu>
+
+
+
     <mat-menu #priorityMenu="matMenu">
         <!-- Low -->
         <button *ngFor="let status of priority | async" mat-menu-item (click)="selectPriority(status)">
@@ -290,6 +432,25 @@
             </span>
         </button>
     </mat-menu>
+
+
+    <mat-menu #subtaskPriorityMenu="matMenu">
+        <!-- Low -->
+        <button *ngFor="let status of priority | async" mat-menu-item (click)="subtaskSelectPriority(status)">
+            <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+                <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
+                <!-- <mat-icon
+            class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+            [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+            </span>
+        </button>
+    </mat-menu>
+
+  
+
+
+       
+    
     
 
    

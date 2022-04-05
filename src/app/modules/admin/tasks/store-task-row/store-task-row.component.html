@@ -1,0 +1,28 @@
+<div class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted">
+    <div class="relative flex items-center h-full pl-4">
+        <!-- Selected indicator -->
+        <div>
+            <div
+                class="z-10 absolute -top-px right-0 -bottom-px flex flex-0 w-1 bg-primary">
+            </div>
+        </div>
+        <!-- User -->
+        <div class="flex items-center justify-center inset-y-0 left-0 me-3">
+            <img [matTooltip]="userInfo?.name" [matTooltipPosition]="'above'"
+                style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
+                src="{{apiUrl+ 'storage/'+userInfo?.user_image}}" alt="">
+        </div>
+        <div class="flex flex-auto items-center min-w-0 h-full pr-7">
+            <!-- Title & Placeholder -->
+            <div class="flex-auto mr-2 editable_title_input">
+                <form [formGroup]="taskForm">
+                    <div class="flex">
+                        <input [placeholder]=" taskId ? 'Add Subtask':'Add Task'" [formControlName]="'title'" class="new_task_row">
+                        <button *ngIf="!taskId" mat-raised-button color="primary" class="new_task_button" (click)="changeSubmitEventTask()">Add</button>
+                        <button *ngIf="taskId" mat-raised-button color="primary" class="new_task_button" (click)="changeSubmitEventSubtask()">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -701,18 +701,18 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
     addUsersToTask(userId: number): void{
         this._tasksService.assignUserTask(this.task2.id, userId).subscribe(res=>{
-            console.log(res);
+            const usersAssigned = this.taskForm.get('users_assigned').value;
+            const index = usersAssigned.findIndex(object => +object === +userId);
+            if (index < 0) {
+                usersAssigned.push(userId);
+            }else{
+                usersAssigned.splice(index,1);
+            }
+            this.taskForm.get('users_assigned').patchValue(usersAssigned);
+            console.log(this.taskForm.get('users_assigned').value);
         })
 
-        const usersAssigned = this.taskForm.get('users_assigned').value;
-        const index = usersAssigned.findIndex(object => +object === +userId);
-        if (index < 0) {
-            usersAssigned.push(userId);
-        }else{
-            usersAssigned.splice(index,1);
-        }
-        this.taskForm.get('users_assigned').patchValue(usersAssigned);
-        console.log(this.taskForm.get('users_assigned').value);
+        
         
     }
 

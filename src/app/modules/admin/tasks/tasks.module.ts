@@ -36,6 +36,7 @@ import { ViewModeDirective } from './editable/view-mode.directive';
 import { EditModeDirective } from './editable/edit-mode.directive';
 import { FocusableDirective } from './focusable.directive';
 import { EditableOnEnterDirective } from './editable/edit-on-enter.directive';
+import { StoreTaskRowComponent } from './store-task-row/store-task-row.component';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -47,7 +48,7 @@ import { EditableOnEnterDirective } from './editable/edit-on-enter.directive';
         ViewModeDirective,
         EditModeDirective, 
         FocusableDirective, 
-        EditableOnEnterDirective
+        EditableOnEnterDirective, StoreTaskRowComponent
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),
