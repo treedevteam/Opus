@@ -39,7 +39,6 @@ export class TasksListComponent implements OnInit, OnDestroy
 {
     @ViewChild('usersPanelOrigin') private _usersPanelOrigin: ElementRef;
     @ViewChild('usersPanel') private _usersPanel: TemplateRef<any>;
-
     apiUrl = environment.apiUrl;
     statusTask: Task2;
     subtaskTrigger: Task2;

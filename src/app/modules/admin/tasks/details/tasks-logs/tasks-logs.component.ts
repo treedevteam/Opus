@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
+import { environment } from 'environments/environment';
 import moment from 'moment';
 import { Observable, takeUntil } from 'rxjs';
 import { TasksService } from '../../tasks.service';
@@ -13,6 +14,8 @@ import { Task2, TaskLogs } from '../../tasks.types';
 export class TasksLogsComponent implements OnInit {
   taskId: number;
   taskLogsData$:Observable<TaskLogs[]>;
+  apiUrl = environment.apiUrl;
+
   constructor(private _tasksService: TasksService) { }
 
   
