@@ -25,7 +25,7 @@ import { TasksDetailsComponent } from './details/details.component';
 import { StoreComponent } from './store/store.component';
 import { TasksListComponent } from './list/list.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { TasksLogsComponent } from './tasks-logs/tasks-logs.component';
+import { TasksLogsComponent } from './details/tasks-logs/tasks-logs.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatBadgeModule} from '@angular/material/badge';
@@ -37,6 +37,7 @@ import { EditModeDirective } from './editable/edit-mode.directive';
 import { FocusableDirective } from './focusable.directive';
 import { EditableOnEnterDirective } from './editable/edit-on-enter.directive';
 import { StoreTaskRowComponent } from './store-task-row/store-task-row.component';
+import { CommentsComponent } from './details/comments/comments.component';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -48,7 +49,7 @@ import { StoreTaskRowComponent } from './store-task-row/store-task-row.component
         ViewModeDirective,
         EditModeDirective, 
         FocusableDirective, 
-        EditableOnEnterDirective, StoreTaskRowComponent
+        EditableOnEnterDirective, StoreTaskRowComponent, CommentsComponent
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),

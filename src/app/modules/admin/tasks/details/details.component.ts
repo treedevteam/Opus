@@ -1,7 +1,7 @@
 import { Priorities } from './../../priorities/model/priorities';
 import { TasksService } from './../tasks.service';
 import { TasksListComponent } from './../list/list.component';
-import { Tag, Task, Task2, TaskComment } from './../tasks.types';
+import { Tag, Task, Task2 } from './../tasks.types';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -55,51 +55,15 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
     checkListtotal = 0
     checkListcompleted = 0;
-    // taskComments$ = this._tasksService.taskComments$;
-
     checkList: TaskCheckList[];
 
 
 
-    taskComments: TaskComment[];
     private _tagsPanelOverlayRef: OverlayRef;
     private _usersPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     taskCheckList$ = this._tasksService.taskCheckListservice$
-    
-     
-    
-
-    
-
-
-
-
-
-
-    taskComments$ = combineLatest([
-        this._tasksService.taskComments$,
-        this._tasksService.taskComment$,
-        this._tasksService.getUsersData$,
-        this._tasksService.deletedComment$
-    ],(g,p,u,de) => {
-        if(p){
-            g.unshift(p);
-        }else if(de){
-            const index = g.findIndex(x => x.id === de);
-            if (index > -1) g.splice(index, 1);
-        }
-        let d = null;
-        if(g){
-            d = g.map(res=>({
-                ...res,
-                user_id: u.find(user => user.id === res.user_id)
-            }))
-        }
-        console.log(d);
-        return d?d : g;
-     })
     /**
      * Constructor
      */
@@ -147,7 +111,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             departments: [],
             has_expired    : [0],
             users_assigned    : [[]],
-            newComment: '',
             checklist:''
         });
 
@@ -343,9 +306,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
-    addComment(): any{
 
-    }
     /**
      * Close the drawer
      */
@@ -828,26 +789,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
         },err=>{
         })
-    }
-
-    addCommentTask(){
-        this._tasksService.storeComment({text: this.taskForm.get('newComment').value,task_id:this.taskForm.get('id').value},).subscribe(res=>{
-            this.taskForm.get('newComment').setValue("");
-        })
-    }
-
-
-    deleteCommentclick(id: number): void{
-
-        const dialogRef = this._fuseConfirmationService.open();
-        // Subscribe to afterClosed from the dialog reference
-        dialogRef.afterClosed().subscribe((result) => {
-            if(result === 'confirmed'){
-                this._tasksService.deleteComment(id).subscribe(res=>{
-                    console.log(res);
-                })
-            }
-        });
     }
 
     addNewCheckList(): void{

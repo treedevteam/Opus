@@ -84,7 +84,10 @@ export class TasksService
         this.deletedCheckList$
       ],(checklist,updatedcheck, addCheckList,deletedCheckList) => {
         if(addCheckList){
-            checklist.push(addCheckList);
+            const checklistIndex = checklist.findIndex(d => d.id === addCheckList.id);
+            if(checklistIndex < 0){
+                checklist.push(addCheckList);
+            }
         }else if(updatedcheck){
           const checklistIndex = checklist.findIndex(d => d.id === updatedcheck.id);
           if(checklistIndex > -1){
