@@ -251,7 +251,7 @@
                                 </div>
                                 <div style="overflow: hidden;" class="subtask_list not_collapsed" [@detailExpand]="expandedSubtasks !== null && expandedSubtasks === tas.id ? 'expanded' : 'collapsed'" >
                                         <div *ngIf="expandedSubtasks === tas.id">
-                                            <ng-container *ngFor="let subtaskTask of subtasksData$ | async; let index1 = index; let first = first; trackBy: trackByFn;">
+                                            <ng-container class="mt-5" *ngFor="let subtaskTask of subtasksData$ | async; let index1 = index; let first = first; trackBy: trackByFn;">
                                                 <div [id]="'task-' + subtaskTask.id"
                                                     class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted"
                                                     [class.border-t]="first">
@@ -371,11 +371,11 @@
                                                 </div>
                                             </ng-container>
                                         </div>
-                                        <ng-container *ngIf="tas.subtasks_count === 0">
+                                        <!-- <ng-container *ngIf="tas.subtasks_count === 0">
                                             <div class="py-3">
                                                 No subtasks created
                                             </div>
-                                        </ng-container>
+                                        </ng-container> -->
                                         <app-store-task-row 
                                         [taskId]="tas.id"></app-store-task-row>
                                 </div>
