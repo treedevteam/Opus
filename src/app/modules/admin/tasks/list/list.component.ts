@@ -85,7 +85,10 @@ export class TasksListComponent implements OnInit, OnDestroy
          if(p){
              p.forEach(element => {
              if(g.id === +element.departments){
-                    g.tasks.push(element);
+                    const taskIndex = g.tasks.findIndex(el=>el.id === element.id)
+                    if(taskIndex < 0 ){
+                        g.tasks.push(element);
+                    }
                 }
              });
          }
