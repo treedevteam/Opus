@@ -73,9 +73,6 @@ export class TasksListComponent implements OnInit, OnDestroy
     };
     taskss: TaskWithDepartment[];
 
-    
-
-
     tasksData$ = combineLatest([
         this._tasksService.currentDepartmentTasks$,
         this._tasksService.newTask$,
@@ -85,8 +82,8 @@ export class TasksListComponent implements OnInit, OnDestroy
          if(p){
              p.forEach(element => {
              if(g.id === +element.departments){
-                    const taskIndex = g.tasks.findIndex(el=>el.id === element.id)
-                    if(taskIndex < 0 ){
+                    const currentVideo = g.tasks.findIndex(el=>el.id === element.id)
+                    if(currentVideo < 0 ){
                         g.tasks.push(element);
                     }
                 }

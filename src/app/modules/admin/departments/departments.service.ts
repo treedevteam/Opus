@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Departments } from './departments.types';
+import { Departments, Boards } from './departments.types';
 import { BehaviorSubject, map, Observable, shareReplay } from 'rxjs';
 import { Users } from '../users/model/users';
 import { environment } from '../../../../environments/environment';
@@ -16,6 +16,9 @@ export class DepartmentsService {
   private _newDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null);
   private _deletedDepartment: BehaviorSubject<number | null> = new BehaviorSubject(null);
   private _updatedDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null);
+
+
+
 
 
   constructor(
@@ -42,6 +45,11 @@ export class DepartmentsService {
     return this._updatedDepartment.asObservable();
   }
 
+
+
+
+
+  
   getDepartments(): Observable<Departments[]>{
     return this._httpClient.get<Departments[]>(this.apiUrl+'api/departments').pipe(
       map((data: any): Departments[] => {

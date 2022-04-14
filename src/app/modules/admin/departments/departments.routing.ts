@@ -1,8 +1,10 @@
 import { Route } from '@angular/router';
 import { DepartmentComponent } from './department/department.component';
 import { DepartmentsComponent } from './departments.component';
-import { DepartmentsResolver } from './departments.resolver';
+import { BoardsResolver, BoardTaskResolve, DepartmentsResolver } from './departments.resolver';
 import { StoreDepartmentsComponent } from './store-departments/store-departments.component';
+import { BoardsComponent } from './boards/boards.component';
+import { TasksComponent } from './boards/tasks/tasks.component';
 
 export const departmentsRoutingModule: Route[] = [
   {
@@ -18,5 +20,18 @@ export const departmentsRoutingModule: Route[] = [
             
         },
     ]
-}
+},
+{
+    path     : ':depId',
+    component: BoardsComponent,
+    resolve  : {
+        departments: BoardsResolver
+    },
+    children : [
+        {
+            path     : '',
+            component: BoardsComponent,
+        },
+    ]
+},
 ];

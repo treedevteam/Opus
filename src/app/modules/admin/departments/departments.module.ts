@@ -20,6 +20,10 @@ import {MatIconModule} from '@angular/material/icon';
 import { DepartmentComponent } from './department/department.component';
 import { StoreDepartmentsComponent } from './store-departments/store-departments.component';
 import { UpdateDepartmentsComponent } from './update-departments/update-departments.component';
+import { BoardsComponent } from './boards/boards.component';
+import { StoreBoardsComponent } from './boards/store-boards/store-boards.component';
+import { UpdateBoardsComponent } from './boards/update-boards/update-boards.component';
+import { TasksComponent } from './boards/tasks/tasks.component';
 
 
 @NgModule({
@@ -27,7 +31,11 @@ import { UpdateDepartmentsComponent } from './update-departments/update-departme
     DepartmentsComponent,
     DepartmentComponent,
     StoreDepartmentsComponent,
-    UpdateDepartmentsComponent
+    UpdateDepartmentsComponent,
+    BoardsComponent,
+    StoreBoardsComponent,
+    UpdateBoardsComponent,
+    TasksComponent
   ],
   imports: [
     RouterModule.forChild(departmentsRoutingModule),
