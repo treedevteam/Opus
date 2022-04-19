@@ -3,7 +3,7 @@ import { TasksService } from './tasks.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, mergeMapTo, Observable, throwError } from 'rxjs';
-import { Departments } from '../departments/departments.types';
+import { Departments, Boards } from '../departments/departments.types';
 
 @Injectable({
     providedIn: 'root'
@@ -57,10 +57,10 @@ export class TasksDepartmentsResolver implements Resolve<any>
      * @param route
      * @param state
      */
-     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Departments>
+     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Boards>
      {
          
-         return this._tasksService.getDepartment(+route.paramMap.get('id'))
+         return this._tasksService.getBoard(+route.paramMap.get('id'))
              .pipe(
                  // Error here means the requested task is not available
                  catchError((error) => {
@@ -104,10 +104,9 @@ export class TasksResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<TaskWithDepartment>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task2[]>
     {
-        console.log(route.paramMap.get('id'));
-        return this._tasksService.getDepartmentTasks(+route.paramMap.get('id'))
+        return this._tasksService.getBoardTasks(+route.paramMap.get('id'))
         .pipe(
             // Error here means the requested task is not available
             catchError((error) => {

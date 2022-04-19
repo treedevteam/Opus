@@ -23,13 +23,13 @@ export class StoreTaskRowComponent implements OnInit {
     this.taskForm = this._formBuilder.group({
       id: [''],
       title: [''],
-      departments: [[]],
+      board_id: [[]],
       task_id: [""]
     });
 
 
 
-    this._tasksService.currentDepartment$.subscribe(res=>{
+    this._tasksService.currentBoard$.subscribe(res=>{
       this.currentDepartment = res.id;
     });
   }
@@ -38,7 +38,7 @@ export class StoreTaskRowComponent implements OnInit {
     
   changeSubmitEventTask(): void {
     console.log(this.taskForm.value);
-    this.taskForm.get('departments').patchValue('['+ this.currentDepartment +']');
+    this.taskForm.get('board_id').patchValue(this.currentDepartment);
     this._tasksService.storeTask(this.taskForm.value).subscribe(res=>{
        this.taskForm.reset();
     },err=>{

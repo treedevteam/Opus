@@ -1,4 +1,4 @@
-import { Tag, Task, Task2, TaskLogs, TaskWithDepartment, TaskComment, TaskCheckList } from './tasks.types';
+import { Tag, Task, Task2, TaskLogs, TaskWithDepartment, TaskComment, TaskCheckList, Users } from './tasks.types';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, shareReplay, switchMap, take, tap, throwError } from 'rxjs';
@@ -6,8 +6,7 @@ import { parseInt } from 'lodash';
 import { Priorities } from '../priorities/model/priorities';
 import { Location } from '../locations/model/location';
 import { Status } from '../statuses/model/status';
-import { Users } from '../users/model/users';
-import { Departments } from '../departments/departments.types';
+import { Departments, Boards } from '../departments/departments.types';
 import { environment } from 'environments/environment';
 
 
@@ -26,6 +25,9 @@ export class TasksService
     private _currentDepartmentId: BehaviorSubject<number | null> = new BehaviorSubject(null); 
 
 
+    private _currentBoard: BehaviorSubject<Boards | null> = new BehaviorSubject(null); 
+    private _currentBoardTasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null); 
+    private _currentBoardUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
 
 
     // Private
@@ -56,7 +58,7 @@ export class TasksService
     //Tasks
     private _mytasks: BehaviorSubject<TaskWithDepartment[] | null> = new BehaviorSubject(null);
     private _mytask: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
-    private _newtask: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
+    private _newtask: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
     private _tasksupdated: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
     private _deletedtasks: BehaviorSubject<any> = new BehaviorSubject(null);
     private _tagsLogs: BehaviorSubject<TaskLogs[] | null> = new BehaviorSubject(null);
@@ -213,6 +215,28 @@ export class TasksService
         return this._currentDepartmentId.asObservable();
     }
 
+    get currentBoard$(): Observable<Boards>{
+        return this._currentBoard.asObservable();
+    }
+    get currentBoardTasks$(): Observable<Task2[]>{
+        return this._currentBoardTasks.asObservable();
+    }
+
+    get currentBoardUsers$(): Observable<Users[]>{
+        return this._currentBoardUsers.asObservable();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     get taskCheckList$(): Observable<TaskCheckList[]>{
         return this._taskCheckList.asObservable();
     }
@@ -220,6 +244,8 @@ export class TasksService
     get udatedCheckList$(): Observable<TaskCheckList>{
         return this._udatedCheckList.asObservable();
     }
+
+
 
     get newCheckList$(): Observable<TaskCheckList>{
         return this._newCheckList.asObservable();
@@ -255,7 +281,7 @@ export class TasksService
         return this._priorities.asObservable();
     }
 
-    get newTask$(): Observable<Task2[]>{
+    get newTask$(): Observable<Task2>{
         return this._newtask.asObservable();
     }
     get deletedTask$(): Observable<any>{
@@ -358,18 +384,28 @@ export class TasksService
         );
     }
 
+    getUsersBoard(boardId: number): Observable<Users[]>
+    {
+        return this._httpClient.get<Users[]>(this.apiUrl+'api/board/'+ boardId +'/users').pipe(
+            map((data: any): Users[] => {
+                console.log(data,"USSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+                this._currentBoardUsers.next(data.users);
+                return data.users;
+            }),
+        );
+    }
+
     /**
      * Crate tag
      *
      * @param tag
      */
   
-     storeTask(form: any): Observable<Task2[]>{
-        return this._httpClient.post<Task2[]>(this.apiUrl+'api/task/store', form).pipe(
+     storeTask(form: any): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task/store/board', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
                 this._newtask.next(data.data);
-                console.log(data,"new taskkkkkkk");
                 this.setNullBehaviourSubject();
                 return data.data;
             }),
@@ -802,6 +838,16 @@ export class TasksService
     }
 
 
+    getBoardTasks(id: number): Observable<Task2[]>{
+        return this._httpClient.get<Task2[]>(this.apiUrl+'api/board/'+id+'/tasks').pipe(
+            map((data: any): Task2[] => {
+                this._currentBoardTasks.next(data.data);
+                return data.data;
+            }),
+             shareReplay(1),
+            );
+    }
+
     editCheckList(form, id:number): Observable<TaskCheckList>{
         return this._httpClient.post<TaskCheckList>(this.apiUrl+'api/checklist/update/'+id, form).pipe(
             map((data: any): TaskCheckList => {
@@ -956,6 +1002,18 @@ export class TasksService
             }
         )
         );
+    }
+
+
+
+    getBoard(id: number): Observable<Boards>{
+        return this._httpClient.get<Boards>(this.apiUrl+'api/board/'+ id).pipe(
+            map((data: any): Boards => {
+                this._currentBoard.next(data.data);
+                return data;
+            }),
+             shareReplay(1),
+            );
     }
 
 }

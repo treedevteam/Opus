@@ -30,7 +30,13 @@ export class Users {
     last_seen: string;
 }
 
-
+export interface Boards{
+    id: number;
+    department_id: string;
+    name: string;
+    description: string;
+    type: any
+}
 export interface Task2
 {
     id: number;
@@ -42,6 +48,7 @@ export interface Task2
     status: number;
     priority: number;
     location: number;
+    board_id: number;
     user: Users;
     users_assigned: number[];
     departments: number[];

@@ -14,7 +14,7 @@ import { assign } from 'lodash-es';
 import * as moment from 'moment';
 import { Status } from '../../statuses/model/status';
 import { Location } from '../../locations/model/location';
-import { Users } from '../../users/model/users';
+import { Users } from '../tasks.types';
 import { Departments } from '../../departments/departments.types';
 import { TaskCheckList } from '../tasks.types';
 import { environment } from 'environments/environment';
@@ -205,8 +205,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             this.task2 = task;
             console.log(this.task2,'this.task2');
 
-            console.log(this.task2);
-            this._tasksService.getUsersDepartment(+this.task2.departments).subscribe(res=>{
+            console.log(this.task2,"this.task2this.task2this.task2this.task2");
+            this._tasksService.getUsersBoard(+this.task2.board_id).subscribe(res=>{
                 this.usersList = res;
             })
 
@@ -340,7 +340,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     getAssignedUsers(ids): Users[]{
-        return ids.map(res => this.usersList.find(x => x.id === res));
+        return ids.map(res => this.usersList.find(x => x.id === +res));
     }
 
     getNameOfDepartmentbyId(): string{

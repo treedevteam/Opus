@@ -14,7 +14,7 @@ import { assign } from 'lodash-es';
 import * as moment from 'moment';
 import { Status } from '../../statuses/model/status';
 import { Location } from '../../locations/model/location';
-import { Users } from '../../users/model/users';
+import { Users } from '../tasks.types';
 import { Departments } from '../../departments/departments.types';
 
 @Component({

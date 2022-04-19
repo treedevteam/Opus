@@ -74,35 +74,27 @@ export class TasksListComponent implements OnInit, OnDestroy
     taskss: TaskWithDepartment[];
 
     tasksData$ = combineLatest([
-        this._tasksService.currentDepartmentTasks$,
+        this._tasksService.currentBoardTasks$,
         this._tasksService.newTask$,
         this._tasksService.taskUpdated$,
         this._tasksService.deletedTask$
     ],(g,p,u,d) => {
          if(p){
-             p.forEach(element => {
-             if(g.id === +element.departments){
-                    const currentVideo = g.tasks.findIndex(el=>el.id === element.id)
-                    if(currentVideo < 0 ){
-                        g.tasks.push(element);
-                    }
-                }
-             });
+            const id = g.findIndex(t=> t.id === p.id);
+            if(id === -1){
+                g.push(p);
+            }
          }
          else if(u){
-            if(g.id === +u.departments){
-                const updatedTaskId = g.tasks.findIndex(t => t.id === +u.id)
-                if(updatedTaskId > -1){
-                g.tasks.splice(updatedTaskId,1,u);
-                }
+            const id = g.findIndex(t=> t.id === u.id);
+            if(id > -1){
+                g.splice(id,1,u);
             }
          }else if(d){
-            if(g.id === +d.departments){
-                const deletedTask = g.tasks.findIndex(t => t.id === +d.id)
+                const deletedTask = g.findIndex(t => t.id === +d.id)
                 if(deletedTask > -1){
-                    g.tasks.splice(deletedTask,1);
+                    g.splice(deletedTask,1);
                 }
-            }
          }
        return g;
      });
@@ -118,20 +110,20 @@ export class TasksListComponent implements OnInit, OnDestroy
         this._tasksService.deletedCheckList$
     ],(tasksWithDepartment,newCL,updatedCL,deletedCL) => {
             if(newCL){
-                tasksWithDepartment.tasks.find(t=>t.id === newCL.task_id)?.checklists.push(newCL);
+                tasksWithDepartment.find(t=>t.id === newCL.task_id)?.checklists.push(newCL);
             }else if(updatedCL){
-                const taskIndex = tasksWithDepartment.tasks.findIndex(t=>t.id === updatedCL.task_id);
+                const taskIndex = tasksWithDepartment.findIndex(t=>t.id === updatedCL.task_id);
                 if(taskIndex > -1){
-                    const checkListIndex = tasksWithDepartment.tasks[taskIndex].checklists.findIndex(c => c.id === updatedCL.id);
+                    const checkListIndex = tasksWithDepartment[taskIndex].checklists.findIndex(c => c.id === updatedCL.id);
                     if(checkListIndex > -1){
-                        tasksWithDepartment.tasks[taskIndex].checklists.splice(checkListIndex,1,updatedCL);
+                        tasksWithDepartment[taskIndex].checklists.splice(checkListIndex,1,updatedCL);
                     }
                 }
             }else if(deletedCL){
-                const taskIndex = tasksWithDepartment.tasks.findIndex(t=>t.id === deletedCL.task_id);
-                const checkListIndex = tasksWithDepartment.tasks[taskIndex].checklists.findIndex(c => c.id === deletedCL.id);
+                const taskIndex = tasksWithDepartment.findIndex(t=>t.id === deletedCL.task_id);
+                const checkListIndex = tasksWithDepartment[taskIndex].checklists.findIndex(c => c.id === deletedCL.id);
                 if(checkListIndex > -1){
-                    tasksWithDepartment.tasks[taskIndex].checklists.splice(checkListIndex,1);
+                    tasksWithDepartment[taskIndex].checklists.splice(checkListIndex,1);
                 }
             }
         return tasksWithDepartment;
@@ -171,16 +163,17 @@ export class TasksListComponent implements OnInit, OnDestroy
       );
 
      departmentTasksWithStatusPriority$ = combineLatest([
+        this._tasksService.currentBoard$,
         this.tasksDataCheckList$,
         this._tasksService.getStatus$,
         this._tasksService.getPriorities$,
         this._tasksService.getUsersData$
       ]).pipe(
-        map(([tasksDepartment, statuses, priority,users]) =>(
+        map(([currentBoard,tasksBoard, statuses, priority,users]) =>(
             {
-            ...tasksDepartment,
+            ...currentBoard,
             tasks: [
-                ...tasksDepartment.tasks.map(res=>({
+                ...tasksBoard.map(res=>({
                     ...res,
                     status: statuses.find(s => +res.status === +s.id),
                     priority: priority.find(p => +res.priority === +p.id),
@@ -296,7 +289,7 @@ export class TasksListComponent implements OnInit, OnDestroy
             this._tasksService.currentDepartmentId$.subscribe(res=>{
                 depId = res; 
             });
-            this.userList = res.filter(x=>x.department_id === depId)
+            // this.userList = res.filter(x=>x.department_id === depId)
         })
 
 
