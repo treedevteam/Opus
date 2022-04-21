@@ -1,0 +1,47 @@
+.user_row{
+    padding: 4px;
+    width: 100%;
+    display: flex;
+}
+.user_logo img{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 7px;
+}
+.userInfo .name{
+    font-size: 16px;
+    font-weight: 600;
+}
+.userInfo .role{
+    font-size: 14px;
+}
+.invite_title{
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+
+///////////////////////////
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .example-full-width {
+    width: 100%;
+  }
+
+  .remove_user_from_board{
+      text-decoration: underline;
+      color: rgb(63, 63, 63);
+      margin-left: 10px;
+      cursor: pointer;
+  }
+  .remove_user_from_board:hover{
+    color: rgb(39, 38, 38);
+
+  }
+  
