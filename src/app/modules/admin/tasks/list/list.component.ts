@@ -1,5 +1,5 @@
 import { TasksService } from '../tasks.service';
-import { Tag, Task, Task2, TaskWithDepartment } from '../tasks.types';
+import { Tag, Task, Task2, TaskWithDepartment, Users } from '../tasks.types';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +18,8 @@ import { Priorities } from '../../priorities/model/priorities';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { Users } from '../../users/model/users';
+import { AsignUsersToBoardComponent } from '../asign-users-to-board/asign-users-to-board.component';
+import { MatDialog } from '@angular/material/dialog';
  
 @Component({
     selector       : 'tasks-list',
@@ -41,9 +42,10 @@ export class TasksListComponent implements OnInit, OnDestroy
     @ViewChild('usersPanel') private _usersPanel: TemplateRef<any>;
     apiUrl = environment.apiUrl;
     statusTask: Task2;
+    board_department: number;
     subtaskTrigger: Task2;
     taskForm: FormGroup;
-    userList: any[];
+    usersList = this._tasksService.currentBoardUsers$
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     expandedSubtasks:number | null = null;
     controls: FormArray;
@@ -79,6 +81,7 @@ export class TasksListComponent implements OnInit, OnDestroy
         this._tasksService.taskUpdated$,
         this._tasksService.deletedTask$
     ],(g,p,u,d) => {
+     
          if(p){
             const id = g.findIndex(t=> t.id === p.id);
             if(id === -1){
@@ -190,6 +193,7 @@ export class TasksListComponent implements OnInit, OnDestroy
         })),
         shareReplay(1),
         tap(res=>{
+            this.board_department = +res.department_id;
             const test = res.tasks.map(entity => {
                 return new FormGroup({
                     title:  new FormControl(entity.title, Validators.required),
@@ -226,6 +230,7 @@ export class TasksListComponent implements OnInit, OnDestroy
         private _formBuilder: FormBuilder,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
+        private dialog: MatDialog
 
 
     )
@@ -285,11 +290,14 @@ export class TasksListComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this._tasksService.getUsersData$.subscribe(res=>{
-            let depId: number;
-            this._tasksService.currentDepartmentId$.subscribe(res=>{
-                depId = res; 
+            let boardId: number;
+            this._tasksService.currentBoard$.subscribe(res=>{
+                boardId = res.id; 
             });
-            // this.userList = res.filter(x=>x.department_id === depId)
+            this._tasksService.getUsersBoard(boardId).subscribe(res=>{
+               console.log(res,"TTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEESST");
+               
+            })
         })
 
 
@@ -549,14 +557,14 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     filterDepartments(event): void
     {
-        console.log(this.userList);
+        console.log(this.usersList);
         
         // Get the value
         const value = event.target.value.toLowerCase();
 
         // Filter the tags
-        this.filteredUsers = this.userList.filter(tag => tag.name.toLowerCase().includes(value));
-        console.log(this.filteredUsers);
+        // this.filteredUsers = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
+        // console.log(this.filteredUsers);
         
     }
     /**
@@ -683,6 +691,26 @@ export class TasksListComponent implements OnInit, OnDestroy
         const a  = this.subtaskControls.at(index).get(fieldName) as FormControl;
         return this.subtaskControls.at(index).get(fieldName) as FormControl;
     }
+
+
+
+    getDepartmentUsers(id:number){
+        
+    }
+
+    assignUserPopup(): void {
+        this._tasksService.getUsersDepartment(this.board_department).subscribe(res=>{
+            const dialogRef = this.dialog.open(AsignUsersToBoardComponent, {
+                width: '100%',
+                maxWidth:'700px',
+                height:'400px',
+                maxHeight:'100%'
+              });
+          
+              dialogRef.afterClosed().subscribe(result => {
+              });
+        })
+      }
 
     /**
      * Track by function for ngFor loops

@@ -18,14 +18,29 @@
                     <!-- Title -->
                     <div>
 
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">Tasks</div>
-                        <div class="ml-0.5 font-medium text-secondary">
+                        <div class="text-4xl font-extrabold tracking-tight leading-none" *ngIf="departmentTasksWithStatusPriority$ | async">{{(departmentTasksWithStatusPriority$ | async).name}}'s Tasks</div>
+                            
                             <!-- <span *ngIf="tasksCount.incomplete === 0">All tasks completed!</span>
                             <span *ngIf="tasksCount.incomplete !== 0">{{tasksCount.incomplete}} remaining tasks</span> -->
-                        </div>
                     </div>
                     <!-- Actions -->
-                    <div class="mt-4 sm:mt-0">
+                    <div class="mt-4 sm:mt-0 flex">
+                        <div class="flex">
+                            <div class="flex items-center justify-center inset-y-0 left-0 me-3">
+                                <div *ngFor="let test of (usersList | async)">
+                                    <!-- User -->
+                                        <img [matTooltip]="test.name" [matTooltipPosition]="'above'"
+                                            style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;"
+                                            src="{{apiUrl+ 'storage/'+test.user_image}}" alt="">
+                                </div>
+                            </div>
+
+                            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserPopup()">
+                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                <span class="ml-2 mr-1">Invite</span>
+                            </button>
+                        </div>
+                       
                         <!-- Add section button -->
                         <!-- <button
                             mat-flat-button
@@ -44,11 +59,11 @@
                             <span class="ml-2 mr-1">Add Section</span>
                         </button> -->
                         <!-- Add task button -->
-                        <button class="ml-3" mat-flat-button [color]="'primary'" routerLink="add/new"
+                        <!-- <button class="ml-3" mat-flat-button [color]="'primary'" routerLink="add/new"
                             [matTooltip]="'Shortcut: Ctrl + /'">
                             <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                             <span class="ml-2 mr-1">Add Task</span>
-                        </button>
+                        </button> -->
 
                     </div>
                 </div>

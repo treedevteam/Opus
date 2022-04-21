@@ -85,7 +85,7 @@ export const appRoutes: Route[] = [
             {path: 'locations', loadChildren: () => import('app/modules/admin/locations/locations.module').then(m => m.LocationsModule)},
             {path: 'priorities', loadChildren: () => import('app/modules/admin/priorities/priorities.module').then(m => m.PrioritiesModule)},
             {path: 'statuses', loadChildren: () => import('app/modules/admin/statuses/status.module').then(m => m.StatusModule)},
-            {path: 'department', loadChildren: () => import('app/modules/admin/tasks/tasks.module').then(m => m.TasksModule)},
+            {path: 'board', loadChildren: () => import('app/modules/admin/tasks/tasks.module').then(m => m.TasksModule)},
             {path: 'departments', loadChildren: () => import('app/modules/admin/departments/departments.module').then(m => m.DepartmentsModule)},
 
              // Error

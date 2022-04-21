@@ -28,6 +28,7 @@ export class Users {
     role: number;
     user_image: string;
     last_seen: string;
+    selected: boolean
 }
 
 export interface Boards{

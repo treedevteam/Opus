@@ -28,6 +28,9 @@ export class TasksService
     private _currentBoard: BehaviorSubject<Boards | null> = new BehaviorSubject(null); 
     private _currentBoardTasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null); 
     private _currentBoardUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
+    private _currentDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
+    private _notAssignedDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
+    
 
 
     // Private
@@ -95,7 +98,22 @@ export class TasksService
         
         return checklist;
     });
-
+    usersAssigned$ = combineLatest([
+        this.currentBoardUsers$,
+        this.currentDepartmentUsers$
+      ]).pipe(
+        map(([currentBoardUsers,currentDepUsers]) =>(
+            {
+              assigned:[...currentBoardUsers],
+              users: currentDepUsers.filter(object1 => 
+                  currentBoardUsers.findIndex(x=>x.id === object1.id) === -1
+              )
+        })),
+        shareReplay(1),
+        tap(res=>{
+            this._notAssignedDepartmentUsers.next(res.users);
+        })
+        );
 
     subtasksList$ = combineLatest([
         this.subtasks$,
@@ -226,6 +244,13 @@ export class TasksService
         return this._currentBoardUsers.asObservable();
     }
 
+    get currentDepartmentUsers$(): Observable<Users[]>{
+        return this._currentDepartmentUsers.asObservable();
+    }
+
+    get notAssignedDepartmentUsers$(): Observable<Users[]>{
+        return this._notAssignedDepartmentUsers.asObservable();
+    }
 
 
 
@@ -379,6 +404,7 @@ export class TasksService
     {
         return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department/' + depId).pipe(
             map((data: any): Users[] => {
+                this._currentDepartmentUsers.next(data.data);
                 return data.data;
             }),
         );
@@ -389,8 +415,18 @@ export class TasksService
         return this._httpClient.get<Users[]>(this.apiUrl+'api/board/'+ boardId +'/users').pipe(
             map((data: any): Users[] => {
                 console.log(data,"USSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-                this._currentBoardUsers.next(data.users);
-                return data.users;
+                this._currentBoardUsers.next(data.data);
+                return data.data;
+            }),
+        );
+    }
+
+    assignUserToBoard(boardId:number, userId:number): Observable<Users[]>
+    {
+        return this._httpClient.post<Users[]>(this.apiUrl+'api/board/'+ boardId +'/'+userId,null).pipe(
+            map((data: any): Users[] => {
+                this._currentBoardUsers.next(data.data);
+                return data.data;
             }),
         );
     }

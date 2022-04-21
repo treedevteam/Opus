@@ -38,6 +38,10 @@ import { FocusableDirective } from './focusable.directive';
 import { EditableOnEnterDirective } from './editable/edit-on-enter.directive';
 import { StoreTaskRowComponent } from './store-task-row/store-task-row.component';
 import { CommentsComponent } from './details/comments/comments.component';
+import { AsignUsersToBoardComponent } from './asign-users-to-board/asign-users-to-board.component';
+import {MatChipsModule} from '@angular/material/chips';
+import { MultiselectAutocompleteComponent } from './multiselect-autocomplete/multiselect-autocomplete.component';
+import { MatCardModule } from '@angular/material/card';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -49,7 +53,8 @@ import { CommentsComponent } from './details/comments/comments.component';
         ViewModeDirective,
         EditModeDirective, 
         FocusableDirective, 
-        EditableOnEnterDirective, StoreTaskRowComponent, CommentsComponent
+        EditableOnEnterDirective, StoreTaskRowComponent, CommentsComponent, AsignUsersToBoardComponent,
+        MultiselectAutocompleteComponent
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),
@@ -76,9 +81,12 @@ import { CommentsComponent } from './details/comments/comments.component';
         MatTabsModule,
         MatSnackBarModule,
         MatBadgeModule,
-        ChecklistModule
+        ChecklistModule,
+        MatChipsModule,
+        MatCardModule
     ],
     providers   : [
+        
         {
             provide : MAT_DATE_FORMATS,
             useValue: {
