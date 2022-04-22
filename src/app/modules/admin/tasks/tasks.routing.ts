@@ -5,47 +5,16 @@ import { TasksComponent } from './tasks.component';
 import {  TasksDepartmentsResolver, TasksResolver, TasksTagsResolver, TasksTaskResolver } from './tasks.resolvers';
 import { Route } from '@angular/router';
 import { StoreComponent } from './store/store.component';
+import { KanbanBoardComponent } from './kanban-view/kanban-board/kanban-board.component';
 
-export const tasksRoutes2: Route[] = [
-    {
-        path     : ':id/tasks',
-        component: TasksComponent,
-        resolve  : {
-            tags: TasksDepartmentsResolver
-        },
-        children : [
-            {
-                path     : '',
-                component: TasksListComponent,
-                resolve  : {
-                    tasks: TasksResolver
-                },
-                children : [
-                    {
-                        path         : ':id',
-                        component    : TasksDetailsComponent,
-                        resolve      : {
-                            task: TasksTaskResolver
-                        },
-                        canDeactivate: [CanDeactivateTasksDetails]
-                    },
-                    {
-                        path         : 'add/new',
-                        component    : StoreComponent,
-                        canDeactivate: [CanDeactivateTasksDetails]
-                    }
-                ]
-            }
-        ]
-    }
-];
+
 
 
 
 
 export const tasksRoutes: Route[] = [
     {
-        path     : ':id/tasks',
+        path     : ':boardId/tasks',
         component: TasksComponent,
         resolve  : {
             tags: TasksDepartmentsResolver
@@ -53,26 +22,52 @@ export const tasksRoutes: Route[] = [
         children : [
             {
                 path     : '',
-                component: TasksListComponent,
+                component: TasksComponent,
                 resolve  : {
-                    tasks: TasksResolver
+                tags: TasksResolver
                 },
                 children : [
                     {
-                        path         : ':id',
-                        component    : TasksDetailsComponent,
-                        resolve      : {
-                            task: TasksTaskResolver
-                        },
-                        canDeactivate: [CanDeactivateTasksDetails]
+                        path     : '',
+                        component: TasksListComponent,
+                        children : [
+                            {
+                                path         : ':id',
+                                component    : TasksDetailsComponent,
+                                resolve      : {
+                                    task: TasksTaskResolver
+                                },
+                                canDeactivate: [CanDeactivateTasksDetails]
+                            },
+                            {
+                                path         : 'add/new',
+                                component    : StoreComponent,
+                                canDeactivate: [CanDeactivateTasksDetails]
+                            }
+                        ]
                     },
                     {
-                        path         : 'add/new',
-                        component    : StoreComponent,
-                        canDeactivate: [CanDeactivateTasksDetails]
+                        path: 'kanban/view',
+                        component: KanbanBoardComponent,
+                        children : [
+                            {
+                                path         : ':id',
+                                component    : TasksDetailsComponent,
+                                resolve      : {
+                                    task: TasksTaskResolver
+                                },
+                                canDeactivate: [CanDeactivateTasksDetails]
+                            },
+                            {
+                                path         : 'add/new',
+                                component    : StoreComponent,
+                                canDeactivate: [CanDeactivateTasksDetails]
+                            }
+                        ]
                     }
                 ]
-            }
+            },
+            
         ]
     }
 ];

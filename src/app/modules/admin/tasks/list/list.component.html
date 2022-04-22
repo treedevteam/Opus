@@ -18,7 +18,12 @@
                     <!-- Title -->
                     <div>
 
-                        <div class="text-4xl font-extrabold tracking-tight leading-none" *ngIf="departmentTasksWithStatusPriority$ | async">{{(departmentTasksWithStatusPriority$ | async).name}}'s Tasks</div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none" *ngIf="departmentTasksWithStatusPriority$ | async">{{(departmentTasksWithStatusPriority$ | async).name}}'s Tasks</div> 
+                        
+                        <div class="kanban_view_button">
+                            <a [routerLink]="['kanban/view']" >Kanban View</a>
+                        </div>
+                        
                             
                             <!-- <span *ngIf="tasksCount.incomplete === 0">All tasks completed!</span>
                             <span *ngIf="tasksCount.incomplete !== 0">{{tasksCount.incomplete}} remaining tasks</span> -->
@@ -40,31 +45,6 @@
                                 <span class="ml-2 mr-1">Invite</span>
                             </button>
                         </div>
-                       
-                        <!-- Add section button -->
-                        <!-- <button
-                            mat-flat-button
-                            [color]="'accent'"
-
-                            [matTooltip]="'Shortcut: Ctrl + .'">
-                            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                            <span class="ml-2 mr-1">Get Departments</span>
-                        </button>
-                        <button
-                            mat-flat-button
-                            [color]="'accent'"
-                            (click)="createTask('section')"
-                            [matTooltip]="'Shortcut: Ctrl + .'">
-                            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                            <span class="ml-2 mr-1">Add Section</span>
-                        </button> -->
-                        <!-- Add task button -->
-                        <!-- <button class="ml-3" mat-flat-button [color]="'primary'" routerLink="add/new"
-                            [matTooltip]="'Shortcut: Ctrl + /'">
-                            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                            <span class="ml-2 mr-1">Add Task</span>
-                        </button> -->
-
                     </div>
                 </div>
                 <div style="min-width: 1000px;">

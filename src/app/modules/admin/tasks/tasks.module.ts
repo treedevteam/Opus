@@ -42,6 +42,7 @@ import { AsignUsersToBoardComponent } from './asign-users-to-board/asign-users-t
 import {MatChipsModule} from '@angular/material/chips';
 import { MultiselectAutocompleteComponent } from './multiselect-autocomplete/multiselect-autocomplete.component';
 import { MatCardModule } from '@angular/material/card';
+import { KanbanBoardComponent } from './kanban-view/kanban-board/kanban-board.component';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -54,7 +55,8 @@ import { MatCardModule } from '@angular/material/card';
         EditModeDirective, 
         FocusableDirective, 
         EditableOnEnterDirective, StoreTaskRowComponent, CommentsComponent, AsignUsersToBoardComponent,
-        MultiselectAutocompleteComponent
+        MultiselectAutocompleteComponent,
+        KanbanBoardComponent
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),

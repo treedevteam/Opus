@@ -60,7 +60,7 @@ export class TasksDepartmentsResolver implements Resolve<any>
      resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Boards>
      {
          
-         return this._tasksService.getBoard(+route.paramMap.get('id'))
+         return this._tasksService.getBoard(+route.paramMap.get('boardId'))
              .pipe(
                  // Error here means the requested task is not available
                  catchError((error) => {
@@ -106,7 +106,7 @@ export class TasksResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task2[]>
     {
-        return this._tasksService.getBoardTasks(+route.paramMap.get('id'))
+        return this._tasksService.getBoardTasks(+route.paramMap.get('boardId'))
         .pipe(
             // Error here means the requested task is not available
             catchError((error) => {
