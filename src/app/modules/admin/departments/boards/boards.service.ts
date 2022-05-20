@@ -87,7 +87,9 @@ export class BoardsService {
   getBoards(id: number): Observable<Boards[]>{
     return this._httpClient.get<Boards[]>(this.apiUrl+'api/department/'+id+'/boards').pipe(
       map((data: any): Boards[] => {
-          this._boards.next(data);
+          this._boards.next([...data.public,...data.private]);
+          console.log([...data.public,...data.private]);
+          
           this.currentDepartment = id;
           return data;
       }),

@@ -110,7 +110,20 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 console.log(value,"value");
                 
                 // Update the card on the server
-                this._tasksService.updateTaskservice(value, value.id ).subscribe();
+                this._tasksService.updateTaskservice(value, value.id ).subscribe((res)=>{
+                    this.cardForm.setValue({
+                        id          : res.id,
+                        title       : res.title,
+                        description : res.description,
+                        deadline    : res.deadline,
+                        priority    : res.priority,
+                        raport      : res.raport,
+                        restrictions: res.restrictions,
+                        status      : res.status
+                    });
+                    
+                    console.log(res,"EEWRWERWERWERw");
+                });
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();

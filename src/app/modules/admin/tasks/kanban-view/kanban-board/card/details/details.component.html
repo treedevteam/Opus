@@ -45,6 +45,7 @@
         <!-- Due date -->
         <div>
             <div class="font-medium">Deadline</div>
+            {{taskById.title}}
             <div
                 class="relative flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer"
                 [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !taskById.deadline,

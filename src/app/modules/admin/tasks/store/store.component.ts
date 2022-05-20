@@ -561,7 +561,6 @@ openUsersPanel(): void
 
 
     // isDepartmentSelected(id: number): boolean{
-    //     debugger;
     //     const departmentsAssigned = this.taskForm.get('departments').value;
     //     const index = departmentsAssigned.findIndex(object => +object === +id);
     //     console.log(departmentsAssigned);

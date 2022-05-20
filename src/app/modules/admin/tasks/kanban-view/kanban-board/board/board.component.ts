@@ -8,6 +8,7 @@ import { ScrumboardService } from '../scrumboard.service';
 import { Board, Card, List } from '../scrumboard.models' 
 import { TasksService } from '../../../tasks.service';
 import { environment } from 'environments/environment';
+import { Boards } from '../../../../departments/departments.types';
 @Component({
     selector       : 'scrumboard-board',
     templateUrl    : './board.component.html',
@@ -17,7 +18,7 @@ import { environment } from 'environments/environment';
 })
 export class ScrumboardBoardComponent implements OnInit, OnDestroy
 {
-    board: Board;
+    board: Boards;
     listTitleForm: FormGroup;
     apiUrl = environment.apiUrl;
 
@@ -138,18 +139,15 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             title: ['']
         });
 
+        this._taskService.currentBoard$.pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((board: Boards) => {
+            
+            this.board = {...board};
+
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
         // Get the board
-        this._scrumboardService.board$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((board: Board) => {
-                this.board = {...board};
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-
-       
-
         
     }
 
@@ -185,24 +183,24 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
      *
      * @param title
      */
-    addList(title: string): void
-    {
-        // Limit the max list count
-        if ( this.board.lists.length >= this._maxListCount )
-        {
-            return;
-        }
+    // addList(title: string): void
+    // {
+    //     // Limit the max list count
+    //     if ( this.board.lists.length >= this._maxListCount )
+    //     {
+    //         return;
+    //     }
 
-        // Create a new list model
-        const list = new List({
-            boardId : this.board.id,
-            position: this.board.lists.length ? this.board.lists[this.board.lists.length - 1].position + this._positionStep : this._positionStep,
-            title   : title
-        });
+    //     // Create a new list model
+    //     const list = new List({
+    //         boardId : this.board.id,
+    //         position: this.board.lists.length ? this.board.lists[this.board.lists.length - 1].position + this._positionStep : this._positionStep,
+    //         title   : title
+    //     });
 
-        // Save the list
-        this._scrumboardService.createList(list).subscribe();
-    }
+    //     // Save the list
+    //     this._scrumboardService.createList(list).subscribe();
+    // }
 
     /**
      * Update the list title
@@ -267,18 +265,18 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     /**
      * Add new card
      */
-    addCard(list: List, title: string): void
+    addCard(list: any, title: string): void
     {
-        // Create a new card model
-        const card = new Card({
-            boardId : this.board.id,
-            listId  : list.id,
-            position: list.cards.length ? list.cards[list.cards.length - 1].position + this._positionStep : this._positionStep,
-            title   : title
-        });
-
+        console.log(list, title);
+        const newTask = {
+            id: null,
+            title: title,
+            board_id: this.board.id,
+            status:list.status.id
+        }
+        console.log(newTask);
         // Save the card
-        this._scrumboardService.createCard(card).subscribe();
+        this._taskService.storeTask(newTask).subscribe();
     }
 
     /**
@@ -321,7 +319,6 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             event.container.data[event.currentIndex].listId = event.container.id;
         }
 
-        debugger;
         // Calculate the positions
         const updated = this._calculatePositions(event);
         const currentTask = event.container.data[event.currentIndex];
