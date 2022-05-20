@@ -10,16 +10,12 @@ import { TasksService } from '../../tasks.service';
   styleUrls: ['./kanban-board.component.scss']
 })
 export class KanbanBoardComponent implements OnInit {
-  @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
-  drawerMode: 'side' | 'over';
-
+  
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _tasksService: TasksService
-
-
   ) { }
 
   ngOnInit(): void {
@@ -33,5 +29,4 @@ export class KanbanBoardComponent implements OnInit {
       // Mark for check
       this._changeDetectorRef.markForCheck();
   }
-
 }

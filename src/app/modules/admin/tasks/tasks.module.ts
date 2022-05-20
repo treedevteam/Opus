@@ -43,12 +43,22 @@ import {MatChipsModule} from '@angular/material/chips';
 import { MultiselectAutocompleteComponent } from './multiselect-autocomplete/multiselect-autocomplete.component';
 import { MatCardModule } from '@angular/material/card';
 import { KanbanBoardComponent } from './kanban-view/kanban-board/kanban-board.component';
+import { ScrumboardBoardComponent } from './kanban-view/kanban-board/board/board.component';
+import { ScrumboardBoardAddListComponent } from './kanban-view/kanban-board/board/add-list/add-list.component';
+import { ScrumboardBoardAddCardComponent } from './kanban-view/kanban-board/board/add-card/add-card.component';
+import { ScrumboardCardDetailsComponent } from './kanban-view/kanban-board/card/details/details.component';
+import { ScrumboardCardComponent } from './kanban-view/kanban-board/card/card.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { TaskDetailsComponent } from './task-details/task-details.component';
 @NgModule({
     declarations: [
         TasksComponent,
         TasksDetailsComponent,
         TasksListComponent,
         StoreComponent,
+        ScrumboardBoardComponent,
+        ScrumboardBoardAddListComponent,
+        ScrumboardBoardAddCardComponent,
         TasksLogsComponent,
         EditableComponent,
         ViewModeDirective,
@@ -56,7 +66,10 @@ import { KanbanBoardComponent } from './kanban-view/kanban-board/kanban-board.co
         FocusableDirective, 
         EditableOnEnterDirective, StoreTaskRowComponent, CommentsComponent, AsignUsersToBoardComponent,
         MultiselectAutocompleteComponent,
-        KanbanBoardComponent
+        KanbanBoardComponent,
+        ScrumboardCardDetailsComponent,
+        ScrumboardCardComponent,
+        TaskDetailsComponent
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),
@@ -67,6 +80,7 @@ import { KanbanBoardComponent } from './kanban-view/kanban-board/kanban-board.co
         MatDatepickerModule,
         MatDividerModule,
         MatFormFieldModule,
+        MatDialogModule,
         MatIconModule,
         MatInputModule,
         MatMenuModule,

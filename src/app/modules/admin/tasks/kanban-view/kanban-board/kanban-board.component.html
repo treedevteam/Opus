@@ -3,16 +3,7 @@
         class="flex-auto h-full bg-card dark:bg-transparent"
         (backdropClick)="onBackdropClicked()"
     >
-        <!-- Drawer -->
-        <mat-drawer
-            class="w-full sm:w-128 dark:bg-gray-900"
-            [mode]="drawerMode"
-            [opened]="false"
-            [position]="'end'"
-            [disableClose]="false"
-            #matDrawer>
-            <router-outlet></router-outlet>
-        </mat-drawer>
+    <app-task-details></app-task-details>
 
         <mat-drawer-content class="flex flex-col">
             <!-- Main -->
@@ -52,8 +43,8 @@
                     
                 </div>
             </div>
-            <div style="min-width: 1000px">
-                <h1>KANBAN VIEW</h1>
+            <div style="min-width: 1000px; ">
+                <scrumboard-board></scrumboard-board>
             </div>
             </div>
         </mat-drawer-content>

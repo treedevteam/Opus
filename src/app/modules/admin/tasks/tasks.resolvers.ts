@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, mergeMapTo, Observable, throwError } from 'rxjs';
 import { Departments, Boards } from '../departments/departments.types';
+import { Board, Card } from './kanban-view/kanban-board/scrumboard.models';
+import { ScrumboardService } from './kanban-view/kanban-board/scrumboard.service';
 
 @Injectable({
     providedIn: 'root'
@@ -79,6 +81,55 @@ export class TasksDepartmentsResolver implements Resolve<any>
                  })
              );
      }
+}
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ScrumboardBoardResolver implements Resolve<any>
+{
+    /**
+     * Constructor
+     */
+    constructor(
+        private _router: Router,
+        private _scrumboardService: ScrumboardService
+    )
+    {
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Resolver
+     *
+     * @param route
+     * @param state
+     */
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Board>
+    {
+        return this._scrumboardService.getBoard(route.paramMap.get('boardId'))
+                   .pipe(
+                       // Error here means the requested task is not available
+                       catchError((error) => {
+
+                           // Log the error
+                           console.error(error);
+
+                           // Get the parent url
+                           const parentUrl = state.url.split('/').slice(0, -1).join('/');
+
+                           // Navigate to there
+                           this._router.navigateByUrl(parentUrl);
+
+                           // Throw an error
+                           return throwError(error);
+                       })
+                   );
+    }
 }
 
 @Injectable({
@@ -175,3 +226,5 @@ export class TasksTaskResolver implements Resolve<any>
             );
     }
 }
+
+

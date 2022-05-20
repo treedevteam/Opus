@@ -2,10 +2,11 @@ import { CanDeactivateTasksDetails } from './tasks.guards';
 import { TasksDetailsComponent } from './details/details.component';
 import { TasksListComponent } from './list/list.component';
 import { TasksComponent } from './tasks.component';
-import {  TasksDepartmentsResolver, TasksResolver, TasksTagsResolver, TasksTaskResolver } from './tasks.resolvers';
+import { TasksDepartmentsResolver, TasksResolver, TasksTagsResolver, TasksTaskResolver } from './tasks.resolvers';
 import { Route } from '@angular/router';
 import { StoreComponent } from './store/store.component';
 import { KanbanBoardComponent } from './kanban-view/kanban-board/kanban-board.component';
+import { ScrumboardCardComponent } from './kanban-view/kanban-board/card/card.component';
 
 
 
@@ -51,16 +52,19 @@ export const tasksRoutes: Route[] = [
                         component: KanbanBoardComponent,
                         children : [
                             {
-                                path         : ':id',
+                                path     : 'card/:id',
+                                component: ScrumboardCardComponent,
+                                resolve      : {
+                                    task: TasksTaskResolver
+                                },
+                                
+                            },
+                            {
+                                path         : 'details/:id',
                                 component    : TasksDetailsComponent,
                                 resolve      : {
                                     task: TasksTaskResolver
                                 },
-                                canDeactivate: [CanDeactivateTasksDetails]
-                            },
-                            {
-                                path         : 'add/new',
-                                component    : StoreComponent,
                                 canDeactivate: [CanDeactivateTasksDetails]
                             }
                         ]
