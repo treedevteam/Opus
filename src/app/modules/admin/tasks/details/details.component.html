@@ -57,7 +57,7 @@
                                 *ngFor="let member of getAssignedUsers(task2.users_assigned).slice(0, 5); trackBy: trackByFn">
                                 <img [matTooltip]="member.name" [matTooltipPosition]="'above'"
                                     class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                    [src]="apiUrl+'storage/' + member.image" alt="Member avatar">
+                                    [src]="apiUrl+'storage/' + member.user_image" alt="Member avatar">
                             </ng-container>
                             <ng-container *ngIf="task2.users_assigned.length > 5">
                                 <div

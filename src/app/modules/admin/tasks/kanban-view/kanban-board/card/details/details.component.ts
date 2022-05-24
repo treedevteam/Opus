@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDe
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef } from '@angular/material/dialog';
-import { debounceTime, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, Subject, takeUntil, tap, Observable } from 'rxjs';
 import * as moment from 'moment';
 import { assign } from 'lodash-es';
 import { ScrumboardService } from '../../scrumboard.service';
@@ -22,9 +22,8 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
     board: Board;
     card: Card;
     cardForm: FormGroup;
+    taskById$: Observable<Task2>
 
-
-    taskById:Task2;
     // Private
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -62,12 +61,8 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             });
 
         // Get the card details
-        this._tasksService.taskById$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((card) => {
-                this.taskById = card;
-                console.log(card,"adminadminadminadmin")
-            });
+        this.taskById$ = this._tasksService.taskById$
+          
 
         // Prepare the card form
         this.cardForm = this._formBuilder.group({
@@ -83,16 +78,19 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
         });
 
         // Fill the form
-        this.cardForm.setValue({
-            id          : this.taskById.id,
-            title       : this.taskById.title,
-            description : this.taskById.description,
-            deadline    : this.taskById.deadline,
-            priority    : this.taskById.priority,
-            raport      : this.taskById.raport,
-            restrictions: this.taskById.restrictions,
-            status      : this.taskById.status
-        });
+        this._tasksService.taskById$.subscribe(res=>{
+            this.cardForm.setValue({
+                id          : res.id,
+                title       : res.title,
+                description : res.description,
+                deadline    : res.deadline,
+                priority    : res.priority,
+                raport      : res.raport,
+                restrictions: res.restrictions,
+                status      : res.status
+            });
+        })
+       
 
         // Update card when there is a value change on the card form
         this.cardForm.valueChanges
@@ -111,16 +109,16 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 
                 // Update the card on the server
                 this._tasksService.updateTaskservice(value, value.id ).subscribe((res)=>{
-                    this.cardForm.setValue({
-                        id          : res.id,
-                        title       : res.title,
-                        description : res.description,
-                        deadline    : res.deadline,
-                        priority    : res.priority,
-                        raport      : res.raport,
-                        restrictions: res.restrictions,
-                        status      : res.status
-                    });
+                    // this.cardForm.setValue({
+                    //     id          : res.id,
+                    //     title       : res.title,
+                    //     description : res.description,
+                    //     deadline    : res.deadline,
+                    //     priority    : res.priority,
+                    //     raport      : res.raport,
+                    //     restrictions: res.restrictions,
+                    //     status      : res.status
+                    // });
                     
                     console.log(res,"EEWRWERWERWERw");
                 });

@@ -877,7 +877,6 @@ export class TasksService
     getBoardTasks(id: number): Observable<Task2[]>{
         return this._httpClient.get<Task2[]>(this.apiUrl+'api/board/'+id+'/tasks').pipe(
             map((data: any): Task2[] => {
-                debugger;
                 this._currentBoardTasks.next(data.data);
                 return data.data;
             }),

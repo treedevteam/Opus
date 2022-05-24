@@ -9,18 +9,28 @@ import { Board, Card, List } from '../scrumboard.models'
 import { TasksService } from '../../../tasks.service';
 import { environment } from 'environments/environment';
 import { Boards } from '../../../../departments/departments.types';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { TaskOrSub } from './add-card/add-card.component';
 @Component({
     selector       : 'scrumboard-board',
     templateUrl    : './board.component.html',
     styleUrls      : ['./board.component.scss'],
     encapsulation  : ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        trigger('detailExpand', [
+          state('collapsed', style({ height: '0px', minHeight: '0' })),
+          state('expanded', style({ height: '*' })),
+          transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+      ],
 })
 export class ScrumboardBoardComponent implements OnInit, OnDestroy
 {
     board: Boards;
     listTitleForm: FormGroup;
     apiUrl = environment.apiUrl;
+    expandedSubtasks:number | null = null;
 
 
     tasksData$ = combineLatest([
@@ -104,6 +114,36 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         )
         );
 
+        subtasksData$ = combineLatest([
+            this._taskService.subtasksList$,
+            this._taskService.getStatus$,
+            this._taskService.getPriorities$,
+            this._taskService.getUsersData$
+          ]).pipe(
+            map(([subtasks, statuses, priority,users]) =>
+            subtasks.map(subtask =>({
+                ...subtask,
+                status: statuses.find(s => +subtask.status === +s.id),
+                priority: priority.find(p => +subtask.priority === +p.id),
+                users_assigned: subtask.users_assigned.map(u => (
+                    users.find(user => u === +user.id)
+                ))
+            }))),
+            shareReplay(1),
+            tap(res=>{
+                // const test = res.map(entity => {
+                //     return new FormGroup({
+                //         title:  new FormControl(entity.title, Validators.required),
+                //         deadline:  new FormControl(entity.deadline, Validators.required),
+                //       },{updateOn: "blur"});
+                // })
+                // this.subtaskControls = new FormArray(test);
+                console.log(res);
+                
+            })
+          );
+    
+
        
      
     // Private
@@ -160,7 +200,16 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
-
+    toggleTableRows(id: number) {
+        if(this.expandedSubtasks === id){
+            this.expandedSubtasks = null;
+        }else{
+            this._taskService.getSubtasks(id).subscribe(res=>{
+                console.log(res);
+                this.expandedSubtasks = id;
+            });
+        }
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -265,18 +314,23 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     /**
      * Add new card
      */
-    addCard(list: any, title: string): void
+    addCard(list: any, event: TaskOrSub): void
     {
-        console.log(list, title);
+        debugger;
+        console.log(list, event,"console.log(list, title,");
         const newTask = {
-            id: null,
-            title: title,
+            task_id: list.id,
+            title: event.title,
             board_id: this.board.id,
             status:list.status.id
         }
+        if(event.type === "task"){
+            this._taskService.storeTask(newTask).subscribe();
+        }else{
+            this._taskService.storeSubtask(newTask).subscribe()
+        }
         console.log(newTask);
         // Save the card
-        this._taskService.storeTask(newTask).subscribe();
     }
 
     /**

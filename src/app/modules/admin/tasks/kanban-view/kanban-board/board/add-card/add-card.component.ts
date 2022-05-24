@@ -1,6 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { FormBuilder, FormGroup } from '@angular/forms';
+export interface TaskOrSub
+{
+    title:string;
+    type: string;
+}
 
 @Component({
     selector       : 'scrumboard-board-add-card',
@@ -13,7 +18,8 @@ export class ScrumboardBoardAddCardComponent implements OnInit
     @ViewChild('titleInput') titleInput: ElementRef;
     @ViewChild('titleAutosize') titleAutosize: CdkTextareaAutosize;
     @Input() buttonTitle: string = 'Add a card';
-    @Output() readonly saved: EventEmitter<string> = new EventEmitter<string>();
+    @Input() taskType: string = 'subtask';
+    @Output() readonly saved: EventEmitter<TaskOrSub> = new EventEmitter<TaskOrSub>();
 
     form: FormGroup;
     formVisible: boolean = false;
@@ -62,8 +68,8 @@ export class ScrumboardBoardAddCardComponent implements OnInit
         }
 
         // Execute the observable
-        this.saved.next(title.trim());
-
+        this.saved.next({title:title,type:this.taskType});
+        
         // Clear the new list title and hide the form
         this.formVisible = false;
         this.form.get('title').setValue('');

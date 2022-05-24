@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto md:w-160 md:min-w-160 max-h-160 -m-6 overflow-y-auto">
+<div *ngIf="taskById$ | async as taskById" class="flex flex-col flex-auto md:w-160 md:min-w-160 max-h-160 -m-6 overflow-y-auto">
 
     <!-- Header -->
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
@@ -25,6 +25,7 @@
                 matInput
                 [formControlName]="'title'"
                 [rows]="1"
+                [value]="'taskById.title'"
                 cdkTextareaAutosize
                 [cdkAutosizeMinRows]="1">
             </textarea>
@@ -45,19 +46,18 @@
         <!-- Due date -->
         <div>
             <div class="font-medium">Deadline</div>
-            {{taskById.title}}
             <div
                 class="relative flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer"
-                [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !taskById.deadline,
-                                'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': taskById.deadline && !isOverdue(taskById.deadline),
-                                'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': taskById.deadline && isOverdue(taskById.deadline)}"
+                [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !cardForm.get('deadline').value,
+                                'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': cardForm.get('deadline').value && !isOverdue(cardForm.get('deadline').value),
+                                'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': cardForm.get('deadline').value && isOverdue(cardForm.get('deadline').value)}"
                 (click)="dueDatePicker.open()">
                 <mat-icon
                     class="icon-size-5 text-current"
                     [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                 <span class="ml-2 text-md font-medium">
-                    <ng-container *ngIf="taskById.deadline">{{taskById.deadline | date:'longDate'}}</ng-container>
-                    <ng-container *ngIf="!taskById.deadline">Not set</ng-container>
+                    <ng-container *ngIf="cardForm.get('deadline').value">{{cardForm.get('deadline').value | date:'longDate'}}</ng-container>
+                    <ng-container *ngIf="!cardForm.get('deadline').value">Not set</ng-container>
                 </span>
                 <mat-form-field class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
                     <input
