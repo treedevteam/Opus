@@ -11,13 +11,15 @@ import { ScrumboardCardDetailsComponent } from './details/details.component';
 })
 export class ScrumboardCardComponent implements OnInit
 {
+    sub: any
     /**
      * Constructor
      */
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _matDialog: MatDialog,
-        private _router: Router
+        private _router: Router,
+        private route: ActivatedRoute
     )
     {
     }
@@ -31,13 +33,22 @@ export class ScrumboardCardComponent implements OnInit
      */
     ngOnInit(): void
     {
-        // Launch the modal
-        this._matDialog.open(ScrumboardCardDetailsComponent, {autoFocus: false})
+
+        this.sub = this.route
+        .data
+        .subscribe(v => {
+            console.log(v.some_data);
+            
+            this._matDialog.open(ScrumboardCardDetailsComponent, {data:v.some_data, autoFocus: false})
             .afterClosed()
             .subscribe(() => {
 
                 // Go up twice because card routes are setup like this; "card/CARD_ID"
                 this._router.navigate(['./../..'], {relativeTo: this._activatedRoute});
             });
+        });
+        
+        // Launch the modal
+       
     }
 }

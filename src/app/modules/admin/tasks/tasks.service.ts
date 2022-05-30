@@ -26,6 +26,7 @@ export class TasksService
 
 
     private _currentBoard: BehaviorSubject<Boards | null> = new BehaviorSubject(null); 
+    private _currentBoardOrderTasks: BehaviorSubject<string | null> = new BehaviorSubject(null); 
     private _currentBoardTasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null); 
     private _currentBoardUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
     private _currentDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
@@ -47,10 +48,7 @@ export class TasksService
     private _taskComment: BehaviorSubject<TaskComment | null> = new BehaviorSubject(null);
     private _deletedTaskComment: BehaviorSubject<number | null> = new BehaviorSubject(null);
 
-    //subtask
-    private _subtasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
-    private _newSubtasks: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
-    private _updateSubtasks: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
+    
 
     private _departments: BehaviorSubject<Departments[] | null> = new BehaviorSubject(null);
     private _priorities: BehaviorSubject<Priorities[] | null> = new BehaviorSubject(null);
@@ -65,6 +63,13 @@ export class TasksService
     private _tasksupdated: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
     private _deletedtasks: BehaviorSubject<any> = new BehaviorSubject(null);
     private _tagsLogs: BehaviorSubject<TaskLogs[] | null> = new BehaviorSubject(null);
+
+//subtask
+    private _subtasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
+    private _newSubtasks: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
+    private _updateSubtasks: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
+    private _mysubtask: BehaviorSubject<Task2 | null> = new BehaviorSubject(null);
+    private _deletedSubtasks: BehaviorSubject<any> = new BehaviorSubject(null);
 
 
 
@@ -236,6 +241,10 @@ export class TasksService
     get currentBoard$(): Observable<Boards>{
         return this._currentBoard.asObservable();
     }
+
+    get currentBoardOrderTasks$(): Observable<string>{
+        return this._currentBoardOrderTasks.asObservable();
+    }
     get currentBoardTasks$(): Observable<Task2[]>{
         return this._currentBoardTasks.asObservable();
     }
@@ -336,6 +345,11 @@ export class TasksService
     {
         return this._subtasks.asObservable();
     }
+    get mysubtask$(): Observable<Task2>
+    {
+        return this._mysubtask.asObservable();
+    }
+    
     get newSubtask$(): Observable<Task2>
     {
         return this._newSubtasks.asObservable();
@@ -441,9 +455,10 @@ export class TasksService
         return this._httpClient.post<Task2>(this.apiUrl+'api/task/store/board', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
-                this._newtask.next(data.data);
+                this._newtask.next(data.task);
+                this._currentBoardOrderTasks.next(data.board_order)
                 this.setNullBehaviourSubject();
-                return data.data;
+                return data.task;
             }),
             catchError((err) => {
                 console.error(err);
@@ -468,6 +483,22 @@ export class TasksService
             map((data: any) => {
                 this._tasksupdated.next(data.data);
                 this._newtask.next(null);
+                return data.data;
+            }),
+            catchError((err) => {
+                console.error(err);
+                throw err;
+            }
+        )
+        );
+    }
+
+    updateSubtaskById(form: any, id: number): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/subtask/' + id + '/update/admin', form).pipe(
+            // eslint-disable-next-line arrow-body-style
+            map((data: any) => {
+                this._updateSubtasks.next(data.data);
+                this._newSubtasks.next(null);
                 return data.data;
             }),
             catchError((err) => {
@@ -655,6 +686,26 @@ export class TasksService
         return this._httpClient.get<Task2>(this.apiUrl+'api/task/'+ id).pipe(
             map((data: any): Task2 => {
                 this._mytask.next(data.data);
+                // this.getTaskComments(+id)
+                // console.log(data);
+                return data;
+            }),switchMap((task) => {
+
+                if ( !task )
+                {
+                    return throwError('Could not found task with id of ' + id + '!');
+                }
+                return of(task);
+            })
+        );
+    }
+
+    getSubtaskById(id: string): Observable<Task2>
+    {
+        // this.getTaskComments(+id);
+        return this._httpClient.get<Task2>(this.apiUrl+'api/subtask/'+ id).pipe(
+            map((data: any): Task2 => {
+                this._mysubtask.next(data.data);
                 // this.getTaskComments(+id)
                 // console.log(data);
                 return data;
@@ -877,7 +928,9 @@ export class TasksService
     getBoardTasks(id: number): Observable<Task2[]>{
         return this._httpClient.get<Task2[]>(this.apiUrl+'api/board/'+id+'/tasks').pipe(
             map((data: any): Task2[] => {
-                this._currentBoardTasks.next(data.data);
+                this._currentBoardTasks.next(data.tasks);
+                this._currentBoardOrderTasks.next(data.order);
+                console.log(data,"data.taskdata.taskdata.taskdata.task");
                 return data.data;
             }),
              shareReplay(1),
@@ -919,9 +972,25 @@ export class TasksService
     updateTaskStatus(statusId: any, taskId:number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_status/' + taskId ,  {status: statusId}).pipe(
             map((data: any) => {
-                this._tasksupdated.next(data.data);
+                this._tasksupdated.next(data.task);
+                this._currentBoardOrderTasks.next(data.order)
                 this._newtask.next(null);
-                return data.data;
+                return data.task;
+            }),
+            catchError((err) => {
+                console.error(err);
+                throw err;
+            }
+        )
+        );
+    }
+    updateTaskStatusOrder(statusId: any, order:string, board_id:number, taskId:number): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task_status/' + taskId ,  {board_id:board_id,status: statusId,order}).pipe(
+            map((data: any) => {
+                this._tasksupdated.next(data.task);
+                this._currentBoardOrderTasks.next(data.order)
+                this._newtask.next(null);
+                return data.task;
             }),
             catchError((err) => {
                 console.error(err);

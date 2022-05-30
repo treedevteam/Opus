@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { combineLatest, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, map, of, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import * as moment from 'moment';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ScrumboardService } from '../scrumboard.service';
@@ -39,6 +39,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         this._taskService.taskUpdated$,
         this._taskService.deletedTask$
     ],(g,p,u,d) => {
+        debugger;
          if(p){
             const id = g.findIndex(t=> t.id === p.id);
             if(id === -1){
@@ -85,17 +86,26 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             }
         return tasksWithDepartment;
     });
+    orderModified$ = this._taskService.currentBoardOrderTasks$.pipe(
+        map(e=>e.split(',').filter(t=>t !== "").map(e=>+e))
+    )
 
     usersAssigned$ = combineLatest([
         this.tasksDataCheckList$,
         this._taskService.getStatus$,
         this._taskService.getPriorities$,
-        this._taskService.getUsersData$
+        this._taskService.getUsersData$,
+        this.orderModified$
       ]).pipe(
-        map(([currentBoardTasks, getStatus, getPriorities, getUsersData]) =>(
-               getStatus.map(s=>({
+        map(([currentBoardTasks, getStatus, getPriorities, getUsersData, getOrderTasks]) =>(
+               getStatus.map(s=>(
+                   {
+                    order:getOrderTasks,
                     status : s,
-                    tasks: currentBoardTasks.filter(x=>x.status === s.id).map(_tasks=>({
+                    tasks: currentBoardTasks.filter(x=>x.status === s.id).sort(function(a,b){
+                        return getOrderTasks.indexOf(a.id) - getOrderTasks.indexOf(b.id);
+                    })
+                    .map(_tasks=>({
                         ..._tasks,
                         priority: getPriorities.find(x=>x.id === _tasks.priority),
                         users_assigned: _tasks.users_assigned.map(u => (
@@ -110,7 +120,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
                ))
         )),
         shareReplay(1),
-        tap(res=>console.log(res)
+        tap(res=>console.log(res,"board_tasks_with_order")
         )
         );
 
@@ -181,6 +191,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
 
         this._taskService.currentBoard$.pipe(takeUntil(this._unsubscribeAll))
         .subscribe((board: Boards) => {
+            console.log(board,"BOARD");
             
             this.board = {...board};
 
@@ -357,27 +368,65 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
      */
     cardDropped(event: CdkDragDrop<Card[]>): void
     {
+        let order;
         console.log(event,"currentItem.position = this._positionStepcurrentItem.position = this._positionStep");
+        this.orderModified$.subscribe(res=>{
+            order = res;
+        })
+        
         // Move or transfer the item
         if ( event.previousContainer === event.container )
         {
             // Move the item
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            const currentTask = event.container.data[event.currentIndex];
+            const currentIndex = event.currentIndex
+            const taskuCurrent = event.container.data[currentIndex]?.id;
+            const previusTask = event.container.data[currentIndex - 1]?.id;
+            const nextTask = event.container.data[currentIndex + 1]?.id;
+            const currentTaskIndex = order.findIndex(d => d === taskuCurrent);
+            if(currentTaskIndex > -1){
+                if(previusTask){
+                    order.splice(currentTaskIndex,1);
+                    const prevTaskIndex = order.findIndex(d => d === previusTask);
+                    order.splice(prevTaskIndex+1, 0, taskuCurrent);
+                }else if(nextTask){
+                    order.splice(currentTaskIndex,1);
+                    const nextTaskIndex = order.findIndex(d => d === nextTask);
+                    order.splice(nextTaskIndex, 0, taskuCurrent);
+                }else{
+                }
+            }
+            console.log(event,"currentItem.position = this._positionStepcurrentItem.position = this._positionStep");
+            this._taskService.updateTaskStatusOrder(event.container.id, order.toString(),this.board.id, +currentTask.id).subscribe();
         }
         else
         {
-            
             transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-
             // Update the card's list it
             event.container.data[event.currentIndex].listId = event.container.id;
+            const currentTask = event.container.data[event.currentIndex];
+            const currentIndex = event.currentIndex
+            const taskuCurrent = event.container.data[currentIndex]?.id;
+            const previusTask = event.container.data[currentIndex - 1]?.id;
+            const nextTask = event.container.data[currentIndex + 1]?.id;
+            const currentTaskIndex = order.findIndex(d => d === taskuCurrent);
+            if(currentTaskIndex > -1){
+                if(previusTask){
+                    order.splice(currentTaskIndex,1);
+                    const prevTaskIndex = order.findIndex(d => d === previusTask);
+                    order.splice(prevTaskIndex+1, 0, taskuCurrent);
+                }else if(nextTask){
+                    order.splice(currentTaskIndex,1);
+                    const nextTaskIndex = order.findIndex(d => d === nextTask);
+                    order.splice(nextTaskIndex, 0, taskuCurrent);
+                }else{
+                }
+            }
+            this._taskService.updateTaskStatusOrder(event.container.id, order.toString(),this.board.id, +currentTask.id).subscribe();
         }
-
         // Calculate the positions
         const updated = this._calculatePositions(event);
-        const currentTask = event.container.data[event.currentIndex];
-        // Update the cards
-        this._taskService.updateTaskStatus(event.container.id, +currentTask.id).subscribe();
     }
 
     /**

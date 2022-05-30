@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { ScrumboardService } from '../../scrumboard.service';
 import { Board, Card, Label } from '../../scrumboard.models';
 import { Task2 } from 'app/modules/admin/tasks/tasks.types';
 import { TasksService } from 'app/modules/admin/tasks/tasks.service';
-
+import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
 @Component({
     selector       : 'scrumboard-card-details',
     templateUrl    : './details.component.html',
@@ -35,7 +35,8 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         private _scrumboardService: ScrumboardService,
-        private _tasksService: TasksService
+        private _tasksService: TasksService,
+        @Inject(MAT_DIALOG_DATA) public data: any
     )
     {
     }
@@ -49,6 +50,8 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        console.log(this.data,"from dialog");
+        
         // Get the board
         this._scrumboardService.board$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -61,8 +64,12 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             });
 
         // Get the card details
-        this.taskById$ = this._tasksService.taskById$
-          
+        if(this.data === "Task"){
+            this.taskById$ = this._tasksService.taskById$
+        }else{
+            this.taskById$ = this._tasksService.mysubtask$
+
+        }
 
         // Prepare the card form
         this.cardForm = this._formBuilder.group({
@@ -78,7 +85,9 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
         });
 
         // Fill the form
-        this._tasksService.taskById$.subscribe(res=>{
+        this.taskById$.subscribe(res=>{
+            console.log(res);
+            
             this.cardForm.setValue({
                 id          : res.id,
                 title       : res.title,
@@ -108,6 +117,8 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 console.log(value,"value");
                 
                 // Update the card on the server
+                if(this.data === "Task"){
+
                 this._tasksService.updateTaskservice(value, value.id ).subscribe((res)=>{
                     // this.cardForm.setValue({
                     //     id          : res.id,
@@ -122,6 +133,22 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                     
                     console.log(res,"EEWRWERWERWERw");
                 });
+                }else{
+                    this._tasksService.updateSubtaskById(value, value.id ).subscribe((res)=>{
+                        // this.cardForm.setValue({
+                        //     id          : res.id,
+                        //     title       : res.title,
+                        //     description : res.description,
+                        //     deadline    : res.deadline,
+                        //     priority    : res.priority,
+                        //     raport      : res.raport,
+                        //     restrictions: res.restrictions,
+                        //     status      : res.status
+                        // });
+                        
+                        console.log(res,"EEWRWERWERWERw");
+                    });
+                }
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();

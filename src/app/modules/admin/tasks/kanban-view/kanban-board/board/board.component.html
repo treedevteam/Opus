@@ -110,12 +110,12 @@
 
                                 <!-- Card -->
                                 <ng-container  *ngFor="let card of list.tasks; trackBy: trackByFn">
+                                    
                                     <div class="position-relative ">
-
                                     <a
                                         class="flex flex-col items-start mt-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card position-relative"
                                         style="padding-bottom: 40px!important;"
-                                        [routerLink]="['card', card.id]"
+                                        [routerLink]="['task', card.id]"
                                         cdkDrag
                                         >
                                         <!-- Cover image -->
@@ -186,7 +186,7 @@
                                                 </div>
                                                 <a
                                                     class="flex flex-col items-start mb-3 p-5 space-y-1 shadow rounded-lg overflow-hidden bg-card"
-                                                    [routerLink]="['card', 2]"
+                                                    [routerLink]="['subtask', subtaskTask.id]"
                                                     style="width: 100%;
                                                     margin-left: 25px;"
                                                     >
@@ -207,11 +207,8 @@
                                             [buttonTitle]="list.tasks.length ? 'Add another subtask' : 'Add a subtask'">
                                         </scrumboard-board-add-card>
                                     </ng-container>
-                                    
                                 </ng-container>
                             </div>
-                          
-
                             <!-- New card -->
                             <scrumboard-board-add-card
                                 (saved)="addCard(list, $event)"
@@ -221,19 +218,9 @@
                         </div>
                     </div>
                 </ng-container>
-
-                <!-- New list -->
-                <!-- <scrumboard-board-add-list
-                    (saved)="addList($event)"
-                    [buttonTitle]="'Add another list'">
-                </scrumboard-board-add-list> -->
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 

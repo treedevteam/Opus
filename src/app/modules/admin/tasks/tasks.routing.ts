@@ -2,7 +2,7 @@ import { CanDeactivateTasksDetails } from './tasks.guards';
 import { TasksDetailsComponent } from './details/details.component';
 import { TasksListComponent } from './list/list.component';
 import { TasksComponent } from './tasks.component';
-import { TasksDepartmentsResolver, TasksResolver, TasksTagsResolver, TasksTaskResolver } from './tasks.resolvers';
+import { SubtaskTaskResolver, TasksDepartmentsResolver, TasksResolver, TasksTagsResolver, TasksTaskResolver } from './tasks.resolvers';
 import { Route } from '@angular/router';
 import { StoreComponent } from './store/store.component';
 import { KanbanBoardComponent } from './kanban-view/kanban-board/kanban-board.component';
@@ -52,12 +52,22 @@ export const tasksRoutes: Route[] = [
                         component: KanbanBoardComponent,
                         children : [
                             {
-                                path     : 'card/:id',
+                                path     : 'task/:id',
                                 component: ScrumboardCardComponent,
                                 resolve      : {
                                     task: TasksTaskResolver
                                 },
+                                data: {some_data: 'Task'}
                                 
+                            },
+                            {
+                                path     : 'subtask/:id',
+                                component: ScrumboardCardComponent,
+                                resolve      : {
+                                    task: SubtaskTaskResolver
+                                },
+                                data: {some_data: 'Subtask'}
+
                             },
                             {
                                 path         : 'details/:id',
@@ -65,7 +75,9 @@ export const tasksRoutes: Route[] = [
                                 resolve      : {
                                     task: TasksTaskResolver
                                 },
-                                canDeactivate: [CanDeactivateTasksDetails]
+                                canDeactivate: [CanDeactivateTasksDetails],
+                                data: {type: 'Subtask'}
+
                             }
                         ]
                     }
