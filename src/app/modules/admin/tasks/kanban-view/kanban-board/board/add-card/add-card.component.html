@@ -1,5 +1,5 @@
 <div
-    class="p-3 pt-0"
+    class="p-3 pt-0 mt-3"
     [class.h-13]="!formVisible">
     <div class="relative flex w-full h-full rounded-lg">
         <button
@@ -22,7 +22,7 @@
                     class="w-full text-lg font-medium leading-5"
                     [spellcheck]="'off'"
                     [formControlName]="'title'"
-                    [placeholder]="'Enter card title...'"
+                    [placeholder]="'Enter task title...'"
                     (keydown.enter)="save()"
                     cdkTextareaAutosize
                     #titleInput
