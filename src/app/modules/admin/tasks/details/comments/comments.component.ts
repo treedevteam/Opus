@@ -23,7 +23,6 @@ export class CommentsComponent implements OnInit {
 
 
   getFields(input, field) {
-      debugger;
       var output = [];
       for (var i=0; i < input.length ; ++i)
           output.push(input[i][field]);

@@ -11,6 +11,8 @@ import { environment } from 'environments/environment';
 import { Boards } from '../../../../departments/departments.types';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TaskOrSub } from './add-card/add-card.component';
+import { AsignUsersToBoardComponent } from '../../../asign-users-to-board/asign-users-to-board.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
     selector       : 'scrumboard-board',
     templateUrl    : './board.component.html',
@@ -31,6 +33,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     listTitleForm: FormGroup;
     apiUrl = environment.apiUrl;
     expandedSubtasks:number | null = null;
+    usersList = this._taskService.currentBoardUsers$
 
 
     tasksData$ = combineLatest([
@@ -39,7 +42,6 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         this._taskService.taskUpdated$,
         this._taskService.deletedTask$
     ],(g,p,u,d) => {
-        debugger;
          if(p){
             const id = g.findIndex(t=> t.id === p.id);
             if(id === -1){
@@ -86,6 +88,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             }
         return tasksWithDepartment;
     });
+
     orderModified$ = this._taskService.currentBoardOrderTasks$.pipe(
         map(e=>e.split(',').filter(t=>t !== "").map(e=>+e))
     )
@@ -170,7 +173,8 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
         private _scrumboardService: ScrumboardService,
-        private _taskService: TasksService
+        private _taskService: TasksService,
+        private dialog: MatDialog
     )
     {
     }
@@ -194,7 +198,12 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             console.log(board,"BOARD");
             
             this.board = {...board};
+            this._taskService.getUsersBoard(board.id).subscribe(res=>{
+                console.log(res,"TTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEESST");
+             })
 
+             this._taskService.getUsersDepartment(+board.department_id).subscribe(res=>{
+              })
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
@@ -224,7 +233,19 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
-
+    assignUserPopup(): void {
+        this._taskService.getUsersDepartment(+this.board.department_id).subscribe(res=>{
+            const dialogRef = this.dialog.open(AsignUsersToBoardComponent, {
+                width: '100%',
+                maxWidth:'700px',
+                height:'400px',
+                maxHeight:'100%'
+              });
+          
+              dialogRef.afterClosed().subscribe(result => {
+              });
+        })
+      }
     /**
      * Focus on the given element to start editing the list title
      *
@@ -327,7 +348,6 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
      */
     addCard(list: any, event: TaskOrSub): void
     {
-        debugger;
         console.log(list, event,"console.log(list, title,");
         const newTask = {
             task_id: list.id,

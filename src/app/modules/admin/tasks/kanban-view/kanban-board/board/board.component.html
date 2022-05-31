@@ -1,33 +1,38 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
-        <!-- Title -->
-        <div class="flex-1 min-w-0">
-            <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                {{board.name}}
-            </h2>
-        </div>
-        <!-- Actions -->
-        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-            <a
-                mat-stroked-button
-                [routerLink]="['..']">
-                <mat-icon
-                    class="icon-size-5 mr-2"
-                    [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
-                Boards
-            </a>
-            <button
-                class="ml-3"
-                mat-stroked-button>
-                <mat-icon
-                    class="icon-size-5 mr-2"
-                    [svgIcon]="'heroicons_solid:cog'"></mat-icon>
-                Settings
-            </button>
-        </div>
-    </div>
+   <!-- Header -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between py-8 px-6 md:px-8">
+                    <!-- Title -->
+                    <div>
+
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">{{board.name}}'s Tasks</div> 
+                        
+                        <div class="kanban_view_button">
+                            <a [routerLink]="['../../']" >Normal View</a>
+                        </div>
+                        
+                            
+                            <!-- <span *ngIf="tasksCount.incomplete === 0">All tasks completed!</span>
+                            <span *ngIf="tasksCount.incomplete !== 0">{{tasksCount.incomplete}} remaining tasks</span> -->
+                    </div>
+                    <!-- Actions -->
+                    <div class="mt-4 sm:mt-0 flex">
+                        <div class="flex items-center justify-center inset-y-0 left-0 me-3">
+                            <div *ngFor="let test of (usersList | async)">
+                                <!-- User -->
+                                    <img [matTooltip]="test.name" [matTooltipPosition]="'above'"
+                                        style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;"
+                                        src="{{apiUrl+ 'storage/'+test.user_image}}" alt="">
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserPopup()">
+                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                <span class="ml-2 mr-1">Invite</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
     <!-- Main -->
     <div style="background-color:rgb(241,245,249)"
@@ -113,7 +118,7 @@
                                     
                                     <div class="position-relative ">
                                     <a
-                                        class="flex flex-col items-start mt-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card position-relative"
+                                        class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card position-relative"
                                         style="padding-bottom: 40px!important;"
                                         [routerLink]="['task', card.id]"
                                         cdkDrag

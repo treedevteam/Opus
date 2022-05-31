@@ -37,7 +37,7 @@ export class AsignUsersToBoardComponent implements OnInit {
 
    this._taskService.currentBoard$.subscribe(res=>{
      this.currentBoard = res;
-   
+     
    })
     
   }
