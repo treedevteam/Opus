@@ -6,15 +6,11 @@
             <!-- comments -->
             <div class="flex items-end py-4 ">
                 <form [formGroup]="commentForm" class=" w-full">
-                    <mat-form-field
-                        class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded fuse-mat-bold w-full"
-                    >
+                    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded fuse-mat-bold w-full">
                         <textarea
+                            [mentionConfig]="mentionConfig1"
                             class="min-h-5 my-0 resize-none"
-                            style="
-                                margin: 11px 0 !important;
-                                padding: 0 !important;
-                            "
+                            style="margin: 11px 0 !important;padding: 0 !important;"
                             [rows]="1"
                             placeholder="Add comment..."
                             matInput
@@ -34,6 +30,7 @@
                 </div>
 
             </div>
+            
             <!-- Message field -->
             <div class="py-4">
                 <!-- {{taskComments | json}} -->

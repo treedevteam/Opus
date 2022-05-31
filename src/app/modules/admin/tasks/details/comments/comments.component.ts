@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { combineLatest, map, Observable, tap } from 'rxjs';
 import { TasksService } from '../../tasks.service';
-import { Task2, TaskComment } from '../../tasks.types';
+import { Task2, TaskComment, Users } from '../../tasks.types';
 import { FuseConfirmationService } from '../../../../../../@fuse/services/confirmation/confirmation.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { environment } from 'environments/environment';
@@ -12,15 +12,32 @@ import { environment } from 'environments/environment';
   styleUrls: ['./comments.component.scss']
 })
 export class CommentsComponent implements OnInit {
+
+  
   taskId: number;
   commentForm: FormGroup;
   apiUrl = environment.apiUrl;
+  boardUsers:Users[] =[];
+  mentionConfig1 = {}
+ 
+
+
+  getFields(input, field) {
+      debugger;
+      var output = [];
+      for (var i=0; i < input.length ; ++i)
+          output.push(input[i][field]);
+      return output;
+  }
+
   taskLogs(){
     this._tasksService.taskById$
     .subscribe((task: Task2) => {
         this.taskId = task.id;
     });
   }
+
+  
   taskComments$ = combineLatest([
     this._tasksService.taskComments$,
     this._tasksService.taskComment$,
@@ -53,8 +70,22 @@ export class CommentsComponent implements OnInit {
     ) { }
 
   
-
+    
   ngOnInit(): void {
+    this._tasksService.currentBoardUsers$.subscribe(res=>{
+      this.mentionConfig1 = {
+        mentions: [
+          {
+              items: res.map(res=>res.email),
+              triggerChar: '@'
+          },
+          {
+              items: [ "Red", "Yellow", "Green"],
+              triggerChar: '#'
+          }
+        ]
+      } 
+    })
     this.taskLogs();
     this.commentForm = this._formBuilder.group({
         id        : [''],
@@ -82,3 +113,5 @@ export class CommentsComponent implements OnInit {
     });
 }
 }
+
+

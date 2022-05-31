@@ -290,6 +290,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this._tasksService.getUsersData$.subscribe(res=>{
+            debugger;
             let boardId: number;
             this._tasksService.currentBoard$.subscribe(res=>{
                 boardId = res.id; 

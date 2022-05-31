@@ -50,6 +50,7 @@ import { ScrumboardCardDetailsComponent } from './kanban-view/kanban-board/card/
 import { ScrumboardCardComponent } from './kanban-view/kanban-board/card/card.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './task-details/task-details.component';
+import { MentionModule } from 'angular-mentions';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -99,7 +100,8 @@ import { TaskDetailsComponent } from './task-details/task-details.component';
         MatBadgeModule,
         ChecklistModule,
         MatChipsModule,
-        MatCardModule
+        MatCardModule,
+        MentionModule 
     ],
     providers   : [
         

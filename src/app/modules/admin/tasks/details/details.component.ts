@@ -128,13 +128,13 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
 
         // Get the departmetns
-        // this._tasksService.getUsersData$
-        // .pipe(takeUntil(this._unsubscribeAll))
-        // .subscribe((usersList: Users[]) => {
-        //     this.usersList = usersList;
-        //     // Mark for check
-        //     this._changeDetectorRef.markForCheck();
-        // });
+        this._tasksService.getUsersData$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((usersList: Users[]) => {
+            this.usersList = usersList;
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        });
        
        
             // Get the statuses
@@ -206,9 +206,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             console.log(this.task2,'this.task2');
 
             console.log(this.task2,"this.task2this.task2this.task2this.task2");
-            this._tasksService.getUsersBoard(+this.task2.board_id).subscribe(res=>{
-                this.usersList = res;
-            })
 
             this._tasksService.getTaskComments(+this.task2.id).subscribe(res=>{
             });
