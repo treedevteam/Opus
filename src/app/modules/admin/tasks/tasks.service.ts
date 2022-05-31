@@ -1002,7 +1002,8 @@ export class TasksService
     updateTaskPriority(priorityId: any, taskId:number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_priority/' + taskId ,  {priority: priorityId}).pipe(
             map((data: any) => {
-                this._tasksupdated.next(data.data);
+                debugger;
+                this._tasksupdated.next(data);
                 this._newtask.next(null);
                 return data.data;
             }),
