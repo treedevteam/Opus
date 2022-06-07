@@ -13,7 +13,9 @@ import { environment } from 'environments/environment';
 })
 export class CommentsComponent implements OnInit {
 
-  
+  items;
+  data: string;
+
   taskId: number;
   commentForm: FormGroup;
   apiUrl = environment.apiUrl;
@@ -72,18 +74,19 @@ export class CommentsComponent implements OnInit {
     
   ngOnInit(): void {
     this._tasksService.currentBoardUsers$.subscribe(res=>{
-      this.mentionConfig1 = {
-        mentions: [
-          {
-              items: res.map(res=>res.email),
-              triggerChar: '@'
-          },
-          {
-              items: [ "Red", "Yellow", "Green"],
-              triggerChar: '#'
-          }
-        ]
-      } 
+      this.items = res
+      // this.mentionConfig1 = {
+      //   mentions: [
+      //     {
+      //         items: res.map(res=>res.email),
+      //         triggerChar: '@'
+      //     },
+      //     {
+      //         items: [ "Red", "Yellow", "Green"],
+      //         triggerChar: '#'
+      //     }
+      //   ]
+      // } 
     })
     this.taskLogs();
     this.commentForm = this._formBuilder.group({
@@ -94,9 +97,17 @@ export class CommentsComponent implements OnInit {
 
 
   addCommentTask(){
-    this._tasksService.storeComment({text: this.commentForm.get('newComment').value,task_id:this.taskId},).subscribe(res=>{
-        this.commentForm.get('newComment').setValue("");
-    })
+    let ids = this.data
+      .replace(/(\r\n|\n|\r)/gm, '')
+      .split('@')
+      .filter(
+        (t) => t != '' && this.items.findIndex((u) => t.includes(u.name) === true) > -1
+      )
+      .map((name) => this.items.find((s) => name.includes(s.name) === true).id);
+      console.log(ids);
+      this._tasksService.storeComment({text: this.commentForm.get('newComment').value,task_id:this.taskId, mentions:'['+ids+']'}).subscribe(res=>{
+          this.commentForm.get('newComment').setValue("");
+      })
   }
 
   deleteCommentclick(id: number): void{

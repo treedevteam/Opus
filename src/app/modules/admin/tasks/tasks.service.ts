@@ -833,8 +833,8 @@ export class TasksService
     }
 
     //add comment
-    storeComment(comment: any): Observable<Task2[]>{
-        return this._httpClient.post<Task2[]>(this.apiUrl+'api/comment/store', comment).pipe(
+    storeComment(comment: any): Observable<TaskComment[]>{
+        return this._httpClient.post<TaskComment[]>(this.apiUrl+'api/comment/store', comment).pipe(
             map((data: any) => {
                 this._taskComment.next(data.data);
                 this._taskComment.next(null);
@@ -969,8 +969,8 @@ export class TasksService
     }
 
 
-    updateTaskStatus(statusId: any, taskId:number): Observable<Task2>{
-        return this._httpClient.post<Task2>(this.apiUrl+'api/task_status/' + taskId ,  {status: statusId}).pipe(
+    updateTaskStatus(statusId: any, order:any,board_id:number, taskId:number): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task_status/' + taskId , {status: statusId,order: order,board_id:board_id}).pipe(
             map((data: any) => {
                 this._tasksupdated.next(data.task);
                 this._currentBoardOrderTasks.next(data.order)

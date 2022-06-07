@@ -50,7 +50,8 @@ export class TasksListComponent implements OnInit, OnDestroy
     expandedSubtasks:number | null = null;
     controls: FormArray;
     subtaskControls: FormArray;
-
+    order;
+    board_id:number;
     getDepartments: Departments[];
 
     DeaprtmentsData$ = this._tasksService.departments$;
@@ -74,6 +75,9 @@ export class TasksListComponent implements OnInit, OnDestroy
         total     : 0
     };
     taskss: TaskWithDepartment[];
+
+    orderModified$ = this._tasksService.currentBoardOrderTasks$
+
 
     tasksData$ = combineLatest([
         this._tasksService.currentBoardTasks$,
@@ -253,7 +257,8 @@ export class TasksListComponent implements OnInit, OnDestroy
     }
 
     selectStatus(status: Status){
-        this._tasksService.updateTaskStatus(status.id, this.statusTask.id).subscribe(res=>{
+        debugger;
+        this._tasksService.updateTaskStatus(status.id,this.order,this.board_id, this.statusTask.id).subscribe(res=>{
         })
     }
     selectPriority(priority: Priorities){
@@ -289,10 +294,16 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {
+        console.log(event,"currentItem.position = this._positionStepcurrentItem.position = this._positionStep");
+        this.orderModified$.subscribe(res=>{
+            debugger;
+            this.order = res;
+        })
         this._tasksService.getUsersData$.subscribe(res=>{
             let boardId: number;
             this._tasksService.currentBoard$.subscribe(res=>{
                 boardId = res.id; 
+                this.board_id = res.id
             });
             this._tasksService.getUsersBoard(boardId).subscribe(res=>{
                console.log(res,"TTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEESST");

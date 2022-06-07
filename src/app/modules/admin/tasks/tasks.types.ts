@@ -88,5 +88,6 @@ export interface TaskComment{
     is_his: boolean;
     user_id: number;
     created_at: string;
+    mentions:number[]
 }
 

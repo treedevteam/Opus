@@ -5,6 +5,10 @@ import { MatButton } from '@angular/material/button';
 import { Subject, takeUntil } from 'rxjs';
 import { Notification } from 'app/layout/common/notifications/notifications.types';
 import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
+import Pusher from 'pusher-js';
+import { WebSocketServiceService } from '../../../modules/web-socket-service.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Notifications } from './notifications.types';
 
 @Component({
     selector       : 'notifications',
@@ -18,10 +22,14 @@ export class NotificationsComponent implements OnInit, OnDestroy
     @ViewChild('notificationsOrigin') private _notificationsOrigin: MatButton;
     @ViewChild('notificationsPanel') private _notificationsPanel: TemplateRef<any>;
 
-    notifications: Notification[];
+    notifications: Notifications[];
     unreadCount: number = 0;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    userId: any;
+    pusher: Pusher;
+    channel: any;
+    notifications$ = this._notificationsService.notifications$
 
     /**
      * Constructor
@@ -30,7 +38,9 @@ export class NotificationsComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _notificationsService: NotificationsService,
         private _overlay: Overlay,
-        private _viewContainerRef: ViewContainerRef
+        private _viewContainerRef: ViewContainerRef,
+        private pusherService: WebSocketServiceService, 
+        private _snackBar: MatSnackBar
     )
     {
     }
@@ -44,11 +54,23 @@ export class NotificationsComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+         // Enable pusher logging - don't include this in production
+
+         this.pusherService.channel.bind('my-event', (data:any) => {
+             console.log(data);
+             this._notificationsService.create(data).subscribe(res=>{
+                 console.log(res,"res from not service");
+             })
+        });
+        
+
+            
         // Subscribe to notification changes
         this._notificationsService.notifications$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((notifications: Notification[]) => {
-
+            .subscribe((notifications: Notifications[]) => {
+                console.log(notifications,"notificationsnotifications");
+                
                 // Load the notifications
                 this.notifications = notifications;
 
@@ -112,32 +134,29 @@ export class NotificationsComponent implements OnInit, OnDestroy
     /**
      * Mark all notifications as read
      */
-    markAllAsRead(): void
-    {
-        // Mark all as read
-        this._notificationsService.markAllAsRead().subscribe();
-    }
+    // markAllAsRead(): void
+    // {
+    //     // Mark all as read
+    //     this._notificationsService.markAllAsRead().subscribe();
+    // }
 
     /**
      * Toggle read status of the given notification
      */
-    toggleRead(notification: Notification): void
+    toggleRead(notification: Notifications): void
     {
-        // Toggle the read status
-        notification.read = !notification.read;
-
         // Update the notification
-        this._notificationsService.update(notification.id, notification).subscribe();
+        this._notificationsService.update(notification).subscribe();
     }
 
     /**
      * Delete the given notification
      */
-    delete(notification: Notification): void
-    {
-        // Delete the notification
-        this._notificationsService.delete(notification.id).subscribe();
-    }
+    // delete(notification: Notification): void
+    // {
+    //     // Delete the notification
+    //     this._notificationsService.delete(notification.id).subscribe();
+    // }
 
     /**
      * Track by function for ngFor loops
@@ -213,7 +232,9 @@ export class NotificationsComponent implements OnInit, OnDestroy
 
         if ( this.notifications && this.notifications.length )
         {
-            count = this.notifications.filter(notification => !notification.read).length;
+            //per ma von
+            // count = this.notifications.filter(notification => notification.status === 0).length;
+            count = this.notifications.length;
         }
 
         this.unreadCount = count;

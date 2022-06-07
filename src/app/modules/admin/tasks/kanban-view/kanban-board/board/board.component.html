@@ -117,19 +117,22 @@
                                 <ng-container  *ngFor="let card of list.tasks; trackBy: trackByFn">
                                     
                                     <div class="position-relative ">
-                                    <a
+                                    <div cdkDrag>
+                                        
+                                    <div
                                         class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card position-relative"
-                                        style="padding-bottom: 40px!important;"
-                                        [routerLink]="['task', card.id]"
-                                        cdkDrag
+                                        style="padding-bottom: 40px!important; cursor: pointer;"
+                                        
                                         >
                                         <!-- Cover image -->
                                         <!-- Title -->
-                                        <div class="text-lg font-medium leading-5">{{card.title}}</div>
+                                        <a 
+                                        [routerLink]="['task', card.id]">
+                                        <div class="text-lg font-medium leading-5 mb-2">{{card.title}}</div>
                                         <!-- Labels -->
                                         <ng-container *ngIf="card.priority">
-                                            <div>
-                                                <div class="flex flex-wrap -mx-1 -mb-2">
+                                            <div >
+                                                <div class="flex flex-wrap -mx-1 -mb-2 mb-2">
                                                         <div class="mx-1 mb-2 py-0.5 px-3 rounded-full text-sm font-medium text-gray-500  dark:text-gray-300 " style="color: #000!important;" [ngStyle]="{'background-color': card.priority.color + '80'}">
                                                             {{card.priority.name}}
                                                         </div>
@@ -139,7 +142,7 @@
                                         <!-- Due date -->
                                         <ng-container *ngIf="card.deadline">
                                             <div
-                                                class="flex items-center rounded text-sm font-medium leading-5 text-secondary"
+                                                class="flex items-center rounded text-sm font-medium leading-5 text-secondary mb-2"
                                                 [ngClass]="{'text-red-600': isOverdue(card.deadline)}">
                                                 <mat-icon
                                                     class="icon-size-4 text-current"
@@ -151,7 +154,7 @@
                                         </ng-container>
                                         
                                         <ng-container>
-                                            <div class="checkListTable mr-4"
+                                            <div class="checkListTable mr-4 mb-2"
                                             [ngClass]="{
                                                 'checkListTablegrey': card.checkListInfo.completed !== card.checkListInfo.total || card.checkListInfo.total === 0,
                                                 'checkListTablegreen': card.checkListInfo.completed === card.checkListInfo.total && card.checkListInfo.total !== 0}">
@@ -159,20 +162,16 @@
                                                 {{card.checkListInfo.completed}}/{{card.checkListInfo.total}}
                                             </div>
                                         </ng-container>
-
-                                        
-                                        
-                                    </a>
-                                    <div class="subtasks_button">
-                                        <div class="subtasks " (click)="toggleTableRows(card.id)" matBadgeColor="warn" [matBadge]="card.subtasks_count" matBadgeSize="small" matBadgePosition="before">
-                                            <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+                                        </a>
+                                        <div class="subtasks_button">
+                                            <div class="subtasks " (click)="toggleTableRows(card.id)" matBadgeColor="warn" [matBadge]="card.subtasks_count" matBadgeSize="small" matBadgePosition="before">
+                                                <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+                                            </div>
                                         </div>
+                                        
                                     </div>
-                                </div>
-
-                                   
                                     <ng-container *ngIf="expandedSubtasks === card.id">
-                                        <div class="position-relative" *ngIf="(subtasksData$ | async).length" style="height: 16px;">
+                                        <div class="position-relative" *ngIf="(subtasksData$ | async).length" style="height: 16px;margin-top: -0.75rem;">
                                             <div class="subitem-kanban-card">
                                                 <div class="subitem-kanban-card-arrow-wrapper" style="width: 16px;height:16px;"><div class="subitem-arrow-component" style="border-color: rgb(226, 68, 92);right: auto;left: 0;"><div class="subitem-arrow-component-top subitem-arrow-no-line" style="border-color: rgb(226, 68, 92);"></div><div class="subitem-arrow-component-bottom" style="border-color: rgb(226, 68, 92);"></div></div></div>
                                             </div>
@@ -212,6 +211,12 @@
                                             [buttonTitle]="list.tasks.length ? 'Add another subtask' : 'Add a subtask'">
                                         </scrumboard-board-add-card>
                                     </ng-container>
+                                </div>
+                                  
+                                </div>
+
+                                   
+                                    
                                 </ng-container>
                             </div>
                             <!-- New card -->

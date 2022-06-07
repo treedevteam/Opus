@@ -48,9 +48,9 @@ export class AuthSignInComponent implements OnInit
             username     : ['rijad.morina@treedev.io', [Validators.required, Validators.email]],
             password     : ['12345678', [Validators.required, Validators.minLength(8)]],
             grant_type   : ['password'],
-            client_id    : ['2'],
+            client_id    : ['1'],
             scope        : [''],
-            client_secret: ['DXhdgn5PEbRy74zLQcrGYDjAsBMr6H0qqEPz2d6E']
+            client_secret: ['oJAehFH9ZEoUiKwuoBDqitBJ43sN6N7GlIoDKfXE']
         });
     }
 

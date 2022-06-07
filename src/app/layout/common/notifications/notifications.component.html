@@ -46,7 +46,7 @@
         <!-- Content -->
         <div class="relative flex flex-col flex-auto sm:max-h-120 divide-y overflow-y-auto bg-card">
             <!-- Notifications -->
-            <ng-container *ngFor="let notification of notifications; trackBy: trackByFn">
+            <ng-container *ngFor="let notification of notifications$ | async; trackBy: trackByFn">
                 <div
                     class="flex group hover:bg-gray-50 dark:hover:bg-black dark:hover:bg-opacity-5"
                     [ngClass]="{'unread': !notification.read}">
@@ -99,7 +99,7 @@
                             [matTooltip]="'Remove'">
                             <mat-icon
                                 class="icon-size-4"
-                                [svgIcon]="'heroicons_solid:x'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                         </button>
                     </div>
 
@@ -108,35 +108,37 @@
                 <!-- Notification content template -->
                 <ng-template #notificationContent>
                     <!-- Icon -->
-                    <ng-container *ngIf="notification.icon && !notification.image">
+                    <ng-container *ngIf="!notification.image">
                         <div class="flex shrink-0 items-center justify-center w-8 h-8 mr-4 rounded-full bg-gray-100 dark:bg-gray-700">
                             <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="notification.icon">
-                            </mat-icon>
+                                class="icon-size-4"
+                                [svgIcon]="'heroicons_solid:x'"></mat-icon>
                         </div>
                     </ng-container>
                     <!-- Image -->
-                    <ng-container *ngIf="notification.image">
+                    <!-- <ng-container *ngIf="notification.image">
                         <img
                             class="shrink-0 w-8 h-8 mr-4 rounded-full overflow-hidden object-cover object-center"
                             [src]="notification.image"
                             [alt]="'Notification image'">
-                    </ng-container>
+                    </ng-container> -->
                     <!-- Title, description & time -->
                     <div class="flex flex-col flex-auto">
-                        <ng-container *ngIf="notification.title">
+                        <!-- <ng-container *ngIf="notification.text">
                             <div
                                 class="font-semibold line-clamp-1"
-                                [innerHTML]="notification.title"></div>
-                        </ng-container>
-                        <ng-container *ngIf="notification.description">
+                                [innerHTML]="notification.text"></div>
+                        </ng-container> -->
+                        <ng-container *ngIf="notification.text">
                             <div
                                 class="line-clamp-2"
-                                [innerHTML]="notification.description"></div>
+                                [innerHTML]="notification.text"></div>
                         </ng-container>
                         <div class="mt-2 text-sm leading-none text-secondary">
-                            {{notification.time | date:'MMM dd, h:mm a'}}
+                            {{notification.created_at | date:'MMM dd, h:mm a'}}
+                            <ng-container *ngIf="!notification.created_at">
+                                now
+                            </ng-container>
                         </div>
                     </div>
                 </ng-template>

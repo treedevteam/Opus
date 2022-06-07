@@ -17,12 +17,7 @@ export class AppComponent implements OnInit
     }
 
     ngOnInit(): void {
-        this.pusherService.channel.bind('my-event', (data:any) => {
-            console.log(data);
-            this._snackBar.open("New Worker added!", "close", {
-                duration: 3000,
-            });
-        });
+        
     }
 
     

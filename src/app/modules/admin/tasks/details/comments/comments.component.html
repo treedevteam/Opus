@@ -8,10 +8,12 @@
                 <form [formGroup]="commentForm" class=" w-full">
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded fuse-mat-bold w-full">
                         <textarea
-                            [mentionConfig]="mentionConfig1"
+                            [mention]="items" 
+                            [mentionConfig]="{triggerChar:'@',maxItems:10,labelKey:'name'}"
+                            [(ngModel)]="data"
                             class="min-h-5 my-0 resize-none"
                             style="margin: 11px 0 !important;padding: 0 !important;"
-                            [rows]="1"
+                            [rows]="3"
                             placeholder="Add comment..."
                             matInput
                             [formControlName]="'newComment'"
