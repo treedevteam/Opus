@@ -8,8 +8,8 @@ import { Posts } from '../models/dashboard';
   providedIn: 'root'
 })
 export class DashboardService {
+  apiUrl = environment.apiUrl; 
 
-  apiUrl = environment.apiUrl;
   private _departmentPosts: BehaviorSubject<Posts | null> = new BehaviorSubject(null); 
 
 

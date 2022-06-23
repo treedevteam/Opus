@@ -8,13 +8,13 @@ import Pusher from 'pusher-js';
 export class WebSocketServiceService {
   pusher: any;
   channel: any;
-  test:any;
+  test: any;
   userInfo: any;
   userId: any;
   constructor(private http: HttpClient) {
     if(localStorage.getItem('user_info')){
       const userinfo = localStorage.getItem('user_info');
-      if(userinfo === "undefined"){
+      if(userinfo === 'undefined'){
         localStorage.removeItem('user_info');
       }else{
         this.userId = JSON.parse(localStorage.getItem('user_info'))?.id;
@@ -26,6 +26,6 @@ export class WebSocketServiceService {
     }else{
       this.userId = null;
     }
-  
+
   }
 }

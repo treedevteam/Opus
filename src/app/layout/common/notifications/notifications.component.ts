@@ -1,3 +1,12 @@
+/* eslint-disable @typescript-eslint/semi */
+/* eslint-disable @typescript-eslint/type-annotation-spacing */
+/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable arrow-parens */
+/* eslint-disable quotes */
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/quotes */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -29,8 +38,8 @@ export class NotificationsComponent implements OnInit, OnDestroy
     userId: any;
     pusher: Pusher;
     channel: any;
-    notifications$ = this._notificationsService.notifications$
-
+    notifications$ = this._notificationsService.notifications$;
+    notificationsOneByone:Notifications[];
     /**
      * Constructor
      */
@@ -39,7 +48,7 @@ export class NotificationsComponent implements OnInit, OnDestroy
         private _notificationsService: NotificationsService,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-        private pusherService: WebSocketServiceService, 
+        private pusherService: WebSocketServiceService,
         private _snackBar: MatSnackBar
     )
     {
@@ -54,23 +63,42 @@ export class NotificationsComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-         // Enable pusher logging - don't include this in production
 
-         this.pusherService.channel.bind('my-event', (data:any) => {
+        this.getEachNotifications();
+                 // Enable pusher logging - don't include this in production
+
+         this.pusherService.channel.bind('my-event', (data: any) => {
              console.log(data);
-             this._notificationsService.create(data).subscribe(res=>{
-                 console.log(res,"res from not service");
-             })
-        });
-        
+             this._notificationsService.create(data).subscribe((res)=>{
+                 console.log(res,'res from not service'); 
 
+                        if(Notification.permission === "granted"){
+                            new Notification("Notifications",{
+                                body: res.text   
+                            });
+        }
+        else if (Notification.permission !== "denied"){
+            Notification.requestPermission().then(premission =>{
+                if(premission === "granted"){
+                    new Notification("Notifications",{
+                        body:  res.text      
+                    });
+                }
+            }); 
+        }
+
+             });
             
+        });
+
+    
+
         // Subscribe to notification changes
         this._notificationsService.notifications$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((notifications: Notifications[]) => {
-                console.log(notifications,"notificationsnotifications");
-                
+                console.log(notifications,'notificationsnotifications');
+
                 // Load the notifications
                 this.notifications = notifications;
 
@@ -80,7 +108,26 @@ export class NotificationsComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+
+   
+        
+        // function  showNotification(){
+        //     const notification = new Notification("test",{
+        //         body: "you have new notification"      
+        //     });
+        // };
+
+
     }
+
+    getEachNotifications(){
+        this.notifications$.forEach(el=>{
+            this.notificationsOneByone = el
+            console.log(this.notificationsOneByone,"One by one");
+        });
+    }
+
+
 
     /**
      * On destroy

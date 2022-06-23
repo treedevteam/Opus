@@ -11,9 +11,9 @@ export class TasksComponent implements OnInit {
   constructor(private _boardSerive: BoardsService) { }
 
   ngOnInit(): void {
-    
+
     console.log(this._boardSerive.$boardTask);
-     
+
   }
 
 }

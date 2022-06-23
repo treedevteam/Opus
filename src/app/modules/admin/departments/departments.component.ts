@@ -11,6 +11,6 @@ export class DepartmentsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  
+
 
 }

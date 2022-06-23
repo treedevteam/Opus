@@ -18,7 +18,7 @@ export class BoardsComponent implements OnInit {
   $boards = this._boardService.$getBoards;
 
   constructor(private _boardService: BoardsService,
-    public dialog:MatDialog,
+    public dialog: MatDialog,
     private _fuseConfirmationService: FuseConfirmationService,
     ) { }
 
@@ -38,10 +38,10 @@ export class BoardsComponent implements OnInit {
       maxWidth:'700px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
     });
   }
- 
+
 
   editBoard(boards: Boards){
     const dialogRef = this.dialog.open(UpdateBoardsComponent, {
@@ -57,7 +57,7 @@ export class BoardsComponent implements OnInit {
       }}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
     });
   }
 
@@ -78,7 +78,7 @@ export class BoardsComponent implements OnInit {
           // Delete the task
           this._boardService.deleteBoard(id).subscribe(
             (res)=>{
-          })
+          });
         }
       });
   }

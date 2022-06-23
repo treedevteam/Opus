@@ -24,37 +24,37 @@ export class StoreTaskRowComponent implements OnInit {
       id: [''],
       title: [''],
       board_id: [[]],
-      task_id: [""]
+      task_id: ['']
     });
 
 
 
-    this._tasksService.currentBoard$.subscribe(res=>{
+    this._tasksService.currentBoard$.subscribe((res)=>{
       this.currentDepartment = res.id;
     });
   }
 
-  
-    
+
+
   changeSubmitEventTask(): void {
     console.log(this.taskForm.value);
     this.taskForm.get('board_id').patchValue(this.currentDepartment);
-    this._tasksService.storeTask(this.taskForm.value).subscribe(res=>{
+    this._tasksService.storeTask(this.taskForm.value).subscribe((res)=>{
        this.taskForm.reset();
-    },err=>{
+    },(err)=>{
         console.log(err);
         this.taskForm.reset();
-    })
+    });
   }
 
   changeSubmitEventSubtask(): void{
     this.taskForm.get('task_id').patchValue(this.taskId);
-    this._tasksService.storeSubtask(this.taskForm.value).subscribe(res=>{
+    this._tasksService.storeSubtask(this.taskForm.value).subscribe((res)=>{
        this.taskForm.reset();
-    },err=>{
+    },(err)=>{
         console.log(err);
         this.taskForm.reset();
-    })
+    });
   }
 
 }

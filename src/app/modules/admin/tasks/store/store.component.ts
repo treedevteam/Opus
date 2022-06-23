@@ -235,7 +235,7 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     departmetnsCheck(user: any): boolean{
-      
+
         if(this.taskForm.get('departments').value.includes(user)){
             return true;
         }else{
@@ -520,7 +520,7 @@ openUsersPanel(): void
     addTagToTask(tag: number): void {
         if(!this.storeTask.departments.includes(+tag)){
             this.storeTask.departments.push(+tag);
-            
+
         }else{
             this.storeTask.departments.splice(+this.storeTask.departments.indexOf(tag), 1);
         }
@@ -565,7 +565,7 @@ openUsersPanel(): void
     //     const index = departmentsAssigned.findIndex(object => +object === +id);
     //     console.log(departmentsAssigned);
     //     console.log(index);
-        
+
     //     if (index === -1) {
     //         return false;
     //     }else{
@@ -615,9 +615,9 @@ openUsersPanel(): void
     setDeadline(time: any): void {
         // Set the value
         console.log(time._i);
-        
+
         this.storeTask.deadline = time._d;
-        const convert = time._i.year + "/" + (time._i.month + 1) + "/" + time._i.date + "  00:00"
+        const convert = time._i.year + '/' + (time._i.month + 1) + '/' + time._i.date + '  00:00';
         this.taskForm.get('deadline').setValue(convert);
     }
 
@@ -676,11 +676,11 @@ openUsersPanel(): void
     // }
     changeSubmitEventTask(): void {
         this.taskForm.get('departments').patchValue('['+ this.storeTask.departments +']');
-        this._tasksService.storeTask(this.taskForm.value).subscribe(res=>{
-            
-        },err=>{
+        this._tasksService.storeTask(this.taskForm.value).subscribe((res)=>{
+
+        },(err)=>{
             console.log(err);
-        })
+        });
     }
 
     navigateTo(): void{

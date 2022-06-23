@@ -8,8 +8,8 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class AuthService
 {
-    private apiUrl = environment.apiUrl; 
-    
+    private apiUrl = environment.apiUrl;
+
     private _authenticated: boolean = false;
 
     /**
@@ -143,7 +143,7 @@ export class AuthService
         localStorage.removeItem('user_info');
         // Set the authenticated flag to false
         this._authenticated = false;
-        
+
      }
 
     /**

@@ -15,7 +15,7 @@ export class StoreBoardsComponent implements OnInit {
 
   constructor(private _formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<StoreBoardsComponent>,
-    public dialog:MatDialog,
+    public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private _boardService: BoardsService
     ) { }
@@ -31,8 +31,8 @@ export class StoreBoardsComponent implements OnInit {
 
   addBoard(){
     console.log(this.storeBoard.value);
-    this._boardService.addBoard(this.storeBoard.value).subscribe(res=>{
-    })
+    this._boardService.addBoard(this.storeBoard.value).subscribe((res)=>{
+    });
   }
 
 }

@@ -58,7 +58,7 @@ export const tasksRoutes: Route[] = [
                                     task: TasksTaskResolver
                                 },
                                 data: {some_data: 'Task'}
-                                
+
                             },
                             {
                                 path     : 'subtask/:id',
@@ -83,7 +83,7 @@ export const tasksRoutes: Route[] = [
                     }
                 ]
             },
-            
+
         ]
     }
 ];

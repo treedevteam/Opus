@@ -9,5 +9,5 @@ export interface Boards{
     department_id: string;
     name: string;
     description: string;
-    type: any
+    type: any;
 }

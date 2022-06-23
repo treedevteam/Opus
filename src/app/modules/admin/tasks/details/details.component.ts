@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Priorities } from './../../priorities/model/priorities';
 import { TasksService } from './../tasks.service';
 import { TasksListComponent } from './../list/list.component';
@@ -42,7 +45,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     filteredUsers: Users[];
     usersList: Users[];
     usersAssignedSelected: number[];
-    isXyzChecked = true; 
+    isXyzChecked = true;
 
     tags: Tag[];
     tagsEditMode: boolean = false;
@@ -53,7 +56,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     taskForm: FormGroup;
     tasks: Task[];
 
-    checkListtotal = 0
+    checkListtotal = 0;
     checkListcompleted = 0;
     checkList: TaskCheckList[];
 
@@ -63,7 +66,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _usersPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    taskCheckList$ = this._tasksService.taskCheckListservice$
+    taskCheckList$ = this._tasksService.taskCheckListservice$;
     /**
      * Constructor
      */
@@ -80,10 +83,10 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private route: ActivatedRoute
     )
     {
-       
+
     }
-    
-    
+
+
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
@@ -115,12 +118,12 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
 
 
-        
+
         // Get the departmetns
         this._tasksService.getDepartmentsData$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((departmetns: Departments[]) => {
-            console.log(departmetns, "Deaprtments");
+            console.log(departmetns, 'Deaprtments');
             this.departments = departmetns;
             this.filteredTags2 = departmetns;
             // Mark for check
@@ -135,8 +138,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
-       
-       
+
+
             // Get the statuses
         this._tasksService.getStatus$
         .pipe(takeUntil(this._unsubscribeAll))
@@ -205,16 +208,16 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             this.task2 = task;
             console.log(this.task2,'this.task2');
 
-            console.log(this.task2,"this.task2this.task2this.task2this.task2");
+            console.log(this.task2,'this.task2this.task2this.task2this.task2');
 
-            this._tasksService.getTaskComments(+this.task2.id).subscribe(res=>{
+            this._tasksService.getTaskComments(+this.task2.id).subscribe((res)=>{
             });
 
-            this._tasksService.getTaskCheckList(+this.task2.id).subscribe(res=>{
+            this._tasksService.getTaskCheckList(+this.task2.id).subscribe((res)=>{
                 this.checkListtotal = res.length;
                 this.checkListcompleted = res.filter(x=> x.value === 1).length;
             });
-            
+
             // Patch values to the form from the task
             this.taskForm.patchValue(task, {emitEvent: false});
 
@@ -222,7 +225,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             this._changeDetectorRef.markForCheck();
         });
 
-       
+
 
 
 
@@ -258,7 +261,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 this._titleField.nativeElement.focus();
             });
     }
-  
+
 
     /**
      * After view init
@@ -309,20 +312,20 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
 
      isAllSelected(item) {
-         this.taskCheckList$.subscribe(res=>{
+         this.taskCheckList$.subscribe((res)=>{
              this.checkList = res;
               this.checkListtotal = res.length;
                 this.checkListcompleted = res.filter(x=> x.value === 1).length;
-             console.log(res,"TETETETETETEETETETETETET");
-         })
-        this.checkList.forEach(val => {
+             console.log(res,'TETETETETETEETETETETETET');
+         });
+        this.checkList.forEach((val) => {
           if (val.id === item.id) {
                 if(item.value){
-                    this._tasksService.editCheckList({value: 0, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe(res=>{
+                    this._tasksService.editCheckList({value: 0, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe((res)=>{
                         console.log(res);
                     });
                 }else{
-                    this._tasksService.editCheckList({value: 1, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe(res=>{
+                    this._tasksService.editCheckList({value: 1, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe((res)=>{
                         console.log(res);
                     });
                 }
@@ -358,7 +361,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     userCheck(user: any): boolean{
-      
+
         if(this.task2.users_assigned.includes(user)){
             return true;
         }else{
@@ -658,7 +661,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     addUsersToTask(userId: number): void{
-        this._tasksService.assignUserTask(this.task2.id, userId).subscribe(res=>{
+        this._tasksService.assignUserTask(this.task2.id, userId).subscribe((res)=>{
             const usersAssigned = this.taskForm.get('users_assigned').value;
             const index = usersAssigned.findIndex(object => +object === +userId);
             if (index < 0) {
@@ -668,10 +671,10 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             }
             this.taskForm.get('users_assigned').patchValue(usersAssigned);
             console.log(this.taskForm.get('users_assigned').value);
-        })
+        });
 
-        
-        
+
+
     }
 
     isUserSelected(id: number): boolean{
@@ -723,7 +726,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         // Set the value
         this.task2.location = location;
         this.taskForm.get('location').setValue(location);
-    } 
+    }
 
     /**
      * Check if the task is overdue or not
@@ -735,7 +738,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     setDeadline(time: any): void
     {
             this.task2.deadline = time;
-            const convert = time._i.year + "-" + time._i.month + "-" + time._i.date + "  00:00"
+            const convert = time._i.year + '-' + time._i.month + '-' + time._i.date + '  00:00';
             this.taskForm.get('deadline').setValue(convert);
     }
 
@@ -755,7 +758,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             }
         });
         // console.log(this.task2);
-        
+
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
 
@@ -768,9 +771,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                     .subscribe((res) => {
                         this.closeDrawer().then(() => true);
                         this._router.navigate(['../'], { relativeTo: this._activatedRoute });
-                    },err=>{
+                    },(err)=>{
                         console.log(err);
-                        
+
                     });
 
                 // Mark for check
@@ -779,20 +782,20 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
     }
     changeSubmitEventTask(): void{
-        this.taskForm.get('users_assigned').patchValue("[" + this.taskForm.get('users_assigned').value +"]");
-        this._tasksService.updateTaskservice(this.taskForm.value, this.task2.id).subscribe(res=>{
+        this.taskForm.get('users_assigned').patchValue('[' + this.taskForm.get('users_assigned').value +']');
+        this._tasksService.updateTaskservice(this.taskForm.value, this.task2.id).subscribe((res)=>{
             this.closeDrawer().then(() => true);
             this._router.navigate(['../'], { relativeTo: this._activatedRoute });
 
-        },err=>{
-        })
+        },(err)=>{
+        });
     }
 
     addNewCheckList(): void{
         this._tasksService.addNewCheckListItem(
             {text: this.taskForm.get('checklist').value, task_id: this.taskForm.get('id').value}
             ).subscribe(()=> this.taskForm.get('checklist').setValue('')
-            )
+            );
     }
 
     deleteCheckList(id: number): void{
