@@ -16,12 +16,12 @@ export class UserService {
   private deletedUser$ = new BehaviorSubject<number>(null);
 
   constructor(private http: HttpClient) { }
-  
+
 
 
 
   getUsers$ = this.http.get<Users[]>(this.apiUrl+'api/users').pipe(
-      map((data: any) :Users[] => data),
+      map((data: any): Users[] => data),
     catchError((err) => {
       console.error(err);
       throw err;
@@ -33,12 +33,12 @@ export class UserService {
   {
       return this.addedUser$.asObservable();
   }
-  
+
   get getUpdatedUsers$(): Observable<Users>
   {
       return this.updateUser$.asObservable();
   }
-  
+
   get getDeletedUsers$(): Observable<number>
   {
       return this.deletedUser$.asObservable();

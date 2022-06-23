@@ -18,7 +18,7 @@ export class EditableComponent implements AfterViewInit{
   @ContentChild(ViewModeDirective) viewModeTpl: ViewModeDirective;
   @ContentChild(EditModeDirective) editModeTpl: EditModeDirective;
   @Output() update = new EventEmitter();
-  @ViewChild("editbutton", { static: false }) myButton: ElementRef;
+  @ViewChild('editbutton', { static: false }) myButton: ElementRef;
 
   editMode = new Subject();
   editMode$ = this.editMode.asObservable();
@@ -26,7 +26,7 @@ export class EditableComponent implements AfterViewInit{
   mode: 'view' | 'edit' = 'view';
   // relevantElem: HTMLElement = document.querySelector(`.testttt`) as HTMLElement;
 
-  
+
   constructor(private host: ElementRef) {
   }
   ngAfterViewInit(): void {
@@ -35,7 +35,7 @@ export class EditableComponent implements AfterViewInit{
   }
 
   ngOnInit() {
-    
+
   }
 
   toViewMode() {
@@ -54,7 +54,7 @@ export class EditableComponent implements AfterViewInit{
   private viewModeHandler() {
     fromEvent(this.elementedit, 'click').pipe(
       untilDestroyed(this)
-    ).subscribe(() => { 
+    ).subscribe(() => {
       this.mode = 'edit';
       this.editMode.next(true);
     });
@@ -64,9 +64,9 @@ export class EditableComponent implements AfterViewInit{
     const clickOutside$ = fromEvent(document, 'click').pipe(
       filter(({ target }) => this.element.contains(target) === false),
       take(1)
-    )
-  
-    
+    );
+
+
 
     this.editMode$.pipe(
       switchMapTo(clickOutside$),

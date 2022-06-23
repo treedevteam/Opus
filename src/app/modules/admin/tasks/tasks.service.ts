@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Tag, Task, Task2, TaskLogs, TaskWithDepartment, TaskComment, TaskCheckList, Users } from './tasks.types';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -20,18 +23,18 @@ export class TasksService
   apiUrl = environment.apiUrl;
 
 
-    private _currentDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null); 
-    private _currentDepartmentTasks: BehaviorSubject<TaskWithDepartment | null> = new BehaviorSubject(null); 
-    private _currentDepartmentId: BehaviorSubject<number | null> = new BehaviorSubject(null); 
+    private _currentDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null);
+    private _currentDepartmentTasks: BehaviorSubject<TaskWithDepartment | null> = new BehaviorSubject(null);
+    private _currentDepartmentId: BehaviorSubject<number | null> = new BehaviorSubject(null);
 
 
-    private _currentBoard: BehaviorSubject<Boards | null> = new BehaviorSubject(null); 
-    private _currentBoardOrderTasks: BehaviorSubject<string | null> = new BehaviorSubject(null); 
-    private _currentBoardTasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null); 
-    private _currentBoardUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
-    private _currentDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
-    private _notAssignedDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
-    
+    private _currentBoard: BehaviorSubject<Boards | null> = new BehaviorSubject(null);
+    private _currentBoardOrderTasks: BehaviorSubject<string | null> = new BehaviorSubject(null);
+    private _currentBoardTasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
+    private _currentBoardUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
+    private _currentDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
+    private _notAssignedDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
+
 
 
     // Private
@@ -48,7 +51,7 @@ export class TasksService
     private _taskComment: BehaviorSubject<TaskComment | null> = new BehaviorSubject(null);
     private _deletedTaskComment: BehaviorSubject<number | null> = new BehaviorSubject(null);
 
-    
+
 
     private _departments: BehaviorSubject<Departments[] | null> = new BehaviorSubject(null);
     private _priorities: BehaviorSubject<Priorities[] | null> = new BehaviorSubject(null);
@@ -100,7 +103,7 @@ export class TasksService
             checklist.splice(checklistIndex,1);
           }
         }
-        
+
         return checklist;
     });
     usersAssigned$ = combineLatest([
@@ -110,12 +113,12 @@ export class TasksService
         map(([currentBoardUsers,currentDepUsers]) =>(
             {
               assigned:[...currentBoardUsers],
-              users: currentDepUsers.filter(object1 => 
+              users: currentDepUsers.filter(object1 =>
                   currentBoardUsers.findIndex(x=>x.id === object1.id) === -1
               )
         })),
         shareReplay(1),
-        tap(res=>{
+        tap((res)=>{
             this._notAssignedDepartmentUsers.next(res.users);
         })
         );
@@ -151,7 +154,7 @@ export class TasksService
         map((data: any): Users[] => {
             this._users.next(data);
             console.log(data);
-            
+
             return data;
         }),
          shareReplay(1),
@@ -161,13 +164,13 @@ export class TasksService
 
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    // getTasksLogsData$ = this._httpClient.get<TaskLogs[]>(this.apiUrl+'api/logs/').pipe(
-    //     map((data: any): TaskLogs[] => {
-    //         this._tagsLogs.next(data);
-    //         return data;
-    //     }),
-    //      shareReplay(1),
-    // );
+    getTasksLogsData$ = this._httpClient.get<TaskLogs[]>(this.apiUrl+'api/logs/').pipe(
+        map((data: any): TaskLogs[] => {
+            this._tagsLogs.next(data);
+            return data;
+        }),
+         shareReplay(1),
+    );
     // eslint-disable-next-line @typescript-eslint/member-ordering
     getTasksData$ = this._httpClient.get<TaskWithDepartment[]>(this.apiUrl+'api/tasks/departments').pipe(
         map((data: any): TaskWithDepartment[] => {
@@ -202,7 +205,7 @@ export class TasksService
         }),
          shareReplay(1),
     );
-    
+
 
 
     setNullBehaviourSubject(): void{
@@ -227,7 +230,7 @@ export class TasksService
     /**
      * Getter for tags
      */
-    
+
     get currentDepartment$(): Observable<Departments>{
         return this._currentDepartment.asObservable();
     }
@@ -288,7 +291,7 @@ export class TasksService
         return this._deletedCheckList.asObservable();
     }
 
-   
+
 
 
 
@@ -349,7 +352,7 @@ export class TasksService
     {
         return this._mysubtask.asObservable();
     }
-    
+
     get newSubtask$(): Observable<Task2>
     {
         return this._newSubtasks.asObservable();
@@ -428,14 +431,14 @@ export class TasksService
     {
         return this._httpClient.get<Users[]>(this.apiUrl+'api/board/'+ boardId +'/users').pipe(
             map((data: any): Users[] => {
-                console.log(data,"USSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+                console.log(data,'USSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
                 this._currentBoardUsers.next(data.data);
                 return data.data;
             }),
         );
     }
 
-    assignUserToBoard(boardId:number, userId:number): Observable<Users[]>
+    assignUserToBoard(boardId: number, userId: number): Observable<Users[]>
     {
         return this._httpClient.post<Users[]>(this.apiUrl+'api/board/'+ boardId +'/'+userId,null).pipe(
             map((data: any): Users[] => {
@@ -450,13 +453,13 @@ export class TasksService
      *
      * @param tag
      */
-  
+
      storeTask(form: any): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task/store/board', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
                 this._newtask.next(data.task);
-                this._currentBoardOrderTasks.next(data.board_order)
+                this._currentBoardOrderTasks.next(data.board_order);
                 this.setNullBehaviourSubject();
                 return data.task;
             }),
@@ -469,6 +472,7 @@ export class TasksService
     }
 
     assignUserTask(taskId: number, userId: number): Observable<TaskWithDepartment>{
+        debugger;
         return this._httpClient.post<any>(this.apiUrl+'api/task/'+ taskId+'/'+ userId, null).pipe(
             map((data: any): TaskWithDepartment => {
                 this._tasksupdated.next(data.data);
@@ -513,12 +517,12 @@ export class TasksService
     getTasksLogs(id): Observable<TaskLogs[]> {
         return this._httpClient.get<TaskLogs[]>(this.apiUrl+'api/logs/'+ id).pipe(
             map((data: any): TaskLogs[] => {
-                this._tagsLogs.next(data.data)
+                this._tagsLogs.next(data.data);
                 return data.data;
             }),
              shareReplay(1),
         );
-      } 
+      }
 
 
     createTag(tag: Tag): Observable<Tag>
@@ -724,7 +728,7 @@ export class TasksService
         return this._httpClient.get<TaskCheckList[]>(this.apiUrl+'api/checklists/'+ id).pipe(
             map((data: any): TaskCheckList[] => {
                 this._taskCheckList.next(data.data);
-             
+
                 return data.data;
             }),
              shareReplay(1),
@@ -808,7 +812,7 @@ export class TasksService
             take(1),
             switchMap(tasks => this._httpClient.delete(this.apiUrl+'api/task/delete/'+id,).pipe(
                 map((isDeleted: boolean) => {
-                    const test = {id:id, departments: departments}
+                    const test = {id:id, departments: departments};
                     this._deletedtasks.next(test);
                     this.setNullBehaviourSubject();
                     return test;
@@ -895,7 +899,7 @@ export class TasksService
             }),
         );
     }
-    
+
 
 
 
@@ -930,14 +934,14 @@ export class TasksService
             map((data: any): Task2[] => {
                 this._currentBoardTasks.next(data.tasks);
                 this._currentBoardOrderTasks.next(data.order);
-                console.log(data,"data.taskdata.taskdata.taskdata.task");
+                console.log(data,'data.taskdata.taskdata.taskdata.task');
                 return data.data;
             }),
              shareReplay(1),
             );
     }
 
-    editCheckList(form, id:number): Observable<TaskCheckList>{
+    editCheckList(form, id: number): Observable<TaskCheckList>{
         return this._httpClient.post<TaskCheckList>(this.apiUrl+'api/checklist/update/'+id, form).pipe(
             map((data: any): TaskCheckList => {
                 this._udatedCheckList.next({...data.data,task_id: form.task_id});
@@ -950,7 +954,7 @@ export class TasksService
     addNewCheckListItem(form: any): Observable<TaskCheckList>{
         return this._httpClient.post<TaskCheckList>(this.apiUrl+'api/checklist/store', form).pipe(
             map((data: any): TaskCheckList => {
-                console.log(form,"DSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                console.log(form,'DSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
                 this._newCheckList.next({...data.data,task_id: form.task_id});
                 this._newCheckList.next(null);
                 return data.data;
@@ -969,11 +973,11 @@ export class TasksService
     }
 
 
-    updateTaskStatus(statusId: any, order:any,board_id:number, taskId:number): Observable<Task2>{
+    updateTaskStatus(statusId: any, order: any,board_id: number, taskId: number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_status/' + taskId , {status: statusId,order: order,board_id:board_id}).pipe(
             map((data: any) => {
                 this._tasksupdated.next(data.task);
-                this._currentBoardOrderTasks.next(data.order)
+                this._currentBoardOrderTasks.next(data.order);
                 this._newtask.next(null);
                 return data.task;
             }),
@@ -984,11 +988,11 @@ export class TasksService
         )
         );
     }
-    updateTaskStatusOrder(statusId: any, order:string, board_id:number, taskId:number): Observable<Task2>{
+    updateTaskStatusOrder(statusId: any, order: string, board_id: number, taskId: number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_status/' + taskId ,  {board_id:board_id,status: statusId,order}).pipe(
             map((data: any) => {
                 this._tasksupdated.next(data.task);
-                this._currentBoardOrderTasks.next(data.order)
+                this._currentBoardOrderTasks.next(data.order);
                 this._newtask.next(null);
                 return data.task;
             }),
@@ -999,7 +1003,7 @@ export class TasksService
         )
         );
     }
-    updateTaskPriority(priorityId: any, taskId:number): Observable<Task2>{
+    updateTaskPriority(priorityId: any, taskId: number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_priority/' + taskId ,  {priority: priorityId}).pipe(
             map((data: any) => {
                 debugger;
@@ -1015,7 +1019,7 @@ export class TasksService
         );
     }
 
-    updateTaskTitle(title: any, taskId:number): Observable<Task2>{
+    updateTaskTitle(title: any, taskId: number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_title/' + taskId ,  {title: title}).pipe(
             map((data: any) => {
                 this._tasksupdated.next(data.data);
@@ -1031,7 +1035,7 @@ export class TasksService
     }
 
 
-    updateTaskDeadline(deadline: any, taskId:number): Observable<Task2>{
+    updateTaskDeadline(deadline: any, taskId: number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_deadline/' + taskId ,  {deadline: deadline}).pipe(
             map((data: any) => {
                 this._tasksupdated.next(data.data);
@@ -1048,7 +1052,7 @@ export class TasksService
 
 
 
-    subtaskUpdateTaskStatus(statusId: any, subtaskId:number): Observable<Task2>{
+    subtaskUpdateTaskStatus(statusId: any, subtaskId: number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/subtask_status/' + subtaskId ,  {status: statusId}).pipe(
             map((data: any) => {
                 this._updateSubtasks.next(data.data);
@@ -1063,7 +1067,7 @@ export class TasksService
         );
     }
 
-    subtaskUpdateTaskPriority(priorityId: any, subtaskId:number): Observable<Task2>{
+    subtaskUpdateTaskPriority(priorityId: any, subtaskId: number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/subtask_priority/' + subtaskId ,  {priority: priorityId}).pipe(
             map((data: any) => {
                 this._updateSubtasks.next(data.data);
@@ -1079,7 +1083,7 @@ export class TasksService
     }
 
 
-    subtaskUpdateTaskDeadline(deadline: any, subtaskId:number): Observable<Task2>{
+    subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/subtask_deadline/' + subtaskId ,  {deadline: deadline}).pipe(
             map((data: any) => {
                 this._updateSubtasks.next(data.data);
@@ -1095,7 +1099,7 @@ export class TasksService
     }
 
 
-    updateSubtaskTitle(title: any, subtaskId:number): Observable<Task2>{
+    updateSubtaskTitle(title: any, subtaskId: number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/subtask_title/' + subtaskId ,  {title: title}).pipe(
             map((data: any) => {
                 this._updateSubtasks.next(data.data);

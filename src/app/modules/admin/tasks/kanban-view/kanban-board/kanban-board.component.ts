@@ -10,7 +10,7 @@ import { TasksService } from '../../tasks.service';
   styleUrls: ['./kanban-board.component.scss']
 })
 export class KanbanBoardComponent implements OnInit {
-  
+
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,

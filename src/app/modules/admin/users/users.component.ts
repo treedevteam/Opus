@@ -64,7 +64,7 @@ export class UsersComponent implements OnInit {
             shareReplay(1)
           );
 
-          
+
     ngOnInit(): void {
         this.getUsers();
     }

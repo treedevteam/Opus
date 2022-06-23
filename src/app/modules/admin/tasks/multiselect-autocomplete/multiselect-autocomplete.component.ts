@@ -5,7 +5,7 @@ import { Observable, tap } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { TasksService } from '../tasks.service';
 import { Users } from '../tasks.types';
-​
+
 export interface ItemData {
   item: string;
   selected: boolean;
@@ -18,7 +18,7 @@ export interface ItemData {
 export class MultiselectAutocompleteComponent implements OnInit {
 
   @Output() result = new EventEmitter<Array<Users>>();
-  
+
   @Input() placeholder: string = 'Select Data';
   @Input() data: Array<Users> = [];
   @Input() boardId: number = 0;
@@ -27,10 +27,10 @@ export class MultiselectAutocompleteComponent implements OnInit {
 
   datatest$ = this._taskService.notAssignedDepartmentUsers$;
   selectControl = new FormControl();
-  
+
   rawData: Array<Users> = [];
   selectData: Array<Users> = [];
-  
+
   filteredData: Observable<Array<Users>>;
   filterString: string = '';
 
@@ -41,29 +41,27 @@ export class MultiselectAutocompleteComponent implements OnInit {
       map(filter => this.filter(filter)),
       tap(t=>console.log(t)
       )
-    );   
-    
+    );
+
   }
 
   ngOnInit(): void {
-    this.datatest$.subscribe(res=>{
+    this.datatest$.subscribe((res)=>{
       res.forEach((item: Users) => {
         this.rawData.push(item);
       });
-    })
+    });
   }
 
   filter = (filter: string): Array<Users> => {
     this.filterString = filter;
     if (filter.length > 0) {
-      return this.rawData.filter(option => {
-        return option.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
-      });
+      return this.rawData.filter(option => option.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0);
     } else {
       return this.rawData.slice();
     }
   };
-  ​
+
   displayFn = (): string => '';
 
   optionClicked = (event: Event, data: Users): void => {
@@ -73,7 +71,7 @@ export class MultiselectAutocompleteComponent implements OnInit {
 
   toggleSelection = (data: Users): void => {
     data.selected = !data.selected;
-  ​
+
     if (data.selected === true) {
       this.selectData.push(data);
       //api assign user to board
@@ -85,13 +83,13 @@ export class MultiselectAutocompleteComponent implements OnInit {
        this.assignUserToBoard(data.id);
 
     }
-  ​
+
     this.selectControl.setValue(this.selectData);
     this.emitAdjustedData();
   };
 
   emitAdjustedData = (): void => {
-    const results: Array<Users> = []
+    const results: Array<Users> = [];
     this.selectData.forEach((data: Users) => {
       results.push(data);
     });
@@ -103,10 +101,10 @@ export class MultiselectAutocompleteComponent implements OnInit {
   };
 
 
-  assignUserToBoard(userId:number){
-    this._taskService.assignUserToBoard(this.boardId , userId).subscribe(res=>{
+  assignUserToBoard(userId: number){
+    this._taskService.assignUserToBoard(this.boardId , userId).subscribe((res)=>{
       console.log(res);
-    })
+    });
   }
 
 }

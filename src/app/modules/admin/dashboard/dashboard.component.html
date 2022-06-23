@@ -80,7 +80,7 @@
                             <!-- Summary -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                 <div class="flex items-start justify-between">
-                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Summary</div>
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Users</div>
                                     <div class="ml-2 -mt-2 -mr-3">
                                         <button
                                             mat-icon-button
@@ -97,18 +97,16 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-col items-center mt-2">
-                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">21</div>
-                                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500">Due Tasks</div>
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">{{userCount.users}}</div>
+                                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500">Amount of users</div>
                                     <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                                        <div class="text-md font-medium truncate">Completed:</div>
-                                        <div class="ml-1.5 text-lg font-semibold">13</div>
                                     </div>
                                 </div>
                             </div>
                             <!-- Overdue -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                 <div class="flex items-start justify-between">
-                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Overdue</div>
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Boards</div>
                                     <div class="ml-2 -mt-2 -mr-3">
                                         <button
                                             mat-icon-button
@@ -125,18 +123,16 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-col items-center mt-2">
-                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">17</div>
-                                    <div class="text-lg font-medium text-red-600 dark:text-red-500">Tasks</div>
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">{{userCount.board}}</div>
+                                    <div class="text-lg font-medium text-red-600 dark:text-red-500">Boards</div>
                                     <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                                        <div class="text-md font-medium truncate">From yesterday:</div>
-                                        <div class="ml-1.5 text-lg font-semibold">9</div>
                                     </div>
                                 </div>
                             </div>
                             <!-- Issues -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                 <div class="flex items-start justify-between">
-                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Issues</div>
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Posts</div>
                                     <div class="ml-2 -mt-2 -mr-3">
                                         <button
                                             mat-icon-button
@@ -153,18 +149,16 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-col items-center mt-2">
-                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">24</div>
-                                    <div class="text-lg font-medium text-amber-600 dark:text-amber-500">Open</div>
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">{{userCount.posts}}</div>
+                                    <div class="text-lg font-medium text-amber-600 dark:text-amber-500">Posts</div>
                                     <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                                        <div class="text-md font-medium truncate">Closed today:</div>
-                                        <div class="ml-1.5 text-lg font-semibold">19</div>
                                     </div>
                                 </div>
                             </div>
                             <!-- Features -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                 <div class="flex items-start justify-between">
-                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Features</div>
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Tasks</div>
                                     <div class="ml-2 -mt-2 -mr-3">
                                         <button
                                             mat-icon-button
@@ -181,11 +175,11 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-col items-center mt-2">
-                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">38</div>
-                                    <div class="text-lg font-medium text-green-600 dark:text-green-500">Proposals</div>
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">{{userCount.tasks}}</div>
+                                    <div class="text-lg font-medium text-green-600 dark:text-green-500">Tasks active</div>
                                     <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                                        <div class="text-md font-medium truncate">Implemented:</div>
-                                        <div class="ml-1.5 text-lg font-semibold">16</div>
+                                        <div class="text-md font-medium truncate">Subtasks:</div>
+                                        <div class="ml-1.5 text-lg font-semibold">{{userCount.subtasks}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -209,19 +203,7 @@
                                         <div class="flex flex-col flex-auto">
                                             <apx-chart
                                                 class="flex-auto w-full h-80"
-                                                [chart]="chartGithubIssues.chart"
-                                                [colors]="chartGithubIssues.colors"
-                                                [dataLabels]="chartGithubIssues.dataLabels"
-                                                [grid]="chartGithubIssues.grid"
-                                                [labels]="chartGithubIssues.labels"
-                                                [legend]="chartGithubIssues.legend"
-                                                [plotOptions]="chartGithubIssues.plotOptions"
-                                                [series]="chartGithubIssues.series[githubIssuesWeekSelector.value]"
-                                                [states]="chartGithubIssues.states"
-                                                [stroke]="chartGithubIssues.stroke"
-                                                [tooltip]="chartGithubIssues.tooltip"
-                                                [xaxis]="chartGithubIssues.xaxis"
-                                                [yaxis]="chartGithubIssues.yaxis"></apx-chart>
+                                              ></apx-chart>
                                         </div>
                                     </div>
                                     <!-- Overview -->
@@ -231,42 +213,36 @@
                                             <!-- New issues -->
                                             <div class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400">
                                                 <div class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
-                                                    {{data.githubIssues.overview[githubIssuesWeekSelector.value]['new-issues']}}
                                                 </div>
                                                 <div class="mt-1 text-sm sm:text-lg font-medium">New Issues</div>
                                             </div>
                                             <!-- Closed -->
                                             <div class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-green-50 text-green-800 dark:bg-white dark:bg-opacity-5 dark:text-green-500">
                                                 <div class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
-                                                    {{data.githubIssues.overview[githubIssuesWeekSelector.value]['closed-issues']}}
                                                 </div>
                                                 <div class="mt-1 text-sm sm:text-lg font-medium">Closed</div>
                                             </div>
                                             <!-- Fixed -->
                                             <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
                                                 <div class="text-5xl font-semibold leading-none tracking-tight">
-                                                    {{data.githubIssues.overview[githubIssuesWeekSelector.value]['fixed']}}
                                                 </div>
                                                 <div class="mt-1 text-sm font-medium text-center">Fixed</div>
                                             </div>
                                             <!-- Won't fix -->
                                             <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
                                                 <div class="text-5xl font-semibold leading-none tracking-tight">
-                                                    {{data.githubIssues.overview[githubIssuesWeekSelector.value]['wont-fix']}}
                                                 </div>
                                                 <div class="mt-1 text-sm font-medium text-center">Won't Fix</div>
                                             </div>
                                             <!-- Re-opened -->
                                             <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
                                                 <div class="text-5xl font-semibold leading-none tracking-tight">
-                                                    {{data.githubIssues.overview[githubIssuesWeekSelector.value]['re-opened']}}
                                                 </div>
                                                 <div class="mt-1 text-sm font-medium text-center">Re-opened</div>
                                             </div>
                                             <!-- Needs triage -->
                                             <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5">
                                                 <div class="text-5xl font-semibold leading-none tracking-tight">
-                                                    {{data.githubIssues.overview[githubIssuesWeekSelector.value]['needs-triage']}}
                                                 </div>
                                                 <div class="mt-1 text-sm font-medium text-center">Needs Triage</div>
                                             </div>
@@ -290,27 +266,16 @@
                                 <div class="flex flex-col flex-auto mt-6">
                                     <apx-chart
                                         class="flex-auto w-full h-80"
-                                        [chart]="chartTaskDistribution.chart"
-                                        [labels]="chartTaskDistribution.labels"
-                                        [legend]="chartTaskDistribution.legend"
-                                        [plotOptions]="chartTaskDistribution.plotOptions"
-                                        [series]="chartTaskDistribution.series[taskDistributionWeekSelector.value]"
-                                        [states]="chartTaskDistribution.states"
-                                        [stroke]="chartTaskDistribution.stroke"
-                                        [theme]="chartTaskDistribution.theme"
-                                        [tooltip]="chartTaskDistribution.tooltip"
-                                        [yaxis]="chartTaskDistribution.yaxis"></apx-chart>
+                                     ></apx-chart>
                                 </div>
                                 <div class="grid grid-cols-2 border-t divide-x -m-6 mt-4 bg-gray-50 dark:bg-transparent">
                                     <div class="flex flex-col items-center justify-center p-6 sm:p-8">
                                         <div class="text-5xl font-semibold leading-none tracking-tighter">
-                                            {{data.taskDistribution.overview[taskDistributionWeekSelector.value]['new']}}
                                         </div>
                                         <div class="mt-1 text-center text-secondary">New tasks</div>
                                     </div>
                                     <div class="flex flex-col items-center justify-center p-6 sm:p-8">
                                         <div class="text-5xl font-semibold leading-none tracking-tighter">
-                                            {{data.taskDistribution.overview[taskDistributionWeekSelector.value]['completed']}}
                                         </div>
                                         <div class="mt-1 text-center text-secondary">Completed tasks</div>
                                     </div>
@@ -330,17 +295,17 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-col mt-2 divide-y">
-                                    <ng-container *ngFor="let scheduleItem of data.schedule[scheduleDaySelector.value]; trackBy: trackByFn">
+                                    <!-- <ng-container *ngFor="let scheduleItem of data.schedule[scheduleDaySelector.value]; trackBy: trackByFn">
                                         <div class="flex flex-row items-center justify-between py-4 px-0.5">
                                             <div class="flex flex-col">
-                                                <div class="font-medium">{{scheduleItem.title}}</div>
+                                                <div class="font-medium"></div>
                                                 <div class="flex flex-col sm:flex-row sm:items-center -ml-0.5 mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3">
                                                     <ng-container *ngIf="scheduleItem.time">
                                                         <div class="flex items-center">
                                                             <mat-icon
                                                                 class="icon-size-5 text-hint"
                                                                 [svgIcon]="'heroicons_solid:clock'"></mat-icon>
-                                                            <div class="ml-1.5 text-md text-secondary">{{scheduleItem.time}}</div>
+                                                            <div class="ml-1.5 text-md text-secondary"></div>
                                                         </div>
                                                     </ng-container>
                                                     <ng-container *ngIf="scheduleItem.location">
@@ -348,7 +313,7 @@
                                                             <mat-icon
                                                                 class="icon-size-5 text-hint"
                                                                 [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
-                                                            <div class="ml-1.5 text-md text-secondary">{{scheduleItem.location}}</div>
+                                                            <div class="ml-1.5 text-md text-secondary"></div>
                                                         </div>
                                                     </ng-container>
                                                 </div>
@@ -357,7 +322,7 @@
                                                 <mat-icon [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
                                             </button>
                                         </div>
-                                    </ng-container>
+                                    </ng-container> -->
                                 </div>
                             </div>
                         </div>
@@ -374,16 +339,7 @@
                                 <div class="flex flex-col flex-auto">
                                     <apx-chart
                                         class="flex-auto w-full h-80"
-                                        [chart]="chartBudgetDistribution.chart"
-                                        [colors]="chartBudgetDistribution.colors"
-                                        [dataLabels]="chartBudgetDistribution.dataLabels"
-                                        [markers]="chartBudgetDistribution.markers"
-                                        [plotOptions]="chartBudgetDistribution.plotOptions"
-                                        [series]="chartBudgetDistribution.series"
-                                        [stroke]="chartBudgetDistribution.stroke"
-                                        [tooltip]="chartBudgetDistribution.tooltip"
-                                        [xaxis]="chartBudgetDistribution.xaxis"
-                                        [yaxis]="chartBudgetDistribution.yaxis"></apx-chart>
+                                    ></apx-chart>
                                 </div>
                             </div>
                             <!-- Expense -->
@@ -425,13 +381,7 @@
                                         <div class="flex flex-col flex-auto ml-8">
                                             <apx-chart
                                                 class="flex-auto w-full h-16"
-                                                [chart]="chartWeeklyExpenses.chart"
-                                                [colors]="chartWeeklyExpenses.colors"
-                                                [series]="chartWeeklyExpenses.series"
-                                                [stroke]="chartWeeklyExpenses.stroke"
-                                                [tooltip]="chartWeeklyExpenses.tooltip"
-                                                [xaxis]="chartWeeklyExpenses.xaxis"
-                                                [yaxis]="chartWeeklyExpenses.yaxis"></apx-chart>
+                                               ></apx-chart>
                                         </div>
                                     </div>
                                 </div>
@@ -472,13 +422,7 @@
                                         <div class="flex flex-col flex-auto ml-8">
                                             <apx-chart
                                                 class="flex-auto w-full h-16"
-                                                [chart]="chartMonthlyExpenses.chart"
-                                                [colors]="chartMonthlyExpenses.colors"
-                                                [series]="chartMonthlyExpenses.series"
-                                                [stroke]="chartMonthlyExpenses.stroke"
-                                                [tooltip]="chartMonthlyExpenses.tooltip"
-                                                [xaxis]="chartMonthlyExpenses.xaxis"
-                                                [yaxis]="chartMonthlyExpenses.yaxis"></apx-chart>
+                                             ></apx-chart>
                                         </div>
                                     </div>
                                 </div>
@@ -519,13 +463,7 @@
                                         <div class="flex flex-col flex-auto ml-8">
                                             <apx-chart
                                                 class="flex-auto w-full h-16"
-                                                [chart]="chartYearlyExpenses.chart"
-                                                [colors]="chartYearlyExpenses.colors"
-                                                [series]="chartYearlyExpenses.series"
-                                                [stroke]="chartYearlyExpenses.stroke"
-                                                [tooltip]="chartYearlyExpenses.tooltip"
-                                                [xaxis]="chartYearlyExpenses.xaxis"
-                                                [yaxis]="chartYearlyExpenses.yaxis"></apx-chart>
+                                           ></apx-chart>
                                         </div>
                                     </div>
                                 </div>

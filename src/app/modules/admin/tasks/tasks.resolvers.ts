@@ -61,21 +61,21 @@ export class TasksDepartmentsResolver implements Resolve<any>
      */
      resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Boards>
      {
-         
+
          return this._tasksService.getBoard(+route.paramMap.get('boardId'))
              .pipe(
                  // Error here means the requested task is not available
                  catchError((error) => {
- 
+
                      // Log the error
                      console.error(error);
- 
+
                      // Get the parent url
                      const parentUrl = state.url.split('/').slice(0, -1).join('/');
- 
+
                      // Navigate to there
                      this._router.navigateByUrl(parentUrl);
- 
+
                      // Throw an error
                      return throwError(error);
                  })
@@ -205,7 +205,7 @@ export class TasksTaskResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task2>
     {
-        
+
         return this._tasksService.getTaskById2(route.paramMap.get('id'))
             .pipe(
                 // Error here means the requested task is not available
@@ -256,7 +256,7 @@ export class SubtaskTaskResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task2>
     {
-        
+
         return this._tasksService.getSubtaskById(route.paramMap.get('id'))
             .pipe(
                 // Error here means the requested task is not available

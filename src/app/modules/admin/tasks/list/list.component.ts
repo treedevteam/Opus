@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/member-ordering */
 import { TasksService } from '../tasks.service';
 import { Tag, Task, Task2, TaskWithDepartment, Users } from '../tasks.types';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
@@ -20,7 +24,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { AsignUsersToBoardComponent } from '../asign-users-to-board/asign-users-to-board.component';
 import { MatDialog } from '@angular/material/dialog';
- 
+
 @Component({
     selector       : 'tasks-list',
     templateUrl    : './list.component.html',
@@ -45,13 +49,13 @@ export class TasksListComponent implements OnInit, OnDestroy
     board_department: number;
     subtaskTrigger: Task2;
     taskForm: FormGroup;
-    usersList = this._tasksService.currentBoardUsers$
+    usersList = this._tasksService.currentBoardUsers$;
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
-    expandedSubtasks:number | null = null;
+    expandedSubtasks: number | null = null;
     controls: FormArray;
     subtaskControls: FormArray;
     order;
-    board_id:number;
+    board_id: number;
     getDepartments: Departments[];
 
     DeaprtmentsData$ = this._tasksService.departments$;
@@ -76,7 +80,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     };
     taskss: TaskWithDepartment[];
 
-    orderModified$ = this._tasksService.currentBoardOrderTasks$
+    orderModified$ = this._tasksService.currentBoardOrderTasks$;
 
 
     tasksData$ = combineLatest([
@@ -85,7 +89,6 @@ export class TasksListComponent implements OnInit, OnDestroy
         this._tasksService.taskUpdated$,
         this._tasksService.deletedTask$
     ],(g,p,u,d) => {
-     debugger;
          if(p){
             const id = g.findIndex(t=> t.id === p.id);
             if(id === -1){
@@ -98,7 +101,7 @@ export class TasksListComponent implements OnInit, OnDestroy
                 g.splice(id,1,u);
             }
          }else if(d){
-                const deletedTask = g.findIndex(t => t.id === +d.id)
+                const deletedTask = g.findIndex(t => t.id === +d.id);
                 if(deletedTask > -1){
                     g.splice(deletedTask,1);
                 }
@@ -138,7 +141,7 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     statuses = this._tasksService.getStatus$;
     priority = this._tasksService.getPriorities$;
-    
+
 
 
     //  subtasksData$ = this._tasksService.subtasks$;
@@ -158,13 +161,11 @@ export class TasksListComponent implements OnInit, OnDestroy
             ))
         }))),
         shareReplay(1),
-        tap(res=>{
-            const test = res.map(entity => {
-                return new FormGroup({
+        tap((res)=>{
+            const test = res.map(entity => new FormGroup({
                     title:  new FormControl(entity.title, Validators.required),
                     deadline:  new FormControl(entity.deadline, Validators.required),
-                  },{updateOn: "blur"});
-            })
+                  },{updateOn: 'blur'}));
             this.subtaskControls = new FormArray(test);
         })
       );
@@ -191,19 +192,17 @@ export class TasksListComponent implements OnInit, OnDestroy
                         completed: res.checklists.filter(x => x.value === 1).length,
                         total: res.checklists.length
                     }
-                    
+
                 })),
             ]
         })),
         shareReplay(1),
-        tap(res=>{
+        tap((res)=>{
             this.board_department = +res.department_id;
-            const test = res.tasks.map(entity => {
-                return new FormGroup({
+            const test = res.tasks.map(entity => new FormGroup({
                     title:  new FormControl(entity.title, Validators.required),
                     deadline:  new FormControl(entity.deadline, Validators.required),
-                  },{updateOn: "blur"});
-            })
+                  },{updateOn: 'blur'}));
             this.controls = new FormArray(test);
         })
         );
@@ -214,8 +213,8 @@ export class TasksListComponent implements OnInit, OnDestroy
         // ],(g) => {
         //     return g;
         // });
-           
-   
+
+
     // tasksaks = this._tasksService.tasksWithDepartment$;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -257,35 +256,34 @@ export class TasksListComponent implements OnInit, OnDestroy
     }
 
     selectStatus(status: Status){
-        debugger;
-        this._tasksService.updateTaskStatus(status.id,this.order,this.board_id, this.statusTask.id).subscribe(res=>{
-        })
+        this._tasksService.updateTaskStatus(status.id,this.order,this.board_id, this.statusTask.id).subscribe((res)=>{
+        });
     }
     selectPriority(priority: Priorities){
-        this._tasksService.updateTaskPriority(priority.id, this.statusTask.id).subscribe(res=>{
-        })
+        this._tasksService.updateTaskPriority(priority.id, this.statusTask.id).subscribe((res)=>{
+        });
     }
 
 
     subtaskSelectStatus(status: Status){
-        this._tasksService.subtaskUpdateTaskStatus(status.id, this.subtaskTrigger.id).subscribe(res=>{
-        })
+        this._tasksService.subtaskUpdateTaskStatus(status.id, this.subtaskTrigger.id).subscribe((res)=>{
+        });
     }
 
 
     subtaskSelectPriority(priority: Priorities){
         console.log(this.subtaskTrigger);
         console.log(priority);
-        
-        this._tasksService.subtaskUpdateTaskPriority(priority.id, this.subtaskTrigger.id).subscribe(res=>{
-        })
+
+        this._tasksService.subtaskUpdateTaskPriority(priority.id, this.subtaskTrigger.id).subscribe((res)=>{
+        });
     }
 
     toggleTableRows(id: number) {
         if(this.expandedSubtasks === id){
             this.expandedSubtasks = null;
         }else{
-            this._tasksService.getSubtasks(id).subscribe(res=>{
+            this._tasksService.getSubtasks(id).subscribe((res)=>{
                 console.log(res);
                 this.expandedSubtasks = id;
             });
@@ -294,22 +292,21 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {
-        console.log(event,"currentItem.position = this._positionStepcurrentItem.position = this._positionStep");
-        this.orderModified$.subscribe(res=>{
-            debugger;
+        console.log(event,'currentItem.position = this._positionStepcurrentItem.position = this._positionStep');
+        this.orderModified$.subscribe((res)=>{
             this.order = res;
-        })
-        this._tasksService.getUsersData$.subscribe(res=>{
+        });
+        this._tasksService.getUsersData$.subscribe((res)=>{
             let boardId: number;
-            this._tasksService.currentBoard$.subscribe(res=>{
-                boardId = res.id; 
-                this.board_id = res.id
+            this._tasksService.currentBoard$.subscribe((res)=>{
+                boardId = res.id;
+                this.board_id = res.id;
             });
-            this._tasksService.getUsersBoard(boardId).subscribe(res=>{
-               console.log(res,"TTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEESST");
-               
-            })
-        })
+            this._tasksService.getUsersBoard(boardId).subscribe((res)=>{
+               console.log(res,'TTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEESST');
+
+            });
+        });
 
 
 
@@ -454,13 +451,13 @@ export class TasksListComponent implements OnInit, OnDestroy
         }
 
         // If there is no tag available...
-       
+
 
         // If there is a tag...
     }
 
     // userCheck(user: any): boolean{
-      
+
     //     if(this.task2.users_assigned.includes(user)){
     //         return true;
     //     }else{
@@ -484,18 +481,18 @@ export class TasksListComponent implements OnInit, OnDestroy
     //         console.log(this.taskForm.get('users_assigned').value);
     //     })
 
-        
-        
+
+
     // }
     openUsersPanel(): void
     {
         // this.filteredUsers = null;
-        
+
         // this.userList = this.userList.map(user=>({
         //     ...user,
         //     checked: userAssigned.findIndex(x=>x.id === user.id) > -1 ? true: false
         // }));
-        
+
         // Create the overlay
         this._usersPanelOverlayRef = this._overlay.create({
             backdropClass   : '',
@@ -553,7 +550,7 @@ export class TasksListComponent implements OnInit, OnDestroy
             }
         });
     }
-    
+
     /**
      * On backdrop clicked
      */
@@ -569,14 +566,14 @@ export class TasksListComponent implements OnInit, OnDestroy
     filterDepartments(event): void
     {
         console.log(this.usersList);
-        
+
         // Get the value
         const value = event.target.value.toLowerCase();
 
         // Filter the tags
         // this.filteredUsers = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
         // console.log(this.filteredUsers);
-        
+
     }
     /**
      * Create task
@@ -639,28 +636,28 @@ export class TasksListComponent implements OnInit, OnDestroy
     }
 
     onOpenMenu(menu: any): void {
-        // menu doesn't have any openMenu() function 
+        // menu doesn't have any openMenu() function
         // which is of course not a trigger object but a menu itself.
         console.log(menu);
      }
      convertDate(time: any): string
      {
-        const convert = time._i.year + "-" + (time._i.month + 1) + "-" + time._i.date + "  00:00"
+        const convert = time._i.year + '-' + (time._i.month + 1) + '-' + time._i.date + '  00:00';
         return convert;
      }
 
     updateField(index, field,taskid) {
         const control = this.getControl(index, field);
         switch(field){
-            case "title":
-                this._tasksService.updateTaskTitle(control.value, taskid).subscribe(res=>{
+            case 'title':
+                this._tasksService.updateTaskTitle(control.value, taskid).subscribe((res)=>{
                         console.log(res);
-                })
+                });
                 break;
-            case "deadline":
-                this._tasksService.updateTaskDeadline(this.convertDate(control.value), taskid).subscribe(res=>{
+            case 'deadline':
+                this._tasksService.updateTaskDeadline(this.convertDate(control.value), taskid).subscribe((res)=>{
                     console.log(res);
-                })
+                });
                 break;
             default:
         }
@@ -674,15 +671,15 @@ export class TasksListComponent implements OnInit, OnDestroy
     updateSubtaskField(index, field,taskid) {
         const control = this.getSubtaskControl(index, field);
         switch(field){
-            case "title":
-                this._tasksService.updateSubtaskTitle(control.value, taskid).subscribe(res=>{
+            case 'title':
+                this._tasksService.updateSubtaskTitle(control.value, taskid).subscribe((res)=>{
                         console.log(res);
-                })
+                });
                 break;
-            case "deadline":
-                this._tasksService.subtaskUpdateTaskDeadline(this.convertDate(control.value), taskid).subscribe(res=>{
+            case 'deadline':
+                this._tasksService.subtaskUpdateTaskDeadline(this.convertDate(control.value), taskid).subscribe((res)=>{
                     console.log(res);
-                })
+                });
                 break;
             default:
         }
@@ -692,7 +689,7 @@ export class TasksListComponent implements OnInit, OnDestroy
         //     })
         // }
     }
-    
+
     getControl(index, fieldName) {
         const a  = this.controls.at(index).get(fieldName) as FormControl;
         return this.controls.at(index).get(fieldName) as FormControl;
@@ -705,22 +702,22 @@ export class TasksListComponent implements OnInit, OnDestroy
 
 
 
-    getDepartmentUsers(id:number){
-        
+    getDepartmentUsers(id: number){
+
     }
 
     assignUserPopup(): void {
-        this._tasksService.getUsersDepartment(this.board_department).subscribe(res=>{
+        this._tasksService.getUsersDepartment(this.board_department).subscribe((res)=>{
             const dialogRef = this.dialog.open(AsignUsersToBoardComponent, {
                 width: '100%',
                 maxWidth:'700px',
                 height:'400px',
                 maxHeight:'100%'
               });
-          
-              dialogRef.afterClosed().subscribe(result => {
+
+              dialogRef.afterClosed().subscribe((result) => {
               });
-        })
+        });
       }
 
     /**

@@ -17,7 +17,7 @@ export const departmentsRoutingModule: Route[] = [
         {
             path     : '',
             component: DepartmentComponent,
-            
+
         },
     ]
 },

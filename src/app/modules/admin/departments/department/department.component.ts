@@ -42,7 +42,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     }else if(deletedDep){
       const departmentIndex = departments.findIndex(d => d.id === deletedDep);
       if(departmentIndex > -1){
-        
+
         departments.splice(departmentIndex,1);
       }
     }
@@ -70,7 +70,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
   constructor(
       private _changeDetectorRef: ChangeDetectorRef,
       private _deprtmentsService: DepartmentsService,
-      public dialog:MatDialog,
+      public dialog: MatDialog,
       private _fuseConfirmationService: FuseConfirmationService,
 
   )
@@ -120,8 +120,8 @@ export class DepartmentComponent implements OnInit, OnDestroy {
           // Delete the task
           this._deprtmentsService.deleteDepartment(id).subscribe(
             (res)=>{
-              
-          })
+
+          });
         }
       });
   }
@@ -133,7 +133,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
       data: {dataKey:department}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
     });
   }
   /**
@@ -163,7 +163,7 @@ export class DepartmentComponent implements OnInit, OnDestroy {
       maxWidth:'700px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
     });
   }
 

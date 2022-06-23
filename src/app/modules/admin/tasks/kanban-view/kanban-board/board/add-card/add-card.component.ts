@@ -3,7 +3,7 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { FormBuilder, FormGroup } from '@angular/forms';
 export interface TaskOrSub
 {
-    title:string;
+    title: string;
     type: string;
 }
 
@@ -69,7 +69,7 @@ export class ScrumboardBoardAddCardComponent implements OnInit
 
         // Execute the observable
         this.saved.next({title:title,type:this.taskType});
-        
+
         // Clear the new list title and hide the form
         this.formVisible = false;
         this.form.get('title').setValue('');

@@ -60,12 +60,12 @@ export class AddOrUpdateUsersComponent implements OnInit {
         });
     }
 
-    getRoles():void {
-        this._usersService._getRoles().subscribe(res=>{
+    getRoles(): void {
+        this._usersService._getRoles().subscribe((res)=>{
             this.roles = res;
             console.log(res);
-            
-        })
+
+        });
     }
 
     onFileChange(pFileList: File): void{

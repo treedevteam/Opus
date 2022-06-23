@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -46,11 +47,11 @@ export class AuthSignInComponent implements OnInit
         // Create the form
         this.signInForm = this._formBuilder.group({
             username     : ['rijad.morina@treedev.io', [Validators.required, Validators.email]],
-            password     : ['12345678', [Validators.required, Validators.minLength(8)]],
+            password     : ['password', [Validators.required, Validators.minLength(8)]],
             grant_type   : ['password'],
             client_id    : ['1'],
             scope        : [''],
-            client_secret: ['oJAehFH9ZEoUiKwuoBDqitBJ43sN6N7GlIoDKfXE']
+            client_secret: ['A7lt43qJY0xGQBY7d7xPLWy5GRxmMU8xpukzRYm7']
         });
     }
 

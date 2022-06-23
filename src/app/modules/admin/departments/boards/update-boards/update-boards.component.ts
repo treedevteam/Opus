@@ -25,11 +25,11 @@ export class UpdateBoardsComponent implements OnInit {
   });
     this.updateBoards.setValue(this.data.dataKey);
     console.log(this.data);
-    
+
   }
 
   updateBoard(): void{
-    this._boardService.updateBoard(this.data.dataKey.id ,this.updateBoards.value).subscribe()
+    this._boardService.updateBoard(this.data.dataKey.id ,this.updateBoards.value).subscribe();
   }
 
 }

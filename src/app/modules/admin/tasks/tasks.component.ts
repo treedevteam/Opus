@@ -8,7 +8,7 @@ import { WebSocketServiceService } from 'app/modules/web-socket-service.service'
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TasksComponent 
+export class TasksComponent
 {
     /**
      * Constructor
