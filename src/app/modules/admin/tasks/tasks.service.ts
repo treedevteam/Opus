@@ -999,8 +999,8 @@ export class TasksService
         )
         );
     }
-    updateTaskPriority(priorityId: any, taskId:number): Observable<Task2>{
-        return this._httpClient.post<Task2>(this.apiUrl+'api/task_priority/' + taskId ,  {priority: priorityId}).pipe(
+    updateTaskPriority(priorityId: any, taskId:number, board_id:number): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task_priority/' + taskId ,  {priority: priorityId,board_id}).pipe(
             map((data: any) => {
                 debugger;
                 this._tasksupdated.next(data);
@@ -1015,8 +1015,8 @@ export class TasksService
         );
     }
 
-    updateTaskTitle(title: any, taskId:number): Observable<Task2>{
-        return this._httpClient.post<Task2>(this.apiUrl+'api/task_title/' + taskId ,  {title: title}).pipe(
+    updateTaskTitle(title: any, taskId:number, board_id:number): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task_title/' + taskId ,  {title: title, board_id:board_id}).pipe(
             map((data: any) => {
                 this._tasksupdated.next(data.data);
                 this._newtask.next(null);
@@ -1031,8 +1031,8 @@ export class TasksService
     }
 
 
-    updateTaskDeadline(deadline: any, taskId:number): Observable<Task2>{
-        return this._httpClient.post<Task2>(this.apiUrl+'api/task_deadline/' + taskId ,  {deadline: deadline}).pipe(
+    updateTaskDeadline(deadline: any, taskId:number, board_id:number): Observable<Task2>{
+        return this._httpClient.post<Task2>(this.apiUrl+'api/task_deadline/' + taskId ,  {deadline: deadline,board_id}).pipe(
             map((data: any) => {
                 this._tasksupdated.next(data.data);
                 this._newtask.next(null);
