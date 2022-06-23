@@ -42,6 +42,10 @@ export const appRoutes: Route[] = [
         path: '',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
+
+
+
+
         component: LayoutComponent,
         data: {
             layout: 'empty'
@@ -86,6 +90,7 @@ export const appRoutes: Route[] = [
             {path: 'priorities', loadChildren: () => import('app/modules/admin/priorities/priorities.module').then(m => m.PrioritiesModule)},
             {path: 'statuses', loadChildren: () => import('app/modules/admin/statuses/status.module').then(m => m.StatusModule)},
             {path: 'board', loadChildren: () => import('app/modules/admin/tasks/tasks.module').then(m => m.TasksModule)},
+            {path: 'mailbox', loadChildren: () => import('app/modules/admin/mailbox/mailbox.module').then(m => m.MailboxModule)},
             {path: 'departments', loadChildren: () => import('app/modules/admin/departments/departments.module').then(m => m.DepartmentsModule)},
 
              // Error

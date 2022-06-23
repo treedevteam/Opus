@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseNavigationItem, FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
-import { MailboxService } from 'app/modules/admin/apps/mailbox/mailbox.service';
-import { MailboxComposeComponent } from 'app/modules/admin/apps/mailbox/compose/compose.component';
-import { labelColorDefs } from 'app/modules/admin/apps/mailbox/mailbox.constants';
-import { MailFilter, MailFolder, MailLabel } from 'app/modules/admin/apps/mailbox/mailbox.types';
+import { MailboxService } from 'app/modules/admin/mailbox/mailbox.service';
+import { MailboxComposeComponent } from 'app/modules/admin/mailbox/compose/compose.component';
+import { labelColorDefs } from 'app/modules/admin/mailbox/mailbox.constants';
+import { MailFilter, MailFolder, MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
 
 @Component({
     selector     : 'mailbox-sidebar',

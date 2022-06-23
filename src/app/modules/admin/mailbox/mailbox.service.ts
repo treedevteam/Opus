@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
-import { Mail, MailCategory, MailFilter, MailFolder, MailLabel } from 'app/modules/admin/apps/mailbox/mailbox.types';
+import { Mail, MailCategory, MailFilter, MailFolder, MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
 
 @Injectable({
     providedIn: 'root'

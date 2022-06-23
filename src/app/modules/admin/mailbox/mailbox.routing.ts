@@ -1,10 +1,10 @@
 import { ActivatedRouteSnapshot, Route, UrlMatchResult, UrlSegment } from '@angular/router';
 import { isEqual } from 'lodash-es';
-import { MailboxComponent } from 'app/modules/admin/apps/mailbox/mailbox.component';
-import { MailboxFiltersResolver, MailboxFoldersResolver, MailboxLabelsResolver, MailboxMailResolver, MailboxMailsResolver } from 'app/modules/admin/apps/mailbox/mailbox.resolvers';
-import { MailboxListComponent } from 'app/modules/admin/apps/mailbox/list/list.component';
-import { MailboxDetailsComponent } from 'app/modules/admin/apps/mailbox/details/details.component';
-import { MailboxSettingsComponent } from 'app/modules/admin/apps/mailbox/settings/settings.component';
+import { MailboxComponent } from 'app/modules/admin/mailbox/mailbox.component';
+import { MailboxFiltersResolver, MailboxFoldersResolver, MailboxLabelsResolver, MailboxMailResolver, MailboxMailsResolver } from 'app/modules/admin/mailbox/mailbox.resolvers';
+import { MailboxListComponent } from 'app/modules/admin/mailbox/list/list.component';
+import { MailboxDetailsComponent } from 'app/modules/admin/mailbox/details/details.component';
+import { MailboxSettingsComponent } from 'app/modules/admin/mailbox/settings/settings.component';
 
 /**
  * Mailbox custom route matcher

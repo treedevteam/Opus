@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, take } from 'rxjs';
-import { MailboxComponent } from 'app/modules/admin/apps/mailbox/mailbox.component';
-import { MailboxService } from 'app/modules/admin/apps/mailbox/mailbox.service';
-import { MailLabel } from 'app/modules/admin/apps/mailbox/mailbox.types';
-import { labelColorDefs, labelColors } from 'app/modules/admin/apps/mailbox/mailbox.constants';
+import { MailboxComponent } from 'app/modules/admin/mailbox/mailbox.component';
+import { MailboxService } from 'app/modules/admin/mailbox/mailbox.service';
+import { MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
+import { labelColorDefs, labelColors } from 'app/modules/admin/mailbox/mailbox.constants';
 
 @Component({
     selector     : 'mailbox-settings',

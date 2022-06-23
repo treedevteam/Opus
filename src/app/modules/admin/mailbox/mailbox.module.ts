@@ -17,13 +17,13 @@ import { FuseNavigationModule } from '@fuse/components/navigation';
 import { FuseScrollbarModule } from '@fuse/directives/scrollbar';
 import { FuseScrollResetModule } from '@fuse/directives/scroll-reset';
 import { SharedModule } from 'app/shared/shared.module';
-import { MailboxComponent } from 'app/modules/admin/apps/mailbox/mailbox.component';
-import { MailboxComposeComponent } from 'app/modules/admin/apps/mailbox/compose/compose.component';
-import { MailboxDetailsComponent } from 'app/modules/admin/apps/mailbox/details/details.component';
-import { MailboxListComponent } from 'app/modules/admin/apps/mailbox/list/list.component';
-import { MailboxSettingsComponent } from 'app/modules/admin/apps/mailbox/settings/settings.component';
-import { MailboxSidebarComponent } from 'app/modules/admin/apps/mailbox/sidebar/sidebar.component';
-import { mailboxRoutes } from 'app/modules/admin/apps/mailbox/mailbox.routing';
+import { MailboxComponent } from 'app/modules/admin/mailbox/mailbox.component';
+import { MailboxComposeComponent } from 'app/modules/admin/mailbox/compose/compose.component';
+import { MailboxDetailsComponent } from 'app/modules/admin/mailbox/details/details.component';
+import { MailboxListComponent } from 'app/modules/admin/mailbox/list/list.component';
+import { MailboxSettingsComponent } from 'app/modules/admin/mailbox/settings/settings.component';
+import { MailboxSidebarComponent } from 'app/modules/admin/mailbox/sidebar/sidebar.component';
+import { mailboxRoutes } from 'app/modules/admin/mailbox/mailbox.routing';
 
 @NgModule({
     declarations: [

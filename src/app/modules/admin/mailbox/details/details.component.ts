@@ -4,9 +4,9 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatButton } from '@angular/material/button';
 import { Subject, takeUntil } from 'rxjs';
-import { MailboxService } from 'app/modules/admin/apps/mailbox/mailbox.service';
-import { Mail, MailFolder, MailLabel } from 'app/modules/admin/apps/mailbox/mailbox.types';
-import { labelColorDefs } from 'app/modules/admin/apps/mailbox/mailbox.constants';
+import { MailboxService } from 'app/modules/admin/mailbox/mailbox.service';
+import { Mail, MailFolder, MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
+import { labelColorDefs } from 'app/modules/admin/mailbox/mailbox.constants';
 
 @Component({
     selector     : 'mailbox-details',

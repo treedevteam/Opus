@@ -1,8 +1,8 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { MailboxService } from 'app/modules/admin/apps/mailbox/mailbox.service';
-import { MailboxComponent } from 'app/modules/admin/apps/mailbox/mailbox.component';
-import { Mail, MailCategory } from 'app/modules/admin/apps/mailbox/mailbox.types';
+import { MailboxService } from 'app/modules/admin/mailbox/mailbox.service';
+import { MailboxComponent } from 'app/modules/admin/mailbox/mailbox.component';
+import { Mail, MailCategory } from 'app/modules/admin/mailbox/mailbox.types';
 
 @Component({
     selector     : 'mailbox-list',
