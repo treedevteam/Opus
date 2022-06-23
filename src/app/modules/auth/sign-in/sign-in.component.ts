@@ -46,7 +46,7 @@ export class AuthSignInComponent implements OnInit
     {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            username     : ['rijad.morina@treedev.io', [Validators.required, Validators.email]],
+            username     : ['lberge@example.net', [Validators.required, Validators.email]],
             password     : ['password', [Validators.required, Validators.minLength(8)]],
             grant_type   : ['password'],
             client_id    : ['1'],

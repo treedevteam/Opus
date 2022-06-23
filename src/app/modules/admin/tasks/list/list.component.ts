@@ -260,8 +260,8 @@ export class TasksListComponent implements OnInit, OnDestroy
         });
     }
     selectPriority(priority: Priorities){
-        this._tasksService.updateTaskPriority(priority.id, this.statusTask.id).subscribe((res)=>{
-        });
+        this._tasksService.updateTaskPriority(priority.id, this.statusTask.id, this.board_id).subscribe(res=>{
+        })
     }
 
 
@@ -649,13 +649,13 @@ export class TasksListComponent implements OnInit, OnDestroy
     updateField(index, field,taskid) {
         const control = this.getControl(index, field);
         switch(field){
-            case 'title':
-                this._tasksService.updateTaskTitle(control.value, taskid).subscribe((res)=>{
+            case "title":
+                this._tasksService.updateTaskTitle(control.value, taskid, this.board_id).subscribe(res=>{
                         console.log(res);
                 });
                 break;
-            case 'deadline':
-                this._tasksService.updateTaskDeadline(this.convertDate(control.value), taskid).subscribe((res)=>{
+            case "deadline":
+                this._tasksService.updateTaskDeadline(this.convertDate(control.value), taskid,this.board_id).subscribe(res=>{
                     console.log(res);
                 });
                 break;

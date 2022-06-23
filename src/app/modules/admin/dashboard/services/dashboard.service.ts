@@ -1,21 +1,37 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/type-annotation-spacing */
-/* eslint-disable no-trailing-spaces */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { Posts } from '../models/dashboard';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
   apiUrl = environment.apiUrl; 
-  constructor(private _http:HttpClient) { }
+
+  private _departmentPosts: BehaviorSubject<Posts | null> = new BehaviorSubject(null); 
 
 
-  //Returns userCount
-  getUserCount()
-  {
-    return  this._http.get(this.apiUrl +'api/data');
+  constructor(private _httpClient: HttpClient) { }
+
+  get departmentPosts$(): Observable<Posts>{
+    return this._departmentPosts.asObservable();
   }
+
+
+  getPostsDepartment(depId: number): Observable<Posts[]>
+  {
+      return this._httpClient.get<Posts[]>(this.apiUrl+'api/posts/' + depId).pipe(
+          map((data: any): Posts[] => {
+              this._departmentPosts.next(data.data);
+              return data.data;
+          }),
+      );
+  }
+
+
+
+
+
 }
