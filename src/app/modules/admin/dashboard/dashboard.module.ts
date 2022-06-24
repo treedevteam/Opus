@@ -16,11 +16,12 @@ import { SharedModule } from 'app/shared/shared.module';
 import { FuseAlertModule } from '@fuse/components/alert';
 import { PostsListComponent } from './posts-list/posts-list.component';
 import { NgApexchartsModule } from "ng-apexcharts";
+import { DashboardResolver } from './dashboard.resolvers';
 
 export const routes: Route[] = [
     {
         path     : '',
-        component: DashboardComponent
+        component: DashboardComponent,
     },
 ];
 

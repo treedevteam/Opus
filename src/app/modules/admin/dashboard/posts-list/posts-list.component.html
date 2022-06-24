@@ -1,6 +1,76 @@
 
-<p class="text-center">No posts yet</p>
+ <!-- Main -->
+ <div class="flex flex-col flex-auto items-center p-6 sm:p-10">
+    <div class="flex flex-col w-full max-w-4xl">
+        <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
+            Posts
+        </div>
+        <!-- Form -->
+        <div class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card">
+            <!-- Alert -->
+            <fuse-alert
+                class="mb-8"
+                *ngIf="alert"
+                [type]="alert.type"
+                [showIcon]="false">
+                {{alert.message}}
+            </fuse-alert>
+            <form
+                class="space-y-3"
+                [formGroup]="supportForm"
+                #supportNgForm="ngForm">
+                <mat-form-field class="fuse-mat-textarea w-full">
+                    <textarea
+                        matInput
+                        [formControlName]="'description'"
+                        [required]="true"
+                        [rows]="5"
+                        matTextareaAutosize></textarea>
+                    <mat-label>Message</mat-label>
+                    <mat-error *ngIf="supportForm.get('description').hasError('required')">
+                        Required
+                    </mat-error>
+                </mat-form-field>
 
-<div class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card">
-    
+                <input type="file" name="file" id="file" (change)="onFileChange($event.target.files)">
+
+                <!-- Actions -->
+                <div class="flex items-center justify-end">
+                    <button
+                        mat-button
+                        [color]="'accent'"
+                        [disabled]="supportForm.pristine || supportForm.untouched"
+                        (click)="clearForm()">
+                        Clear
+                    </button>
+                    <button
+                        class="ml-2"
+                        mat-flat-button
+                        [color]="'primary'"
+                        [disabled]="supportForm.pristine || supportForm.invalid"
+                        (click)="sendForm()">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+
+<div class="flex flex-col flex-auto items-center p-6 sm:p-10 pt-0">
+    <div class="flex flex-col w-full max-w-4xl">
+        <p *ngIf="!departmentPosts$ | async" class="text-center">No posts yet</p>
+
+        <div *ngIf="departmentPosts$ | async as Posts" class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card">
+            <div *ngFor="let post of Posts" class="post_section">
+                <p>{{post.description}}</p>
+                <p class="mb-3">{{post.created_at | date:'fullDate' }}</p>
+                <img *ngIf="post.file" src="{{apiUrl}}storage/{{post.file}}" alt="image">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
