@@ -1,6 +1,3 @@
-import { LocationsModule } from './modules/admin/locations/locations.module';
-import { UsersComponent } from './modules/admin/users/users.component';
-import { DepartamentsModule } from './modules/admin/pages/departaments/departaments.module';
 import { Route } from '@angular/router';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
@@ -82,13 +79,14 @@ export const appRoutes: Route[] = [
 
             {path: 'pages', children: [
                 {path: 'settings', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
-                {path: 'departments', loadChildren: () => import('app/modules/admin/pages/departaments/departaments.module').then(m => m.DepartamentsModule)},
+                // {path: 'departments', loadChildren: () => import('app/modules/admin/pages/departaments/departaments.module').then(m => m.DepartamentsModule)},
             ]},
             {path: 'users', loadChildren: () => import('app/modules/admin/users/users.module').then(m => m.UsersModule)},
             {path: 'locations', loadChildren: () => import('app/modules/admin/locations/locations.module').then(m => m.LocationsModule)},
             {path: 'priorities', loadChildren: () => import('app/modules/admin/priorities/priorities.module').then(m => m.PrioritiesModule)},
             {path: 'statuses', loadChildren: () => import('app/modules/admin/statuses/status.module').then(m => m.StatusModule)},
-            {path: 'tasks', loadChildren: () => import('app/modules/admin/tasks/tasks.module').then(m => m.TasksModule)},
+            {path: 'board', loadChildren: () => import('app/modules/admin/tasks/tasks.module').then(m => m.TasksModule)},
+            {path: 'departments', loadChildren: () => import('app/modules/admin/departments/departments.module').then(m => m.DepartmentsModule)},
 
              // Error
              {path: 'error', children: [

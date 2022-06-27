@@ -33,7 +33,7 @@
             <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row" style="height: fit-content; min-height: 500px;">
                 <div class="flex flex-col p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
 
-                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <table mat-table [dataSource]="usersWithRoleDep$" class="mat-elevation-z8">
 
                     <!--- Note that these columns can be defined in any order.
                           The actual rendered columns are set as a property on the row definition" -->
@@ -57,18 +57,18 @@
                        <!-- Department Column -->
                      <ng-container matColumnDef="department">
                         <th mat-header-cell *matHeaderCellDef> Department </th>
-                        <td mat-cell *matCellDef="let element"> {{element.department_id}}</td>
+                        <td mat-cell *matCellDef="let element"> {{element.department_id.name}}</td>
                       </ng-container>
                         <!-- Role Column -->
                         <ng-container matColumnDef="role">
                             <th mat-header-cell *matHeaderCellDef> Role </th>
-                            <td mat-cell *matCellDef="let element"> {{element.role_id}}</td>
+                            <td mat-cell *matCellDef="let element"> {{element.role_id.name}}</td>
                         </ng-container>
                     <!-- Weight Column -->
                     <ng-container matColumnDef="image">
                       <th mat-header-cell *matHeaderCellDef>Image</th>
                       <td mat-cell *matCellDef="let element">
-                          <img style="width: 50px!important; border-radius: 50%; margin: 5px 0;" src="https://opus.devtaktika.com/storage/{{element.image}}" alt="">
+                          <img style="width: 35px!important;height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;" src="{{apiUrl+ 'storage/'+element.image}}" alt="">
                         </td>
                     </ng-container>
 

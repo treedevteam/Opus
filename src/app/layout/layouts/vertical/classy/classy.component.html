@@ -15,7 +15,7 @@
             <div class="flex items-center justify-center">
                 <img
                     class="w-8"
-                    src="assets/images/logo/logo.svg">
+                    src="assets/images/logo/fav.png">
             </div>
             <!-- Components -->
             <div class="flex items-center ml-auto">
@@ -28,8 +28,9 @@
             <div class="relative w-24 h-24">
               <img
                     class="w-full h-full rounded-full"
+                    style="object-fit: cover;"
                     *ngIf="userInfo?.user_image"
-                    src="https://opus.devtaktika.com/storage/{{userInfo?.user_image}}"
+                    src="{{apiUrl+ 'storage/'+userInfo?.user_image}}"
                     alt="User avatar">
                 <mat-icon
                     class="icon-size-24"
@@ -51,7 +52,7 @@
         <div class="flex flex-0 items-center justify-center h-16 pr-6 pl-2 mt-2 mb-4 opacity-12">
             <img
                 class="max-w-36"
-                src="assets/images/logo/logo-text-on-dark.svg">
+                src="assets/images/logo/bambusllogo.svg">
         </div>
     </ng-container>
 </fuse-vertical-navigation>

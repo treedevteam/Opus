@@ -19,20 +19,20 @@
         <div class="form-group mb-3">
             <label for="">Department:</label>
             <div>
-                <select class="form-select" aria-label="Default select example" [value]="userById?.department_id"  [formControlName]="'department_id'" required>
+                <select class="form-select" aria-label="Default select example" [value]="userById?.department_id"  [formControlName]="'department_id'" required style="display:flex; justify-content: center; align-items: center;">
                     <option *ngFor="let dep of departmentsList" [value]="dep.id">{{dep.name}} - {{dep.id}}</option>
                 </select>
             </div>
         </div>
         <div class="form-group mb-3">
-            <label for="">Role:</label>
+            <label for="">Roles:</label>
             <div>
-                <select class="form-select" aria-label="Default select example" [value]="userById?.role_id"  [formControlName]="'role_id'" required>
-                    <option value="1" >Admin</option>
-                    <option value="2" >User</option>
+                <select class="form-select" aria-label="Default select example" [value]="userById?.role_id"  [formControlName]="'role_id'" required style="display:flex; justify-content: center; align-items: center;">
+                    <option *ngFor="let role of roles" [value]="role.id">{{role.name}} - {{role.id}}</option>
                 </select>
             </div>
         </div>
+        
         <div>
             <div class="dropzone" fileDragDrop (filesChangeEmiter)="onFileChange($event)">
                 <div class="text-wrapper">
@@ -54,7 +54,7 @@
                     <mat-list-item>
                         <mat-icon mat-list-icon>
                             <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;"
-                                src="https://opus.devtaktika.com/storage/{{file}}" alt="">
+                                src="{{apiUrl+ 'storage/'+file}}" alt="">
                         </mat-icon>
                         <h4 mat-line></h4>
                         <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>

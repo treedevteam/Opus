@@ -2,45 +2,47 @@ import { Priorities } from './../../priorities/model/priorities';
 import { TasksService } from './../tasks.service';
 import { TasksListComponent } from './../list/list.component';
 import { Tag, Task, Task2 } from './../tasks.types';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { debounceTime, filter, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, debounceTime, filter, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import { assign } from 'lodash-es';
 import * as moment from 'moment';
-import { Departments } from '../../pages/departaments/model/departments.model';
 import { Status } from '../../statuses/model/status';
 import { Location } from '../../locations/model/location';
-import { Users } from '../../users/model/users';
+import { Users } from '../tasks.types';
+import { Departments } from '../../departments/departments.types';
+import { TaskCheckList } from '../tasks.types';
+import { environment } from 'environments/environment';
 
 @Component({
     selector       : 'tasks-details',
     templateUrl    : './details.component.html',
+    styleUrls      : ['./details.component.scss'],
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 {
+    apiUrl = environment.apiUrl;
+
     @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
     @ViewChild('usersPanelOrigin') private _usersPanelOrigin: ElementRef;
     @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
     @ViewChild('usersPanel') private _usersPanel: TemplateRef<any>;
     @ViewChild('titleField') private _titleField: ElementRef;
-
-
     departments: Departments[];
     priorities: Priorities[];
     statuses: Status[];
     locations: Location[];
-
     filteredUsers: Users[];
     usersList: Users[];
     usersAssignedSelected: number[];
-
+    isXyzChecked = true; 
 
     tags: Tag[];
     tagsEditMode: boolean = false;
@@ -50,10 +52,18 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     task2: Task2;
     taskForm: FormGroup;
     tasks: Task[];
+
+    checkListtotal = 0
+    checkListcompleted = 0;
+    checkList: TaskCheckList[];
+
+
+
     private _tagsPanelOverlayRef: OverlayRef;
     private _usersPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+    taskCheckList$ = this._tasksService.taskCheckListservice$
     /**
      * Constructor
      */
@@ -62,26 +72,26 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
-        private _renderer2: Renderer2,
         private _router: Router,
         private _tasksListComponent: TasksListComponent,
         private _tasksService: TasksService,
         private _overlay: Overlay,
-        private _viewContainerRef: ViewContainerRef
+        private _viewContainerRef: ViewContainerRef,
+        private route: ActivatedRoute
     )
     {
+       
     }
-
+    
+    
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
-
     /**
      * On init
      */
     ngOnInit(): void
     {
-
 
         // Open the drawer
         this._tasksListComponent.matDrawer.open();
@@ -100,13 +110,17 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             user    : [0],
             departments: [],
             has_expired    : [0],
-            users_assigned    : [[]]
+            users_assigned    : [[]],
+            checklist:''
         });
 
+
+        
         // Get the departmetns
-        this._tasksService.departments$
+        this._tasksService.getDepartmentsData$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((departmetns: Departments[]) => {
+            console.log(departmetns, "Deaprtments");
             this.departments = departmetns;
             this.filteredTags2 = departmetns;
             // Mark for check
@@ -118,16 +132,16 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((usersList: Users[]) => {
             this.usersList = usersList;
-            console.log(this.usersList);
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
+       
+       
             // Get the statuses
         this._tasksService.getStatus$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((status: Status[]) => {
             this.statuses = status;
-            console.log(status);
 
             // Mark for check
             this._changeDetectorRef.markForCheck();
@@ -138,14 +152,12 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((location: Location[]) => {
                 this.locations = location;
-                console.log(location);
-
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
 
             // Get the priorities
-        this._tasksService.getPriorities$
+        this._tasksService.priorities$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((priorities: Priorities[]) => {
             this.priorities = priorities;
@@ -191,15 +203,28 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
             // Get the task
             this.task2 = task;
-            console.log(task);
+            console.log(this.task2,'this.task2');
 
+            console.log(this.task2,"this.task2this.task2this.task2this.task2");
 
+            this._tasksService.getTaskComments(+this.task2.id).subscribe(res=>{
+            });
+
+            this._tasksService.getTaskCheckList(+this.task2.id).subscribe(res=>{
+                this.checkListtotal = res.length;
+                this.checkListcompleted = res.filter(x=> x.value === 1).length;
+            });
+            
             // Patch values to the form from the task
             this.taskForm.patchValue(task, {emitEvent: false});
 
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
+
+       
+
+
 
         // Update task when there is a value change on the task form
         this.taskForm.valueChanges
@@ -215,7 +240,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             .subscribe((value) => {
 
                 // Update the task on the server
-                this._tasksService.updateTask(value.id, value).subscribe();
+                // this._tasksService.updateTask(value.id, value).subscribe();
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -233,6 +258,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 this._titleField.nativeElement.focus();
             });
     }
+  
 
     /**
      * After view init
@@ -281,13 +307,37 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Close the drawer
      */
+
+     isAllSelected(item) {
+         this.taskCheckList$.subscribe(res=>{
+             this.checkList = res;
+              this.checkListtotal = res.length;
+                this.checkListcompleted = res.filter(x=> x.value === 1).length;
+             console.log(res,"TETETETETETEETETETETETET");
+         })
+        this.checkList.forEach(val => {
+          if (val.id === item.id) {
+                if(item.value){
+                    this._tasksService.editCheckList({value: 0, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe(res=>{
+                        console.log(res);
+                    });
+                }else{
+                    this._tasksService.editCheckList({value: 1, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe(res=>{
+                        console.log(res);
+                    });
+                }
+            };
+
+        });
+      }
+
     closeDrawer(): Promise<MatDrawerToggleResult>
     {
         return this._tasksListComponent.matDrawer.close();
     }
 
     getAssignedUsers(ids): Users[]{
-        return ids.map(res => this.usersList.find(x => x.id === res));
+        return ids.map(res => this.usersList.find(x => x.id === +res));
     }
 
     getNameOfDepartmentbyId(): string{
@@ -307,6 +357,14 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         completedFormControl.setValue(!completedFormControl.value);
     }
 
+    userCheck(user: any): boolean{
+      
+        if(this.task2.users_assigned.includes(user)){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * Open tags panel
      */
@@ -369,6 +427,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             }
         });
     }
+    addItem(newItem: string) {
+        alert('Detalis comp');
+      }
 
     openUsersPanel(): void
     {
@@ -565,9 +626,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     addTagToTask(tag: Tag): void
     {
-        console.log(tag);
 
-        console.log(this.taskForm.get('departments').value);
     }
 
     /**
@@ -599,15 +658,30 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     addUsersToTask(userId: number): void{
+        this._tasksService.assignUserTask(this.task2.id, userId).subscribe(res=>{
+            const usersAssigned = this.taskForm.get('users_assigned').value;
+            const index = usersAssigned.findIndex(object => +object === +userId);
+            if (index < 0) {
+                usersAssigned.push(userId);
+            }else{
+                usersAssigned.splice(index,1);
+            }
+            this.taskForm.get('users_assigned').patchValue(usersAssigned);
+            console.log(this.taskForm.get('users_assigned').value);
+        })
+
+        
+        
+    }
+
+    isUserSelected(id: number): boolean{
         const usersAssigned = this.taskForm.get('users_assigned').value;
-        const index = usersAssigned.findIndex(object => +object === +userId);
+        const index = usersAssigned.findIndex(object => +object === +id);
         if (index === -1) {
-            usersAssigned.push(userId);
+            return false;
         }else{
-            usersAssigned.splice(index,1);
+            return true;
         }
-        this.taskForm.get('users_assigned').setValue(usersAssigned);
-        console.log(this.taskForm.get('users_assigned').value);
     }
 
     toggleTaskUser(user: number): void
@@ -680,7 +754,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 }
             }
         });
-
+        // console.log(this.task2);
+        
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
 
@@ -688,34 +763,14 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             if ( result === 'confirmed' )
             {
 
-                // Get the current task's id
-                const id = this.task.id;
-
-                // Get the next/previous task's id
-                const currentTaskIndex = this.tasks.findIndex(item => item.id === id);
-                const nextTaskIndex = currentTaskIndex + ((currentTaskIndex === (this.tasks.length - 1)) ? -1 : 1);
-                const nextTaskId = (this.tasks.length === 1 && this.tasks[0].id === id) ? null : this.tasks[nextTaskIndex].id;
-
                 // Delete the task
-                this._tasksService.deleteTask(id)
-                    .subscribe((isDeleted) => {
-
-                        // Return if the task wasn't deleted...
-                        if ( !isDeleted )
-                        {
-                            return;
-                        }
-
-                        // Navigate to the next task if available
-                        if ( nextTaskId )
-                        {
-                            this._router.navigate(['../', nextTaskId], {relativeTo: this._activatedRoute});
-                        }
-                        // Otherwise, navigate to the parent
-                        else
-                        {
-                            this._router.navigate(['../'], {relativeTo: this._activatedRoute});
-                        }
+                this._tasksService.deleteTask(this.task2.id, +this.task2.departments)
+                    .subscribe((res) => {
+                        this.closeDrawer().then(() => true);
+                        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+                    },err=>{
+                        console.log(err);
+                        
                     });
 
                 // Mark for check
@@ -724,15 +779,31 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
     }
     changeSubmitEventTask(): void{
-        console.log(this.taskForm.value);
+        this.taskForm.get('users_assigned').patchValue("[" + this.taskForm.get('users_assigned').value +"]");
         this._tasksService.updateTaskservice(this.taskForm.value, this.task2.id).subscribe(res=>{
-            console.log(res);
-            
+            this.closeDrawer().then(() => true);
+            this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+
         },err=>{
-            console.log(err);
         })
     }
 
+    addNewCheckList(): void{
+        this._tasksService.addNewCheckListItem(
+            {text: this.taskForm.get('checklist').value, task_id: this.taskForm.get('id').value}
+            ).subscribe(()=> this.taskForm.get('checklist').setValue('')
+            )
+    }
+
+    deleteCheckList(id: number): void{
+        this._tasksService.deletedCheckListItem(id,this.taskForm.get('id').value).subscribe(()=>{
+        });
+    }
+
+    navigateTo(): void{
+        this.closeDrawer().then(() => true);
+        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+    }
     /**
      * Track by function for ngFor loops
      *

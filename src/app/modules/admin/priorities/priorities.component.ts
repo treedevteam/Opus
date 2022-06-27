@@ -2,9 +2,12 @@ import { Route, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { AddOrUpdate } from '../pages/departaments/model/add-or-update';
 import { Priorities } from './model/priorities';
 import { PrioritiesService } from './services/priorities.service';
+class AddOrUpdate {
+    isUpdate?: boolean;
+    data: any;
+}
 const ELEMENT_DATA: Priorities[] = [
 ];
 @Component({
@@ -26,8 +29,6 @@ export class PrioritiesComponent implements OnInit {
         this.getPriorities();
     }
     parentFunction(data: AddOrUpdate): void{
-        console.log(data);
-        console.log(data,'parentFunction');
         if(!data.isUpdate){
             this.dataSource.unshift(data.data);
             this.dataSource = [...this.dataSource];
@@ -37,7 +38,7 @@ export class PrioritiesComponent implements OnInit {
     }
     getPriorities(): any{
         this._priorityService._getPriorities().subscribe((res: any)=>{
-            this.dataSource = res.data;
+            this.dataSource = res;
         },(err: any)=>{
             console.log(err);
         });
@@ -50,7 +51,6 @@ export class PrioritiesComponent implements OnInit {
         const dialogRef = this._fuseConfirmationService.open();
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
             if(result === 'confirmed'){
                 this._priorityService._deletePriority($id).subscribe((res: any)=>{
                     this.dataSource.splice($rowNumber, 1);

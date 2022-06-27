@@ -7,3 +7,8 @@ export class Users {
     role_id: number;
     image: string;
 }
+
+export class Roles {
+    id: number;
+    name: string;
+}

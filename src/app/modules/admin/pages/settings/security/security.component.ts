@@ -70,7 +70,6 @@ export class SettingsSecurityComponent implements OnInit
 
     changePassword(): void
     {
-        console.log(this.securityForm);
 
         // Return if the form is invalid
         if ( this.securityForm.invalid )
@@ -102,7 +101,6 @@ export class SettingsSecurityComponent implements OnInit
 
                 },
                 (response) => {
-                    console.log(response);
 
                     // Re-enable the form
                     this.securityForm.enable();

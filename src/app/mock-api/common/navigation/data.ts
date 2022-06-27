@@ -9,11 +9,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         icon : 'dashboard',
         link : '/dashboard'
     },{
-        id   : 'department',
-        title: 'Department',
+        id   : 'departments',
+        title: 'Departments',
         type : 'basic',
         icon : 'heroicons_outline:color-swatch',
-        link : 'pages/departments'
+        link : 'departments'
     },{
         id   : 'users',
         title: 'Users',
@@ -41,13 +41,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'heroicons_outline:view-grid-add',
         link : '/priorities'
-    },{
-        id   : 'tasks',
-        title: 'Tasks',
-        type : 'basic',
-        icon : 'heroicons_outline:check-circle',
-        link : '/tasks'
     }
+    // ,{
+    //     id   : 'tasks',
+    //     title: 'Tasks',
+    //     type : 'basic',
+    //     icon : 'heroicons_outline:check-circle',
+    //     link : '/tasks'
+    // }
 
 ];
 export const compactNavigation: FuseNavigationItem[] = [

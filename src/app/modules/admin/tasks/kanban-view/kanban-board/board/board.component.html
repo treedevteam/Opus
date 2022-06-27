@@ -1,0 +1,241 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+   <!-- Header -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between py-8 px-6 md:px-8">
+                    <!-- Title -->
+                    <div>
+
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">{{board.name}}'s Tasks</div> 
+                        
+                        <div class="kanban_view_button">
+                            <a [routerLink]="['../../']" >Normal View</a>
+                        </div>
+                        
+                            
+                            <!-- <span *ngIf="tasksCount.incomplete === 0">All tasks completed!</span>
+                            <span *ngIf="tasksCount.incomplete !== 0">{{tasksCount.incomplete}} remaining tasks</span> -->
+                    </div>
+                    <!-- Actions -->
+                    <div class="mt-4 sm:mt-0 flex">
+                        <div class="flex items-center justify-center inset-y-0 left-0 me-3">
+                            <div *ngFor="let test of (usersList | async)">
+                                <!-- User -->
+                                    <img [matTooltip]="test.name" [matTooltipPosition]="'above'"
+                                        style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;"
+                                        src="{{apiUrl+ 'storage/'+test.user_image}}" alt="">
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserPopup()">
+                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                <span class="ml-2 mr-1">Invite</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+    <!-- Main -->
+    <div style="background-color:rgb(241,245,249)"
+        class="flex-auto p-6 sm:p-8 sm:pt-4 overflow-y-auto"
+        cdkScrollable>
+
+        <!-- Lists -->
+        <div
+            class="flex"
+            cdkDropList
+            [cdkDropListData]="usersAssigned$ | async"
+            [cdkDropListOrientation]="'horizontal'"
+            (cdkDropListDropped)="listDropped($event)">
+
+            <!-- Group all cdkDropList's after this point together so that the cards can be transferred between lists -->
+            <div
+                class="flex items-start"
+                cdkDropListGroup>
+
+                <!-- List -->
+                <ng-container *ngFor="let list of usersAssigned$ | async; trackBy: trackByFn">
+                    <div
+                        class="flex-0 w-72 p-2 rounded-2xl bg-default"
+                        cdkDrag
+                        [cdkDragLockAxis]="'x'">
+
+                        <div
+                            class="flex items-center justify-between"
+                            cdkDragHandle>
+                            <div class="flex items-center w-full py-2 px-3 rounded-md cursor-text border border-transparent focus-within:bg-white focus-within:shadow-sm focus-within:border-primary dark:focus-within:bg-gray-900">
+                                <input
+                                    class="w-full font-medium leading-5 bg-transparent"
+                                    [spellcheck]="'false'"
+                                    [value]="list.status.name"
+                                    (focusout)="updateListTitle($event, list)"
+                                    (keydown.enter)="listTitleInput.blur()"
+                                    #listTitleInput>
+                            </div>
+                            <div class="flex items-center justify-center min-w-6 ml-4 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                                {{list.tasks.length}}
+                            </div>
+                            <div class="ml-1">
+                                <button
+                                    class="w-8 h-8 min-h-8"
+                                    mat-icon-button
+                                    [matMenuTriggerFor]="listMenu">
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                                </button>
+                                <mat-menu #listMenu="matMenu">
+                                    <button
+                                        mat-menu-item
+                                        (click)="renameList(listTitleInput)">
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                        Rename list
+                                    </button>
+                                    <button
+                                        mat-menu-item
+                                        (click)="deleteList(list.status.id)">
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                        Delete list
+                                    </button>
+                                </mat-menu>
+                            </div>
+                        </div>
+
+                        <!-- Cards -->
+                        <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                            <div
+                                [id]="list.status.id"
+                                class="p-3 pb-0"
+                                cdkDropList
+                                [cdkDropListData]="list.tasks"
+                                (cdkDropListDropped)="cardDropped($event)">
+
+                                <!-- Card -->
+                                <ng-container  *ngFor="let card of list.tasks; trackBy: trackByFn">
+                                    
+                                    <div class="position-relative ">
+                                    <div cdkDrag>
+                                        
+                                    <div
+                                        class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card position-relative"
+                                        style="padding-bottom: 40px!important; cursor: pointer;"
+                                        
+                                        >
+                                        <!-- Cover image -->
+                                        <!-- Title -->
+                                        <a 
+                                        [routerLink]="['task', card.id]">
+                                        <div class="text-lg font-medium leading-5 mb-2">{{card.title}}</div>
+                                        <!-- Labels -->
+                                        <ng-container *ngIf="card.priority">
+                                            <div >
+                                                <div class="flex flex-wrap -mx-1 -mb-2 mb-2">
+                                                        <div class="mx-1 mb-2 py-0.5 px-3 rounded-full text-sm font-medium text-gray-500  dark:text-gray-300 " style="color: #000!important;" [ngStyle]="{'background-color': card.priority.color + '80'}">
+                                                            {{card.priority.name}}
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                        <!-- Due date -->
+                                        <ng-container *ngIf="card.deadline">
+                                            <div
+                                                class="flex items-center rounded text-sm font-medium leading-5 text-secondary mb-2"
+                                                [ngClass]="{'text-red-600': isOverdue(card.deadline)}">
+                                                <mat-icon
+                                                    class="icon-size-4 text-current"
+                                                    [svgIcon]="'heroicons_outline:clock'"></mat-icon>
+                                                <div class="ml-1">
+                                                    {{card.deadline | date: 'longDate'}}
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                        
+                                        <ng-container>
+                                            <div class="checkListTable mr-4 mb-2"
+                                            [ngClass]="{
+                                                'checkListTablegrey': card.checkListInfo.completed !== card.checkListInfo.total || card.checkListInfo.total === 0,
+                                                'checkListTablegreen': card.checkListInfo.completed === card.checkListInfo.total && card.checkListInfo.total !== 0}">
+                                                <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
+                                                {{card.checkListInfo.completed}}/{{card.checkListInfo.total}}
+                                            </div>
+                                        </ng-container>
+                                        </a>
+                                        <div class="subtasks_button">
+                                            <div class="subtasks " (click)="toggleTableRows(card.id)" matBadgeColor="warn" [matBadge]="card.subtasks_count" matBadgeSize="small" matBadgePosition="before">
+                                                <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <ng-container *ngIf="expandedSubtasks === card.id">
+                                        <div class="position-relative" *ngIf="(subtasksData$ | async).length" style="height: 16px;margin-top: -0.75rem;">
+                                            <div class="subitem-kanban-card">
+                                                <div class="subitem-kanban-card-arrow-wrapper" style="width: 16px;height:16px;"><div class="subitem-arrow-component" style="border-color: rgb(226, 68, 92);right: auto;left: 0;"><div class="subitem-arrow-component-top subitem-arrow-no-line" style="border-color: rgb(226, 68, 92);"></div><div class="subitem-arrow-component-bottom" style="border-color: rgb(226, 68, 92);"></div></div></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <ng-container *ngFor="let subtaskTask of subtasksData$ | async; let firsttt = first; let lasttt = last; trackBy: trackByFn;">
+                                            <div class="flex position-relative">
+                                                <div class="subitem-kanban-card" *ngIf="firsttt && !lasttt">
+                                                    <div class="subitem-kanban-card-arrow-wrapper"><div class="subitem-arrow-component" style="border-color: rgb(226, 68, 92);"><div class="subitem-arrow-component-top" style="border-color: rgb(226, 68, 92);"></div><div class="subitem-arrow-component-bottom" style="border-color: rgb(226, 68, 92);"></div></div></div>
+                                                </div>
+                                                <div class="subitem-kanban-card" *ngIf="!firsttt && !lasttt">
+                                                    <div class="subitem-kanban-card-arrow-wrapper"><div class="subitem-arrow-component" style="border-color: rgb(226, 68, 92);"><div class="subitem-arrow-component-top" style="border-color: rgb(226, 68, 92);"></div><div class="subitem-arrow-component-bottom" style="border-color: rgb(226, 68, 92);"></div></div></div>
+                                                </div> 
+                                                <div class="subitem-kanban-card" *ngIf="lasttt">
+                                                    <div class="subitem-kanban-card-arrow-wrapper"><div class="subitem-arrow-component" style="border-color: rgb(226, 68, 92);"><div class="subitem-arrow-component-top" style="border-color: rgb(226, 68, 92);"></div></div></div>
+                                                </div>
+                                                <a
+                                                    class="flex flex-col items-start mb-3 p-5 space-y-1 shadow rounded-lg overflow-hidden bg-card"
+                                                    [routerLink]="['subtask', subtaskTask.id]"
+                                                    style="width: 100%;
+                                                    margin-left: 25px;"
+                                                    >
+                                                    <div class="subtask_list not_collapsed" >
+                                                        <div >
+                                                            {{subtaskTask.title}}
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                
+                                            </div>
+                                            
+                                            
+                                        </ng-container>
+                                        <scrumboard-board-add-card 
+                                            (saved)="addCard(card, $event)"
+                                            [taskType]="'subtask'"
+                                            [buttonTitle]="list.tasks.length ? 'Add another subtask' : 'Add a subtask'">
+                                        </scrumboard-board-add-card>
+                                    </ng-container>
+                                </div>
+                                  
+                                </div>
+
+                                   
+                                    
+                                </ng-container>
+                            </div>
+                            <!-- New card -->
+                            <scrumboard-board-add-card
+                                (saved)="addCard(list, $event)"
+                                [taskType]="'task'"
+                                [buttonTitle]="list.tasks.length ? 'Add another card' : 'Add a card'">
+                            </scrumboard-board-add-card>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Invisible router-outlet for ScrumboardCard component -->
+<div class="absolute invisible w-0 h-0 opacity-0 pointer-events-none">
+    <router-outlet></router-outlet>
+</div>

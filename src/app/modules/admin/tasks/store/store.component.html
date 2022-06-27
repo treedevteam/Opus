@@ -18,7 +18,7 @@
 
             <div class="flex items-center">
                 <!-- More menu -->
-                <button mat-icon-button [matMenuTriggerFor]="moreMenu">
+                <!-- <button mat-icon-button [matMenuTriggerFor]="moreMenu">
                     <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
                 </button>
                 <mat-menu #moreMenu="matMenu">
@@ -26,10 +26,10 @@
                         <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         <span>Delete task</span>
                     </button>
-                </mat-menu>
+                </mat-menu> -->
 
                 <!-- Close button -->
-                <button mat-icon-button [routerLink]="['../../']">
+                <button mat-icon-button (click)="navigateTo()">
                     <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
                 </button>
             </div>
@@ -45,7 +45,7 @@
                 <ng-container *ngFor="let member of task2.users_assigned.slice(0, 5); trackBy: trackByFn">
                     <img
                         class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                        [src]="'https://opus.devtaktika.com/storage/' + member.user_image"
+                        [src]="'http://127.0.0.1:8000/storage/' + member.user_image"
                         alt="Member avatar">
                 </ng-container>
                 <ng-container *ngIf="task2.users_assigned.length > 5">
@@ -116,9 +116,9 @@
                                 <!-- Tags -->
                                 <ng-container *ngIf="!tagsEditMode">
                                     <ng-container *ngFor="let tag of filteredTags2; trackBy: trackByFn">
-                                        <div class="flex items-center h-10 min-h-10 px-4 cursor-pointer hover:bg-hover"
-                                            (click)="toggleTaskTag(tag.id)" matRipple>
-                                            <mat-checkbox class="flex items-center h-10 min-h-10" [color]="'primary'">
+                                        <div class="flex items-center h-10 min-h-10 px-4"
+                                            >
+                                            <mat-checkbox [checked]="departmetnsCheck(tag.id)" [value]="departmetnsCheck(tag.id)"  (change)="toggleTaskTag(tag.id)" class="flex items-center h-10 min-h-10" [color]="'primary'">
                                             </mat-checkbox>
                                             <div class="ml-1">{{tag.name}}</div>
                                         </div>

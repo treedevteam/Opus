@@ -12,14 +12,15 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { debounceTime, filter, Subject, takeUntil, tap } from 'rxjs';
 import { assign } from 'lodash-es';
 import * as moment from 'moment';
-import { Departments } from '../../pages/departaments/model/departments.model';
 import { Status } from '../../statuses/model/status';
 import { Location } from '../../locations/model/location';
-import { Users } from '../../users/model/users';
+import { Users } from '../tasks.types';
+import { Departments } from '../../departments/departments.types';
 
 @Component({
     selector: 'store-details',
     templateUrl: './store.component.html',
+    styleUrls      : ['./store.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -101,7 +102,7 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
             priority: [[]],
             location: [0],
             user: [0],
-            departments: [[45,46]],
+            departments: [[]],
             has_expired: [0],
             users_assigned: [0]
         });
@@ -112,7 +113,6 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe((departmetns: Departments[]) => {
                 this.departments = departmetns;
                 this.filteredTags2 = departmetns;
-                console.log(this.departments);
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -123,7 +123,6 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((usersList: Users[]) => {
             this.usersList = usersList;
-            console.log(this.usersList);
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
@@ -132,7 +131,6 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((status: Status[]) => {
                 this.statuses = status;
-                console.log(status);
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -142,7 +140,6 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((location: Location[]) => {
                 this.locations = location;
-                console.log(location);
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -237,6 +234,15 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
         return this._tasksListComponent.matDrawer.close();
     }
 
+    departmetnsCheck(user: any): boolean{
+      
+        if(this.taskForm.get('departments').value.includes(user)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     /**
      * Toggle the completed status
      */
@@ -268,8 +274,6 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.taskForm.get('users_assigned').setValue(usersAssigned);
         this.storeTask.users_assigned = usersAssigned;
-        console.log(index);
-        console.log(this.storeTask.users_assigned);
 
     }
 
@@ -279,7 +283,7 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getAssignedUsers(ids): Users[]{
-        return ids.map(res => this.usersList.find(x => x.id === res));
+        return ids.map(res => this.usersList.find(x => +x.id === +res));
     }
     /**
      * Open tags panel
@@ -514,15 +518,14 @@ openUsersPanel(): void
      * @param tag
      */
     addTagToTask(tag: number): void {
-        console.log(tag);
         if(!this.storeTask.departments.includes(+tag)){
             this.storeTask.departments.push(+tag);
+            
         }else{
             this.storeTask.departments.splice(+this.storeTask.departments.indexOf(tag), 1);
         }
 
-        this.taskForm.get('departments').patchValue('['+ this.storeTask.departments +']');
-        console.log(this.storeTask.departments);
+        this.taskForm.get('departments').patchValue( this.storeTask.departments);
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
@@ -540,9 +543,8 @@ openUsersPanel(): void
         // Remove the tag
         this.task2.departments.splice(this.task2.departments.findIndex(item => +item === tag.id), 1);
         const test = this.taskForm.get('departments');
-        console.log(test);
         // Update the task form
-        this.taskForm.get('departments').patchValue('['+ this.task.tags +']');
+        this.taskForm.get('departments').patchValue(this.task.tags);
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -556,6 +558,20 @@ openUsersPanel(): void
     toggleTaskTag(tag: number): void {
         this.addTagToTask(tag);
     }
+
+
+    // isDepartmentSelected(id: number): boolean{
+    //     const departmentsAssigned = this.taskForm.get('departments').value;
+    //     const index = departmentsAssigned.findIndex(object => +object === +id);
+    //     console.log(departmentsAssigned);
+    //     console.log(index);
+        
+    //     if (index === -1) {
+    //         return false;
+    //     }else{
+    //         return true;
+    //     }
+    // }
 
     /**
      * Should the create tag button be visible
@@ -598,75 +614,78 @@ openUsersPanel(): void
 
     setDeadline(time: any): void {
         // Set the value
+        console.log(time._i);
+        
         this.storeTask.deadline = time._d;
-        console.log(time);
-        console.log(this.storeTask.deadline);
-        const convert = time._i.year + "-" + time._i.month + "-" + time._i.date + "  00:00"
+        const convert = time._i.year + "/" + (time._i.month + 1) + "/" + time._i.date + "  00:00"
         this.taskForm.get('deadline').setValue(convert);
     }
 
     /**
      * Delete the task
      */
-    deleteTask(): void {
-        // Open the confirmation dialog
-        const confirmation = this._fuseConfirmationService.open({
-            title: 'Delete task',
-            message: 'Are you sure you want to delete this task? This action cannot be undone!',
-            actions: {
-                confirm: {
-                    label: 'Delete'
-                }
-            }
-        });
+    // deleteTask(): void {
+    //     // Open the confirmation dialog
+    //     const confirmation = this._fuseConfirmationService.open({
+    //         title: 'Delete task',
+    //         message: 'Are you sure you want to delete this task? This action cannot be undone!',
+    //         actions: {
+    //             confirm: {
+    //                 label: 'Delete'
+    //             }
+    //         }
+    //     });
 
-        // Subscribe to the confirmation dialog closed action
-        confirmation.afterClosed().subscribe((result) => {
+    //     // Subscribe to the confirmation dialog closed action
+    //     confirmation.afterClosed().subscribe((result) => {
 
-            // If the confirm button pressed...
-            if (result === 'confirmed') {
+    //         // If the confirm button pressed...
+    //         if (result === 'confirmed') {
 
-                // Get the current task's id
-                const id = this.task.id;
+    //             // Get the current task's id
+    //             const id = this.task.id;
 
-                // Get the next/previous task's id
-                const currentTaskIndex = this.tasks.findIndex(item => item.id === id);
-                const nextTaskIndex = currentTaskIndex + ((currentTaskIndex === (this.tasks.length - 1)) ? -1 : 1);
-                const nextTaskId = (this.tasks.length === 1 && this.tasks[0].id === id) ? null : this.tasks[nextTaskIndex].id;
+    //             // Get the next/previous task's id
+    //             const currentTaskIndex = this.tasks.findIndex(item => item.id === id);
+    //             const nextTaskIndex = currentTaskIndex + ((currentTaskIndex === (this.tasks.length - 1)) ? -1 : 1);
+    //             const nextTaskId = (this.tasks.length === 1 && this.tasks[0].id === id) ? null : this.tasks[nextTaskIndex].id;
 
-                // Delete the task
-                this._tasksService.deleteTask(id)
-                    .subscribe((isDeleted) => {
+    //             // Delete the task
+    //             this._tasksService.deleteTask(id)
+    //                 .subscribe((isDeleted) => {
 
-                        // Return if the task wasn't deleted...
-                        if (!isDeleted) {
-                            return;
-                        }
+    //                     // Return if the task wasn't deleted...
+    //                     if (!isDeleted) {
+    //                         return;
+    //                     }
 
-                        // Navigate to the next task if available
-                        if (nextTaskId) {
-                            this._router.navigate(['../', nextTaskId], { relativeTo: this._activatedRoute });
-                        }
-                        // Otherwise, navigate to the parent
-                        else {
-                            this._router.navigate(['../'], { relativeTo: this._activatedRoute });
-                        }
-                    });
+    //                     // Navigate to the next task if available
+    //                     if (nextTaskId) {
+    //                         this._router.navigate(['../', nextTaskId], { relativeTo: this._activatedRoute });
+    //                     }
+    //                     // Otherwise, navigate to the parent
+    //                     else {
+    //                         this._router.navigate(['../'], { relativeTo: this._activatedRoute });
+    //                     }
+    //                 });
 
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            }
-        });
-    }
+    //             // Mark for check
+    //             this._changeDetectorRef.markForCheck();
+    //         }
+    //     });
+    // }
     changeSubmitEventTask(): void {
-        console.log(this.taskForm.value);
-        console.log(this.taskForm.get('departments').value);
+        this.taskForm.get('departments').patchValue('['+ this.storeTask.departments +']');
         this._tasksService.storeTask(this.taskForm.value).subscribe(res=>{
-            console.log(res);
             
         },err=>{
             console.log(err);
         })
+    }
+
+    navigateTo(): void{
+        this.closeDrawer().then(() => true);
+        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }
 
     /**

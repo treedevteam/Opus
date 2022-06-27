@@ -2,9 +2,13 @@ import { Route, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { AddOrUpdate } from '../pages/departaments/model/add-or-update';
 import { Location } from './model/location';
 import { LocationsService } from './services/locations.service';
+
+class AddOrUpdate {
+    isUpdate?: boolean;
+    data: any;
+}
 const ELEMENT_DATA: Location[] = [
 ];
 @Component({
@@ -26,8 +30,6 @@ export class LocationsComponent implements OnInit {
         this.getLocations();
     }
     parentFunction(data: AddOrUpdate): void{
-        console.log(data);
-        console.log(data,'parentFunction');
         if(!data.isUpdate){
             this.dataSource.unshift(data.data);
             this.dataSource = [...this.dataSource];
@@ -37,7 +39,7 @@ export class LocationsComponent implements OnInit {
     }
     getLocations(): any{
         this._locationService._getLocations().subscribe((res: any)=>{
-            this.dataSource = res.data;
+            this.dataSource = res;
         },(err: any)=>{
             console.log(err);
         });
@@ -50,7 +52,6 @@ export class LocationsComponent implements OnInit {
         const dialogRef = this._fuseConfirmationService.open();
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
             if(result === 'confirmed'){
                 this._locationService._deleteLocation($id).subscribe((res: any)=>{
                     this.dataSource.splice($rowNumber, 1);

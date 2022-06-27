@@ -1,6 +1,5 @@
 import { Component, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
 import { PrioritiesService } from '../services/priorities.service';
 import { EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +7,10 @@ import { FuseAlertType } from '@fuse/components/alert';
 import { Priorities } from '../model/priorities';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { parseInt } from 'lodash';
-
+class AddOrUpdate {
+    isUpdate?: boolean;
+    data: any;
+}
 @Component({
   selector: 'app-add-or-update-priorities',
   templateUrl: './add-or-update-priorities.component.html',
@@ -66,7 +68,6 @@ export class AddOrUpdatePrioritiesComponent implements OnInit {
 
     getPriorityById($id): void{
         this._priorityService._getPriorityById($id).subscribe((res: any)=>{
-            console.log(res);
             this.storePriority.patchValue({
                 name: res.name,
                 color: res.color
@@ -78,7 +79,6 @@ export class AddOrUpdatePrioritiesComponent implements OnInit {
     }
 
     editPrioritySubmit(): void{
-        console.log(this.storePriority.value);
         this._priorityService._updatePriority(this.storePriority.value, this.priorityId ).subscribe((res: any)=>{
             const d = new AddOrUpdate();
             d.isUpdate = true;

@@ -1,6 +1,5 @@
 import { Component, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
 import { StatusService } from '../services/status.service';
 import { EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +7,10 @@ import { FuseAlertType } from '@fuse/components/alert';
 import { Status } from '../model/status';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { parseInt } from 'lodash';
-
+class AddOrUpdate {
+    isUpdate?: boolean;
+    data: any;
+}
 @Component({
   selector: 'app-add-or-update-status',
   templateUrl: './add-or-update-status.component.html',
@@ -54,10 +56,6 @@ export class AddOrUpdateStatusComponent implements OnInit {
 
     storeStatusFunc(): any{
         this._statusService._addStatus(this.storeStatus.value).subscribe((res: any)=>{
-                const d = new AddOrUpdate();
-                d.isUpdate = false;
-                d.data = res;
-                this.parentFunction.emit(d);
                 this._snackBar.open('Added successfuly!', 'close', {
                     duration: 3000,
                 });
@@ -81,10 +79,6 @@ export class AddOrUpdateStatusComponent implements OnInit {
 
     editStatusSubmit(): void{
         this._statusService._updateStatus(this.storeStatus.value, this.stautsId ).subscribe((res: any)=>{
-            const d = new AddOrUpdate();
-            d.isUpdate = true;
-            d.data = res;
-            this.parentFunction.emit(d);
             this._snackBar.open('Updated successfuly!', 'close', {
                 duration: 3000,
             });

@@ -1,0 +1,62 @@
+<div class="p-5">
+
+    <h2 mat-dialog-title>Add new department</h2>
+    
+    <form [formGroup]="storeDepartment" #storeDepartmentNgForm="ngForm"
+        class="flex flex-col pb-4 overflow-hidden">
+        <div class="flex flex-col gt-xs:flex-row">
+            <mat-form-field class="flex-auto gt-xs:pr-3">
+                <mat-label>Department name:</mat-label>
+                <input matInput [formControlName]="'name'" [value]="departmentById?.name">
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+            </mat-form-field>
+            <div>
+                <div>
+                    <div class="dropzone" fileDragDrop (filesChangeEmiter)="onFileChange($event)">
+                        <div class="text-wrapper">
+                            <div class="centered">
+    
+                                <input type="file" [formControlName]="'image'" name="file" id="file" (change)="onFileChange($event.target.files)">
+                                <label for="file"><span class="textLink"> <mat-icon svgIcon="heroicons_outline:cloud-upload"></mat-icon>Select department image</span> or Drop it here!</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div *ngIf="url || file" [ngIfElse]="elseUrl">
+    
+                    <ng-template [ngIf]="!uploaded">
+                        <h3 mat-subheader>Files</h3>
+                        <div class="mb-4" style="display: flex;align-items: center; justify-content: space-between;">
+                            <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;"
+                            src="{{apiUrl+ 'storage/'+file}}" alt="">
+                            <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>
+
+                        </div>
+                                
+                                
+                    </ng-template>
+                    <ng-template [ngIf]="uploaded">
+                            <h3 mat-subheader>Files</h3>
+                            <div class="mb-4" style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                ">
+                                <img *ngIf="file" style="width: 50px; height: auto;  margin: 5px 0;" [src]='url' alt="">
+                                <button mat-raised-button color="warn" (click)="deleteFile()">Delete</button>
+                            </div>
+                                
+                    </ng-template>
+                </div>
+                <ng-template #elseUrl>
+    
+                </ng-template>
+    
+            </div>
+           
+            <button mat-raised-button color="primary" (click)="editDepartmentFunc()">Edit Department</button>
+        </div>
+    </form>
+    </div>
+    

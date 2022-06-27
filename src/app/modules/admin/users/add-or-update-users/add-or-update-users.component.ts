@@ -4,12 +4,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, ParamMap, Route, Router } from '@angular/router';
 
 import { FuseAlertType } from '@fuse/components/alert';
-import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
+// import { AddOrUpdate } from '../../pages/departaments/model/add-or-update';
 import { UserService } from '../services/user.service';
 import { EventEmitter } from '@angular/core';
-import { Departments } from '../../pages/departaments/model/departments.model';
 import { parseInt } from 'lodash';
-import { Users } from '../model/users';
+import { Roles, Users } from '../model/users';
+import { Departments } from '../../departments/departments.types';
+export class AddOrUpdate {
+    isUpdate?: boolean;
+    data: any;
+}
 
 @Component({
   selector: 'app-add-or-update-users',
@@ -24,7 +28,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
         message: ''
     };
     departmentsList: Departments[];
-
+    roles: Roles[];
     userId: number;
     userById: Users;
 
@@ -44,6 +48,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
 
     ngOnInit(): void {
         this.departments();
+        this.getRoles();
         this.getUserdIdFromUrl();
         this.storeUsers = this._formBuilder.group({
             name: ['', Validators.required],
@@ -55,24 +60,57 @@ export class AddOrUpdateUsersComponent implements OnInit {
         });
     }
 
+    getRoles():void {
+        this._usersService._getRoles().subscribe(res=>{
+            this.roles = res;
+            console.log(res);
+            
+        })
+    }
+
     onFileChange(pFileList: File): void{
-        this.uploaded = true;
-        this.file = pFileList[0];
-        const file = pFileList[0];
-        this.storeUsers.patchValue({
-            file: pFileList[0]
-            });
-        this._snackBar.open('Successfully upload!', 'Close', {
-          duration: 2000,
-        });
-        console.log(this.file);
-        const reader = new FileReader();
-        reader.readAsDataURL(pFileList[0]);
-        reader.onload = (event): any => {
-            this.url = event.target.result;
-        };
-        console.warn(this.url,'url');
-        console.warn(this.file,'url');
+
+        if (pFileList[0]) {
+            if (
+                pFileList[0].type === 'image/jpeg' ||
+                pFileList[0].type === 'image/png' ||
+                pFileList[0].type === 'image/jpg'
+            ) {
+                if (pFileList[0].size < 200 * 200) {
+                    /* Checking height * width*/
+                }
+                if (pFileList[0].size < 512000) {
+                    this.uploaded = true;
+                    this.file = pFileList[0];
+                    const file = pFileList[0];
+                    this.storeUsers.patchValue({
+                        file: pFileList[0]
+                        });
+                    this._snackBar.open('Successfully upload!', 'Close', {
+                      duration: 2000,
+                    });
+                    const reader = new FileReader();
+                    reader.readAsDataURL(pFileList[0]);
+                    reader.onload = (event): any => {
+                        this.url = event.target.result;
+                    };
+                }else{
+                    this._snackBar.open('File is too large!', 'Close', {
+                        duration: 2000,
+                    });
+                    this.uploaded = false;
+                    this.file = null;
+                    this.url = null;
+                }
+            }else{
+                this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
+                    duration: 2000,
+                });
+                this.uploaded = false;
+                this.file = null;
+                this.url = null;
+            }
+        }
       }
 
     storeUserSubmit(): void{
@@ -85,10 +123,6 @@ export class AddOrUpdateUsersComponent implements OnInit {
         formData.append('role_id', this.storeUsers.get('role_id').value);
         formData.append('image', this.storeUsers.get('file').value);
         this._usersService.storeUsers(formData).subscribe((res: any)=>{
-            const d = new AddOrUpdate();
-            d.isUpdate = false;
-            d.data = res;
-            this.parentFunction.emit(d);
             this._snackBar.open('Added successfuly!', 'close', {
                 duration: 3000,
             });
@@ -110,14 +144,9 @@ export class AddOrUpdateUsersComponent implements OnInit {
         }else{
         }
         this._usersService._updateUser(this.userId, formData2).subscribe((res: any)=>{
-            const d = new AddOrUpdate();
-            d.isUpdate = true;
-            d.data = res;
-            this.parentFunction.emit(d);
             this._snackBar.open('Updated successfuly!', 'close', {
             duration: 3000,
         });
-        this._router.navigate(['/users']);
         },(err: any)=>{
             console.log(err);
         });
@@ -138,7 +167,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
 
     departments(): any{
         return this._usersService._getDepartments().subscribe((res: any)=>{
-            this.departmentsList = res.data;
+            this.departmentsList = res;
         },(err: any)=>{
             console.log(err);
         });
@@ -150,9 +179,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
             this.storeUsers.patchValue({
                 name: res.name, email: res.email,department_id:res.department_id,role_id:res.role_id,file:res.image
                 });
-            console.log(res);
             this.file = res.image;
-            console.log(this.storeUsers.value);
 
         },(err: any)=>{
             console.log(err);

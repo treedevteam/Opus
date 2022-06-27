@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, switchMap, throwError, tap, mapTo } from 'rxjs';
+import { catchError, Observable, of, switchMap, throwError, tap, mapTo, shareReplay } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class AuthService
 {
+    private apiUrl = environment.apiUrl; 
+    
     private _authenticated: boolean = false;
 
     /**
@@ -66,7 +69,7 @@ export class AuthService
 
     changepassword(credentials: { current_password: string; new_password: string; new_confirm_password: string }): Observable<any>
     {
-        return this._httpClient.post('https://opus.devtaktika.com/api/user/password', credentials);
+        return this._httpClient.post(this.apiUrl+'api/user/password', credentials);
     }
 
     /**
@@ -77,16 +80,14 @@ export class AuthService
     signIn(credentials): Observable<any>
     {
 
-
         // Throw error, if the user is already logged in
         if ( this._authenticated )
         {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('https://opus.devtaktika.com/oauth/token', credentials).pipe(
+        return this._httpClient.post(this.apiUrl+'oauth/token', credentials).pipe(
             switchMap((response: any) => {
-                console.log(response);
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
 
@@ -97,14 +98,13 @@ export class AuthService
                 this._userService.user = response.user;
 
                 // Return a new observable with the response
-                return this._httpClient.get('https://opus.devtaktika.com/api/user').pipe(
+                return this._httpClient.get(this.apiUrl+'api/user').pipe(
                     catchError(() =>
                     // Return false
                     of(false)
                 ),
                     switchMap((res:
                         any)=>{
-                        console.log(res.data);
                         localStorage.setItem('user_info', JSON.stringify(res.data));
                         return of(response);
                     })
@@ -116,20 +116,20 @@ export class AuthService
     /**
      * Sign in using the access token
      */
-    signInUsingToken(): Observable<any>
+    signInUsingToken(): Observable<boolean>
     {
         // Renew token
-        return this._httpClient.get('https://opus.devtaktika.com/api/user').pipe(
+        return this._httpClient.get(this.apiUrl+'api/user').pipe(
             catchError(() =>
             // Return false
             of(false)
         ),
             switchMap((res:
                 any)=>{
-                console.log(res.data);
                 localStorage.setItem('user_info', JSON.stringify(res.data));
+
                 return of(true);
-            })
+            }),shareReplay(1),
         );
         }
 
@@ -143,6 +143,7 @@ export class AuthService
         localStorage.removeItem('user_info');
         // Set the authenticated flag to false
         this._authenticated = false;
+        
      }
 
     /**
@@ -191,6 +192,6 @@ export class AuthService
         }
 
         // If the access token exists and it didn't expire, sign in using it
-          return this.signInUsingToken();
+         return this.signInUsingToken();
     }
 }
