@@ -1,4 +1,4 @@
-name: CI
+name: CD
 
 on:
     push:
@@ -38,5 +38,5 @@ jobs:
                   PORT: 22
               with:
                   source: "./dist/fuse/"
-                  target: "/home/zokwup7ajdnt/opusfront.devtaktika.com"
+                  target: "/home/zokwup7ajdnt/public_html/opusfront.devtaktika.com"
                   strip_components: 3 # this is important
