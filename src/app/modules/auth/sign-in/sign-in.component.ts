@@ -7,18 +7,17 @@ import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
-    selector     : 'auth-sign-in',
-    templateUrl  : './sign-in.component.html',
+    selector: 'auth-sign-in',
+    templateUrl: './sign-in.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations,
 })
-export class AuthSignInComponent implements OnInit
-{
+export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
     alert: { type: FuseAlertType; message: string } = {
-        type   : 'success',
-        message: ''
+        type: 'success',
+        message: '',
     };
     signInForm: FormGroup;
     showAlert: boolean = false;
@@ -31,9 +30,7 @@ export class AuthSignInComponent implements OnInit
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
         private _router: Router
-    )
-    {
-    }
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -42,16 +39,21 @@ export class AuthSignInComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            username     : ['patience67@example.net', [Validators.required, Validators.email]],
-            password     : ['password', [Validators.required, Validators.minLength(8)]],
-            grant_type   : ['password'],
-            client_id    : ['1'],
-            scope        : [''],
-            client_secret: ['16MqdZGn0ytPNSYt01Vew5oA7mNzySb8beXGDeJD']
+            username: [
+                'rijad.morina@treedev.io',
+                [Validators.required, Validators.email],
+            ],
+            password: [
+                '12345678',
+                [Validators.required, Validators.minLength(8)],
+            ],
+            grant_type: ['password'],
+            client_id: ['1'],
+            scope: [''],
+            client_secret: ['9hix3ot6JHkFWOvm5fd5hVd36hK7K3p5LiiOsEGa'],
         });
     }
 
@@ -62,12 +64,9 @@ export class AuthSignInComponent implements OnInit
     /**
      * Sign in
      */
-    signIn(): void
-    {
-
+    signIn(): void {
         // Return if the form is invalid
-        if ( this.signInForm.invalid )
-        {
+        if (this.signInForm.invalid) {
             return;
         }
 
@@ -78,38 +77,38 @@ export class AuthSignInComponent implements OnInit
         this.showAlert = false;
 
         // Sign in
-        this._authService.signIn(this.signInForm.value)
-            .subscribe(
-                (res) => {
-                    console.log(res);
+        this._authService.signIn(this.signInForm.value).subscribe(
+            (res) => {
+                console.log(res);
 
-                    // Set the redirect url.
-                    // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                    // to the correct page after a successful sign in. This way, that url can be set via
-                    // routing file and we don't have to touch here.
-                    const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
+                // Set the redirect url.
+                // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
+                // to the correct page after a successful sign in. This way, that url can be set via
+                // routing file and we don't have to touch here.
+                const redirectURL =
+                    this._activatedRoute.snapshot.queryParamMap.get(
+                        'redirectURL'
+                    ) || '/signed-in-redirect';
 
-                    //  Navigate to the redirect url
-                    this._router.navigateByUrl(redirectURL);
+                //  Navigate to the redirect url
+                this._router.navigateByUrl(redirectURL);
+            },
+            (response) => {
+                // Re-enable the form
+                this.signInForm.enable();
 
-                },
-                (response) => {
+                // Reset the form
+                this.signInNgForm.resetForm();
 
-                    // Re-enable the form
-                    this.signInForm.enable();
+                // Set the alert
+                this.alert = {
+                    type: 'error',
+                    message: 'Wrong email or password',
+                };
 
-                    // Reset the form
-                    this.signInNgForm.resetForm();
-
-                    // Set the alert
-                    this.alert = {
-                        type   : 'error',
-                        message: 'Wrong email or password'
-                    };
-
-                    // Show the alert
-                    this.showAlert = true;
-                }
-            );
+                // Show the alert
+                this.showAlert = true;
+            }
+        );
     }
 }
