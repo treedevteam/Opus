@@ -24,7 +24,7 @@ import { MailboxListComponent } from 'app/modules/admin/mailbox/list/list.compon
 import { MailboxSettingsComponent } from 'app/modules/admin/mailbox/settings/settings.component';
 import { MailboxSidebarComponent } from 'app/modules/admin/mailbox/sidebar/sidebar.component';
 import { mailboxRoutes } from 'app/modules/admin/mailbox/mailbox.routing';
-
+import { MentionModule } from 'angular-mentions';
 @NgModule({
     declarations: [
         MailboxComponent,
@@ -52,7 +52,8 @@ import { mailboxRoutes } from 'app/modules/admin/mailbox/mailbox.routing';
         FuseNavigationModule,
         FuseScrollbarModule,
         FuseScrollResetModule,
-        SharedModule
+        SharedModule,
+        MentionModule
     ]
 })
 export class MailboxModule

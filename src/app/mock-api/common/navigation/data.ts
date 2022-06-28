@@ -41,6 +41,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'heroicons_outline:view-grid-add',
         link : '/priorities'
+    },
+    {
+        id: 'mail',
+        title:'Mailbox',
+        type:'basic',
+        icon:'heroicons_outline:mail',
+        link: '/mailbox'
     }
     // ,{
     //     id   : 'tasks',

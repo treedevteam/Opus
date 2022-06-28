@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -69,7 +70,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
     }
 
     onFileChange(pFileList: File): void{
-
+        debugger;
         if (pFileList[0]) {
             if (
                 pFileList[0].type === 'image/jpeg' ||

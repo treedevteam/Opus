@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, OnInit } from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { Users } from '../tasks.types';

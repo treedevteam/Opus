@@ -21,45 +21,48 @@
         <!-- To -->
         <mat-form-field>
             <mat-label>To</mat-label>
-            <input
+            <!-- <input
                 matInput
-                [formControlName]="'to'">
+                [formControlName]="'to'"
+
+                > -->
+            <textarea
+            matInput
+            [formControlName]="'users'"
+            [mention]="items"
+            [mentionConfig]="{triggerChar:'@',maxItems:50,labelKey:'name'}"
+            class="min-h-5 my-0 resize-one"
+            [rows]="3"
+            placeholder="Mention user with @ to send email"
+            ></textarea>
             <div
                 class="copy-fields-toggles"
                 matSuffix>
-                <span
+                <!-- <span
                     class="text-sm font-medium cursor-pointer select-none hover:underline"
-                    *ngIf="!copyFields.cc"
-                    (click)="showCopyField('cc')">
-                    Cc
+                    *ngIf="!copyFields.file"
+                    (click)="showCopyField('file')">
+                    file
                 </span>
                 <span
                     class="ml-2 text-sm font-medium cursor-pointer select-none hover:underline"
-                    *ngIf="!copyFields.bcc"
-                    (click)="showCopyField('bcc')">
+                    *ngIf="!copyFields.file"
+                    (click)="showCopyField('file')">
                     Bcc
-                </span>
+                </span> -->
             </div>
+
         </mat-form-field>
 
-        <!-- Cc -->
-        <mat-form-field
-            *ngIf="copyFields.cc">
-            <mat-label>Cc</mat-label>
-            <input
-                matInput
-                [formControlName]="'cc'">
-        </mat-form-field>
-
-        <!-- Bcc -->
-        <mat-form-field
-            *ngIf="copyFields.bcc">
-            <mat-label>Bcc</mat-label>
-            <input
-                matInput
-                [formControlName]="'bcc'">
-        </mat-form-field>
-
+        <!-- File -->
+            <mat-label>File</mat-label>
+                <input
+                [formControlName]="'files'"
+                type="file"
+                class="min-h-5 my-0 resize-one pb-2"
+                placeholder="Upload file"
+                (click)="onFileSelect($event)"
+                >
         <!-- Subject -->
         <mat-form-field>
             <mat-label>Subject</mat-label>
@@ -71,36 +74,36 @@
         <!-- Body -->
         <quill-editor
             class="mt-2"
-            [formControlName]="'body'"
+            [formControlName]="'content'"
             [modules]="quillModules"></quill-editor>
 
         <!-- Actions -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 sm:mt-6">
             <div class="-ml-2">
                 <!-- Attach file -->
-                <button mat-icon-button>
+                <!-- <button mat-icon-button (click)="showCopyField('file')">
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:paper-clip'"></mat-icon>
-                </button>
+                </button> -->
                 <!-- Insert link -->
-                <button mat-icon-button>
+                <!-- <button mat-icon-button>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:link'"></mat-icon>
-                </button>
+                </button> -->
                 <!-- Insert emoji -->
-                <button mat-icon-button>
+                <!-- <button mat-icon-button>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:emoji-happy'"></mat-icon>
-                </button>
+                </button> -->
                 <!-- Insert image -->
-                <button mat-icon-button>
+                <!-- <button mat-icon-button>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
-                </button>
+                </button> -->
             </div>
 
             <div class="flex items-center mt-4 sm:mt-0">
@@ -129,4 +132,6 @@
             </div>
         </div>
     </form>
+
+    value {{this.composeForm.value | json }}
 </div>

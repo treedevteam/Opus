@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable quotes */
+/* eslint-disable arrow-parens */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -261,7 +264,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     }
     selectPriority(priority: Priorities){
         this._tasksService.updateTaskPriority(priority.id, this.statusTask.id, this.board_id).subscribe(res=>{
-        })
+        });
     }
 
 

@@ -1,7 +1,14 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable prefer-const */
+/* eslint-disable arrow-parens */
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { Mail, MailCategory, MailFilter, MailFolder, MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
+import { User } from 'app/core/user/user.types';
+import { environment } from 'environments/environment';
+import { Users } from '../users/model/users';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +24,8 @@ export class MailboxService
     private _mailsLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
     private _mail: BehaviorSubject<Mail> = new BehaviorSubject(null);
     private _pagination: BehaviorSubject<any> = new BehaviorSubject(null);
+    private _userList: BehaviorSubject<Users[]> = new BehaviorSubject (null);
+    private apiUrl = environment.apiUrl;
 
     /**
      * Constructor
@@ -28,6 +37,12 @@ export class MailboxService
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
+
+    //**Getter for user list */
+    get $userList(): Observable <Users[]>
+    {
+        return this._userList.asObservable();
+    }
 
     /**
      * Getter for category
@@ -392,4 +407,23 @@ export class MailboxService
             ))
         );
     }
+
+        //get user list
+        getAllUsers(): Observable <Users[]>
+        {
+        return this._httpClient.get<Users[]>(this.apiUrl+'api/users').pipe(
+            map((data: any): Users[] => {
+                this._userList.next(data);
+            debugger;
+
+                console.log(data,'All users');
+                return data;
+            }),
+        );
+        }
+
+        //Send email
+        sendEmail(emailData){
+            return this._httpClient.post(this.apiUrl+'api/email/store',emailData);
+        }
 }
