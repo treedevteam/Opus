@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
-import { Observable, of, switchMap } from 'rxjs';
+import { Observable, of, shareReplay, switchMap } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
 import { UserService } from 'app/core/user/user.service';
 import { Role } from '../roles';
@@ -97,7 +97,9 @@ export class AdminGuard implements CanActivate, CanActivateChild, CanLoad
                         
                            // Allow the access
                            return of(true);
-                       })
+                       }),
+                       shareReplay(1)
+
                    );
     }
 }
