@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +15,8 @@ export class DashboardComponent implements OnInit {
   private : any;
 
   constructor(
-    private _snackBar:MatSnackBar
+    private _snackBar:MatSnackBar,
+    private _router:Router
     ) { }
 
   ngOnInit(): void {

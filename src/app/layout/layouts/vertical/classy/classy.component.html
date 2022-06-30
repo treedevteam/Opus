@@ -6,7 +6,7 @@
     class="dark bg-gray-900 print:hidden"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
-    [navigation]="navigation.default"
+    [navigation]="navigation"
     [opened]="!isScreenSmall">
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
@@ -20,7 +20,7 @@
             <!-- Components -->
             <div class="flex items-center ml-auto">
                 <notifications></notifications>
-                <!-- <user [showAvatar]="false"></user> -->
+                <user [showAvatar]="false"></user>
             </div>
         </div>
         <!-- User -->

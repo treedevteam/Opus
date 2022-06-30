@@ -32,7 +32,13 @@ export class StoreBoardsComponent implements OnInit {
   addBoard(){
     console.log(this.storeBoard.value);
     this._boardService.addBoard(this.storeBoard.value).subscribe((res)=>{
+      this.closeDialog();
     });
+  }
+
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 
 }
