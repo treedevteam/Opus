@@ -3,6 +3,7 @@ import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
+import { AdminGuard } from './core/auth/guards/admin.guard';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -67,39 +68,77 @@ export const appRoutes: Route[] = [
             {path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule)},
         ]
     },
+    {path: 'dashboard',component  : LayoutComponent,
+    resolve    : {
+        initialData: InitialDataResolver,
+    },  canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    canLoad: [AuthGuard], loadChildren: () => import('app/modules/admin/dashboard/dashboard.module').then(m => m.DashboardModule)},
 
-    // Admin routes
+
+    {path: 'pages', component  : LayoutComponent,
+    resolve    : {
+        initialData: InitialDataResolver,
+    }, canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    canLoad: [AuthGuard], children: [
+        {path: 'settings', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
+    ]},
+
+    {path: 'board',component  : LayoutComponent,
+    resolve    : {
+        initialData: InitialDataResolver,
+    },  canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    canLoad: [AuthGuard], loadChildren: () => import('app/modules/admin/tasks/tasks.module').then(m => m.TasksModule)},
+
+
     {
-        path       : '',
+        path       : 'departments',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
+        canLoad: [AuthGuard],
+        component  : LayoutComponent,
+        resolve    : {
+            initialData: InitialDataResolver,
+        },
+        loadChildren: () => import('app/modules/admin/departments/departments.module').then(m => m.DepartmentsModule)
+    },
+    //User
+    {
+        path       : 'error',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        canLoad: [AuthGuard],
         component  : LayoutComponent,
         resolve    : {
             initialData: InitialDataResolver,
         },
         children   : [
-            {path: 'dashboard', loadChildren: () => import('app/modules/admin/dashboard/dashboard.module').then(m => m.DashboardModule)},
+            
+                {path: '404', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.module').then(m => m.Error404Module)},
+                {path: '500', loadChildren: () => import('app/modules/admin/pages/error/error-500/error-500.module').then(m => m.Error500Module)}
+            ,
+            {path: '**', redirectTo: '/404'}
+        ]
+    },
 
-
-            {path: 'pages', children: [
-                {path: 'settings', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
-                // {path: 'departments', loadChildren: () => import('app/modules/admin/pages/departaments/departaments.module').then(m => m.DepartamentsModule)},
-            ]},
+    // Admin routes
+    {
+        path       : 'admin',
+        canActivate: [AdminGuard],
+        canActivateChild: [AdminGuard],
+        canLoad: [AdminGuard],
+        component  : LayoutComponent,
+        resolve    : {
+            initialData: InitialDataResolver,
+        },
+        children   : [
             {path: 'users', loadChildren: () => import('app/modules/admin/users/users.module').then(m => m.UsersModule)},
             {path: 'locations', loadChildren: () => import('app/modules/admin/locations/locations.module').then(m => m.LocationsModule)},
             {path: 'priorities', loadChildren: () => import('app/modules/admin/priorities/priorities.module').then(m => m.PrioritiesModule)},
             {path: 'statuses', loadChildren: () => import('app/modules/admin/statuses/status.module').then(m => m.StatusModule)},
-            {path: 'board', loadChildren: () => import('app/modules/admin/tasks/tasks.module').then(m => m.TasksModule)},
             {path: 'mailbox', loadChildren: () => import('app/modules/admin/mailbox/mailbox.module').then(m => m.MailboxModule)},
-            {path: 'departments', loadChildren: () => import('app/modules/admin/departments/departments.module').then(m => m.DepartmentsModule)},
-
-             // Error
-             {path: 'error', children: [
-                {path: '404', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.module').then(m => m.Error404Module)},
-                {path: '500', loadChildren: () => import('app/modules/admin/pages/error/error-500/error-500.module').then(m => m.Error500Module)}
-            ]},
-            // {path: '404-not-found', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.module').then(m => m.Error404Module)},
-            {path: '**', redirectTo: 'error/404'}
         ]
     }
 ];

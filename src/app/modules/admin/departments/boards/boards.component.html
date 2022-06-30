@@ -18,7 +18,7 @@
                     class="icon-size-12 text-hint"
                     [svgIcon]="'heroicons_outline:plus'"></mat-icon>
             </div>
-            <ng-container  *ngFor='let boards of $boards | async; trackBy: trackByFn'>
+            <ng-container  *ngFor="let boards of $boards | async; trackBy: trackByFn">
                 <div
                     class="flex flex-col items-start w-56 p-6 rounded-lg shadow bg-card rounded-lg hover:shadow-xl transition-shadow duration-150 ease-in-out"
                     >
@@ -26,11 +26,12 @@
 
                     <!-- <div class="flex items-center justify-center p-2 rounded-full bg-primary-50 text-primary-700 dark:bg-primary dark:text-on-primary"> -->
                         <!-- <img class="department_image" src="{{apiUrl+'storage/' + department.image}}" alt=""> -->
-                        <h1>
-                            <a [routerLink]="'../../board/'+[boards.id]+'/tasks'">
+                        
+                        <div class=" text-lg font-medium leading-5 line-clamp-2">  <a [routerLink]="'../../board/'+[boards.id]+'/tasks'">
                             {{boards.name | titlecase }}
                             </a>
-                        </h1>
+                        </div>
+
                        
                     <!-- </div> -->
                     
@@ -46,8 +47,8 @@
                     </div>
 
                     <!-- Title -->
-                        <div class="mt-5 text-lg font-medium leading-5 line-clamp-2"> <p>{{boards.description}}</p></div>
-                  
+                    <p class="mt-4">{{boards.description}}</p>
+                    <div class="private_label" *ngIf="boards.type === 0">Private <mat-icon class="color:#fff;" svgIcon="mat_solid:lock" ></mat-icon></div>
                 </div>
             </ng-container>
             

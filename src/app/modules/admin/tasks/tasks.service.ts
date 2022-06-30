@@ -473,7 +473,6 @@ export class TasksService
     }
 
     assignUserTask(taskId: number, userId: number): Observable<TaskWithDepartment>{
-        debugger;
         return this._httpClient.post<any>(this.apiUrl+'api/task/'+ taskId+'/'+ userId, null).pipe(
             map((data: any): TaskWithDepartment => {
                 this._tasksupdated.next(data.data);
@@ -1007,7 +1006,6 @@ export class TasksService
     updateTaskPriority(priorityId: any, taskId:number, board_id:number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_priority/' + taskId ,  {priority: priorityId,board_id}).pipe(
             map((data: any) => {
-                debugger;
                 this._tasksupdated.next(data);
                 this._newtask.next(null);
                 return data.data;

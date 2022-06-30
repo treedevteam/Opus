@@ -5,13 +5,15 @@ export interface FuseNavigationItem
     id?: string;
     title?: string;
     subtitle?: string;
+    admin?:boolean;
     type:
         | 'aside'
         | 'basic'
         | 'collapsable'
         | 'divider'
         | 'group'
-        | 'spacer';
+        | 'spacer'
+        |string;
     hidden?: (item: FuseNavigationItem) => boolean;
     active?: boolean;
     disabled?: boolean;
