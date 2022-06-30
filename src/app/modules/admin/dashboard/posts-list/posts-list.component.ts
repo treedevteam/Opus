@@ -13,6 +13,18 @@ import { Departments } from '../../departments/departments.types';
     styleUrls: ['./posts-list.component.scss'],
 })
 export class PostsListComponent implements OnInit {
+    numberOfLikes: number = 0;
+    likeButtonClick() {
+        this.numberOfLikes++;
+    }
+    dislikeButtonClick() {
+        this.numberOfLikes--;
+    }
+    isShowDivIf = true;
+
+    toggleDisplayDivIf() {
+        this.isShowDivIf = !this.isShowDivIf;
+    }
     @ViewChild('supportNgForm') supportNgForm: NgForm;
     apiUrl = environment.apiUrl;
     currentDepartment:Departments
@@ -159,5 +171,4 @@ export class PostsListComponent implements OnInit {
             this.clearForm();
         });
     }
-
 }

@@ -124,10 +124,10 @@
                             <mat-icon
                             svgIcon="heroicons_outline:thumb-up"
                             ></mat-icon>
-                            <mat-icon svgIcon="heroicons_solid:thumb-up"></mat-icon>
+                            <mat-icon svgIcon="heroicons_solid:thumb-up" (click)="dislikeButtonClick()"></mat-icon>
                     </div>
                     <div class="col-4">
-                        <p class="comments">Comments</p>
+                        <p (click)="toggleDisplayDivIf()" class="comments">Show comments</p>
                     </div>
                 </div>
                 <hr />
