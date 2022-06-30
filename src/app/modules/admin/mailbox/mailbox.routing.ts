@@ -104,17 +104,12 @@ export const mailboxRunGuardsAndResolvers: (from: ActivatedRouteSnapshot, to: Ac
 export const mailboxRoutes: Route[] = [
     {
         path      : '',
-        redirectTo: 'inbox/1',
+        redirectTo: 'inbox/:id',
         pathMatch : 'full'
     },
     {
         path      : 'filter/:filter',
         redirectTo: 'filter/:filter/1',
-        pathMatch : 'full'
-    },
-    {
-        path      : 'label/:label',
-        redirectTo: 'label/:label/1',
         pathMatch : 'full'
     },
     {

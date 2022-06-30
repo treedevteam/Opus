@@ -244,7 +244,7 @@ export class MailboxSidebarComponent implements OnInit, OnDestroy
                     ...this._foldersMenuData
                 ]
             },
-            ...this._otherMenuData
+
         ];
     }
 

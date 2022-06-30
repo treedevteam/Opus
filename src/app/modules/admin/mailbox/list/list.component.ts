@@ -7,6 +7,14 @@ import { Mail, MailCategory, Maill } from 'app/modules/admin/mailbox/mailbox.typ
 @Component({
     selector     : 'mailbox-list',
     templateUrl  : './list.component.html',
+    styles: [
+        `.paragrafi p{
+            max-width: 150px;
+             text-overflow:
+              ellipsis; overflow:
+               hidden; white-space: nowrap;
+        }`
+    ],
     encapsulation: ViewEncapsulation.None
 })
 export class MailboxListComponent implements OnInit, OnDestroy

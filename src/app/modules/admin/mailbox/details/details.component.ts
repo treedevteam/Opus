@@ -68,6 +68,7 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
             });
 
         // Mail
+        debugger;
         this._mailboxService.mail$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((mail: Maill) => {

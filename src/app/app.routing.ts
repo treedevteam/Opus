@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 import { Route } from '@angular/router';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
@@ -8,6 +9,7 @@ import { AdminGuard } from './core/auth/guards/admin.guard';
 // @formatter:off
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disabled */
 export const appRoutes: Route[] = [
 
     // Redirect empty path to '/example'
@@ -114,8 +116,7 @@ export const appRoutes: Route[] = [
         resolve    : {
             initialData: InitialDataResolver,
         },
-        children   : [
-            
+        children   : [          
                 {path: '404', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.module').then(m => m.Error404Module)},
                 {path: '500', loadChildren: () => import('app/modules/admin/pages/error/error-500/error-500.module').then(m => m.Error500Module)}
             ,
