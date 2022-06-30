@@ -7,49 +7,61 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Dashboard',
         type : 'basic',
         icon : 'dashboard',
-        link : '/dashboard'
+        link : '/dashboard',
+        admin: false
     },{
         id   : 'departments',
         title: 'Departments',
         type : 'basic',
         icon : 'heroicons_outline:color-swatch',
-        link : 'departments'
+        link : '/departments',
+        admin: true
+
     },{
         id   : 'users',
         title: 'Users',
         type : 'basic',
         icon : 'heroicons_outline:user-group',
-        link : '/users'
+        link : '/admin/users',
+        admin: true
     },
     {
         id   : 'statuses',
         title: 'Statuses',
         type : 'basic',
         icon : 'heroicons_outline:clipboard-check',
-        link : '/statuses'
+        link : '/admin/statuses',
+        admin: true
     },
     {
         id   : 'locations',
         title: 'Locations',
         type : 'basic',
         icon : 'heroicons_outline:location-marker',
-        link : '/locations'
+        link : '/admin/locations',
+        admin: true
     },
     {
         id   : 'priorities',
         title: 'Priorities',
         type : 'basic',
         icon : 'heroicons_outline:view-grid-add',
-        link : '/priorities'
-    }
-    // ,{
-    //     id   : 'tasks',
-    //     title: 'Tasks',
-    //     type : 'basic',
-    //     icon : 'heroicons_outline:check-circle',
-    //     link : '/tasks'
-    // }
-
+        link : '/admin/priorities',
+        admin: true
+    },
+    {
+        id   : 'Boards',
+        title: 'Boards',
+        type : 'basic',
+        icon : 'heroicons_outline:view-grid-add',
+        link : '/departments',
+        admin: false,
+    },
+    {
+        id  : 'divider-1',
+        type: 'divider',
+        admin: false,
+    },
 ];
 export const compactNavigation: FuseNavigationItem[] = [
     {

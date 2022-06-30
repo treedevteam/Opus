@@ -2,21 +2,22 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
-import { NavigationService } from 'app/core/navigation/navigation.service';
+import { UserService } from 'app/core/user/user.service';
+import { Role } from '../roles';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
+export class AdminGuard implements CanActivate, CanActivateChild, CanLoad
 {
+    
     /**
      * Constructor
      */
     constructor(
         private _authService: AuthService,
         private _router: Router,
-        private _navigationService: NavigationService
-
+        private _userService: UserService
     )
     {
     }
@@ -76,20 +77,24 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
         return this._authService.check()
                    .pipe(
                        switchMap((authenticated) => {
-
-                            this._navigationService.getmyBoards().subscribe(res=>{
-                                console.log(res,"tESSSTSTSTSST");
-                            })
                            // If the user is not authenticated...
                            if ( !authenticated )
                            {
                                // Redirect to the sign-in page
                                this._router.navigate(['sign-in'], {queryParams: {redirectURL}});
-
                                // Prevent the access
                                return of(false);
+                           }else{
+                            this._userService.user$.subscribe(res=>{
+                                console.log(res);
+                                if(res.role.name === Role.Admin){
+                                    return of(true);
+                                }else{
+                                    this._router.navigate(['/departments']);
+                                }
+                            })  
                            }
-
+                        
                            // Allow the access
                            return of(true);
                        })

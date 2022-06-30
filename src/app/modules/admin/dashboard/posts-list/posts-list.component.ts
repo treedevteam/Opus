@@ -55,24 +55,24 @@ export class PostsListComponent implements OnInit {
         });
     }
 
-    onFileChange(pFileList: File): void {
-        debugger;
 
-        if (pFileList[0]) {
-            if (
-                pFileList[0].type === 'image/jpeg' ||
-                pFileList[0].type === 'image/png' ||
-                pFileList[0].type === 'image/jpg'
-            ) {
-                if (pFileList[0].size < 200 * 200) {
-                    /* Checking height * width*/
-                }
-                if (pFileList[0].size < 512000) {
-                    this.uploaded = true;
-                    this.file = pFileList[0];
-                    const file = pFileList[0];
-                    this.supportForm.patchValue({
-                        file: pFileList[0],
+
+  onFileChange(pFileList: File): void{
+    if (pFileList[0]) {
+        if (
+            pFileList[0].type === 'image/jpeg' ||
+            pFileList[0].type === 'image/png' ||
+            pFileList[0].type === 'image/jpg'
+        ) {
+            if (pFileList[0].size < 200 * 200) {
+                /* Checking height * width*/
+            }
+            if (pFileList[0].size < 512000) {
+                this.uploaded = true;
+                this.file = pFileList[0];
+                const file = pFileList[0];
+                this.supportForm.patchValue({
+                    file: pFileList[0]
                     });
                     this._snackBar.open('Successfully upload!', 'Close', {
                         duration: 2000,
