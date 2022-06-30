@@ -119,19 +119,19 @@
                 </div>
                 <div class="row">
                     <div class="col-8">
-                            <p class="like-text">5 Likes</p>
-                            <mat-icon
+                            <p class="like-text">{{numberOfLikes}}</p>
+                            <mat-icon (click)="likeButtonClick()"
                             svgIcon="heroicons_outline:thumb-up"
                             ></mat-icon>
-                            <mat-icon svgIcon="heroicons_solid:thumb-up"></mat-icon>
+                            <mat-icon svgIcon="heroicons_solid:thumb-up" (click)="dislikeButtonClick()"></mat-icon>
                     </div>
                     <div class="col-4">
-                        <p class="comments">Comments</p>
+                        <p (click)="toggleDisplayDivIf()" class="comments">Show comments</p>
                     </div>
                 </div>
                 <hr />
 
-                <div class="row">
+                <div class="row " *ngIf="!isShowDivIf">
                     <div class="col-1">
                         <img
                             src="../../../../../assets/images/avatars/female-01.jpg"
@@ -155,7 +155,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" *ngIf="!isShowDivIf">
                     <div class="col-1">
                         <img
                             src="../../../../../assets/images/avatars/female-01.jpg"

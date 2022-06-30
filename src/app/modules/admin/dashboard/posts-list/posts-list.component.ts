@@ -5,6 +5,7 @@ import { DashboardService } from '../services/dashboard.service';
 import { Observable } from 'rxjs';
 import { Posts } from '../models/dashboard';
 import { environment } from 'environments/environment';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
     selector: 'app-posts-list',
@@ -12,6 +13,19 @@ import { environment } from 'environments/environment';
     styleUrls: ['./posts-list.component.scss'],
 })
 export class PostsListComponent implements OnInit {
+    numberOfLikes: number = 0;
+    likeButtonClick() {
+        this.numberOfLikes++;
+    }
+    dislikeButtonClick() {
+        this.numberOfLikes--;
+    }
+    isShowDivIf = true;
+
+    toggleDisplayDivIf() {
+        this.isShowDivIf = !this.isShowDivIf;
+    }
+    public Editor = ClassicEditor;
     @ViewChild('supportNgForm') supportNgForm: NgForm;
     apiUrl = environment.apiUrl;
 
@@ -109,5 +123,4 @@ export class PostsListComponent implements OnInit {
             this.clearForm();
         });
     }
-
 }
