@@ -64,7 +64,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this.userLoginInfo();
-
+        this._navigationService.getmyBoards().subscribe();
         // Subscribe to navigation data
         combineLatest(this._navigationService.navigation$, this._userService.user$,this._navigationService.myboards$)
         .subscribe(([navigation, user, boards])=>{
@@ -82,6 +82,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
                 //     link : '/departments',
                 //     admin: false,
                 // }
+                
                 const myBoards = boards.map(x=>
                     (
                         {

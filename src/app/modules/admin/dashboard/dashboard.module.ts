@@ -22,6 +22,9 @@ export const routes: Route[] = [
     {
         path     : '',
         component: DashboardComponent,
+        resolve: {
+          dashboard: DashboardResolver
+        }
     },
 ];
 

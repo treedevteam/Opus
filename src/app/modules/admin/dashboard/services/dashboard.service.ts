@@ -4,6 +4,7 @@ import { environment } from 'environments/environment';
 import { BehaviorSubject, map, Observable, switchMap, take } from 'rxjs';
 import { Posts } from '../models/dashboard';
 import { Departments } from '../../departments/departments.types';
+import { Users } from '../../tasks/tasks.types';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class DashboardService {
   apiUrl = environment.apiUrl; 
 
   private _departmentPosts: BehaviorSubject<Posts[] | null> = new BehaviorSubject(null); 
-  private _currentDepartment: BehaviorSubject<Departments[] | null> = new BehaviorSubject(null); 
+  private _currentDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null); 
+  private _currentDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
 
 
   constructor(private _httpClient: HttpClient) { }
@@ -20,6 +22,13 @@ export class DashboardService {
   get departmentPosts$(): Observable<Posts[]>{
     return this._departmentPosts.asObservable();
   }
+
+  get currentDepartment$(): Observable<Departments>{
+    return this._currentDepartment.asObservable();
+  }
+  get currentDepartmentUsers$(): Observable<Users[]>{
+    return this._currentDepartmentUsers.asObservable();
+}
 
 
   getPostsDepartment(depId: number): Observable<Posts[]>
@@ -32,6 +41,7 @@ export class DashboardService {
       );
   }
 
+  
   storePost(data:any): Observable<Posts>
   {
     return this.departmentPosts$.pipe(
@@ -54,6 +64,16 @@ export class DashboardService {
     );
   }
 
+
+  getUsersDepartment(depId: number): Observable<Users[]>
+    {
+        return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department/' + depId).pipe(
+            map((data: any): Users[] => {
+                this._currentDepartmentUsers.next(data.data);
+                return data.data;
+            }),
+        );
+    }
 
 
 
