@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation 
 import { Subject, takeUntil } from 'rxjs';
 import { MailboxService } from 'app/modules/admin/mailbox/mailbox.service';
 import { MailboxComponent } from 'app/modules/admin/mailbox/mailbox.component';
-import { Mail, MailCategory } from 'app/modules/admin/mailbox/mailbox.types';
+import { Mail, MailCategory, Maill } from 'app/modules/admin/mailbox/mailbox.types';
 
 @Component({
     selector     : 'mailbox-list',
@@ -14,10 +14,10 @@ export class MailboxListComponent implements OnInit, OnDestroy
     @ViewChild('mailList') mailList: ElementRef;
 
     category: MailCategory;
-    mails: Mail[];
+    mails: Maill[];
     mailsLoading: boolean = false;
     pagination: any;
-    selectedMail: Mail;
+    selectedMail: Maill;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -47,9 +47,9 @@ export class MailboxListComponent implements OnInit, OnDestroy
             });
 
         // Mails
-        this._mailboxService.mails$
+        this._mailboxService.allEmails$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((mails: Mail[]) => {
+            .subscribe((mails: Maill[]) => {
                 this.mails = mails;
             });
 
@@ -75,9 +75,9 @@ export class MailboxListComponent implements OnInit, OnDestroy
             });
 
         // Selected mail
-        this._mailboxService.mail$
+        this._mailboxService.allEmails$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((mail: Mail) => {
+            .subscribe((mail: any) => {
                 this.selectedMail = mail;
             });
     }

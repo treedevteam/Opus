@@ -1,3 +1,7 @@
+/* eslint-disable arrow-parens */
+/* eslint-disable quotes */
+/* eslint-disable @typescript-eslint/semi */
+/* eslint-disable @typescript-eslint/quotes */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -24,7 +28,7 @@ export class PostsListComponent implements OnInit {
 
   constructor(private _dashboardService: DashboardService,
     private _formBuilder: FormBuilder,
-    private _snackBar:MatSnackBar
+    private _snackBar: MatSnackBar
     ) { }
 
   ngOnInit(): void {
@@ -35,7 +39,6 @@ export class PostsListComponent implements OnInit {
         departments: "["+4+"]"
     });
 
-    
     this._dashboardService.getPostsDepartment(4).subscribe(res=>{
       console.log(res);
     })
@@ -106,7 +109,7 @@ export class PostsListComponent implements OnInit {
     this._dashboardService.storePost(formData).subscribe(res=>{
       this.clearForm();
     })
-     
+
   }
 
 }

@@ -40,6 +40,7 @@ export class AuthSignInComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
+        debugger;
         // Create the form
         this.signInForm = this._formBuilder.group({
             username     : ['harber.jarrett@example.net', [Validators.required, Validators.email]],
@@ -47,7 +48,7 @@ export class AuthSignInComponent implements OnInit {
             grant_type   : ['password'],
             client_id    : ['1'],
             scope        : [''],
-            client_secret: ['RzWQlEMxclQ3oLSXePOHziwxnphSz76AzlWuf7ur']
+            client_secret: ['GzA9V6dHhBXyJnkN1dHdhQbFX17F7aXBYg2eBCjG']
         });
     }
 

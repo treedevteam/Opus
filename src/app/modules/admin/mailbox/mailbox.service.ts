@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/semi */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable prefer-const */
@@ -5,7 +6,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
-import { Mail, MailCategory, MailFilter, MailFolder, MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
+import { Mail, MailCategory, MailFilter, MailFolder, MailLabel,Maill, SentEmails } from 'app/modules/admin/mailbox/mailbox.types';
 import { User } from 'app/core/user/user.types';
 import { environment } from 'environments/environment';
 import { Users } from '../users/model/users';
@@ -22,9 +23,11 @@ export class MailboxService
     private _labels: BehaviorSubject<MailLabel[]> = new BehaviorSubject(null);
     private _mails: BehaviorSubject<Mail[]> = new BehaviorSubject(null);
     private _mailsLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
-    private _mail: BehaviorSubject<Mail> = new BehaviorSubject(null);
+    private _mail: BehaviorSubject<Maill> = new BehaviorSubject(null);
     private _pagination: BehaviorSubject<any> = new BehaviorSubject(null);
     private _userList: BehaviorSubject<Users[]> = new BehaviorSubject (null);
+    private _userEmails: BehaviorSubject<Maill[]> =  new BehaviorSubject (null);
+    private _sentEmails: BehaviorSubject<SentEmails[]>= new BehaviorSubject (null);
     private apiUrl = environment.apiUrl;
 
     /**
@@ -37,6 +40,18 @@ export class MailboxService
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
+
+/**Getter for sent emails */
+    get sentEmails$(): Observable <SentEmails[]>
+    {
+        return this._sentEmails.asObservable();
+    }
+/**Getter for all emails */
+
+    get allEmails$(): Observable <Maill[]>
+    {
+        return this._userEmails.asObservable();
+    }
 
     //**Getter for user list */
     get $userList(): Observable <Users[]>
@@ -95,7 +110,7 @@ export class MailboxService
     /**
      * Getter for mail
      */
-    get mail$(): Observable<Mail>
+    get mail$(): Observable<Maill>
     {
         return this._mail.asObservable();
     }
@@ -267,13 +282,12 @@ export class MailboxService
      */
     getMailById(id: string): Observable<any>
     {
-        return this._mails.pipe(
+        return this._userEmails.pipe(
             take(1),
             map((mails) => {
-
+                debugger;
                 // Find the mail
-                const mail = mails.find(item => item.id === id) || null;
-
+                const mail = mails.find(item => item.id === +id) || null;
                 // Update the mail
                 this._mail.next(mail);
 
@@ -426,4 +440,28 @@ export class MailboxService
         sendEmail(emailData){
             return this._httpClient.post(this.apiUrl+'api/email/store',emailData);
         }
+
+        /**Get all emails */
+        getEmails(): Observable <Maill[]>
+        {
+            return this._httpClient.get<Maill[]>(this.apiUrl + 'api/emails').pipe(
+                map((data: any): Maill[]=>{
+                    this._userEmails.next(data.data);
+                    console.log(data.data);
+                    return data;
+                })
+            );
+        }
+
+    /**Get sent emails */
+       getSentEmails(): Observable <SentEmails[]>
+       {
+        return this._httpClient.get<SentEmails[]>(this.apiUrl +'api/sent/emails').pipe(
+            map((data: any): SentEmails[]=>{
+            this._sentEmails.next(data);
+            console.log(data);
+            return data;
+            })
+        )
+       }
 }

@@ -244,23 +244,6 @@ export class MailboxSidebarComponent implements OnInit, OnDestroy
                     ...this._foldersMenuData
                 ]
             },
-            {
-                title   : 'FILTERS',
-                type    : 'group',
-                children: [
-                    ...this._filtersMenuData
-                ]
-            },
-            {
-                title   : 'LABELS',
-                type    : 'group',
-                children: [
-                    ...this._labelsMenuData
-                ]
-            },
-            {
-                type: 'spacer'
-            },
             ...this._otherMenuData
         ];
     }

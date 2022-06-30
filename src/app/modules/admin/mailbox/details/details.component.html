@@ -17,9 +17,9 @@
                 </a>
 
                 <!-- Toggle labels button & menu -->
-                <button
+                <!-- <button
                     class="ml-auto"
-                    mat-icon-button
+                    mat-icon-button 
                     [matMenuTriggerFor]="toggleLabelMenu">
                     <mat-icon [svgIcon]="'heroicons_outline:tag'"></mat-icon>
                 </button>
@@ -35,7 +35,7 @@
                             </mat-checkbox>
                         </div>
                     </ng-container>
-                </mat-menu>
+                </mat-menu> -->
 
                 <!-- Toggle important button -->
                 <button
@@ -143,7 +143,6 @@
                         <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
                             <img
                                 class="w-full h-full"
-                                [src]="mail.from.avatar"
                                 alt="User avatar">
                         </div>
 
@@ -151,7 +150,7 @@
                         <div class="ml-4 min-w-0">
 
                             <!-- From -->
-                            <div class="font-semibold truncate">{{mail.from.contact.split('<')[0].trim()}}</div>
+                            <div class="font-semibold truncate">{{mail.sender.name}}</div>
 
                             <!-- To -->
                             <div class="flex items-center mt-0.5 leading-5">
@@ -187,27 +186,14 @@
                                         <!-- From -->
                                         <div class="flex">
                                             <div class="min-w-14 font-medium text-right">from:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{mail.from.contact}}</div>
+                                            <div class="pl-2 whitespace-pre-wrap">{{mail.sender.name}}</div>
                                         </div>
                                         <!-- To -->
                                         <div class="flex">
                                             <div class="min-w-14 font-medium text-right">to:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{mail.to}}</div>
+                                            <div class="pl-2 whitespace-pre-wrap">{{mail.sent_to.name}}</div>
                                         </div>
-                                        <!-- Cc -->
-                                        <ng-container *ngIf="mail.cc">
-                                            <div class="flex">
-                                                <div class="min-w-14 font-medium text-right">cc:</div>
-                                                <div class="pl-2 whitespace-pre-wrap">{{mail.cc.join(',\n')}}</div>
-                                            </div>
-                                        </ng-container>
-                                        <!-- Bbc -->
-                                        <ng-container *ngIf="mail.bcc">
-                                            <div class="flex">
-                                                <div class="min-w-14 font-medium text-right">bcc:</div>
-                                                <div class="pl-2 whitespace-pre-wrap">{{mail.bcc.join(',\n')}}</div>
-                                            </div>
-                                        </ng-container>
+       
                                         <!-- Date -->
                                         <div class="flex">
                                             <div class="min-w-14 font-medium text-right">date:</div>
@@ -284,10 +270,10 @@
                 <div class="flex w-full p-6 border-t bg-gray-50 dark:bg-transparent">
 
                     <!-- Buttons -->
-                    <ng-container *ngIf="!replyFormActive">
-                        <div class="flex flex-wrap w-full -m-2">
+                    <!-- <ng-container *ngIf="!replyFormActive">
+                        <div class="flex flex-wrap w-full -m-2"> -->
                             <!-- Reply -->
-                            <button
+                            <!-- <button
                                 class="m-2"
                                 mat-stroked-button
                                 [color]="'primary'"
@@ -296,9 +282,9 @@
                                     class="icon-size-5"
                                     [svgIcon]="'heroicons_solid:reply'"></mat-icon>
                                 <span class="ml-2">Reply</span>
-                            </button>
+                            </button> -->
                             <!-- Reply all -->
-                            <button
+                            <!-- <button
                                 class="m-2"
                                 mat-stroked-button
                                 [color]="'primary'"
@@ -307,9 +293,9 @@
                                     class="icon-size-5"
                                     [svgIcon]="'heroicons_solid:reply'"></mat-icon>
                                 <span class="ml-2">Reply All</span>
-                            </button>
+                            </button> -->
                             <!-- Forward -->
-                            <button
+                            <!-- <button
                                 class="m-2"
                                 mat-stroked-button
                                 [color]="'primary'"
@@ -319,9 +305,9 @@
                                     [color]="'primary'"
                                     [svgIcon]="'heroicons_solid:chevron-double-right'"></mat-icon>
                                 <span class="ml-2">Forward</span>
-                            </button>
-                        </div>
-                    </ng-container>
+                            </button> -->
+                        <!-- </div> -->
+                    <!-- </ng-container> -->
 
                     <!-- Reply form -->
                     <ng-container *ngIf="replyFormActive">

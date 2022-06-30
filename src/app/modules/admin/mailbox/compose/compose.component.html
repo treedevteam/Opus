@@ -61,7 +61,7 @@
                 type="file"
                 class="min-h-5 my-0 resize-one pb-2"
                 placeholder="Upload file"
-                (click)="onFileSelect($event)"
+                (change)="onFileSelect($event.target.files)"
                 >
         <!-- Subject -->
         <mat-form-field>

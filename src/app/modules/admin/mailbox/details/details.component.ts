@@ -5,7 +5,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatButton } from '@angular/material/button';
 import { Subject, takeUntil } from 'rxjs';
 import { MailboxService } from 'app/modules/admin/mailbox/mailbox.service';
-import { Mail, MailFolder, MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
+import { Mail, MailFolder, Maill, MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
 import { labelColorDefs } from 'app/modules/admin/mailbox/mailbox.constants';
 
 @Component({
@@ -21,7 +21,8 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     folders: MailFolder[];
     labelColors: any;
     labels: MailLabel[];
-    mail: Mail;
+    mail: Maill;
+    mails: Maill;
     replyFormActive: boolean = false;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -69,7 +70,7 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
         // Mail
         this._mailboxService.mail$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((mail: Mail) => {
+            .subscribe((mail: Maill) => {
                 this.mail = mail;
             });
 
@@ -105,131 +106,131 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
         return this._activatedRoute.snapshot.paramMap.get('folder');
     }
 
+    // /**
+    //  * Move to folder
+    //  *
+    //  * @param folderSlug
+    //  */
+    // moveToFolder(folderSlug: string): void
+    // {
+    //     // Find the folder details
+    //     const folder = this.folders.find(item => item.slug === folderSlug);
+
+    //     // Return if the current folder of the mail
+    //     // is already equals to the given folder
+    //     if ( this.mail.folder === folder.id )
+    //     {
+    //         return;
+    //     }
+
+    //     // Update the mail object
+    //     this.mail.folder = folder.id;
+
+    //     // Update the mail on the server
+    //     this._mailboxService.updateMail(this.mail.id, {folder: this.mail.folder}).subscribe();
+
+    //     // Navigate to the parent
+    //     this._router.navigate(['./'], {relativeTo: this._activatedRoute.parent});
+    // }
+
     /**
-     * Move to folder
-     *
-     * @param folderSlug
-     */
-    moveToFolder(folderSlug: string): void
-    {
-        // Find the folder details
-        const folder = this.folders.find(item => item.slug === folderSlug);
+    //  * Toggle label
+    //  *
+    //  * @param label
+    //  */
+    // toggleLabel(label: MailLabel): void
+    // {
+    //     let deleted = false;
 
-        // Return if the current folder of the mail
-        // is already equals to the given folder
-        if ( this.mail.folder === folder.id )
-        {
-            return;
-        }
+    //     // Update the mail object
+    //     if ( this.mail.labels.includes(label.id) )
+    //     {
+    //         // Set the deleted
+    //         deleted = true;
 
-        // Update the mail object
-        this.mail.folder = folder.id;
+    //         // Delete the label
+    //         this.mail.labels.splice(this.mail.labels.indexOf(label.id), 1);
+    //     }
+    //     else
+    //     {
+    //         // Add the label
+    //         this.mail.labels.push(label.id);
+    //     }
 
-        // Update the mail on the server
-        this._mailboxService.updateMail(this.mail.id, {folder: this.mail.folder}).subscribe();
+    //     // Update the mail on the server
+    //     this._mailboxService.updateMail(this.mail.id, {labels: this.mail.labels}).subscribe();
 
-        // Navigate to the parent
-        this._router.navigate(['./'], {relativeTo: this._activatedRoute.parent});
-    }
-
-    /**
-     * Toggle label
-     *
-     * @param label
-     */
-    toggleLabel(label: MailLabel): void
-    {
-        let deleted = false;
-
-        // Update the mail object
-        if ( this.mail.labels.includes(label.id) )
-        {
-            // Set the deleted
-            deleted = true;
-
-            // Delete the label
-            this.mail.labels.splice(this.mail.labels.indexOf(label.id), 1);
-        }
-        else
-        {
-            // Add the label
-            this.mail.labels.push(label.id);
-        }
-
-        // Update the mail on the server
-        this._mailboxService.updateMail(this.mail.id, {labels: this.mail.labels}).subscribe();
-
-        // If the label was deleted...
-        if ( deleted )
-        {
-            // If the current activated route has a label parameter and it equals to the one we are removing...
-            if ( this._activatedRoute.snapshot.paramMap.get('label') && this._activatedRoute.snapshot.paramMap.get('label') === label.slug )
-            {
-                // Navigate to the parent
-                this._router.navigate(['./'], {relativeTo: this._activatedRoute.parent});
-            }
-        }
-    }
+    //     // If the label was deleted...
+    //     if ( deleted )
+    //     {
+    //         // If the current activated route has a label parameter and it equals to the one we are removing...
+    //         if ( this._activatedRoute.snapshot.paramMap.get('label') && this._activatedRoute.snapshot.paramMap.get('label') === label.slug )
+    //         {
+    //             // Navigate to the parent
+    //             this._router.navigate(['./'], {relativeTo: this._activatedRoute.parent});
+    //         }
+    //     }
+    // }
 
     /**
      * Toggle important
      */
-    toggleImportant(): void
-    {
-        // Update the mail object
-        this.mail.important = !this.mail.important;
+    // toggleImportant(): void
+    // {
+    //     // Update the mail object
+    //     this.mail.important = !this.mail.important;
 
-        // Update the mail on the server
-        this._mailboxService.updateMail(this.mail.id, {important: this.mail.important}).subscribe();
+    //     // Update the mail on the server
+    //     this._mailboxService.updateMail(this.mail.id, {important: this.mail.important}).subscribe();
 
-        // If the important was removed...
-        if ( !this.mail.important )
-        {
-            // If the current activated route has a filter parameter and it equals to the 'important'...
-            if ( this._activatedRoute.snapshot.paramMap.get('filter') && this._activatedRoute.snapshot.paramMap.get('filter') === 'important' )
-            {
-                // Navigate to the parent
-                this._router.navigate(['./'], {relativeTo: this._activatedRoute.parent});
-            }
-        }
-    }
+    //     // If the important was removed...
+    //     if ( !this.mail.important )
+    //     {
+    //         // If the current activated route has a filter parameter and it equals to the 'important'...
+    //         if ( this._activatedRoute.snapshot.paramMap.get('filter') && this._activatedRoute.snapshot.paramMap.get('filter') === 'important' )
+    //         {
+    //             // Navigate to the parent
+    //             this._router.navigate(['./'], {relativeTo: this._activatedRoute.parent});
+    //         }
+    //     }
+    // }
 
     /**
      * Toggle star
      */
-    toggleStar(): void
-    {
-        // Update the mail object
-        this.mail.starred = !this.mail.starred;
+    // toggleStar(): void
+    // {
+    //     // Update the mail object
+    //     this.mail.starred = !this.mail.starred;
 
-        // Update the mail on the server
-        this._mailboxService.updateMail(this.mail.id, {starred: this.mail.starred}).subscribe();
+    //     // Update the mail on the server
+    //     this._mailboxService.updateMail(this.mail.id, {starred: this.mail.starred}).subscribe();
 
-        // If the star was removed...
-        if ( !this.mail.starred )
-        {
-            // If the current activated route has a filter parameter and it equals to the 'starred'...
-            if ( this._activatedRoute.snapshot.paramMap.get('filter') && this._activatedRoute.snapshot.paramMap.get('filter') === 'starred' )
-            {
-                // Navigate to the parent
-                this._router.navigate(['./'], {relativeTo: this._activatedRoute.parent});
-            }
-        }
-    }
+    //     // If the star was removed...
+    //     if ( !this.mail.starred )
+    //     {
+    //         // If the current activated route has a filter parameter and it equals to the 'starred'...
+    //         if ( this._activatedRoute.snapshot.paramMap.get('filter') && this._activatedRoute.snapshot.paramMap.get('filter') === 'starred' )
+    //         {
+    //             // Navigate to the parent
+    //             this._router.navigate(['./'], {relativeTo: this._activatedRoute.parent});
+    //         }
+    //     }
+    // }
 
-    /**
-     * Toggle unread
-     *
-     * @param unread
-     */
-    toggleUnread(unread: boolean): void
-    {
-        // Update the mail object
-        this.mail.unread = unread;
+    // /**
+    //  * Toggle unread
+    //  *
+    //  * @param unread
+    //  */
+    // toggleUnread(unread: boolean): void
+    // {
+    //     // Update the mail object
+    //     this.mail.unread = unread;
 
-        // Update the mail on the server
-        this._mailboxService.updateMail(this.mail.id, {unread: this.mail.unread}).subscribe();
-    }
+    //     // Update the mail on the server
+    //     this._mailboxService.updateMail(this.mail.id, {unread: this.mail.unread}).subscribe();
+    // }
 
     /**
      * Reply

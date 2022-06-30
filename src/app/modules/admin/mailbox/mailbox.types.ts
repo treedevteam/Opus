@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable eol-last */
 export interface Mail
 {
     id?: string;
@@ -57,4 +59,30 @@ export interface MailLabel
     title: string;
     slug: string;
     color: string;
+}
+export interface Maill
+{
+    id: number;
+    subject: string;
+    conten: string;
+    files: object;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    sent_to: {
+        name: string;
+        image: string;
+    };
+    sender: {
+        name: string;
+        image: string;
+    };
+    read: number;
+}
+
+export interface SentEmails
+{
+    id: number;
+    subcject: string;
+    content: string;
+    user_id: 11;
+    files: string;
 }

@@ -1,3 +1,6 @@
+/* eslint-disable quotes */
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable arrow-parens */
 /* eslint-disable max-len */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-trailing-spaces */
@@ -25,6 +28,7 @@ export class MailboxComposeComponent implements OnInit
     Userid: number;
     items;
     newEmail;
+    allFiles: any;
     // file: File = null;
     composeForm: FormGroup;
     allusers: Users[] =[];
@@ -118,12 +122,12 @@ export class MailboxComposeComponent implements OnInit
 
       onFileSelect(event)
       {
-        if(event.target.files.length > 0){
-            const file = event.target.files[0];
-
+        debugger;
+        if(event){          
+            this.allFiles = event;
             this.composeForm.patchValue({
-                files: file
-            });
+                files: event
+                });
         }
       }
 
@@ -180,6 +184,7 @@ export class MailboxComposeComponent implements OnInit
     send(): void
     {
         debugger;
+        console.warn(this.allFiles,"FAJLLAT");
         const user = this.composeForm.value.users
         .replace(/(\r\n|\n|\r)/gm, '')
         .split('@')
@@ -190,10 +195,16 @@ export class MailboxComposeComponent implements OnInit
         console.log(user,'TESTSSSSSST');
         const p = {...this.composeForm.value};
          p.users=user;
-        this._mailbox.sendEmail({users:'[' + user +']',subject: this.composeForm.value.subject,content: this.composeForm.value.content,files:this.composeForm.value.files}).subscribe((res)=>{
+    const formData = new FormData();
+    const result = Object.assign({}, this.composeForm.value);
+    formData.append('users','[' + user +']');
+    formData.append('subject',this.composeForm.get('subject').value);
+    formData.append('content',this.composeForm.get('content').value);
+    formData.append('files',this.composeForm.get('files').value);
+    console.log(this.composeForm.get('files').value);
+    this._mailbox.sendEmail(formData).subscribe((res)=>{
         console.log(res);
         this.matDialogRef.close();
     });
     }
-
 }

@@ -15,40 +15,9 @@
                         <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
                     </button>
                     <!-- Category name -->
-                    <div class="ml-2 font-semibold uppercase">{{category.name}}</div>
                 </div>
 
-                <!-- Pagination -->
-                <div class="flex items-center">
-                    <!-- Info -->
-                    <div class="flex items-center mr-3 text-md font-medium">
-                        <span>{{pagination.startIndex + 1}}</span>
-                        <span class="mx-1 text-secondary">-</span>
-                        <span>{{pagination.endIndex + 1}}</span>
-                        <span class="mx-1 text-secondary">of</span>
-                        <span>{{pagination.totalResults}}</span>
-                    </div>
-                    <!-- Previous page button -->
-                    <a
-                        class="w-8 h-8 min-h-8"
-                        mat-icon-button
-                        [disabled]="pagination.currentPage === 1"
-                        [routerLink]="['../' + (pagination.currentPage > 1 ? pagination.currentPage - 1 : 1 )]">
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_solid:chevron-left'"></mat-icon>
-                    </a>
-                    <!-- Next page button-->
-                    <a
-                        class="w-8 h-8 min-h-8"
-                        mat-icon-button
-                        [disabled]="pagination.currentPage === pagination.lastPage"
-                        [routerLink]="['../' + (pagination.currentPage < pagination.lastPage ? pagination.currentPage + 1 : pagination.lastPage )]">
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_solid:chevron-right'"></mat-icon>
-                    </a>
-                </div>
+                
 
                 <!-- Loading bar -->
                 <mat-progress-bar
@@ -74,14 +43,14 @@
                         <!-- Item content -->
                         <div
                             class="flex flex-col items-start justify-start w-full py-6 pr-4 pl-5 border-l-4 border-transparent"
-                            [ngClass]="{'border-primary': mail.unread,
+                            [ngClass]="{'border-primary': mail.read,
                                         'bg-primary-50 dark:bg-black dark:bg-opacity-5': selectedMail && selectedMail.id === mail.id}">
 
                             <!-- Info -->
                             <div class="flex items-center w-full">
                                 <!-- Sender name -->
                                 <div class="mr-2 font-semibold truncate">
-                                    {{mail.from.contact.split('<')[0].trim()}}
+                                    {{mail.sender.name}} 
                                 </div>
                                 <!-- Important indicator -->
                                 <mat-icon
@@ -98,24 +67,10 @@
                             <div class="flex items-center w-full mt-1">
                                 <span class="leading-4 truncate">{{mail.subject}}</span>
                                 <!-- Indicators -->
-                                <div
-                                    class="flex ml-auto pl-2"
-                                    *ngIf="(mail.attachments && mail.attachments.length > 0) || mail.starred">
-                                    <!-- Attachments -->
-                                    <mat-icon
-                                        class="flex justify-center icon-size-4"
-                                        *ngIf="mail.attachments && mail.attachments.length > 0"
-                                        [svgIcon]="'heroicons_solid:paper-clip'"></mat-icon>
-                                    <!-- Starred -->
-                                    <mat-icon
-                                        class="flex justify-center icon-size-4 ml-1 text-orange-500 dark:text-orange-400"
-                                        *ngIf="mail.starred"
-                                        [svgIcon]="'heroicons_solid:star'"></mat-icon>
-                                </div>
                             </div>
 
                             <!-- Excerpt -->
-                            <div class="mt-2 leading-normal line-clamp-2 text-secondary">
+                            <div class="mt-2 leading-normal line-clamp-2 text-secondary" [innerHTML]="mail.content">
                                 {{mail.content}}...
                             </div>
 
