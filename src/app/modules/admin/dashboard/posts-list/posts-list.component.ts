@@ -7,39 +7,40 @@ import { Posts } from '../models/dashboard';
 import { environment } from 'environments/environment';
 
 @Component({
-  selector: 'app-posts-list',
-  templateUrl: './posts-list.component.html',
-  styleUrls: ['./posts-list.component.scss']
+    selector: 'app-posts-list',
+    templateUrl: './posts-list.component.html',
+    styleUrls: ['./posts-list.component.scss'],
 })
 export class PostsListComponent implements OnInit {
-  @ViewChild('supportNgForm') supportNgForm: NgForm;
-  apiUrl = environment.apiUrl;
+    @ViewChild('supportNgForm') supportNgForm: NgForm;
+    apiUrl = environment.apiUrl;
 
-  supportForm: FormGroup;
-  url: any;
-  file: any;
-  uploaded: boolean;
-  alert: any;
-  departmentPosts$ = this._dashboardService.departmentPosts$;
+    supportForm: FormGroup;
+    url: any;
+    file: any;
+    uploaded: boolean;
+    alert: any;
+    departmentPosts$ = this._dashboardService.departmentPosts$;
 
-  constructor(private _dashboardService: DashboardService,
-    private _formBuilder: FormBuilder,
-    private _snackBar:MatSnackBar
-    ) { }
+    constructor(
+        private _dashboardService: DashboardService,
+        private _formBuilder: FormBuilder,
+        private _snackBar: MatSnackBar
+    ) {}
 
-  ngOnInit(): void {
-     // Create the support form
-    this.supportForm = this._formBuilder.group({
-        description : ['', Validators.required],
-        file:[''],
-        departments: "["+4+"]"
-    });
+    ngOnInit(): void {
+        // Create the support form
+        this.supportForm = this._formBuilder.group({
+            description: ['', Validators.required],
+            file: [''],
+            departments: '[' + 4 + ']',
+        });
 
-    
-    this._dashboardService.getPostsDepartment(4).subscribe(res=>{
-      console.log(res);
-    })
-  }
+        this._dashboardService.getPostsDepartment(4).subscribe((res) => {
+            console.log(res);
+        });
+    }
+
 
 
   onFileChange(pFileList: File): void{
@@ -59,52 +60,54 @@ export class PostsListComponent implements OnInit {
                 this.supportForm.patchValue({
                     file: pFileList[0]
                     });
-                this._snackBar.open('Successfully upload!', 'Close', {
-                  duration: 2000,
-                });
-                const reader = new FileReader();
-                reader.readAsDataURL(pFileList[0]);
-                reader.onload = (event): any => {
-                    this.url = event.target.result;
-                };
-            }else{
-                this._snackBar.open('File is too large!', 'Close', {
+                    this._snackBar.open('Successfully upload!', 'Close', {
+                        duration: 2000,
+                    });
+                    const reader = new FileReader();
+                    reader.readAsDataURL(pFileList[0]);
+                    reader.onload = (event): any => {
+                        this.url = event.target.result;
+                    };
+                } else {
+                    this._snackBar.open('File is too large!', 'Close', {
+                        duration: 2000,
+                    });
+                    this.uploaded = false;
+                    this.file = null;
+                    this.url = null;
+                }
+            } else {
+                this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
                     duration: 2000,
                 });
                 this.uploaded = false;
                 this.file = null;
                 this.url = null;
             }
-        }else{
-            this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
-                duration: 2000,
-            });
-            this.uploaded = false;
-            this.file = null;
-            this.url = null;
         }
     }
-  }
 
+    clearForm(): void {
+        // Reset the form
+        this.supportNgForm.resetForm();
+    }
 
-  clearForm(): void
-  {
-      // Reset the form
-      this.supportNgForm.resetForm();
-  }
-
-  sendForm(): void
-  {
-    console.log(this.supportForm.get('file').value);
-    const formData  = new FormData();
-    const result = Object.assign({}, this.supportForm.value);
-    formData.append('description', this.supportForm.get('description').value);
-    formData.append('file', this.supportForm.get('file').value);
-    formData.append('departments', this.supportForm.get('departments').value);
-    this._dashboardService.storePost(formData).subscribe(res=>{
-      this.clearForm();
-    })
-     
-  }
+    sendForm(): void {
+        console.log(this.supportForm.get('file').value);
+        const formData = new FormData();
+        const result = Object.assign({}, this.supportForm.value);
+        formData.append(
+            'description',
+            this.supportForm.get('description').value
+        );
+        formData.append('file', this.supportForm.get('file').value);
+        formData.append(
+            'departments',
+            this.supportForm.get('departments').value
+        );
+        this._dashboardService.storePost(formData).subscribe((res) => {
+            this.clearForm();
+        });
+    }
 
 }
