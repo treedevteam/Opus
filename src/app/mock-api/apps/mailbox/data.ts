@@ -15,18 +15,6 @@ export const folders = [
         icon : 'heroicons_outline:paper-airplane'
     },
     {
-        id   : 'fbdc8e79-a0c4-4a27-bc98-9c81ee7a86e5',
-        title: 'Drafts',
-        slug : 'drafts',
-        icon : 'heroicons_outline:document'
-    },
-    {
-        id   : '0197c436-2ef3-424d-b546-8b7f49186e15',
-        title: 'Spam',
-        slug : 'spam',
-        icon : 'heroicons_outline:exclamation'
-    },
-    {
         id   : '2fa74637-d362-4fd2-9a88-f7195a88bdde',
         title: 'Trash',
         slug : 'trash',
