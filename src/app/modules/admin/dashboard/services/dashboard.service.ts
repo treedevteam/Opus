@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { BehaviorSubject, map, Observable, switchMap, take } from 'rxjs';
+import { BehaviorSubject, concatMap, map, Observable, switchMap, take, tap, shareReplay } from 'rxjs';
 import { Posts } from '../models/dashboard';
 import { Departments } from '../../departments/departments.types';
 import { Users } from '../../tasks/tasks.types';
@@ -61,9 +61,42 @@ export class DashboardService {
             this._currentDepartment.next(data.data);
             return data.data;
         }),
+        shareReplay(1)
     );
   }
 
+  myPosts(){
+    return this.myDepartment().pipe(
+        concatMap(((val :any) => {
+          console.log(val);
+            return this.getPostsDepartment(val.id)
+        })),
+    )
+  };
+
+  myUsers(){
+    return this.myDepartment().pipe(
+        concatMap(((val :any) => {
+          console.log(val);
+            return this.getUsersDepartment(val.id)
+        })),
+    )
+  };
+
+  getPostsDepartmentWithId$ = this.currentDepartment$.pipe(
+    tap(res=>{
+      console.log(res);
+    }),
+    switchMap(x => {
+      return this.getPostsDepartment(x.id)
+    })
+  )
+
+  getUsersDepartmentWithId$ = this.currentDepartment$.pipe(
+    switchMap(x => {
+      return this.getUsersDepartment(x.id)
+    })
+  )
 
   getUsersDepartment(depId: number): Observable<Users[]>
     {

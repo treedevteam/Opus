@@ -40,11 +40,10 @@ export class AuthSignInComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
-        debugger;
         // Create the form
         this.signInForm = this._formBuilder.group({
             username: [
-                'arunte@example.org',
+                'ecarter@example.com',
                 [Validators.required, Validators.email],
             ],
             password: [
@@ -54,7 +53,7 @@ export class AuthSignInComponent implements OnInit {
             grant_type: ['password'],
             client_id    : ['1'],
             scope        : [''],
-            client_secret: ['GzA9V6dHhBXyJnkN1dHdhQbFX17F7aXBYg2eBCjG']
+            client_secret: ['eYXGBNFj4KqxYUh3SzTlJ4o5F7DfkaknXNllTIZI']
         });
     }
 
@@ -76,7 +75,6 @@ export class AuthSignInComponent implements OnInit {
 
         // Hide the alert
         this.showAlert = false;
-
         // Sign in
         this._authService.signIn(this.signInForm.value).subscribe(
             (res) => {

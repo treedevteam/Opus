@@ -69,7 +69,6 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
         combineLatest(this._navigationService.navigation$, this._userService.user$,this._navigationService.myboards$)
         .subscribe(([navigation, user, boards])=>{
             console.log(navigation,user);
-
             if(user.role.name === Role.Admin){
                 this.navigation = navigation.default.filter(x=> x.admin === true)
             }else{
