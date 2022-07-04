@@ -432,6 +432,7 @@ export class TasksService
     {
         return this._httpClient.get<Users[]>(this.apiUrl+'api/board/'+ boardId +'/users').pipe(
             map((data: any): Users[] => {
+                debugger;
                 console.log(data,'USSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
                 this._currentBoardUsers.next(data.data);
                 return data.data;
@@ -1118,7 +1119,8 @@ export class TasksService
     getBoard(id: number): Observable<Boards>{
         return this._httpClient.get<Boards>(this.apiUrl+'api/board/'+ id).pipe(
             map((data: any): Boards => {
-                this._currentBoard.next(data.data);
+                debugger;
+                this._currentBoard.next({...data.board, is_his: data.is_his});
                 return data;
             }),
              shareReplay(1),

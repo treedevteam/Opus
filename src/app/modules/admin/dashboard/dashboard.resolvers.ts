@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
-import { catchError, mergeMapTo, Observable, throwError } from 'rxjs';
+import { catchError, mergeMapTo, Observable, throwError, combineLatest } from 'rxjs';
 import { DepartmentsService } from '../departments/departments.service';
 import { DashboardService } from './services/dashboard.service';
 import { Departments } from '../departments/departments.types';
@@ -13,6 +13,7 @@ export class DashboardResolver implements Resolve<any>
     /**
      * Constructor
      */
+    // vm$ = combineLatest(this._dashboardService.myDepartment(),)
     constructor(private _dashboardService: DashboardService)
     {
     }
@@ -27,8 +28,10 @@ export class DashboardResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Departments>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any
     {
-        return this._dashboardService.myDepartment();
+        return this._dashboardService.myDepartment().subscribe(res=>{
+            console.log(res);
+        });
     }
 }

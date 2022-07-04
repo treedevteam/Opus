@@ -62,6 +62,7 @@ export class AsignUsersToBoardComponent implements OnInit {
 
   assignUserToBoard(userId: number){
     this._taskService.assignUserToBoard(this.currentBoard.id , userId).subscribe((res)=>{
+      debugger;
       console.log(res);
     });
   }

@@ -107,7 +107,7 @@ export class UsersComponent implements OnInit {
 
 
     navigateTo(id: number): void{
-        this._router.navigate([`/users/${id}`]);
+        this._router.navigate([`admin/users/${id}`]);
     }
 
 }

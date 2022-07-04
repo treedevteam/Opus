@@ -45,6 +45,7 @@
                 <input
                     type="file"
                     name="file"
+                    [formControlName]="'file'"
                     id="file"
                     (change)="onFileChange($event.target.files)"
                 />
@@ -83,14 +84,14 @@
 </div>
 <div class="flex flex-col flex-auto items-center p-6 sm:p-10 pt-0">
     <div class="flex flex-col w-full max-w-4xl">
-        <p *ngIf="!departmentPosts$ | async" class="text-center">
+        <!-- <p *ngIf="!(departmentPostsWithReplies$ | async)" class="text-center">
             No posts yet
-        </p>
-
+        </p> -->
+        {{(departmentPostsWithReplies$ | async) | json}}
         <div
             class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card"
         >
-        <ng-container *ngFor="let post of departmentPostsWithReplies$ | async">
+         <ng-container *ngFor="let post of departmentPostsWithReplies$ | async">
 
             <div  class="post_section">
                 <div class="row">
@@ -143,7 +144,7 @@
                     </div>
                     <div class="col-10">
                         <div class="box">
-                            <h1 class="fw-bold p-2">Name Surname</h1>
+                            <h1 class="fw-bold p-2">{{replies.name}}</h1>
                             <p class="descriptioni">{{ replies.text }}</p>
                         </div>
                         <p class="mt-1 ms-2 date">
@@ -180,7 +181,7 @@
                     </div>
                 </div>
             </div>
-            </ng-container>
+            </ng-container> 
        </div>
     </div>
 </div>

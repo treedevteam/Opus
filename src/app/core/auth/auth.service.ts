@@ -191,8 +191,8 @@ export class AuthService
         {
             return of(false);
         }
+        // Check the access token expire date
         return of(!AuthUtils.isTokenExpired(this.accessToken));
-
     }
 
 
