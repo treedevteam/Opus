@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, switchMap, throwError, tap, mapTo, shareReplay } from 'rxjs';
+import { catchError, Observable, of, switchMap, throwError, tap, mapTo, shareReplay, map, BehaviorSubject } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { environment } from '../../../environments/environment';
+import { Role } from './roles';
+import { User } from '../user/user.types';
 
 @Injectable()
 export class AuthService
 {
-    private apiUrl = environment.apiUrl; 
-    
+    private apiUrl = environment.apiUrl;
+
     private _authenticated: boolean = false;
+    private _userRole: BehaviorSubject<boolean | null> = new BehaviorSubject(null); 
 
     /**
      * Constructor
@@ -39,6 +42,11 @@ export class AuthService
     {
 
         localStorage.setItem('access_token', token);
+    }
+
+    get getRole$(): Observable<boolean>
+    {
+        return this._userRole.asObservable();
     }
 
 
@@ -124,10 +132,9 @@ export class AuthService
             // Return false
             of(false)
         ),
-            switchMap((res:
-                any)=>{
+            switchMap((res: any)=>{
                 localStorage.setItem('user_info', JSON.stringify(res.data));
-
+                this._userService.user = res.data;
                 return of(true);
             }),shareReplay(1),
         );
@@ -143,7 +150,7 @@ export class AuthService
         localStorage.removeItem('user_info');
         // Set the authenticated flag to false
         this._authenticated = false;
-        
+
      }
 
     /**
@@ -184,14 +191,20 @@ export class AuthService
         {
             return of(false);
         }
-
         // Check the access token expire date
-        if ( AuthUtils.isTokenExpired(this.accessToken) )
-        {
-            return of(false);
-        }
+        return of(!AuthUtils.isTokenExpired(this.accessToken));
+    }
 
-        // If the access token exists and it didn't expire, sign in using it
-         return this.signInUsingToken();
+
+
+    isAdmin(): any{
+        return this._userService.user$.pipe(
+            map((res: User): any => {
+                console.log(res,"RESSSSSSSSTEST");
+                this._userRole.next(res.role.name === Role.Admin)
+                return of(res.role.name === Role.Admin)
+            }),
+
+        );
     }
 }

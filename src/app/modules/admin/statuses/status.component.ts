@@ -18,7 +18,7 @@ export class StatusComponent implements OnInit {
     displayedColumns: string[] = ['position', 'name', 'color','edit', 'delete'];
     dataSource = ELEMENT_DATA;
 
-   
+
     constructor(
         private _statusService: StatusService,
         private _fuseConfirmationService: FuseConfirmationService,
@@ -51,10 +51,10 @@ export class StatusComponent implements OnInit {
      });
 
     ngOnInit(): void {
-       
+
     }
-    
-  
+
+
 
     wcHexIsLight(color: any): string {
         const hex = color.replace('#', '');

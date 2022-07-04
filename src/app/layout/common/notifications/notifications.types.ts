@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export interface Notification
 {
     id: string;
@@ -25,5 +26,5 @@ export interface Notifications
     user_id?: number;
     task_id?: number;
     status?: number;
-    created_at:string;
+    created_at: string;
 }

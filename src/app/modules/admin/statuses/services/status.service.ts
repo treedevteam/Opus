@@ -16,7 +16,7 @@ export class StatusService {
 
   constructor(private http: HttpClient) { }
   getStatuses$ = this.http.get<Status[]>(this.apiUrl+'api/statuses').pipe(
-    map((data: any) :Status[] => data),
+    map((data: any): Status[] => data),
    catchError((err) => {
      console.error(err);
      throw err;

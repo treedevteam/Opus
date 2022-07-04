@@ -1,0 +1,13 @@
+.private_label{
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 5px;
+    font-size: 13px;
+    margin-top: 1.5rem;
+}
+.private_label mat-icon{
+    height: 18px;
+    min-height: 18px;
+    margin-left: 4px;
+}

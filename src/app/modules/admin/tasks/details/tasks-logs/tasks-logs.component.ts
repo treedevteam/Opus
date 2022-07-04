@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
 import { environment } from 'environments/environment';
@@ -13,25 +14,26 @@ import { Task2, TaskLogs } from '../../tasks.types';
 })
 export class TasksLogsComponent implements OnInit {
   taskId: number;
-  taskLogsData$:Observable<TaskLogs[]>;
+  taskLogsData$: Observable<TaskLogs[]>;
   apiUrl = environment.apiUrl;
 
   constructor(private _tasksService: TasksService) { }
 
-  
+
   taskLogs(){
     this._tasksService.taskById$
     .subscribe((task: Task2) => {
+      console.warn('loGIIII',task);
         this.taskId = task.id;
         this.taskLogsData$ =  this._tasksService.getTasksLogs(this.taskId);
     });
   }
-  
-  
+
+
   ngOnInit(): void {
     this.taskLogs();
   }
-  
+
   getRelativeFormat(date: string): string
     {
         const today = moment().startOf('day');

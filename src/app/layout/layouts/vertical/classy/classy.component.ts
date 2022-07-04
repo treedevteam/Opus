@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { Navigation } from 'app/core/navigation/navigation.types';
@@ -9,6 +9,8 @@ import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { environment } from 'environments/environment';
+import { Role } from 'app/core/auth/roles';
+import { FuseNavigationItem } from '../../../../../@fuse/components/navigation/navigation.types';
 
 @Component({
     selector     : 'classy-layout',
@@ -20,7 +22,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     apiUrl = environment.apiUrl;
 
     isScreenSmall: boolean;
-    navigation: Navigation;
+    navigation: FuseNavigationItem[];
     user: User;
     userInfo: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -35,7 +37,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
         private _userService: UserService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService,
-        private _authservice: AuthService
+        private _authservice: AuthService,
     )
     {
     }
@@ -62,14 +64,38 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this.userLoginInfo();
-
+        this._navigationService.getmyBoards().subscribe();
         // Subscribe to navigation data
-        this._navigationService.navigation$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((navigation: Navigation) => {
-                this.navigation = navigation;
-            });
+        combineLatest(this._navigationService.navigation$, this._userService.user$,this._navigationService.myboards$)
+        .subscribe(([navigation, user, boards])=>{
+            console.log(navigation,user);
+            if(user.role.name === Role.Admin){
+                this.navigation = navigation.default.filter(x=> x.admin === true)
+            }else{
 
+                // const departmetn = {
+                //     id   : 'Department',
+                //     title: 'Department',
+                //     type : 'basic',
+                //     icon : 'heroicons_outline:view-grid-add',
+                //     link : '/departments',
+                //     admin: false,
+                // }
+                
+                const myBoards = boards.map(x=>
+                    (
+                        {
+                            id   : 'Boards',
+                            title: x.name,
+                            type : 'basic',
+                            link : '/board/'+ x.id+'/tasks',
+                            admin: false,
+                        }
+                    )
+                )
+              this.navigation = [...navigation.default.filter(x=> x.admin === false),...myBoards]
+            }
+        })
         // Subscribe to the user service
         this._userService.user$
             .pipe((takeUntil(this._unsubscribeAll)))

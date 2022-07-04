@@ -11,7 +11,7 @@ import { ScrumboardCardDetailsComponent } from './details/details.component';
 })
 export class ScrumboardCardComponent implements OnInit
 {
-    sub: any
+    sub: any;
     /**
      * Constructor
      */
@@ -36,9 +36,9 @@ export class ScrumboardCardComponent implements OnInit
 
         this.sub = this.route
         .data
-        .subscribe(v => {
+        .subscribe((v) => {
             console.log(v.some_data);
-            
+
             this._matDialog.open(ScrumboardCardDetailsComponent, {data:v.some_data, autoFocus: false})
             .afterClosed()
             .subscribe(() => {
@@ -47,8 +47,8 @@ export class ScrumboardCardComponent implements OnInit
                 this._router.navigate(['./../..'], {relativeTo: this._activatedRoute});
             });
         });
-        
+
         // Launch the modal
-       
+
     }
 }

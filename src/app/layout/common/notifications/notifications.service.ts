@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
+/* eslint-disable quotes */
+/* eslint-disable @typescript-eslint/quotes */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, ReplaySubject, switchMap, take, tap } from 'rxjs';

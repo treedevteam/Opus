@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Component, OnInit } from '@angular/core';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -64,7 +66,7 @@ export class UsersComponent implements OnInit {
             shareReplay(1)
           );
 
-          
+
     ngOnInit(): void {
         this.getUsers();
     }
@@ -105,7 +107,7 @@ export class UsersComponent implements OnInit {
 
 
     navigateTo(id: number): void{
-        this._router.navigate([`/users/${id}`]);
+        this._router.navigate([`admin/users/${id}`]);
     }
 
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Departments } from '../departments/departments.types';
 import { Priorities } from '../priorities/model/priorities';
 import { Status } from '../statuses/model/status';
@@ -28,7 +29,7 @@ export class Users {
     role: number;
     user_image: string;
     last_seen: string;
-    selected: boolean
+    selected: boolean;
 }
 
 export interface Boards{
@@ -36,7 +37,7 @@ export interface Boards{
     department_id: string;
     name: string;
     description: string;
-    type: any
+    type: any;
 }
 export interface Task2
 {
@@ -55,7 +56,7 @@ export interface Task2
     departments: number[];
     has_expired: boolean;
     subtasks_count: number;
-    checklists: TaskCheckList[]
+    checklists: TaskCheckList[];
 }
 
 export interface TaskWithDepartment{
@@ -67,10 +68,10 @@ export interface TaskWithDepartment{
 export interface TaskLogs{
     message?: string;
     created_at: string;
-    type:{
+    type: {
         name: string;
         image: string;
-    }
+    };
 }
 
 export interface TaskCheckList{
@@ -88,6 +89,6 @@ export interface TaskComment{
     is_his: boolean;
     user_id: number;
     created_at: string;
-    mentions:number[]
+    mentions: number[];
 }
 

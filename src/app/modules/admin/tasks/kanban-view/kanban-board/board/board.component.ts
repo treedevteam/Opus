@@ -5,7 +5,7 @@ import { combineLatest, map, of, shareReplay, Subject, takeUntil, tap } from 'rx
 import * as moment from 'moment';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ScrumboardService } from '../scrumboard.service';
-import { Board, Card, List } from '../scrumboard.models' 
+import { Board, Card, List } from '../scrumboard.models';
 import { TasksService } from '../../../tasks.service';
 import { environment } from 'environments/environment';
 import { Boards } from '../../../../departments/departments.types';
@@ -32,8 +32,8 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     board: Boards;
     listTitleForm: FormGroup;
     apiUrl = environment.apiUrl;
-    expandedSubtasks:number | null = null;
-    usersList = this._taskService.currentBoardUsers$
+    expandedSubtasks: number | null = null;
+    usersList = this._taskService.currentBoardUsers$;
 
 
     tasksData$ = combineLatest([
@@ -54,15 +54,15 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
                 g.splice(id,1,u);
             }
          }else if(d){
-                const deletedTask = g.findIndex(t => t.id === +d.id)
+                const deletedTask = g.findIndex(t => t.id === +d.id);
                 if(deletedTask > -1){
                     g.splice(deletedTask,1);
                 }
          }
        return g;
-     }); 
+     });
 
-        
+
      tasksDataCheckList$= combineLatest([
         this.tasksData$,
         this._taskService.newCheckList$,
@@ -90,8 +90,8 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     });
 
     orderModified$ = this._taskService.currentBoardOrderTasks$.pipe(
-        map(e=>e.split(',').filter(t=>t !== "").map(e=>+e))
-    )
+        map(e=>e.split(',').filter(t=>t !== '').map(e=>+e))
+    );
 
     usersAssigned$ = combineLatest([
         this.tasksDataCheckList$,
@@ -123,7 +123,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
                ))
         )),
         shareReplay(1),
-        tap(res=>console.log(res,"board_tasks_with_order")
+        tap(res=>console.log(res,'board_tasks_with_order')
         )
         );
 
@@ -143,7 +143,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
                 ))
             }))),
             shareReplay(1),
-            tap(res=>{
+            tap((res)=>{
                 // const test = res.map(entity => {
                 //     return new FormGroup({
                 //         title:  new FormControl(entity.title, Validators.required),
@@ -152,13 +152,13 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
                 // })
                 // this.subtaskControls = new FormArray(test);
                 console.log(res);
-                
+
             })
           );
-    
 
-       
-     
+
+
+
     // Private
     private readonly _positionStep: number = 65536;
     private readonly _maxListCount: number = 200;
@@ -195,20 +195,20 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
 
         this._taskService.currentBoard$.pipe(takeUntil(this._unsubscribeAll))
         .subscribe((board: Boards) => {
-            console.log(board,"BOARD");
-            
-            this.board = {...board};
-            this._taskService.getUsersBoard(board.id).subscribe(res=>{
-                console.log(res,"TTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEESST");
-             })
+            console.log(board,'BOARD');
 
-             this._taskService.getUsersDepartment(+board.department_id).subscribe(res=>{
-              })
+            this.board = {...board};
+            this._taskService.getUsersBoard(board.id).subscribe((res)=>{
+                console.log(res,'TTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEESST');
+             });
+
+             this._taskService.getUsersDepartment(+board.department_id).subscribe((res)=>{
+              });
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
         // Get the board
-        
+
     }
 
     /**
@@ -224,7 +224,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         if(this.expandedSubtasks === id){
             this.expandedSubtasks = null;
         }else{
-            this._taskService.getSubtasks(id).subscribe(res=>{
+            this._taskService.getSubtasks(id).subscribe((res)=>{
                 console.log(res);
                 this.expandedSubtasks = id;
             });
@@ -234,17 +234,17 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
     assignUserPopup(): void {
-        this._taskService.getUsersDepartment(+this.board.department_id).subscribe(res=>{
+        this._taskService.getUsersDepartment(+this.board.department_id).subscribe((res)=>{
             const dialogRef = this.dialog.open(AsignUsersToBoardComponent, {
                 width: '100%',
                 maxWidth:'700px',
                 height:'400px',
                 maxHeight:'100%'
               });
-          
-              dialogRef.afterClosed().subscribe(result => {
+
+              dialogRef.afterClosed().subscribe((result) => {
               });
-        })
+        });
       }
     /**
      * Focus on the given element to start editing the list title
@@ -348,17 +348,17 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
      */
     addCard(list: any, event: TaskOrSub): void
     {
-        console.log(list, event,"console.log(list, title,");
+        console.log(list, event,'console.log(list, title,');
         const newTask = {
             task_id: list.id,
             title: event.title,
             board_id: this.board.id,
             status:list.status.id
-        }
-        if(event.type === "task"){
+        };
+        if(event.type === 'task'){
             this._taskService.storeTask(newTask).subscribe();
         }else{
-            this._taskService.storeSubtask(newTask).subscribe()
+            this._taskService.storeSubtask(newTask).subscribe();
         }
         console.log(newTask);
         // Save the card
@@ -389,18 +389,18 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     cardDropped(event: CdkDragDrop<Card[]>): void
     {
         let order;
-        console.log(event,"currentItem.position = this._positionStepcurrentItem.position = this._positionStep");
-        this.orderModified$.subscribe(res=>{
+        console.log(event,'currentItem.position = this._positionStepcurrentItem.position = this._positionStep');
+        this.orderModified$.subscribe((res)=>{
             order = res;
-        })
-        
+        });
+
         // Move or transfer the item
         if ( event.previousContainer === event.container )
         {
             // Move the item
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             const currentTask = event.container.data[event.currentIndex];
-            const currentIndex = event.currentIndex
+            const currentIndex = event.currentIndex;
             const taskuCurrent = event.container.data[currentIndex]?.id;
             const previusTask = event.container.data[currentIndex - 1]?.id;
             const nextTask = event.container.data[currentIndex + 1]?.id;
@@ -417,7 +417,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
                 }else{
                 }
             }
-            console.log(event,"currentItem.position = this._positionStepcurrentItem.position = this._positionStep");
+            console.log(event,'currentItem.position = this._positionStepcurrentItem.position = this._positionStep');
             this._taskService.updateTaskStatusOrder(event.container.id, order.toString(),this.board.id, +currentTask.id).subscribe();
         }
         else
@@ -426,7 +426,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             // Update the card's list it
             event.container.data[event.currentIndex].listId = event.container.id;
             const currentTask = event.container.data[event.currentIndex];
-            const currentIndex = event.currentIndex
+            const currentIndex = event.currentIndex;
             const taskuCurrent = event.container.data[currentIndex]?.id;
             const previusTask = event.container.data[currentIndex - 1]?.id;
             const nextTask = event.container.data[currentIndex + 1]?.id;

@@ -4,21 +4,29 @@ import {
   RouterStateSnapshot,
   ActivatedRouteSnapshot
 } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { iif, mergeMap, Observable, of, throwError } from 'rxjs';
 import { DepartmentsService } from './departments.service';
 import { Departments, Boards } from './departments.types';
 import { BoardsService } from './boards/boards.service';
 import { Task2 } from '../tasks/tasks.types';
+import { UserService } from 'app/core/user/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepartmentsResolver implements Resolve<any> {
-
-  constructor(private _departmentsService: DepartmentsService){
+  constructor(private _departmentsService: DepartmentsService, private _userService: UserService, private _router:Router){
 
   }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Departments[]> {
+//Duhet te permisohet    
+    this._userService.get().subscribe((res:any)=>{
+      if(res.data.role.name === "User"){
+        const parentUrl = '/departments/'+res.data.department.id
+        this._router.navigateByUrl(parentUrl);
+      }
+    })
+   
     return this._departmentsService.getDepartments();
   }
 }
@@ -45,10 +53,11 @@ export class BoardsResolver implements Resolve<any> {
 })
 export class BoardTaskResolve implements Resolve<any> {
 
-  constructor(private _boardService: BoardsService){
+  constructor(private _boardService: BoardsService, ){
 
   }
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Task2[]> {
+
     return this._boardService.getBoardTasks(+route.paramMap.get('boardId'));
   }
 }

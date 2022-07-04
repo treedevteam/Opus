@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +14,7 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 
 const routerConfig: ExtraOptions = {
@@ -40,6 +42,7 @@ const routerConfig: ExtraOptions = {
         // Layout module of your application
         LayoutModule,
         MatSnackBarModule,
+        CKEditorModule,
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({})
     ],

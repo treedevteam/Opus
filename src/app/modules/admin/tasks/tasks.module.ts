@@ -64,8 +64,8 @@ import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
         TasksLogsComponent,
         EditableComponent,
         ViewModeDirective,
-        EditModeDirective, 
-        FocusableDirective, 
+        EditModeDirective,
+        FocusableDirective,
         EditableOnEnterDirective, StoreTaskRowComponent, CommentsComponent, AsignUsersToBoardComponent,
         MultiselectAutocompleteComponent,
         KanbanBoardComponent,
@@ -103,10 +103,10 @@ import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
         ChecklistModule,
         MatChipsModule,
         MatCardModule,
-        MentionModule 
+        MentionModule
     ],
     providers   : [
-        
+
         {
             provide : MAT_DATE_FORMATS,
             useValue: {

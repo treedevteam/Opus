@@ -30,12 +30,12 @@ export class StoreDepartmentsComponent implements OnInit {
   departmentById: Departments;
 
   constructor(public dialogRef: MatDialogRef<StoreDepartmentsComponent>,
-    public dialog:MatDialog,
+    public dialog: MatDialog,
     private _formBuilder: FormBuilder,
       private departmentService: DepartmentsService,
       private _snackBar: MatSnackBar,
       private _route: ActivatedRoute
-    ) { 
+    ) {
     }
 
     ngOnInit(): void {
@@ -44,7 +44,7 @@ export class StoreDepartmentsComponent implements OnInit {
           image: ['', Validators.required],
       });
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -115,8 +115,8 @@ export class StoreDepartmentsComponent implements OnInit {
     const result = Object.assign({}, this.storeDepartment.value);
     formData.append('name', this.storeDepartment.get('name').value);
     formData.append('image', this.file);
-    console.log(this.storeDepartment.get('name').value, "this.storeDepartment.get('name').value");
-    console.log(this.file, "this.file");
+    console.log(this.storeDepartment.get('name').value, 'this.storeDepartment.get(\'name\').value');
+    console.log(this.file, 'this.file');
 
       this.departmentService.addDepartment(formData).subscribe(
         (res)=>{
@@ -126,6 +126,6 @@ export class StoreDepartmentsComponent implements OnInit {
             duration: 3000,
           });
         }
-      )
+      );
   }
 }

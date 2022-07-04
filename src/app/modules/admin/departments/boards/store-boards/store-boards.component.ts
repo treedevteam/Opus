@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -15,7 +17,7 @@ export class StoreBoardsComponent implements OnInit {
 
   constructor(private _formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<StoreBoardsComponent>,
-    public dialog:MatDialog,
+    public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private _boardService: BoardsService
     ) { }
@@ -31,8 +33,14 @@ export class StoreBoardsComponent implements OnInit {
 
   addBoard(){
     console.log(this.storeBoard.value);
-    this._boardService.addBoard(this.storeBoard.value).subscribe(res=>{
-    })
+    this._boardService.addBoard(this.storeBoard.value).subscribe((res)=>{
+      this.closeDialog();
+    });
+  }
+
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 
 }

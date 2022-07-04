@@ -22,7 +22,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
     board: Board;
     card: Card;
     cardForm: FormGroup;
-    taskById$: Observable<Task2>
+    taskById$: Observable<Task2>;
 
     // Private
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -50,8 +50,8 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        console.log(this.data,"from dialog");
-        
+        console.log(this.data,'from dialog');
+
         // Get the board
         this._scrumboardService.board$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -64,10 +64,10 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             });
 
         // Get the card details
-        if(this.data === "Task"){
-            this.taskById$ = this._tasksService.taskById$
+        if(this.data === 'Task'){
+            this.taskById$ = this._tasksService.taskById$;
         }else{
-            this.taskById$ = this._tasksService.mysubtask$
+            this.taskById$ = this._tasksService.mysubtask$;
 
         }
 
@@ -81,13 +81,13 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             raport      : [null],
             restrictions    : [null],
             status    : [null],
-            
+
         });
 
         // Fill the form
-        this.taskById$.subscribe(res=>{
+        this.taskById$.subscribe((res)=>{
             console.log(res);
-            
+
             this.cardForm.setValue({
                 id          : res.id,
                 title       : res.title,
@@ -98,14 +98,14 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 restrictions: res.restrictions,
                 status      : res.status
             });
-        })
-       
+        });
+
 
         // Update card when there is a value change on the card form
         this.cardForm.valueChanges
             .pipe(
                 tap((value) => {
-                    
+
 
                     // Update the card object
                     this.card = assign(this.card, value);
@@ -114,10 +114,10 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 takeUntil(this._unsubscribeAll)
             )
             .subscribe((value) => {
-                console.log(value,"value");
-                
+                console.log(value,'value');
+
                 // Update the card on the server
-                if(this.data === "Task"){
+                if(this.data === 'Task'){
 
                 this._tasksService.updateTaskservice(value, value.id ).subscribe((res)=>{
                     // this.cardForm.setValue({
@@ -130,8 +130,8 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                     //     restrictions: res.restrictions,
                     //     status      : res.status
                     // });
-                    
-                    console.log(res,"EEWRWERWERWERw");
+
+                    console.log(res,'EEWRWERWERWERw');
                 });
                 }else{
                     this._tasksService.updateSubtaskById(value, value.id ).subscribe((res)=>{
@@ -145,8 +145,8 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                         //     restrictions: res.restrictions,
                         //     status      : res.status
                         // });
-                        
-                        console.log(res,"EEWRWERWERWERw");
+
+                        console.log(res,'EEWRWERWERWERw');
                     });
                 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -18,14 +19,14 @@ export class UpdateDepartmentsComponent implements OnInit {
   file: any = null;
   departmetId: number;
   uploaded = false;
-  departmentById: Departments
+  departmentById: Departments;
 
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
       private departmentService: DepartmentsService,
       public dialogRef: MatDialogRef<UpdateDepartmentsComponent>,
-      public dialog:MatDialog,
+      public dialog: MatDialog,
       private _snackBar: MatSnackBar,
       private _formBuilder: FormBuilder,
 
@@ -37,7 +38,7 @@ export class UpdateDepartmentsComponent implements OnInit {
       name: ['', Validators.required],
       image: ['', Validators.required],
     });
-    this.getDepartmentById(this.data.dataKey.id)
+    this.getDepartmentById(this.data.dataKey.id);
 
   }
 
@@ -45,13 +46,13 @@ export class UpdateDepartmentsComponent implements OnInit {
     const formData = new FormData();
     const result = Object.assign({}, this.storeDepartment.value);
     formData.append('name', this.storeDepartment.get('name').value);
-    console.log(this.storeDepartment.get('name').value, "this.storeDepartment.get('name').value");
+    console.log(this.storeDepartment.get('name').value, 'this.storeDepartment.get(\'name\').value');
     if (this.file instanceof File) {
       formData.append('image', this.file);
   }
-    this.departmentService.updateDepartments(formData, this.data.dataKey.id).subscribe(res=>{
+    this.departmentService.updateDepartments(formData, this.data.dataKey.id).subscribe((res)=>{
       this.dialogRef.close();
-    })
+    });
   }
 
 
@@ -124,7 +125,7 @@ export class UpdateDepartmentsComponent implements OnInit {
     this.departmentService.getDepartmentById(id).pipe(first())
     .subscribe(
         (res) => {
-          console.log(res,"RESSSSSSSSSSSSSSSS");
+          console.log(res,'RESSSSSSSSSSSSSSSS');
           this.departmentById = res;
             this.file = res.image;
             this.storeDepartment.setValue({name: res.name, image: res.image});

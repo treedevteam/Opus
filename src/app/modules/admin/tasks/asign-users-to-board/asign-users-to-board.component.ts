@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, OnInit } from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { Users } from '../tasks.types';
@@ -16,13 +17,13 @@ export class AsignUsersToBoardComponent implements OnInit {
   };
 
   selectOptions: Array<Users>;
-  
+
   apiUrl = environment.apiUrl;
 
   usersAssigned = this._taskService.currentBoardUsers$;
   departmentUsers = this._taskService.currentDepartmentUsers$;
-  usersAssigned$ = this._taskService.usersAssigned$
- 
+  usersAssigned$ = this._taskService.usersAssigned$;
+
 
 
 
@@ -31,24 +32,24 @@ export class AsignUsersToBoardComponent implements OnInit {
   constructor(private _taskService: TasksService) { }
 
   ngOnInit(): void {
-    this._taskService.notAssignedDepartmentUsers$.subscribe(res=>{
+    this._taskService.notAssignedDepartmentUsers$.subscribe((res)=>{
       this.selectOptions = res;
-    })
+    });
 
-   this._taskService.currentBoard$.subscribe(res=>{
+   this._taskService.currentBoard$.subscribe((res)=>{
      this.currentBoard = res;
-     
-   })
-    
+
+   });
+
   }
 
 
 
 
-  getDepartmentUsers(id:number){
-    this._taskService.getUsersDepartment(id).subscribe(res=>{
-      this.selectOptions = res; 
-    })
+  getDepartmentUsers(id: number){
+    this._taskService.getUsersDepartment(id).subscribe((res)=>{
+      this.selectOptions = res;
+    });
   }
 
   selectChange = (event: any) => {
@@ -59,10 +60,10 @@ export class AsignUsersToBoardComponent implements OnInit {
   };
 
 
-  assignUserToBoard(userId:number){
-    this._taskService.assignUserToBoard(this.currentBoard.id , userId).subscribe(res=>{
+  assignUserToBoard(userId: number){
+    this._taskService.assignUserToBoard(this.currentBoard.id , userId).subscribe((res)=>{
       console.log(res);
-    })
+    });
   }
 
 }

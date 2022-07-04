@@ -26,22 +26,22 @@ export class DepartmentsService {
   ) { }
 
 
-  get $departments (): Observable<Departments[]>{
+  get $departments(): Observable<Departments[]>{
     return this._departments.asObservable();
   }
 
-  get $department (): Observable<Departments>{
+  get $department(): Observable<Departments>{
     return this._department.asObservable();
   }
 
-  get $newDepartment (): Observable<Departments>{
+  get $newDepartment(): Observable<Departments>{
     return this._newDepartment.asObservable();
   }
-  get $deletedDepartment (): Observable<number>{
+  get $deletedDepartment(): Observable<number>{
     return this._deletedDepartment.asObservable();
   }
 
-  get $updatedDep (): Observable<Departments>{
+  get $updatedDep(): Observable<Departments>{
     return this._updatedDepartment.asObservable();
   }
 
@@ -49,12 +49,12 @@ export class DepartmentsService {
 
 
 
-  
+
   getDepartments(): Observable<Departments[]>{
     return this._httpClient.get<Departments[]>(this.apiUrl+'api/departments').pipe(
       map((data: any): Departments[] => {
           this._departments.next(data);
-          console.log(data,"DEPARTMETS");
+          console.log(data,'DEPARTMETS');
           return data;
       }),
        shareReplay(1),
@@ -63,9 +63,7 @@ export class DepartmentsService {
 
   getUsers(): Observable<Users[]>{
     return this._httpClient.get<Users[]>(this.apiUrl+'api/users').pipe(
-      map((data: any): Users[] => {
-          return data;
-      }),
+      map((data: any): Users[] => data),
        shareReplay(1),
   );
   }
@@ -77,35 +75,33 @@ export class DepartmentsService {
         this._newDepartment.next(null);
         return res;
       })
-    )
+    );
   }
 
   updateDepartments(form: any, id: number): Observable<Departments>{
-    return this._httpClient.post<Departments>(this.apiUrl+"api/department/update/"+id, form).pipe(
+    return this._httpClient.post<Departments>(this.apiUrl+'api/department/update/'+id, form).pipe(
       map((res: any): Departments=>{
         this._updatedDepartment.next(res);
         this._updatedDepartment.next(null);
         return res;
       })
-    )
+    );
   }
 
   deleteDepartment(id: number): Observable<number>{
-    return this._httpClient.delete<Number>(this.apiUrl+"api/department/delete/"+ id).pipe(
+    return this._httpClient.delete<Number>(this.apiUrl+'api/department/delete/'+ id).pipe(
       map((res: any): number =>{
         this._deletedDepartment.next(id);
         this._deletedDepartment.next(null);
         return res;
       })
-    )
+    );
   }
 
   getDepartmentById(id: number): Observable<Departments>{
-    return this._httpClient.get<Departments>(this.apiUrl+"api/department/"+ id).pipe(
-      map((res: any): Departments =>{
-        return res;
-      })
-    )
+    return this._httpClient.get<Departments>(this.apiUrl+'api/department/'+ id).pipe(
+      map((res: any): Departments =>res)
+    );
   }
 
   setNullBehaviour(): void{
@@ -114,6 +110,6 @@ export class DepartmentsService {
     this._updatedDepartment.next(null);
   }
 
-  
+
 
 }

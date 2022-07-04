@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { combineLatest, map, Observable, tap } from 'rxjs';
 import { TasksService } from '../../tasks.service';
@@ -19,62 +20,66 @@ export class CommentsComponent implements OnInit {
   taskId: number;
   commentForm: FormGroup;
   apiUrl = environment.apiUrl;
-  boardUsers:Users[] =[];
-  mentionConfig1 = {}
- 
+  boardUsers: Users[] = [];
+  mentionConfig1 = {};
+
 
 
   getFields(input, field) {
-      var output = [];
-      for (var i=0; i < input.length ; ++i)
-          output.push(input[i][field]);
-      return output;
+
+    const output = [];
+    for (let i = 0; i < input.length; ++i) { output.push(input[i][field]); }
+    return output;
   }
 
-  taskLogs(){
+  taskLogs() {
+
     this._tasksService.taskById$
-    .subscribe((task: Task2) => {
+      .subscribe((task: Task2) => {
         this.taskId = task.id;
-    });
+      });
   }
 
-  
+
   taskComments$ = combineLatest([
+
     this._tasksService.taskComments$,
     this._tasksService.taskComment$,
     this._tasksService.getUsersData$,
     this._tasksService.deletedComment$
-],(g,p,u,de) => {
-    if(p){
-      const index = g.findIndex(x => x.id === p.id)
-         if (index < 0) {
-          g.unshift(p);
-        };
-      
-    }else if(de){
-        const index = g.findIndex(x => x.id === de);
-        if (index > -1) g.splice(index, 1);
+  ], (g, p, u, de) => {
+
+    if (p) {
+      const index = g.findIndex(x => x.id === p.id);
+      if (index < 0) {
+        g.unshift(p);
+      };
+
+    } else if (de) {
+      const index = g.findIndex(x => x.id === de);
+      if (index > -1) { g.splice(index, 1); }
     }
     let d = null;
-    if(g){
-        d = g.map(res=>({
-            ...res,
-            user_id: u.find(user => user.id === res.user_id)
-        }))
+    if (g) {
+      d = g.map(res => ({
+        ...res,
+        user_id: u.find(user => user.id === res.user_id)
+      }));
     }
-    return d?d : g;
- })
+    return d ? d : g;
+  });
 
   constructor(private _tasksService: TasksService,
     private _fuseConfirmationService: FuseConfirmationService,
     private _formBuilder: FormBuilder
-    ) { }
+  ) { }
 
-  
-    
+
+
   ngOnInit(): void {
-    this._tasksService.currentBoardUsers$.subscribe(res=>{
-      this.items = res
+
+    this._tasksService.currentBoardUsers$.subscribe((res) => {
+      this.items = res;
       // this.mentionConfig1 = {
       //   mentions: [
       //     {
@@ -86,42 +91,41 @@ export class CommentsComponent implements OnInit {
       //         triggerChar: '#'
       //     }
       //   ]
-      // } 
-    })
+      // }
+    });
     this.taskLogs();
     this.commentForm = this._formBuilder.group({
-        id        : [''],
-        newComment: '',
+      id: [''],
+      newComment: '',
     });
   }
 
 
-  addCommentTask(){
-    let ids = this.data
+  addCommentTask() {
+    const ids = this.data
       .replace(/(\r\n|\n|\r)/gm, '')
       .split('@')
       .filter(
-        (t) => t != '' && this.items.findIndex((u) => t.includes(u.name) === true) > -1
+        t => t != '' && this.items.findIndex(u => t.includes(u.name) === true) > -1
       )
-      .map((name) => this.items.find((s) => name.includes(s.name) === true).id);
-      console.log(ids);
-      this._tasksService.storeComment({text: this.commentForm.get('newComment').value,task_id:this.taskId, mentions:'['+ids+']'}).subscribe(res=>{
-          this.commentForm.get('newComment').setValue("");
-      })
+      .map(name => this.items.find(s => name.includes(s.name) === true).id);
+    console.log(ids);
+    this._tasksService.storeComment({ text: this.commentForm.get('newComment').value, task_id: this.taskId, mentions: '[' + ids + ']' }).subscribe((res) => {
+      this.commentForm.get('newComment').setValue('');
+    });
   }
 
-  deleteCommentclick(id: number): void{
-
+  deleteCommentclick(id: number): void {
     const dialogRef = this._fuseConfirmationService.open();
     // Subscribe to afterClosed from the dialog reference
     dialogRef.afterClosed().subscribe((result) => {
-        if(result === 'confirmed'){
-            this._tasksService.deleteComment(id).subscribe(res=>{
-                console.log(res);
-            })
-        }
+      if (result === 'confirmed') {
+        this._tasksService.deleteComment(id).subscribe((res) => {
+          console.log(res);
+        });
+      }
     });
-}
+  }
 }
 
 
