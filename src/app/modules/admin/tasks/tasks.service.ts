@@ -432,7 +432,6 @@ export class TasksService
     {
         return this._httpClient.get<Users[]>(this.apiUrl+'api/board/'+ boardId +'/users').pipe(
             map((data: any): Users[] => {
-                debugger;
                 console.log(data,'USSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
                 this._currentBoardUsers.next(data.data);
                 return data.data;
@@ -1007,7 +1006,7 @@ export class TasksService
     updateTaskPriority(priorityId: any, taskId:number, board_id:number): Observable<Task2>{
         return this._httpClient.post<Task2>(this.apiUrl+'api/task_priority/' + taskId ,  {priority: priorityId,board_id}).pipe(
             map((data: any) => {
-                this._tasksupdated.next(data);
+                this._tasksupdated.next(data.data);
                 this._newtask.next(null);
                 return data.data;
             }),
@@ -1119,7 +1118,6 @@ export class TasksService
     getBoard(id: number): Observable<Boards>{
         return this._httpClient.get<Boards>(this.apiUrl+'api/board/'+ id).pipe(
             map((data: any): Boards => {
-                debugger;
                 this._currentBoard.next({...data.board, is_his: data.is_his});
                 return data;
             }),

@@ -92,6 +92,7 @@ export class TasksListComponent implements OnInit, OnDestroy
         this._tasksService.taskUpdated$,
         this._tasksService.deletedTask$
     ],(g,p,u,d) => {
+        debugger;
          if(p){
             const id = g.findIndex(t=> t.id === p.id);
             if(id === -1){

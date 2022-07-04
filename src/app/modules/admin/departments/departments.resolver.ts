@@ -21,7 +21,6 @@ export class DepartmentsResolver implements Resolve<any> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Departments[]> {
 //Duhet te permisohet    
     this._userService.get().subscribe((res:any)=>{
-      debugger;
       if(res.data.role.name === "User"){
         const parentUrl = '/departments/'+res.data.department.id
         this._router.navigateByUrl(parentUrl);
