@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, shareReplay } from 'rxjs';
 import { Boards } from '../departments.types';
@@ -100,6 +101,7 @@ export class BoardsService {
     return this._httpClient.post<Boards>(this.apiUrl+'api/board/store',board).pipe(
       map((res: any): Boards=>{
         this._newBoards.next(res.data);
+        console.log(board);
         return res;
       })
     );

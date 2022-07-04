@@ -17,7 +17,10 @@
             </mat-form-field>
             <mat-form-field class="flex-auto gt-xs:pr-3">
                 <mat-label>Board type:</mat-label>
-                <input matInput [formControlName]="'type'" type="number">
+                <mat-select matNativeControl required name="'type"  [formControlName]="'type'" >
+                    <mat-option value="0">Public</mat-option>
+                    <mat-option value="1">Private</mat-option>
+                </mat-select>
                 <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
             </mat-form-field>
             <button mat-raised-button color="primary" [disabled]="updateBoardNgForm.invalid"
