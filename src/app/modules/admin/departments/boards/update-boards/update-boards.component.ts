@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
@@ -20,7 +21,7 @@ export class UpdateBoardsComponent implements OnInit {
   public dialogRef: MatDialogRef<StoreBoardsComponent>,
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.updateBoards = this._formBuilder.group({
       id:['', Validators.required],
       name: ['', Validators.required],
@@ -30,7 +31,13 @@ export class UpdateBoardsComponent implements OnInit {
   });
     this.updateBoards.setValue(this.data.dataKey);
     console.log(this.data);
-
+  this.updateBoards.value({
+    id:this.updateBoards.value.id,
+    name:this.updateBoards.value.name,
+    description:this.updateBoards.value.description,
+    type:this.updateBoards.value.type,
+    department_id: this.updateBoards.value.department_id
+  });
   }
 
   updateBoard(): void{
