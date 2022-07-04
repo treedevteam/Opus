@@ -73,8 +73,8 @@
                             <!-- Task content -->
                             <div class="relative flex items-center h-full pl-4 ">
                         
-                                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                <mat-icon>more_vert</mat-icon>
+                                <!-- <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                <mat-icon class="three-dots">more_vert</mat-icon>
                                 </button>
                                 <mat-menu #menu="matMenu">
                                      <button mat-menu-item>
@@ -89,8 +89,8 @@
                                 <mat-icon>notifications_off</mat-icon>
                                 <span>Disable alerts</span>
                                 </button>
-                                 </mat-menu>
-    
+                                 </mat-menu> -->
+                                    
                                          <div class="subtasks" (click)="toggleTableRows(tas.id)" matBadgeColor="warn" [matBadge]="tas.subtasks_count" matBadgeSize="small" matBadgePosition="before">
                                             <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
                                         </div>
@@ -139,7 +139,7 @@
                                         </ng-container>
                                         <!-- Users Assign -->
                                         <div class="users_asiggn_task">
-                                            <span class="add_userToTasl" (click)="openUsersPanel(tas.users_assigned,tas.id)" #usersPanelOrigin>+</span>
+                                            <!-- <span class="add_userToTasl" (click)="openUsersPanel(tas.users_assigned,tas.id)" #usersPanelOrigin>+</span> -->
                                             <ng-container
                                                 *ngFor="let item of tas.users_assigned">
                                                 <img [matTooltip]="item.name" [matTooltipPosition]="'above'"
@@ -263,6 +263,7 @@
                                         </ng-container> 
                                     </div>
                                 </div>
+                            
                                 <div style="overflow: hidden;" class="subtask_list not_collapsed" [@detailExpand]="expandedSubtasks !== null && expandedSubtasks === tas.id ? 'expanded' : 'collapsed'" >
                                         <div *ngIf="expandedSubtasks === tas.id">
                                             <ng-container class="mt-5" *ngFor="let subtaskTask of subtasksData$ | async; let index1 = index; let first = first; trackBy: trackByFn;">
