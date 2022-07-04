@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://opus-api.fibrasec.net/'
+    apiUrl: 'https://opus-api.fibrasec.net/'
 };
