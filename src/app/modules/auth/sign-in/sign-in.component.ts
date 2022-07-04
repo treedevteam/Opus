@@ -40,7 +40,6 @@ export class AuthSignInComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
-        debugger;
         // Create the form
         this.signInForm = this._formBuilder.group({
             username: [

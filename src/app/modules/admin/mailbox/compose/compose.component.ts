@@ -183,7 +183,7 @@ export class MailboxComposeComponent implements OnInit
      */
     send(): void
     {
-        debugger;
+        
         console.warn(this.allFiles,"FAJLLAT");
         const user = this.composeForm.value.users
         .replace(/(\r\n|\n|\r)/gm, '')
@@ -205,6 +205,7 @@ export class MailboxComposeComponent implements OnInit
     this._mailbox.sendEmail(formData).subscribe((res)=>{
         console.log(res);
         this.matDialogRef.close();
-    });
-    }
+     });
+}
+
 }

@@ -5,6 +5,7 @@ import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
 import { AdminGuard } from './core/auth/guards/admin.guard';
+import { MailboxComponent } from './modules/admin/mailbox/mailbox.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -57,8 +58,8 @@ export const appRoutes: Route[] = [
             {path: 'sign-out', loadChildren: () => import('app/modules/auth/sign-out/sign-out.module').then(m => m.AuthSignOutModule)},
             {path: 'unlock-session', loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.module').then(m => m.AuthUnlockSessionModule)}
         ]
+    
     },
-
     // Landing routes
     {
         path: '',
@@ -139,7 +140,7 @@ export const appRoutes: Route[] = [
             {path: 'locations', loadChildren: () => import('app/modules/admin/locations/locations.module').then(m => m.LocationsModule)},
             {path: 'priorities', loadChildren: () => import('app/modules/admin/priorities/priorities.module').then(m => m.PrioritiesModule)},
             {path: 'statuses', loadChildren: () => import('app/modules/admin/statuses/status.module').then(m => m.StatusModule)},
-            {path: 'mailbox', loadChildren: () => import('app/modules/admin/mailbox/mailbox.module').then(m => m.MailboxModule)},
+            {path: 'mailbox', loadChildren: () => import('app/modules/admin/mailbox/mailbox.module').then(m => m.MailboxModule)},    
         ]
     }
 ];
