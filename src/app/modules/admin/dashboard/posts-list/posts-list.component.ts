@@ -14,6 +14,7 @@ import { combineLatest, forkJoin, map, Observable, shareReplay, tap } from 'rxjs
 import { Posts } from '../models/dashboard';
 import { environment } from 'environments/environment';
 import { Departments } from '../../departments/departments.types';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
     selector: 'app-posts-list',
@@ -21,13 +22,7 @@ import { Departments } from '../../departments/departments.types';
     styleUrls: ['./posts-list.component.scss'],
 })
 export class PostsListComponent implements OnInit {
-    numberOfLikes: number = 0;
-    likeButtonClick() {
-        this.numberOfLikes++;
-    }
-    dislikeButtonClick() {
-        this.numberOfLikes--;
-    }
+    
     isShowDivIf = true;
 
     toggleDisplayDivIf() {
@@ -54,7 +49,7 @@ export class PostsListComponent implements OnInit {
             ...post,
             replies: post.replies.map(rep=>({
                 ...rep,
-                name: users.find(x=> x.id === rep.user_id).name
+                user: users.find(x=> x.id === rep.user_id)
             }))
             // replies: {
             //     ...post.replies,
@@ -74,19 +69,22 @@ export class PostsListComponent implements OnInit {
     constructor(
         private _dashboardService: DashboardService,
         private _formBuilder: FormBuilder,
-        private _snackBar: MatSnackBar
+        private _snackBar: MatSnackBar,
+        private _user: UserService
     ) {}
 
     ngOnInit(): void {
-        this.supportForm = this._formBuilder.group({
-            description: ['', Validators.required],
-            file: [''],
-            // departments: '[' + res.id + ']',
-        });
-        this._dashboardService.currentDepartment$.subscribe(res=>{
-           
+        this._dashboardService.myPosts()
+        this._dashboardService.myUsers()
+        this._user.user$.subscribe(res=>{
+            debugger;
+            this.supportForm = this._formBuilder.group({
+                description: ['', Validators.required],
+                file: [''],
+                departments: "[" + res.department.id + "]"
+            });
         })
-        // Create the support form
+        
     }
 
 
@@ -140,7 +138,8 @@ export class PostsListComponent implements OnInit {
     }
 
     sendForm(): void {
-        console.log(this.supportForm.get('file').value);
+        debugger;
+        console.log(this.supportForm.value);
         const formData = new FormData();
         const result = Object.assign({}, this.supportForm.value);
         formData.append(
@@ -153,7 +152,15 @@ export class PostsListComponent implements OnInit {
             this.supportForm.get('departments').value
         );
         this._dashboardService.storePost(formData).subscribe((res) => {
-            this.clearForm();
+            this.supportForm.patchValue({
+                file:null,
+                description:null
+            })
         });
+    }
+
+
+    LikeButtonClick(postId){
+        this._dashboardService.likeorUnlikePost(postId).subscribe()
     }
 }

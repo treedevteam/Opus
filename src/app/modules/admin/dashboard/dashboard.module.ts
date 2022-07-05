@@ -17,6 +17,7 @@ import { FuseAlertModule } from '@fuse/components/alert';
 import { PostsListComponent } from './posts-list/posts-list.component';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { DashboardResolver } from './dashboard.resolvers';
+import { StoreReplyComponent } from './store-reply/store-reply.component';
 
 export const routes: Route[] = [
     {
@@ -32,7 +33,8 @@ export const routes: Route[] = [
 @NgModule({
   declarations: [
     DashboardComponent,
-    PostsListComponent
+    PostsListComponent,
+    StoreReplyComponent
   ],
   imports: [
     RouterModule.forChild(routes),
