@@ -48,7 +48,7 @@ export class DashboardService {
       take(1),
       switchMap(posts => this._httpClient.post<Posts>(this.apiUrl + 'api/post/store',data).pipe(
           map((newPost: Posts) => {
-              this._departmentPosts.next([newPost,...posts]);
+              this._departmentPosts.next([data.newPost,...posts]);
               return newPost;
           })
       ))
@@ -102,10 +102,28 @@ export class DashboardService {
     {
         return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department/' + depId).pipe(
             map((data: any): Users[] => {
+              debugger;
                 this._currentDepartmentUsers.next(data.data);
                 return data.data;
             }),
         );
+    }
+
+
+    storeReply(id:number, data){
+      return this._httpClient.post<Posts>(this.apiUrl + `reply/${id}/store`,{text: data}).pipe(
+        map((newPost: Posts) => {
+            return newPost;
+        })
+      )
+    }
+
+    likeorUnlikePost(id: number){
+      return this._httpClient.post<Posts>(this.apiUrl + `/post/${id}/like`,null).pipe(
+        map((newPost: Posts) => {
+            return newPost;
+        })
+      )
     }
 
 

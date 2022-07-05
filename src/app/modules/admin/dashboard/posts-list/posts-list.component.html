@@ -121,11 +121,13 @@
                 </div>
                 <div class="row">
                     <div class="col-8">
-                            <p class="like-text">{{post.likes}} Likes</p>
+                        <p class="like-text">{{post.likes}} Likes</p>
+                        <div (click)="LikeButtonClick(post.id)">
                             <mat-icon
                             svgIcon="heroicons_outline:thumb-up"
                             ></mat-icon>
-                            <mat-icon svgIcon="heroicons_solid:thumb-up" (click)="dislikeButtonClick()"></mat-icon>
+                            <mat-icon svgIcon="heroicons_solid:thumb-up" ></mat-icon>
+                        </div>
                     </div>
                     <div class="col-4">
                         <p (click)="toggleDisplayDivIf()" class="comments">Show comments</p>
@@ -137,14 +139,15 @@
                 <div class="row" *ngFor="let replies of post.replies">
                     <div class="col-1">
                         <img
-                            src="../../../../../assets/images/avatars/female-01.jpg"
+                        src="{{ apiUrl }}storage/{{ replies.user.user_image }}"
                             alt=""
-                            class="image-2 mt-3"
+                            class=""
+                            style="width: 50px;height:50px; object-fit:cover;border-radius: 50%;"
                         />
                     </div>
                     <div class="col-10">
                         <div class="box">
-                            <h1 class="fw-bold p-2">{{replies.name}}</h1>
+                            <h1 class="fw-bold p-2">{{replies.user.name}}</h1>
                             <p class="descriptioni">{{ replies.text }}</p>
                         </div>
                         <p class="mt-1 ms-2 date">
@@ -158,28 +161,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-10 textarea">
-                        <mat-form-field class="fuse-mat-textarea w-full mt-4">
-                            <textarea
-                                matInput
-                                [formControlName]="'comment'"
-                                [rows]="1"
-                                [placeholder]="'Write a comment...'"
-                                matTextareaAutosize
-                            ></textarea>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2 post">
-                        <button
-                            class="post-button"
-                            mat-raised-button 
-                            [color]="'primary'"
-                        >
-                            <b>Post</b>
-                        </button>
-                    </div>
-                </div>
+                <app-store-reply [postId]="post.id"></app-store-reply>
             </div>
             </ng-container> 
        </div>
