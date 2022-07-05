@@ -81,6 +81,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             raport      : [null],
             restrictions    : [null],
             status    : [null],
+            file: [null],
 
         });
 
@@ -96,7 +97,8 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 priority    : res.priority,
                 raport      : res.raport,
                 restrictions: res.restrictions,
-                status      : res.status
+                status      : res.status,
+                file: res.file
             });
         });
 

@@ -53,7 +53,7 @@ export class AuthSignInComponent implements OnInit {
             grant_type: ['password'],
             client_id    : ['1'],
             scope        : [''],
-            client_secret: ['7vKXpZik96eo3VIiDkjlXfpHkgmZk4wdrVMK0kNL']
+            client_secret: ['N70W9BYYHevFvhKHTeWgRHMH68hKRr0roXtscUxU']
         });
     }
 
@@ -66,6 +66,7 @@ export class AuthSignInComponent implements OnInit {
      */
     signIn(): void {
         // Return if the form is invalid
+        debugger;
         if (this.signInForm.invalid) {
             return;
         }

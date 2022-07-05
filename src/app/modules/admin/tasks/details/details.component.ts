@@ -114,7 +114,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             departments: [],
             has_expired    : [0],
             users_assigned    : [[]],
-            checklist:''
+            checklist:'',
+            file:''
         });
 
 
@@ -817,4 +818,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     {
         return item.id || index;
     }
+    addFiletoTask(file){
+
+    }
+
 }

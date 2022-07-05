@@ -57,6 +57,7 @@ export interface Task2
     has_expired: boolean;
     subtasks_count: number;
     checklists: TaskCheckList[];
+    file: any;
 }
 
 export interface TaskWithDepartment{
