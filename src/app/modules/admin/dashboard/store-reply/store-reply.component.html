@@ -1,0 +1,29 @@
+<div class="" style="width: 100%;">
+
+    <form [formGroup]="replyForm">
+<div class="row align-items-center">
+    <div class="col-10 textarea">
+
+        <mat-form-field class="fuse-mat-textarea w-full mt-4">
+            <textarea
+                matInput
+                [formControlName]="'text'"
+                [rows]="1"
+                [placeholder]="'Write a comment...'"
+                matTextareaAutosize
+            ></textarea>
+        </mat-form-field>
+    </div>
+    <div class="col-2 post">
+        <button
+        (click)="storeReplyPost()"
+            class="post-button"
+            mat-raised-button 
+            [color]="'primary'"
+        >
+            <b>Post</b>
+        </button>
+    </div>
+</div>
+</form>
+</div>
