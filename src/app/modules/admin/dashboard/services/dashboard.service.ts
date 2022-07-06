@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, concatMap, map, Observable, switchMap, take, tap, shareReplay } from 'rxjs';
-import { Posts } from '../models/dashboard';
+import { Posts, Replies } from '../models/dashboard';
 import { Departments } from '../../departments/departments.types';
 import { Users } from '../../tasks/tasks.types';
+import { UserService } from 'app/core/user/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,13 @@ export class DashboardService {
 
   private _departmentPosts: BehaviorSubject<Posts[] | null> = new BehaviorSubject(null); 
   private _currentDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null); 
+  private _currentDepartmentId: BehaviorSubject<number | null> = new BehaviorSubject(null); 
   private _currentDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
+  private _likedByMe: BehaviorSubject<boolean | null> = new BehaviorSubject(null); 
 
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient,
+    private _user: UserService) { }
 
   get departmentPosts$(): Observable<Posts[]>{
     return this._departmentPosts.asObservable();
@@ -27,14 +31,24 @@ export class DashboardService {
     return this._currentDepartment.asObservable();
   }
   get currentDepartmentUsers$(): Observable<Users[]>{
-    return this._currentDepartmentUsers.asObservable();
-}
+      return this._currentDepartmentUsers.asObservable();
+  }
+  get currentDepartmentId$(): Observable<number>{
+    return this._currentDepartmentId.asObservable();
+  }
+
+  get likedByMe$(): Observable<boolean>{
+    return this._likedByMe.asObservable();
+  }
 
 
-  getPostsDepartment(depId: number): Observable<Posts[]>
+  
+
+  getPostsDepartment(): Observable<Posts[]>
   {
-      return this._httpClient.get<Posts[]>(this.apiUrl+'api/posts/' + depId).pipe(
+      return this._httpClient.get<Posts[]>(this.apiUrl+'api/posts').pipe(
           map((data: any): Posts[] => {
+            debugger;
               this._departmentPosts.next(data.data);
               return data.data;
           }),
@@ -47,60 +61,19 @@ export class DashboardService {
     return this.departmentPosts$.pipe(
       take(1),
       switchMap(posts => this._httpClient.post<Posts>(this.apiUrl + 'api/post/store',data).pipe(
-          map((newPost: Posts) => {
-              this._departmentPosts.next([data.newPost,...posts]);
+          map((newPost: any) => {
+              this._departmentPosts.next([newPost.data,...posts]);
               return newPost;
           })
       ))
   );
   }
 
-  myDepartment(){
-    return this._httpClient.get(this.apiUrl+'api/my_department').pipe(
-        map((data: any):any => {
-            this._currentDepartment.next(data.data);
-            return data.data;
-        }),
-        shareReplay(1)
-    );
-  }
+ 
 
-  myPosts(){
-    return this.myDepartment().pipe(
-        concatMap(((val :any) => {
-          console.log(val);
-            return this.getPostsDepartment(val.id)
-        })),
-    )
-  };
-
-  myUsers(){
-    return this.myDepartment().pipe(
-        concatMap(((val :any) => {
-          console.log(val);
-            return this.getUsersDepartment(val.id)
-        })),
-    )
-  };
-
-  getPostsDepartmentWithId$ = this.currentDepartment$.pipe(
-    tap(res=>{
-      console.log(res);
-    }),
-    switchMap(x => {
-      return this.getPostsDepartment(x.id)
-    })
-  )
-
-  getUsersDepartmentWithId$ = this.currentDepartment$.pipe(
-    switchMap(x => {
-      return this.getUsersDepartment(x.id)
-    })
-  )
-
-  getUsersDepartment(depId: number): Observable<Users[]>
+  getUsersDepartment(): Observable<Users[]>
     {
-        return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department/' + depId).pipe(
+        return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department').pipe(
             map((data: any): Users[] => {
               debugger;
                 this._currentDepartmentUsers.next(data.data);
@@ -111,19 +84,47 @@ export class DashboardService {
 
 
     storeReply(id:number, data){
-      return this._httpClient.post<Posts>(this.apiUrl + `reply/${id}/store`,{text: data}).pipe(
-        map((newPost: Posts) => {
+
+      return this.departmentPosts$.pipe(
+        take(1),
+        switchMap(posts => this._httpClient.post<Replies>(this.apiUrl + `api/reply/${id}/store`,data).pipe(
+            map((newPost: Replies) => { 
+              debugger;
+                const postet = posts.map(res=>({
+                    ...res,
+                    replies: res.id === id ? [...res.replies,newPost] : res.replies
+                }))
+                this._departmentPosts.next(postet);
+                return newPost;
+            })
+        ))
+      );
+    }
+
+    likeorUnlikePost(id: number, like:boolean){
+      return this._httpClient.post(this.apiUrl + `api/post/${id}/like`,null).pipe(
+        map((newPost: any) => {
+          debugger;
+            this._likedByMe.next(like);
             return newPost;
         })
       )
     }
 
-    likeorUnlikePost(id: number){
-      return this._httpClient.post<Posts>(this.apiUrl + `/post/${id}/like`,null).pipe(
-        map((newPost: Posts) => {
-            return newPost;
-        })
-      )
+
+    deleteReply(id: number, postId: number){
+      return this.departmentPosts$.pipe(
+        take(1),
+        switchMap(posts => this._httpClient.delete(this.apiUrl + `api/reply/delete/${id}`).pipe(
+            map((newPost: any) => { 
+              const postIndex =  posts.findIndex(x=>x.id === postId);
+              const repliesIndex = posts[postIndex].replies.findIndex(x=>x.id === id);
+              posts[postIndex].replies.splice(repliesIndex,1);
+              this._departmentPosts.next(posts)
+              return newPost;
+            })
+        ))
+      );
     }
 
 

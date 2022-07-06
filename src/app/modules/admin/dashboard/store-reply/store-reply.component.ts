@@ -29,7 +29,7 @@ export class StoreReplyComponent implements OnInit {
             'text',
             this.replyForm.get('text').value
         );
-    this._dashboardService.storeReply(this.postId, this.replyForm.get('text').value).subscribe(res=>{
+    this._dashboardService.storeReply(this.postId, formData).subscribe(res=>{
       console.log(res);
     })
     
