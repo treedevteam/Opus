@@ -18,7 +18,6 @@
                 <form [formGroup]="taskForm">
                     <div class="flex">
                         <input [placeholder]=" taskId ? 'Add Subtask':'Add Task '" [formControlName]="'title'" class="new_task_row">
-                            <input type="file" [formControlName]="'file'">
                         <button *ngIf="!taskId" mat-raised-button color="primary" class="new_task_button" (click)="changeSubmitEventTask()">Add</button>
                         <button *ngIf="taskId" mat-raised-button color="primary" class="new_task_button" (click)="changeSubmitEventSubtask()">Add</button>
                     </div>
