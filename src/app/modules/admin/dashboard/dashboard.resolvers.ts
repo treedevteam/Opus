@@ -30,8 +30,9 @@ export class DashboardResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any
     {
-        return this._dashboardService.myDepartment().subscribe(res=>{
+        this._dashboardService.getUsersDepartment().subscribe(res=>{
             console.log(res);
         });
+        return this._dashboardService.getPostsDepartment() 
     }
 }
