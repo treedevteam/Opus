@@ -68,7 +68,8 @@
                     <ng-container matColumnDef="image">
                       <th mat-header-cell *matHeaderCellDef>Image</th>
                       <td mat-cell *matCellDef="let element">
-                          <img style="width: 35px!important;height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;" src="{{apiUrl+ 'storage/'+element.image}}" alt="">
+                          <img style="width: 35px!important;height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;" src="{{apiUrl+ 'storage/'+element.image}}" alt=""
+                          onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                         </td>
                     </ng-container>
 

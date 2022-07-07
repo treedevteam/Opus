@@ -41,20 +41,23 @@ export class PostsListComponent implements OnInit {
     postsWithReplies$ = combineLatest([
         this._dashboardService.departmentPosts$,
         this._dashboardService.currentDepartmentUsers$,
-        this._dashboardService.likedByMe$,
         this._user.user$
       ]).pipe(
-        map(([posts, users, like, myUser]) =>
+        map(([posts, users, myUser]) =>
         posts.map(post =>({
             ...post,
-            likes: post.likes.push(+myUser.id),
-            liked: like !== null ? like : post.likes.find(x=>x === +myUser.id) > -1 ? true : false,
+            likes: post.likes.length + 1,
+            liked: post.likes.findIndex(x=> x === +myUser.id) > -1,
             replies: post.replies.map(rep=>({
                 ...rep,
                 user: users.find(x=>x.id === rep.user_id),
                 isHis: +myUser.id === rep.user_id
             }))
         }))),
+        tap(res=>{
+            debugger;
+            console.log(res);
+        }),
         shareReplay(1),
       );
    
@@ -165,16 +168,13 @@ export class PostsListComponent implements OnInit {
             this.supportForm.get('departments').value
         );
         this._dashboardService.storePost(formData).subscribe((res) => {
-            this.supportForm.patchValue({
-                file:null,
-                description:null
-            })
+           this.clearForm();
         });
     }
 
 
-    LikeButtonClick(postId,like){
-        this._dashboardService.likeorUnlikePost(postId, like).subscribe(res=>{
+    LikeButtonClick(postId){
+        this._dashboardService.likeorUnlikePost(postId).subscribe(res=>{
             console.log(res);
         })
     }

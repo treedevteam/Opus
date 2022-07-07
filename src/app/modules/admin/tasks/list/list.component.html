@@ -21,12 +21,8 @@
                         <div class="text-4xl font-extrabold tracking-tight leading-none" *ngIf="departmentTasksWithStatusPriority$ | async">{{(departmentTasksWithStatusPriority$ | async).name}}'s Tasks</div> 
                         
                         <div class="kanban_view_button">
-                            <a [routerLink]="['kanban/view']" >Kanban View</a>
+                            <a [routerLink]="['kanban/view']" mat-flat-button [color]="'primary'" >Kanban View</a>
                         </div>
-                        
-                            
-                            <!-- <span *ngIf="tasksCount.incomplete === 0">All tasks completed!</span>
-                            <span *ngIf="tasksCount.incomplete !== 0">{{tasksCount.incomplete}} remaining tasks</span> -->
                     </div>
                     <!-- Actions -->
                     <div class="mt-4 sm:mt-0 flex">
@@ -72,28 +68,42 @@
                             [class.border-t]="first">
                             <!-- Task content -->
                             <div class="relative flex items-center h-full pl-4 ">
-                        
-                                <!-- <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                <mat-icon class="three-dots">more_vert</mat-icon>
-                                </button>
+                                <div class="relative" style="position: relative;">
+                                    <button style="position: relative;" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                        <mat-icon style="position: relative !important;top: 0;left: 0;
+                                        bottom: 0; right: 0;" class="three-dots">more_vert</mat-icon>
+                                    </button>
+                                </div>
                                 <mat-menu #menu="matMenu">
-                                     <button mat-menu-item>
-                                <mat-icon>dialpad</mat-icon>
-                                 <span>Redial</span>
-                                </button>
-                                <button mat-menu-item disabled>
-                                <mat-icon>voicemail</mat-icon>
-                                <span>Check voice mail</span>
-                                </button>
-                                <button mat-menu-item>
-                                <mat-icon>notifications_off</mat-icon>
-                                <span>Disable alerts</span>
-                                </button>
-                                 </mat-menu> -->
-                                    
-                                         <div class="subtasks" (click)="toggleTableRows(tas.id)" matBadgeColor="warn" [matBadge]="tas.subtasks_count" matBadgeSize="small" matBadgePosition="before">
-                                            <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+                                    <button (click)="sahreTaskPopover()"  [matMenuTriggerFor]="dateTimeMenu" (menuOpened)="menuOpened()" mat-menu-item>Share task</button>
+                                    <mat-menu class="date-range-menu" #dateTimeMenu="matMenu" >
+                                        <div class="share_task_popover"  (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                                            <div class="share_task_popover_header">
+                                                <span class="">Share task</span>
+                                                <a href="#" class=""></a>
+                                            </div>
+
+                                            <form [formGroup]="formShare" (ngSubmit)="onSubmit(tas.id)"  #shareTaskNgForm="ngForm">
+                                                <div class="form_body_popover">
+                                                    <mat-form-field style="width: 100%;" >
+                                                        <mat-select multiple [formControlName]="'boards'" disableOptionCentering>
+                                                        <mat-optgroup label="{{department.name}}" *ngFor="let department of departmentsWithBoard$ | async">
+                                                            <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
+                                                        </mat-optgroup>
+                                                        </mat-select>
+                                                    </mat-form-field> 
+                                                </div>
+                                                <button type="submit" mat-raised-button color="primary">Share</button>
+                                            </form>
                                         </div>
+                                    </mat-menu>
+                                 </mat-menu>
+
+
+                                 <div class="subtasks" (click)="toggleTableRows(tas.id)" matBadgeColor="warn" [matBadge]="tas.subtasks_count" matBadgeSize="small" matBadgePosition="before">
+                                    <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+                                </div>
+                                         
 
                                         <!-- Selected indicator -->
                                         <div>
@@ -105,7 +115,8 @@
                                         <div class="flex items-center justify-center inset-y-0 left-0 me-3">
                                             <img [matTooltip]="tas.user.name" [matTooltipPosition]="'above'"
                                                 style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
-                                                src="{{apiUrl+ 'storage/'+tas.user.user_image}}" alt="">
+                                                src="{{apiUrl+ 'storage/'+tas.user.user_image}}" alt=""
+                                                onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                                         </div>
                                         <!-- Task title -- link -->
                                         <div class="flex flex-auto items-center min-w-0 h-full pr-7" >
@@ -144,7 +155,8 @@
                                                 *ngFor="let item of tas.users_assigned">
                                                 <img [matTooltip]="item.name" [matTooltipPosition]="'above'"
                                                     class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                                    [src]="apiUrl+ 'storage/' + item.image" alt="Member avatar">
+                                                    [src]="apiUrl+ 'storage/' + item.image" alt="Member avatar"
+                                                    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                                             </ng-container>
                                             <div *ngIf="tas.users_assigned.length === 0" (click)="openUsersPanel(tas.users_assigned,tas.id)" #usersPanelOrigin>
                                                 <img

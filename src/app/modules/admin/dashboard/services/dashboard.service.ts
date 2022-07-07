@@ -101,14 +101,20 @@ export class DashboardService {
       );
     }
 
-    likeorUnlikePost(id: number, like:boolean){
-      return this._httpClient.post(this.apiUrl + `api/post/${id}/like`,null).pipe(
-        map((newPost: any) => {
-          debugger;
-            this._likedByMe.next(like);
-            return newPost;
-        })
-      )
+    likeorUnlikePost(id: number){
+      return this.departmentPosts$.pipe(
+        take(1),
+        switchMap(posts => this._httpClient.post(this.apiUrl + `api/post/${id}/like`,null).pipe(
+            map((postLikes: number[]) => { 
+              debugger;
+                const postIndex =  posts.findIndex(x=>x.id === id);
+                const repliesIndex = posts[postIndex].replies.findIndex(x=>x.id === id);
+                posts[postIndex].likes = postLikes
+                this._departmentPosts.next(posts)
+                return postLikes;
+            })
+        ))
+      );
     }
 
 

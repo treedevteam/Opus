@@ -10,7 +10,8 @@
         <div class="flex items-center justify-center inset-y-0 left-0 me-3">
             <img [matTooltip]="userInfo?.name" [matTooltipPosition]="'above'"
                 style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
-                src="{{apiUrl+ 'storage/'+userInfo?.user_image}}" alt="">
+                src="{{apiUrl+ 'storage/'+userInfo?.user_image}}" alt=""
+                onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
         </div>
         <div class="flex flex-auto items-center min-w-0 h-full pr-7">
             <!-- Title & Placeholder -->

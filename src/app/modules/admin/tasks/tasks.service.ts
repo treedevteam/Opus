@@ -30,6 +30,7 @@ export class TasksService
 
 
     private _currentBoard: BehaviorSubject<Boards | null> = new BehaviorSubject(null);
+    private _allBoards: BehaviorSubject<Boards[] | null> = new BehaviorSubject(null);
     private _currentBoardOrderTasks: BehaviorSubject<string | null> = new BehaviorSubject(null);
     private _currentBoardTasks: BehaviorSubject<Task2[] | null> = new BehaviorSubject(null);
     private _currentBoardUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
@@ -150,6 +151,15 @@ export class TasksService
         }),
          shareReplay(1),
     );
+
+
+    getBoardsData$ = this._httpClient.get<Boards[]>(this.apiUrl+'api/all/boards').pipe(
+        map((data: any): Boards[] => {
+            this._allBoards.next(data);
+            return data;
+        }),
+         shareReplay(1),
+    );
     // eslint-disable-next-line @typescript-eslint/member-ordering
     getUsersData$ = this._httpClient.get<Users[]>(this.apiUrl+'api/users').pipe(
         map((data: any): Users[] => {
@@ -244,6 +254,9 @@ export class TasksService
 
     get currentBoard$(): Observable<Boards>{
         return this._currentBoard.asObservable();
+    }
+    get allBoards$(): Observable<Boards[]>{
+        return this._allBoards.asObservable();
     }
 
     get currentBoardOrderTasks$(): Observable<string>{

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { combineLatest, map, of, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import * as moment from 'moment';
@@ -29,6 +29,10 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ScrumboardBoardComponent implements OnInit, OnDestroy
 {
+    @ViewChild('shareTaskNgForm') shareTaskNgForm: NgForm;
+
+    formShare: FormGroup;
+
     board: Boards;
     listTitleForm: FormGroup;
     apiUrl = environment.apiUrl;
@@ -61,6 +65,22 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
          }
        return g;
      });
+
+     departmentsWithBoard$ = combineLatest([
+        this._taskService.getDepartmentsData$,
+        this._taskService.getBoardsData$,
+      ]).pipe(
+        map(([departments,board]) =>
+        departments.map(departmet =>({
+            ...departmet,
+            boards: board.filter(x=> +x.department_id === departmet.id)
+            
+        }))),
+        shareReplay(1),
+        tap((res)=>{
+            console.log(res);
+        })
+      );
 
 
      tasksDataCheckList$= combineLatest([
@@ -188,6 +208,9 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        this.formShare = this._formBuilder.group({
+            boards: ['', Validators.required],
+        });
         // Initialize the list title form
         this.listTitleForm = this._formBuilder.group({
             title: ['']

@@ -92,3 +92,18 @@
 .kanban_view_button{
     margin-top: 20px;
 }
+
+.share_task_popover{
+    max-width: 100%;
+    width: 270px;
+    padding: 15px;
+}
+.share_task_popover_header{
+    border-bottom: 1px solid #0000002a;
+    padding: 0 0 10px 0;
+    text-align: center;
+    font-size: 18px;
+}
+.form_body_popover{
+    padding-top: 10px;
+}

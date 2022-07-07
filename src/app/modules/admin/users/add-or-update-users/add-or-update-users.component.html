@@ -13,7 +13,7 @@
         </mat-form-field>
         <mat-form-field *ngIf="isAddMode" class="flex-auto gt-xs:pr-3">
             <mat-label>Password:</mat-label>
-            <input matInput [formControlName]="'password'" [value]="userById?.password">
+            <input matInput [formControlName]="'password'" type="password" [value]="userById?.password">
             <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
         </mat-form-field>
         <div class="form-group mb-3">
@@ -47,7 +47,6 @@
         </div>
         <hr>
         <div *ngIf="url || file" [ngIfElse]="elseUrl">
-<h1>BABA</h1>
             <ng-template [ngIf]="!uploaded">
                 <mat-list>
                     <h3 mat-subheader>Files</h3>

@@ -119,11 +119,11 @@
                 </div>
                 <div class="row">
                     <div class="col-8">
-                        <p class="like-text">{{post.likes.length}} Likes</p>
-                            <mat-icon (click)="LikeButtonClick(post.id,true)" *ngIf="!post.liked"
+                        <p class="like-text"> {{post.likes}} Likes</p>
+                            <mat-icon (click)="LikeButtonClick(post.id)" *ngIf="!post.liked"
                             svgIcon="heroicons_outline:thumb-up"
                             ></mat-icon>
-                            <mat-icon (click)="LikeButtonClick(post.id,false)" *ngIf="post.liked" svgIcon="heroicons_solid:thumb-up" ></mat-icon>
+                            <mat-icon (click)="LikeButtonClick(post.id)" *ngIf="post.liked" svgIcon="heroicons_solid:thumb-up" ></mat-icon>
                     </div>
                     <div class="col-4">
                         <p (click)="toggleDisplayDivIf()" class="comments">Show comments</p>
