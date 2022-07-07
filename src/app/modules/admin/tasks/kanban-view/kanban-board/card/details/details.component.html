@@ -43,6 +43,11 @@
             </textarea>
         </mat-form-field>
 
+        <!-- File -->
+        <div class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+            <input (change)="onFileChange($event.target.files)" type="file" [formControlName]="'file'">
+        </div>
+
         <!-- Due date -->
         <div>
             <div class="font-medium">Deadline</div>

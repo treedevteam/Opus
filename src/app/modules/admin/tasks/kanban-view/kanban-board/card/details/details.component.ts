@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -10,6 +11,7 @@ import { Board, Card, Label } from '../../scrumboard.models';
 import { Task2 } from 'app/modules/admin/tasks/tasks.types';
 import { TasksService } from 'app/modules/admin/tasks/tasks.service';
 import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
     selector       : 'scrumboard-card-details',
     templateUrl    : './details.component.html',
@@ -23,7 +25,9 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
     card: Card;
     cardForm: FormGroup;
     taskById$: Observable<Task2>;
-
+    file: any;
+    uploaded: boolean;
+    url ;
     // Private
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -36,6 +40,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
         private _formBuilder: FormBuilder,
         private _scrumboardService: ScrumboardService,
         private _tasksService: TasksService,
+        private _snackBar: MatSnackBar,
         @Inject(MAT_DIALOG_DATA) public data: any
     )
     {
@@ -81,13 +86,13 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             raport      : [null],
             restrictions    : [null],
             status    : [null],
+            file: [null],
 
         });
 
         // Fill the form
         this.taskById$.subscribe((res)=>{
             console.log(res);
-
             this.cardForm.setValue({
                 id          : res.id,
                 title       : res.title,
@@ -96,29 +101,28 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 priority    : res.priority,
                 raport      : res.raport,
                 restrictions: res.restrictions,
-                status      : res.status
+                status      : res.status,
+                file: res.file
             });
         });
 
 
         // Update card when there is a value change on the card form
         this.cardForm.valueChanges
-            .pipe(
-                tap((value) => {
+        .pipe(
+            tap((value) => {
 
-
-                    // Update the card object
+                // Update the card object
                     this.card = assign(this.card, value);
                 }),
                 debounceTime(300),
                 takeUntil(this._unsubscribeAll)
-            )
-            .subscribe((value) => {
-                console.log(value,'value');
-
-                // Update the card on the server
-                if(this.data === 'Task'){
-
+                )
+                .subscribe((value) => {
+                    console.log(value,'value');
+                    // Update the card on the server
+                    if(this.data === 'Task'){
+                        debugger;
                 this._tasksService.updateTaskservice(value, value.id ).subscribe((res)=>{
                     // this.cardForm.setValue({
                     //     id          : res.id,
@@ -280,5 +284,47 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             // Read the file as the
             reader.readAsDataURL(file);
         });
-    }
+    }  
+    onFileChange(pFileList: File): void{
+        if (pFileList[0]) {
+            if (
+                pFileList[0].type === 'image/png' ||
+                pFileList[0].type === 'image/jpg'
+            ) {
+                if (pFileList[0].size < 200 * 200) {
+                    /* Checking height * width*/
+                }
+                if (pFileList[0].size < 512000) {
+                    this.uploaded = true;
+                    this.file = pFileList[0];
+                    const file = pFileList[0];
+                    this.cardForm.patchValue({
+                        file: pFileList[0]
+                        });
+                        this._snackBar.open('Successfully upload!', 'Close', {
+                            duration: 2000,
+                        });
+                        const reader = new FileReader();
+                        reader.readAsDataURL(pFileList[0]);
+                        reader.onload = (event): any => {
+                            this.url = event.target.result;
+                        };
+                    } else {
+                        this._snackBar.open('File is too large!', 'Close', {
+                            duration: 2000,
+                        });
+                        this.uploaded = false;
+                        this.file = null;
+                        this.url = null;
+                    }
+                } else {
+                    this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
+                        duration: 2000,
+                    });
+                    this.uploaded = false;
+                    this.file = null;
+                    this.url = null;
+                }
+            }
+        } 
 }

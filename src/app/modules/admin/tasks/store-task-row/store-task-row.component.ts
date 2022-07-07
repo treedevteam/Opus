@@ -23,6 +23,7 @@ export class StoreTaskRowComponent implements OnInit {
     this.taskForm = this._formBuilder.group({
       id: [''],
       title: [''],
+      file:[''],
       board_id: [[]],
       task_id: ['']
     });

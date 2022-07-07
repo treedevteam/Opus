@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Directive, Input, HostListener } from '@angular/core';
 import { EditableComponent } from './editable.component';
 

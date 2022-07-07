@@ -75,11 +75,7 @@
             </form>
         </div>
 
-        <div
-            class="messages text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight"
-        >
-            Latest Posts
-        </div>
+        
     </div>
 </div>
 <div class="flex flex-col flex-auto items-center p-6 sm:p-10 pt-0">
@@ -87,12 +83,13 @@
         <!-- <p *ngIf="!(departmentPostsWithReplies$ | async)" class="text-center">
             No posts yet
         </p> -->
-        {{(departmentPostsWithReplies$ | async) | json}}
         <div
-            class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card"
+            class="messages text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight"
         >
-         <ng-container *ngFor="let post of departmentPostsWithReplies$ | async">
-
+            Latest Posts
+        </div>
+        <div class="mt-8 sm:mt-12 p-6 pb-7 sm:p-10 sm:pb-7 shadow rounded-2xl bg-card">
+         <ng-container *ngFor="let post of postsWithReplies$ | async">
             <div  class="post_section">
                 <div class="row">
                     <div class="col-1">
@@ -100,6 +97,7 @@
                             src="{{ apiUrl }}storage/{{ post.user?.image }}"
                             alt=""
                             class="image"
+                            onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';"
                         />
                     </div>
                     <div class="col-11">
@@ -109,7 +107,6 @@
                         </p>
                     </div>
                 </div>
-
                 <p class="description">{{ post.description }}</p>
                 <hr />
                 <div class="row file">
@@ -117,15 +114,16 @@
                         *ngIf="post.file"
                         src="{{ apiUrl }}storage/{{ post.file }}"
                         alt="image"
+                        
                     />
                 </div>
                 <div class="row">
                     <div class="col-8">
-                            <p class="like-text">{{post.likes}} Likes</p>
-                            <mat-icon
+                        <p class="like-text">{{post.likes.length}} Likes</p>
+                            <mat-icon (click)="LikeButtonClick(post.id,true)" *ngIf="!post.liked"
                             svgIcon="heroicons_outline:thumb-up"
                             ></mat-icon>
-                            <mat-icon svgIcon="heroicons_solid:thumb-up" (click)="dislikeButtonClick()"></mat-icon>
+                            <mat-icon (click)="LikeButtonClick(post.id,false)" *ngIf="post.liked" svgIcon="heroicons_solid:thumb-up" ></mat-icon>
                     </div>
                     <div class="col-4">
                         <p (click)="toggleDisplayDivIf()" class="comments">Show comments</p>
@@ -137,14 +135,15 @@
                 <div class="row" *ngFor="let replies of post.replies">
                     <div class="col-1">
                         <img
-                            src="../../../../../assets/images/avatars/female-01.jpg"
+                        src="{{ apiUrl }}storage/{{ replies.user.user_image }}"
                             alt=""
-                            class="image-2 mt-3"
+                            class="image"
+                            onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';"
                         />
                     </div>
                     <div class="col-10">
                         <div class="box">
-                            <h1 class="fw-bold p-2">{{replies.name}}</h1>
+                            <h1 class="fw-bold p-2">{{replies.user.name}}</h1>
                             <p class="descriptioni">{{ replies.text }}</p>
                         </div>
                         <p class="mt-1 ms-2 date">
@@ -152,34 +151,13 @@
                         </p>
                     </div>
                     <div class="col-1">
-                        <button class="mt-3" mat-button [color]="''">
+                        <button class="mt-3" *ngIf="replies.isHis" (click)="deleteReplyPost(replies.id ,post.id)" mat-button [color]="''">
                             <b>x</b>
                         </button>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-10 textarea">
-                        <mat-form-field class="fuse-mat-textarea w-full mt-4">
-                            <textarea
-                                matInput
-                                [formControlName]="'comment'"
-                                [rows]="1"
-                                [placeholder]="'Write a comment...'"
-                                matTextareaAutosize
-                            ></textarea>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2 post">
-                        <button
-                            class="post-button"
-                            mat-raised-button 
-                            [color]="'primary'"
-                        >
-                            <b>Post</b>
-                        </button>
-                    </div>
-                </div>
+                <app-store-reply [postId]="post.id"></app-store-reply>
             </div>
             </ng-container> 
        </div>
