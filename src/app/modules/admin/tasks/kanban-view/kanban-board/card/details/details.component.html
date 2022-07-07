@@ -45,7 +45,7 @@
 
         <!-- File -->
         <div class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-            <input type="file" [formControlName]="'file'">
+            <input (change)="onFileChange($event.target.files)" type="file" [formControlName]="'file'">
         </div>
 
         <!-- Due date -->
