@@ -31,8 +31,9 @@
                                 <div *ngFor="let test of (usersList | async)">
                                     <!-- User -->
                                         <img [matTooltip]="test.name" [matTooltipPosition]="'above'"
-                                            style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;"
-                                            src="{{apiUrl+ 'storage/'+test.user_image}}" alt="">
+                                            class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                                            src="{{apiUrl+ 'storage/'+test.user_image}}" alt=""
+                                            onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                                 </div>
                             </div>
 
