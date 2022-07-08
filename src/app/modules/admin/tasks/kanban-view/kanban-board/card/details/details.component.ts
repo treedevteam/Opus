@@ -1,3 +1,5 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/member-ordering */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,15 +10,17 @@ import * as moment from 'moment';
 import { assign } from 'lodash-es';
 import { ScrumboardService } from '../../scrumboard.service';
 import { Board, Card, Label } from '../../scrumboard.models';
-import { Task2 } from 'app/modules/admin/tasks/tasks.types';
+import { Task2, Users } from 'app/modules/admin/tasks/tasks.types';
 import { TasksService } from 'app/modules/admin/tasks/tasks.service';
 import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TasksListComponent } from 'app/modules/admin/tasks/list/list.component';
 @Component({
     selector       : 'scrumboard-card-details',
     templateUrl    : './details.component.html',
     encapsulation  : ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers:[TasksListComponent]
 })
 export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
 {
@@ -28,6 +32,9 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
     file: any;
     uploaded: boolean;
     url ;
+    filteredUsers: Users[];
+    usersList: Users[];
+    priority = this._tasksService.getPriorities$;
     // Private
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -40,6 +47,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
         private _formBuilder: FormBuilder,
         private _scrumboardService: ScrumboardService,
         private _tasksService: TasksService,
+        private _prioritys: TasksListComponent,
         private _snackBar: MatSnackBar,
         @Inject(MAT_DIALOG_DATA) public data: any
     )
@@ -86,7 +94,6 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             raport      : [null],
             restrictions    : [null],
             status    : [null],
-            file: [null],
 
         });
 
@@ -102,7 +109,6 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 raport      : res.raport,
                 restrictions: res.restrictions,
                 status      : res.status,
-                file: res.file
             });
         });
 
@@ -122,7 +128,13 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                     console.log(value,'value');
                     // Update the card on the server
                     if(this.data === 'Task'){
-                        debugger;
+                  
+                        const formData = new FormData();
+                        const result  = Object.assign({},this.cardForm.value);
+                        formData.append('id',this.cardForm.get('id').value);  
+                        formData.append('title',this.cardForm.get('title').value);  
+                        formData.append('description',this.cardForm.get('description').value);  
+                        formData.append('deadline',this.cardForm.get('deadline').value);  
                 this._tasksService.updateTaskservice(value, value.id ).subscribe((res)=>{
                     // this.cardForm.setValue({
                     //     id          : res.id,
@@ -137,6 +149,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
 
                     console.log(res,'EEWRWERWERWERw');
                 });
+                this.addfileTotask();
                 }else{
                     this._tasksService.updateSubtaskById(value, value.id ).subscribe((res)=>{
                         // this.cardForm.setValue({
@@ -183,6 +196,14 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
         return !!this.card.labels.find(cardLabel => cardLabel.id === label.id);
     }
 
+
+    addfileTotask()
+    { 
+     return   this._tasksService.addfileToTask(this.file, this.cardForm.get('id').value).subscribe((res)=>{
+            console.log(res);
+    });
+ }
+
     /**
      * Toggle card label
      *
@@ -200,6 +221,16 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             this.removeLabelFromCard(label);
         }
     }
+    
+    filterDepartments(event): void
+    {
+        // Get the value
+        const value = event.target.value.toLowerCase();
+
+        // Filter the tags
+        this.filteredUsers = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
+    }
+
 
     /**
      * Add label to the card
@@ -217,7 +248,9 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
-
+    selectPriority(status){
+       this._prioritys.selectPriority(status);
+ }
     /**
      * Remove label from the card
      *
@@ -284,7 +317,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             // Read the file as the
             reader.readAsDataURL(file);
         });
-    }  
+    }
     onFileChange(pFileList: File): void{
         if (pFileList[0]) {
             if (
@@ -326,5 +359,6 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                     this.url = null;
                 }
             }
-        } 
+        }
+        
 }

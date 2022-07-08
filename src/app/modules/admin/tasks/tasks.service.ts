@@ -1137,5 +1137,7 @@ export class TasksService
              shareReplay(1),
             );
     }
-
+    addfileToTask(file,id): any{
+        return this._httpClient.post(`api/task_file/${id}`, {file});
+    }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
@@ -605,4 +606,5 @@ export class ScrumboardService
         // @TODO: Update the board cards based on the search results
         return this._httpClient.get<Card[] | null>('api/apps/scrumboard/board/search', {params: {query}});
     }
+
 }

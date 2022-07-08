@@ -120,7 +120,7 @@ import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
                     monthYearA11yLabel: 'MMMM YYYY'
                 }
             }
-        }
+        },
     ]
 })
 export class TasksModule
