@@ -54,7 +54,7 @@ export class AuthSignInComponent implements OnInit {
             client_id    : ['3'],
             scope        : [''],
             client_secret: ['bx54KDFq0TXjuptmVdJVGKML4D3nsLK3Ltl10zXH'] 
-        });
+        }); 
     }
 
     // -----------------------------------------------------------------------------------------------------
