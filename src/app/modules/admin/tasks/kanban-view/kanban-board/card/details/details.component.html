@@ -45,10 +45,22 @@
         </mat-form-field>
 
         <!-- File -->
-        <div class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-            <input (change)="onFileChange($event.target.files)" type="file" [formControlName]="'file'">
-        </div>
-{{cardForm.get('priority').value}}
+        <!-- <div class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+            <input onchange="onFileChange(console.warn($event.target.files))" type="file" [formControlName]="'file'">
+        </div> -->
+        <input style="display:none ;" type="file" class="file-input"
+       (change)="onFileChange($event)" #fileUpload>
+
+        <div class="file-upload">
+
+   {{fileName || "No file uploaded yet."}}
+
+    <button mat-mini-fab color="primary" class="upload-btn"
+      (click)="fileUpload.click()">
+        <mat-icon>attach_file</mat-icon>
+    </button>
+</div>
+        {{cardForm.get('priority').value}}
         <!-- Due date -->
         <div>
             <div class="font-medium">Deadline</div>

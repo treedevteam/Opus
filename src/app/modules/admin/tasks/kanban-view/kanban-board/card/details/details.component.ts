@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/semi */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/member-ordering */
@@ -15,6 +16,7 @@ import { TasksService } from 'app/modules/admin/tasks/tasks.service';
 import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TasksListComponent } from 'app/modules/admin/tasks/list/list.component';
+
 @Component({
     selector       : 'scrumboard-card-details',
     templateUrl    : './details.component.html',
@@ -29,9 +31,10 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
     card: Card;
     cardForm: FormGroup;
     taskById$: Observable<Task2>;
-    file: any;
+    file: any = null;
     uploaded: boolean;
     url ;
+    fileName = '';
     filteredUsers: Users[];
     usersList: Users[];
     priority = this._tasksService.getPriorities$;
@@ -94,6 +97,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             raport      : [null],
             restrictions    : [null],
             status    : [null],
+            file: ['', Validators.required],
 
         });
 
@@ -109,10 +113,11 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 raport      : res.raport,
                 restrictions: res.restrictions,
                 status      : res.status,
+                file: res.file,
             });
         });
 
-
+      
         // Update card when there is a value change on the card form
         this.cardForm.valueChanges
         .pipe(
@@ -125,31 +130,29 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                 takeUntil(this._unsubscribeAll)
                 )
                 .subscribe((value) => {
+                    
                     console.log(value,'value');
                     // Update the card on the server
+                    debugger
                     if(this.data === 'Task'){
-                  
-                        const formData = new FormData();
+                         const formData = new FormData();
                         const result  = Object.assign({},this.cardForm.value);
                         formData.append('id',this.cardForm.get('id').value);  
                         formData.append('title',this.cardForm.get('title').value);  
                         formData.append('description',this.cardForm.get('description').value);  
                         formData.append('deadline',this.cardForm.get('deadline').value);  
-                this._tasksService.updateTaskservice(value, value.id ).subscribe((res)=>{
-                    // this.cardForm.setValue({
-                    //     id          : res.id,
-                    //     title       : res.title,
-                    //     description : res.description,
-                    //     deadline    : res.deadline,
-                    //     priority    : res.priority,
-                    //     raport      : res.raport,
-                    //     restrictions: res.restrictions,
-                    //     status      : res.status
-                    // });
+                        formData.append('priority',this.cardForm.get('priority').value);  
+                        formData.append('raport',this.cardForm.get('raport').value);  
+                        formData.append('restrictions',this.cardForm.get('restrictions').value);  
+                        formData.append('status',this.cardForm.get('status').value);  
+                        // if(this.file instanceof File){
+                        //     formData.append('file', this.file);
+                        // }
+                        this._tasksService.updateTaskservice(formData, value.id).subscribe((res)=>{
+  
 
                     console.log(res,'EEWRWERWERWERw');
                 });
-                this.addfileTotask();
                 }else{
                     this._tasksService.updateSubtaskById(value, value.id ).subscribe((res)=>{
                         // this.cardForm.setValue({
@@ -199,7 +202,10 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
 
     addfileTotask()
     { 
-     return   this._tasksService.addfileToTask(this.file, this.cardForm.get('id').value).subscribe((res)=>{
+        debugger;
+        const formDataFile = new FormData();
+        formDataFile.append('file',this.cardForm.get('file').value);
+     return this._tasksService.addfileToTask(formDataFile, this.cardForm.get('id').value).subscribe((res)=>{
             console.log(res);
     });
  }
@@ -318,47 +324,74 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             reader.readAsDataURL(file);
         });
     }
-    onFileChange(pFileList: File): void{
-        if (pFileList[0]) {
-            if (
-                pFileList[0].type === 'image/png' ||
-                pFileList[0].type === 'image/jpg'
-            ) {
-                if (pFileList[0].size < 200 * 200) {
-                    /* Checking height * width*/
-                }
-                if (pFileList[0].size < 512000) {
-                    this.uploaded = true;
-                    this.file = pFileList[0];
-                    const file = pFileList[0];
-                    this.cardForm.patchValue({
-                        file: pFileList[0]
-                        });
-                        this._snackBar.open('Successfully upload!', 'Close', {
-                            duration: 2000,
-                        });
-                        const reader = new FileReader();
-                        reader.readAsDataURL(pFileList[0]);
-                        reader.onload = (event): any => {
-                            this.url = event.target.result;
-                        };
-                    } else {
-                        this._snackBar.open('File is too large!', 'Close', {
-                            duration: 2000,
-                        });
-                        this.uploaded = false;
-                        this.file = null;
-                        this.url = null;
-                    }
-                } else {
-                    this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
-                        duration: 2000,
-                    });
-                    this.uploaded = false;
-                    this.file = null;
-                    this.url = null;
-                }
-            }
+    onFileChange(event): void{
+        debugger
+        const file: File = event.target.files[0];
+        console.log(file)
+        if(file){
+            this.fileName = file.name;
+            const formData  = new FormData();
+            const result  = Object.assign({},this.cardForm.value);
+            formData.append('id',this.cardForm.get('id').value);  
+            formData.append('title',this.cardForm.get('title').value);  
+            formData.append('description',this.cardForm.get('description').value);  
+            formData.append('deadline',this.cardForm.get('deadline').value);  
+            formData.append('priority',this.cardForm.get('priority').value);  
+            formData.append('raport',this.cardForm.get('raport').value);  
+            formData.append('restrictions',this.cardForm.get('restrictions').value);  
+            formData.append('status',this.cardForm.get('status').value);  
+            formData.append('file', file);
+            this.file = file
+            this._tasksService.updateTaskservice(formData, this.cardForm.value.id).subscribe((res)=>{
+  
+
+                console.log(res,'EEWRWERWERWERw');
+            });
+
         }
-        
+        // if (pFileList[0]) {
+        //     if (
+        //         pFileList[0].type === 'image/jpeg' ||
+        //         pFileList[0].type === 'image/png' ||
+        //         pFileList[0].type === 'image/jpg'
+        //     ) {
+        //         if (pFileList[0].size < 200 * 200) {
+        //             /* Checking height * width*/
+        //         }
+        //         if (pFileList[0].size < 512000) {
+        //             this.uploaded = true;
+        //             this.file = pFileList[0];
+        //             const file = pFileList[0];
+        //             this.cardForm.patchValue({
+        //                 file: pFileList[0]
+        //                 });
+        //             this._snackBar.open('Successfully upload!', 'Close', {
+        //               duration: 2000,
+        //             });
+        //             const reader = new FileReader();
+        //             reader.readAsDataURL(pFileList[0]);
+        //             reader.onload = (event): any => {
+        //                 this.url = event.target.result;
+        //             };
+        //         }else{
+        //             this._snackBar.open('File is too large!', 'Close', {
+        //                 duration: 2000,
+        //             });
+        //             this.uploaded = false;
+        //             this.file = null;
+        //             this.url = null;
+        //         }
+        //     }else{
+        //         this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
+        //             duration: 2000,
+        //         });
+        //         this.uploaded = false;
+        //         this.file = null;
+        //         this.url = null;
+        //     }
+        // }
+      }
+
+     
 }
+

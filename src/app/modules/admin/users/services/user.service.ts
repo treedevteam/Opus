@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Roles, Users } from './../model/users';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

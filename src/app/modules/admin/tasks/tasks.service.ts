@@ -495,9 +495,11 @@ export class TasksService
         );
     }
     updateTaskservice(form: any, id: number): Observable<Task2>{
+        debugger;
         return this._httpClient.post<Task2>(this.apiUrl+'api/task/' + id + '/update/admin', form).pipe(
             // eslint-disable-next-line arrow-body-style
             map((data: any) => {
+                console.warn(data);
                 this._tasksupdated.next(data.data);
                 this._newtask.next(null);
                 return data.data;

@@ -144,6 +144,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
         }else{
         }
         this._usersService._updateUser(this.userId, formData2).subscribe((res: any)=>{
+            console.log(res);
             this._snackBar.open('Updated successfuly!', 'close', {
             duration: 3000,
         });
