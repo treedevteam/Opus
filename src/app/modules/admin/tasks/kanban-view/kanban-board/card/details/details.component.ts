@@ -30,6 +30,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
     board: Board;
     card: Card;
     cardForm: FormGroup;
+    fileForm: FormGroup;
     taskById$: Observable<Task2>;
     file: any = null;
     uploaded: boolean;
@@ -97,9 +98,10 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             raport      : [null],
             restrictions    : [null],
             status    : [null],
-            file: ['', Validators.required],
+            file: [''],
 
         });
+
 
         // Fill the form
         this.taskById$.subscribe((res)=>{
@@ -311,73 +313,85 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             reader.readAsDataURL(file);
         });
     }
-    onFileChange(event): void{
-        debugger
-        const file: File = event.target.files[0];
-        console.log(file)
-        if(file){
-            this.fileName = file.name;
-            const formData = new FormData();
-            const result  = Object.assign({},this.cardForm.value);
-            formData.append('id',this.cardForm.get('id').value);  
-            formData.append('title',this.cardForm.get('title').value);  
-            formData.append('description',this.cardForm.get('description').value);  
-            formData.append('deadline',this.cardForm.get('deadline').value);  
-            formData.append('priority',this.cardForm.get('priority').value);  
-            formData.append('raport',this.cardForm.get('raport').value);  
-            formData.append('restrictions',this.cardForm.get('restrictions').value);  
-            formData.append('status',this.cardForm.get('status').value);  
-            formData.append('file', file);
-            this.file = file
-            console.log(this.file,'try this ')
-            this._tasksService.updateTaskservice(formData,this.cardForm.get('id').value).subscribe((res)=>{
-                console.log(res,'EEWRWERWERWERw');
+    // onFileChange(event): void{
+    //     debugger
+    //     const file: File = event.target.files[0];
+    //     console.log(file)
+    //     if(file){
+    //         this.fileName = file.name;
+    //         const formData = new FormData();
+    //         const result  = Object.assign({},this.cardForm.value);
+    //         formData.append('file', file);
+    //         this.file = file
+    //         console.log(this.file,'try this ')
+    //         
+
+
+    //     }
+       
+    //   }
+
+
+
+    
+  onFileChange(pFileList: File): void {
+    debugger;
+    this.uploaded = true;
+    this.file = pFileList[0];
+
+    if (pFileList[0]) {
+        if (
+            pFileList[0].type === 'image/jpeg' ||
+            pFileList[0].type === 'image/png' ||
+            pFileList[0].type === 'image/jpg'
+        ) {
+            if (pFileList[0].size < 200 * 200) {
+                /* Checking height * width*/
+            }
+            if (pFileList[0].size < 512000) {
+                this._snackBar.open('Successfully upload!', 'Close', {
+                    duration: 2000,
+                });
+
+                const reader = new FileReader();
+                reader.readAsDataURL(pFileList[0]);
+                reader.onload = (event): any => {
+                    this.url = event.target.result;
+                };
+                this.cardForm.get('file').patchValue(this.file);
+
+                this.uploadTaskImage();
+                console.warn(this.url, 'url');
+                console.warn(this.file, 'url');
+            }else{
+                this._snackBar.open('File is too large!', 'Close', {
+                    duration: 2000,
+                });
+                this.uploaded = false;
+                this.file = null;
+                this.cardForm.get('file').patchValue(null);
+                this.url = null;
+            }
+        }else{
+            this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
+                duration: 2000,
             });
-
-
+            this.uploaded = false;
+            this.file = null;
+            this.cardForm.get('file').patchValue(null);
+            this.url = null;
         }
-        // if (pFileList[0]) {
-        //     if (
-        //         pFileList[0].type === 'image/jpeg' ||
-        //         pFileList[0].type === 'image/png' ||
-        //         pFileList[0].type === 'image/jpg'
-        //     ) {
-        //         if (pFileList[0].size < 200 * 200) {
-        //             /* Checking height * width*/
-        //         }
-        //         if (pFileList[0].size < 512000) {
-        //             this.uploaded = true;
-        //             this.file = pFileList[0];
-        //             const file = pFileList[0];
-        //             this.cardForm.patchValue({
-        //                 file: pFileList[0]
-        //                 });
-        //             this._snackBar.open('Successfully upload!', 'Close', {
-        //               duration: 2000,
-        //             });
-        //             const reader = new FileReader();
-        //             reader.readAsDataURL(pFileList[0]);
-        //             reader.onload = (event): any => {
-        //                 this.url = event.target.result;
-        //             };
-        //         }else{
-        //             this._snackBar.open('File is too large!', 'Close', {
-        //                 duration: 2000,
-        //             });
-        //             this.uploaded = false;
-        //             this.file = null;
-        //             this.url = null;
-        //         }
-        //     }else{
-        //         this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
-        //             duration: 2000,
-        //         });
-        //         this.uploaded = false;
-        //         this.file = null;
-        //         this.url = null;
-        //     }
-        // }
-      }
+    }
+}
+
+uploadTaskImage(){
+    const formData = new FormData();
+    const result = Object.assign({}, this.cardForm.value);
+    formData.append('file', this.cardForm.get('file').value);
+    this._tasksService.addfileToTask(formData,this.cardForm.get('id').value).subscribe((res)=>{
+        console.log(res,'EEWRWERWERWERw');
+    }); 
+}
 
      
 }

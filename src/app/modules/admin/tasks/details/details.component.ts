@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/member-ordering */
@@ -21,6 +22,7 @@ import { Users } from '../tasks.types';
 import { Departments } from '../../departments/departments.types';
 import { TaskCheckList } from '../tasks.types';
 import { environment } from 'environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector       : 'tasks-details',
@@ -47,7 +49,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     usersAssignedSelected: number[];
     isXyzChecked = true;
     file: any = null;
-
+    fileName: any;
     tags: Tag[];
     tagsEditMode: boolean = false;
     filteredTags2: Departments[];
@@ -56,7 +58,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     task2: Task2;
     taskForm: FormGroup;
     tasks: Task[];
-
+    uploaded: boolean;
+    url ;
     checkListtotal = 0;
     checkListcompleted = 0;
     checkList: TaskCheckList[];
@@ -81,7 +84,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _tasksService: TasksService,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private _snackBar: MatSnackBar,
     )
     {
 
@@ -818,72 +822,93 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     {
         return item.id || index;
     }
-    onFileChange(event): void{
-        debugger
-        const file: File = event.target.files[0];
-        console.log(file)
-        if(file){
-            this.fileName = file.name;
-            const formData = new FormData();
-            const result  = Object.assign({},this.taskForm.value);
-            formData.append('id',this.taskForm.get('id').value);  
-            formData.append('title',this.taskForm.get('title').value);  
-            formData.append('description',this.taskForm.get('description').value);  
-            formData.append('deadline',this.taskForm.get('deadline').value);  
-            formData.append('priority',this.taskForm.get('priority').value);  
-            formData.append('raport',this.taskForm.get('raport').value);  
-            formData.append('restrictions',this.taskForm.get('restrictions').value);  
-            formData.append('status',this.taskForm.get('status').value);  
-            formData.append('file', file);
-            this.file = file;
-            console.log(this.file,'try this ');
-            this._tasksService.updateTaskservice(formData,this.cardForm.get('id').value).subscribe((res)=>{
-                console.log(res,'EEWRWERWERWERw');
+    // onFileChange(event): void{
+    //     debugger;
+    //     const file: File = event.target.files[0];
+    //     console.log(file);
+    //     if(file){
+    //         this.fileName = file.name;
+    //         const formData = new FormData();
+    //         const result  = Object.assign({},this.taskForm.value);
+    //         formData.append('id',this.taskForm.get('id').value);  
+    //         formData.append('title',this.taskForm.get('title').value);  
+    //         formData.append('description',this.taskForm.get('description').value);  
+    //         formData.append('deadline',this.taskForm.get('deadline').value);  
+    //         formData.append('priority',this.taskForm.get('priority').value);  
+    //         formData.append('raport',this.taskForm.get('raport').value);  
+    //         formData.append('restrictions',this.taskForm.get('restrictions').value);  
+    //         formData.append('status',this.taskForm.get('status').value);  
+    //         formData.append('file', file);
+    //         this.file = file;
+    //         console.log(this.file,'try this ');
+    //         this._tasksService.updateTaskservice(formData,this.taskForm.get('id').value).subscribe((res)=>{
+    //             console.log(res,'EEWRWERWERWERw');
+    //         });
+
+
+
+    //     }
+        
+    //   }
+
+        
+  onFileChange(pFileList: File): void {
+    debugger;
+    this.uploaded = true;
+    this.file = pFileList[0];
+
+    if (pFileList[0]) {
+        if (
+            pFileList[0].type === 'image/jpeg' ||
+            pFileList[0].type === 'image/png' ||
+            pFileList[0].type === 'image/jpg'
+        ) {
+            if (pFileList[0].size < 200 * 200) {
+                /* Checking height * width*/
+            }
+            if (pFileList[0].size < 512000) {
+                this._snackBar.open('Successfully upload!', 'Close', {
+                    duration: 2000,
+                });
+
+                const reader = new FileReader();
+                reader.readAsDataURL(pFileList[0]);
+                reader.onload = (event): any => {
+                    this.url = event.target.result;
+                };
+                this.taskForm.get('file').patchValue(this.file);
+
+                this.uploadTaskImage();
+                console.warn(this.url, 'url');
+                console.warn(this.file, 'url');
+            }else{
+                this._snackBar.open('File is too large!', 'Close', {
+                    duration: 2000,
+                });
+                this.uploaded = false;
+                this.file = null;
+                this.taskForm.get('file').patchValue(null);
+                this.url = null;
+            }
+        }else{
+            this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
+                duration: 2000,
             });
-
-
+            this.uploaded = false;
+            this.file = null;
+            this.taskForm.get('file').patchValue(null);
+            this.url = null;
         }
-        // if (pFileList[0]) {
-        //     if (
-        //         pFileList[0].type === 'image/jpeg' ||
-        //         pFileList[0].type === 'image/png' ||
-        //         pFileList[0].type === 'image/jpg'
-        //     ) {
-        //         if (pFileList[0].size < 200 * 200) {
-        //             /* Checking height * width*/
-        //         }
-        //         if (pFileList[0].size < 512000) {
-        //             this.uploaded = true;
-        //             this.file = pFileList[0];
-        //             const file = pFileList[0];
-        //             this.cardForm.patchValue({
-        //                 file: pFileList[0]
-        //                 });
-        //             this._snackBar.open('Successfully upload!', 'Close', {
-        //               duration: 2000,
-        //             });
-        //             const reader = new FileReader();
-        //             reader.readAsDataURL(pFileList[0]);
-        //             reader.onload = (event): any => {
-        //                 this.url = event.target.result;
-        //             };
-        //         }else{
-        //             this._snackBar.open('File is too large!', 'Close', {
-        //                 duration: 2000,
-        //             });
-        //             this.uploaded = false;
-        //             this.file = null;
-        //             this.url = null;
-        //         }
-        //     }else{
-        //         this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
-        //             duration: 2000,
-        //         });
-        //         this.uploaded = false;
-        //         this.file = null;
-        //         this.url = null;
-        //     }
-        // }
-      }
+    }
+}
+
+uploadTaskImage(){
+    const formData = new FormData();
+    const result = Object.assign({}, this.taskForm.value);
+    formData.append('file', this.taskForm.get('file').value);
+    this._tasksService.addfileToTask(formData,this.taskForm.get('id').value).subscribe((res)=>{
+        console.log(res,'EEWRWERWERWERw');
+    }); 
+}
 
 }

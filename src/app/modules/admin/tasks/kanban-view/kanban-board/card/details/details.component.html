@@ -54,7 +54,7 @@
             style="display: none"
             type="file"
             class="file-input"
-            (change)="onFileChange($event)"
+            (change)="onFileChange($event.target.files)"
             #fileUpload
         />
 
