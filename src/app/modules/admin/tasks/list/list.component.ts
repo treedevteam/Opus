@@ -779,7 +779,9 @@ export class TasksListComponent implements OnInit, OnDestroy
     menuOpened() {
         console.log('menuOpened @configbug')
     }
-
+    getAssignedUsers(assignedUsers:Users[]): Users[]{
+        return assignedUsers.slice(0, 5)
+    }
     /**
      * Track by function for ngFor loops
      *

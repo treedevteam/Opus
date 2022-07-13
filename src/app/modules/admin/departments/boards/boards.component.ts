@@ -15,7 +15,7 @@ import { UpdateBoardsComponent } from './update-boards/update-boards.component';
 })
 export class BoardsComponent implements OnInit {
 
-  $boards = this._boardService.$getBoards;
+  $boards = this._boardService.$boards;
 
   constructor(private _boardService: BoardsService,
     public dialog: MatDialog,

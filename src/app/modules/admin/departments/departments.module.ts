@@ -25,7 +25,6 @@ import { UpdateDepartmentsComponent } from './update-departments/update-departme
 import { BoardsComponent } from './boards/boards.component';
 import { StoreBoardsComponent } from './boards/store-boards/store-boards.component';
 import { UpdateBoardsComponent } from './boards/update-boards/update-boards.component';
-import { TasksComponent } from './boards/tasks/tasks.component';
 import {MatSelectModule} from '@angular/material/select';
 
 
@@ -38,7 +37,6 @@ import {MatSelectModule} from '@angular/material/select';
     BoardsComponent,
     StoreBoardsComponent,
     UpdateBoardsComponent,
-    TasksComponent
   ],
   imports: [
     RouterModule.forChild(departmentsRoutingModule),

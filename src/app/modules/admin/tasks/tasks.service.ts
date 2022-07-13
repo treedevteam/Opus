@@ -121,6 +121,7 @@ export class TasksService
         })),
         shareReplay(1),
         tap((res)=>{
+            debugger;
             this._notAssignedDepartmentUsers.next(res.users);
         })
         );
@@ -433,7 +434,8 @@ export class TasksService
 
     getUsersDepartment(depId: number): Observable<Users[]>
     {
-        return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department').pipe(
+        debugger;
+        return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department/'+depId).pipe(
             map((data: any): Users[] => {
                 this._currentDepartmentUsers.next(data.data);
                 return data.data;

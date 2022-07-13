@@ -51,9 +51,9 @@ export class AuthSignInComponent implements OnInit {
                 [Validators.required, Validators.minLength(8)],
             ],
             grant_type   : ['password'],
-            client_id    : ['1'],
+            client_id    : ['2'],
             scope        : [''],
-            client_secret: ['IvS8BOxbVSRwJikjlSMEeZuNMTGMelv7ZQlqbil9'] 
+            client_secret: ['hciRR8XShpFCTuN5jXrmmjYKCDoeCyUQVsEFc7l1'] 
         });
     }
 
@@ -97,7 +97,7 @@ export class AuthSignInComponent implements OnInit {
                 this.signInForm.enable();
 
                 // Reset the form
-                this.signInNgForm.resetForm();
+                this.resetForm()
 
                 // Set the alert
                 this.alert = {
@@ -109,5 +109,12 @@ export class AuthSignInComponent implements OnInit {
                 this.showAlert = true;
             }
         );
+    }
+
+    resetForm(): void{
+        this.signInForm.patchValue({
+            username: null,
+            password: null
+            });
     }
 }

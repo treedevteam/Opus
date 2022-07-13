@@ -17,7 +17,7 @@ const ELEMENT_DATA: Priorities[] = [
 })
 export class PrioritiesComponent implements OnInit {
     displayedColumns: string[] = ['position', 'name', 'color','edit', 'delete'];
-    dataSource = ELEMENT_DATA;
+    dataSource = this._priorityService.priorities$;
     constructor(
         private _priorityService: PrioritiesService,
         private _fuseConfirmationService: FuseConfirmationService,
@@ -28,24 +28,13 @@ export class PrioritiesComponent implements OnInit {
     ngOnInit(): void {
         this.getPriorities();
     }
-    parentFunction(data: AddOrUpdate): void{
-        if(!data.isUpdate){
-            this.dataSource.unshift(data.data);
-            this.dataSource = [...this.dataSource];
-        }else{
-            this.getPriorities();
-        }
-    }
     getPriorities(): any{
         this._priorityService._getPriorities().subscribe((res: any)=>{
-            this.dataSource = res;
+
         },(err: any)=>{
             console.log(err);
         });
     }
-
-
-
 
     deletePriority($id: number, $rowNumber: number): void{
         const dialogRef = this._fuseConfirmationService.open();
@@ -53,8 +42,6 @@ export class PrioritiesComponent implements OnInit {
         dialogRef.afterClosed().subscribe((result) => {
             if(result === 'confirmed'){
                 this._priorityService._deletePriority($id).subscribe((res: any)=>{
-                    this.dataSource.splice($rowNumber, 1);
-                    this.dataSource = [...this.dataSource];
                     this._snackBar.open('Deleted successfuly!', 'close', {
                         duration: 3000,
                     });
