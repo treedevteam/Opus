@@ -145,12 +145,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                         formData.append('raport',this.cardForm.get('raport').value);  
                         formData.append('restrictions',this.cardForm.get('restrictions').value);  
                         formData.append('status',this.cardForm.get('status').value);  
-                        // if(this.file instanceof File){
-                        //     formData.append('file', this.file);
-                        // }
                         this._tasksService.updateTaskservice(formData, value.id).subscribe((res)=>{
-  
-
                     console.log(res,'EEWRWERWERWERw');
                 });
                 }else{
@@ -200,15 +195,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
     }
 
 
-    addfileTotask()
-    { 
-        debugger;
-        const formDataFile = new FormData();
-        formDataFile.append('file',this.cardForm.get('file').value);
-     return this._tasksService.addfileToTask(formDataFile, this.cardForm.get('id').value).subscribe((res)=>{
-            console.log(res);
-    });
- }
+
 
     /**
      * Toggle card label
@@ -330,7 +317,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
         console.log(file)
         if(file){
             this.fileName = file.name;
-            const formData  = new FormData();
+            const formData = new FormData();
             const result  = Object.assign({},this.cardForm.value);
             formData.append('id',this.cardForm.get('id').value);  
             formData.append('title',this.cardForm.get('title').value);  
@@ -342,11 +329,11 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             formData.append('status',this.cardForm.get('status').value);  
             formData.append('file', file);
             this.file = file
-            this._tasksService.updateTaskservice(formData, this.cardForm.value.id).subscribe((res)=>{
-  
-
+            console.log(this.file,'try this ')
+            this._tasksService.updateTaskservice(formData,this.cardForm.get('id').value).subscribe((res)=>{
                 console.log(res,'EEWRWERWERWERw');
             });
+
 
         }
         // if (pFileList[0]) {

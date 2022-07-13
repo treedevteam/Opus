@@ -134,10 +134,23 @@
                                                         <input style="padding: 5px; border: 1px dotted #00000070;" [formControl]="getControl(index, 'title')" focusable editableOnEnter>
                                                     </ng-template>
                                                 </editable>
+
                                                 <!-- ////////////////////// -->
                                                 
                                             </div>
                                         </div>
+                                        <!-- Task file -->
+
+                                        <ng-container  *ngIf="tas.file !== null">
+                                            <button
+                                            mat-mini-fab
+                                            (click)="openImagePopup(apiUrl+ 'storage/'+tas.file)"
+                                            color="primary"
+                                            class="upload-btn mr-4"
+                                        >
+                                         <mat-icon>attach_file</mat-icon>
+                                        </button>
+                                        </ng-container>
 
                                         <!-- Users Assign -->
                                         <ng-container>

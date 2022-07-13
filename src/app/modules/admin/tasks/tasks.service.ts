@@ -1140,6 +1140,6 @@ export class TasksService
             );
     }
     addfileToTask(file,id): any{
-        return this._httpClient.post(`api/task_file/${id}`, {file});
+        return this._httpClient.post(this.apiUrl+`api/task_file/${id}`, {file});
     }
 }

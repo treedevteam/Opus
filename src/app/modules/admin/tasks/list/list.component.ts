@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/semi */
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable quotes */
 /* eslint-disable arrow-parens */
@@ -27,6 +29,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { AsignUsersToBoardComponent } from '../asign-users-to-board/asign-users-to-board.component';
 import { MatDialog } from '@angular/material/dialog';
+import { OpenimageTaskComponent } from '../openimage-task/openimage-task.component';
 
 @Component({
     selector       : 'tasks-list',
@@ -760,6 +763,19 @@ export class TasksListComponent implements OnInit, OnDestroy
            console.log(this.formShare.value);
         }
       }
+      openImagePopup(file)
+      {
+        console.log(file);
+        this.dialog.open(OpenimageTaskComponent, {
+            width: '100%',
+            height:'100%',
+            data:{
+                file:file
+            }
+
+        })
+      }
+      
     menuOpened() {
         console.log('menuOpened @configbug')
     }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/semi */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
@@ -15,6 +17,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { TaskOrSub } from './add-card/add-card.component';
 import { AsignUsersToBoardComponent } from '../../../asign-users-to-board/asign-users-to-board.component';
 import { MatDialog } from '@angular/material/dialog';
+import { OpenimageTaskComponent } from '../../../openimage-task/openimage-task.component';
 @Component({
     selector       : 'scrumboard-board',
     templateUrl    : './board.component.html',
@@ -270,6 +273,19 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
               dialogRef.afterClosed().subscribe((result) => {
               });
         });
+      }
+
+      openImagePopup(file)
+      {
+        console.log(file);
+        this.dialog.open(OpenimageTaskComponent, {
+            width: '100%',
+            height:'100%',
+            data:{
+                file:file
+            }
+
+        })
       }
     /**
      * Focus on the given element to start editing the list title

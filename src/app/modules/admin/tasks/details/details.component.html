@@ -164,10 +164,32 @@
                                     </button>
                                 </mat-form-field>
                             </li>
-
+                            <li>
+                                <input
+                                style="display: none"
+                                type="file"
+                                class="file-input"
+                                (change)="onFileChange($event)"
+                                #fileUpload
+                            />
+                    
+                            <div class="file-upload">
+                                {{ fileName || "No file uploaded yet." }}
+                    
+                                <button
+                                    mat-mini-fab
+                                    color="primary"
+                                    class="upload-btn"
+                                    (click)="fileUpload.click()"
+                                >
+                                    <mat-icon>attach_file</mat-icon>
+                                </button>
+                            </div>
+                            </li>
                         </ul>
                     </div>
                 </form>
+   
             </div>
         </div>
     </mat-tab>

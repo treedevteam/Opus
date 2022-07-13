@@ -126,8 +126,8 @@
                                         
                                         >
                                         <!-- Cover image -->
-                                        <div class="cover-image" *ngIf="card.file ! null">
-                                            <img class="w-25 h-25" [src]="'card.file'">
+                                        <div (click)="openImagePopup(apiUrl+'storage/'+card.file)" class="cover-image" *ngIf="card.file ! null">
+                                            <img class="w-100 h-25"  [src]="apiUrl+'storage/' + card.file">
                                         </div>
                                         <!-- Title -->
                                         <div class="flex align-center" style="width: 100%; justify-content: space-between; align-items: center;">

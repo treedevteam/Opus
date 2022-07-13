@@ -52,6 +52,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './task-details/task-details.component';
 import { MentionModule } from 'angular-mentions';
 import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
+import { OpenimageTaskComponent } from './openimage-task/openimage-task.component';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -72,7 +73,8 @@ import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
         ScrumboardCardDetailsComponent,
         ScrumboardCardComponent,
         TaskDetailsComponent,
-        TasksHeaderComponent
+        TasksHeaderComponent,
+        OpenimageTaskComponent
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),
