@@ -767,8 +767,8 @@ export class TasksListComponent implements OnInit, OnDestroy
       {
         console.log(file);
         this.dialog.open(OpenimageTaskComponent, {
-            width: '100%',
-            height:'100%',
+            width: '50vh',
+            height:'50vh',
             data:{
                 file:file
             }
