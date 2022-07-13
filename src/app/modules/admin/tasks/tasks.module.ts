@@ -51,7 +51,6 @@ import { ScrumboardCardComponent } from './kanban-view/kanban-board/card/card.co
 import { MatDialogModule } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './task-details/task-details.component';
 import { MentionModule } from 'angular-mentions';
-import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -72,7 +71,6 @@ import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
         ScrumboardCardDetailsComponent,
         ScrumboardCardComponent,
         TaskDetailsComponent,
-        TasksHeaderComponent
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),

@@ -28,16 +28,14 @@
     <div class="flex flex-wrap w-full max-w-screen-xl mx-auto p-6 md:p-8">
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full mt-8">
             <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row">
-                  <app-add-or-update-users  (parentFunction)='parentFunction($event)'></app-add-or-update-users>
+                  <app-add-or-update-users ></app-add-or-update-users>
             </div>
             <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row" style="height: fit-content; min-height: 500px;">
                 <div class="flex flex-col p-8 pb-4 bg-card rounded-2xl shadow overflow-hidden">
 
                 <table mat-table [dataSource]="usersWithRoleDep$" class="mat-elevation-z8">
-
                     <!--- Note that these columns can be defined in any order.
                           The actual rendered columns are set as a property on the row definition" -->
-
                     <!-- Position Column -->
                     <ng-container matColumnDef="position">
                       <th mat-header-cell *matHeaderCellDef> No. </th>

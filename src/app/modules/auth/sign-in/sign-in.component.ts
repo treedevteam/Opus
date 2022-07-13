@@ -97,7 +97,7 @@ export class AuthSignInComponent implements OnInit {
                 this.signInForm.enable();
 
                 // Reset the form
-                this.signInNgForm.resetForm();
+                this.resetForm()
 
                 // Set the alert
                 this.alert = {
@@ -109,5 +109,12 @@ export class AuthSignInComponent implements OnInit {
                 this.showAlert = true;
             }
         );
+    }
+
+    resetForm(): void{
+        this.signInForm.patchValue({
+            username: null,
+            password: null
+            });
     }
 }
