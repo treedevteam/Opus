@@ -28,13 +28,21 @@
                     <div class="mt-4 sm:mt-0 flex">
                         <div class="flex">
                             <div class="flex items-center justify-center inset-y-0 left-0 me-3">
-                                <div *ngFor="let test of (usersList | async)">
+                                <div *ngFor="let test of (usersList | async).slice(0, 3)">
                                     <!-- User -->
                                         <img [matTooltip]="test.name" [matTooltipPosition]="'above'"
                                             class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
                                             src="{{apiUrl+ 'storage/'+test.user_image}}" alt=""
                                             onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                                 </div>
+                                <ng-container *ngIf="(usersList | async).length > 3">
+                                    <div
+                                        class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500">
+                                        <div class="text-md font-semibold">
+                                            +{{ ((usersList | async).slice(3)).length }}
+                                        </div>
+                                    </div>
+                                </ng-container>
                             </div>
 
                             <button class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserPopup()">
@@ -150,20 +158,41 @@
                                             </div>
                                         </ng-container>
                                         <!-- Users Assign -->
-                                        <div class="users_asiggn_task">
-                                            <!-- <span class="add_userToTasl" (click)="openUsersPanel(tas.users_assigned,tas.id)" #usersPanelOrigin>+</span> -->
-                                            <ng-container
+                                        <div class="">
+                                            <ng-container class="mt-5">
+                                                <div class="flex items-center  -space-x-1.5">
+                                                    <ng-container
+                                                        *ngFor="let member of tas.users_assigned.slice(0, 3); trackBy: trackByFn">
+                                                        <img [matTooltip]="member.name" [matTooltipPosition]="'above'"
+                                                            class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                                                            [src]="apiUrl+'storage/' + member.image" alt="Member avatar"
+                                                            onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                                                    </ng-container>
+                                                    <ng-container *ngIf="tas.users_assigned.length > 3">
+                                                        <div
+                                                            class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500">
+                                                            <div class="text-md font-semibold">
+                                                                +{{ (tas.users_assigned.slice(3)).length }}
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </ng-container>
+                                            <div *ngIf="tas.users_assigned.length === 0" >
+                                                <img
+                                                class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                                                src="assets/images/dapulse-person-column.svg" alt="Member avatar">
+                                            </div>
+
+                                            <!-- <ng-container
                                                 *ngFor="let item of tas.users_assigned">
                                                 <img [matTooltip]="item.name" [matTooltipPosition]="'above'"
                                                     class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
                                                     [src]="apiUrl+ 'storage/' + item.image" alt="Member avatar"
                                                     onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                                             </ng-container>
-                                            <div *ngIf="tas.users_assigned.length === 0" (click)="openUsersPanel(tas.users_assigned,tas.id)" #usersPanelOrigin>
-                                                <img
-                                                class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                                src="assets/images/dapulse-person-column.svg" alt="Member avatar">
-                                            </div>
+                                             
+                                        -->
 
                                             <!-- Tags panel -->
                                           <!-- Tags panel -->

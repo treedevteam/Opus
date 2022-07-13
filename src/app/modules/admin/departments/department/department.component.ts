@@ -26,28 +26,8 @@ export class DepartmentComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
 
-  $departmets = combineLatest([
-    this._deprtmentsService.$departments,
-    this._deprtmentsService.$newDepartment,
-    this._deprtmentsService.$updatedDep,
-    this._deprtmentsService.$deletedDepartment
-  ],(departments,newDeap,updatedDep,deletedDep) => {
-    if(newDeap){
-        departments.unshift(newDeap);
-    }else if(updatedDep){
-      const departmentIndex = departments.findIndex(d => d.id === updatedDep.id);
-      if(departmentIndex > -1){
-        departments.splice(departmentIndex,1,updatedDep);
-      }
-    }else if(deletedDep){
-      const departmentIndex = departments.findIndex(d => d.id === deletedDep);
-      if(departmentIndex > -1){
+  $departmets = this._deprtmentsService.$departments;
 
-        departments.splice(departmentIndex,1);
-      }
-    }
-  return departments;
-});
 
   departmetsWithUsers$ = combineLatest([
     this.$departmets,
@@ -60,9 +40,6 @@ export class DepartmentComponent implements OnInit, OnDestroy {
     }))),
     tap(res=>console.log(res))
   );
-
-
-
 
   /**
    * Constructor
