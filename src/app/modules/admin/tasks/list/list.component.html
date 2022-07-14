@@ -134,7 +134,7 @@
                                                 <!-- ////////////////////// -->
                                                 <editable  (update)="updateField(index, 'title',tas.id)" style="display: flex; align-items: center; width: fit-content;">
                                                     <ng-template viewMode>
-                                                        <a [routerLink]="tas.id" class="title_task_rwo truncate">
+                                                        <a [routerLink]="tas.id" (click)="reloadMatdrawer()" class="title_task_rwo truncate">
                                                             {{tas.title}}
                                                         </a>
                                                     </ng-template>

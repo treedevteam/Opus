@@ -1,7 +1,6 @@
 <div class="flex flex-col flex-auto p-6 pt-5 sm:p-8 sm:pt-10 w-full ">
     <!-- Header -->
     <div class="flex items-center justify-between -mt-3 -ml-4">
-
         <!-- Mark as ... button -->
         <button class="pr-4 pl-3.5" mat-button (click)="toggleCompleted()">
 
@@ -17,7 +16,6 @@
 
             </ng-container>
         </button>
-
         <div class="flex items-center">
             <!-- More menu -->
             <button mat-icon-button [matMenuTriggerFor]="moreMenu">
@@ -49,6 +47,10 @@
                         <div class="flex items-center -space-x-1.5">
                            
                         </div>
+                    </ng-container>
+                    <!-- Task file -->
+                    <ng-container *ngIf="taskFile !== null" class="mb-3 mt-2">
+                        <img [src]="apiUrl + 'storage/' + taskFile " alt="">
                     </ng-container>
                     <!-- Members -->
                     <ng-container class="mt-5" *ngIf="task2.users_assigned?.length && usersList?.length ">

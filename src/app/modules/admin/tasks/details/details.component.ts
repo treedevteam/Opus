@@ -50,6 +50,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     isXyzChecked = true;
     file: any = null;
     fileName: any;
+    taskFile: any = null;
     tags: Tag[];
     tagsEditMode: boolean = false;
     filteredTags2: Departments[];
@@ -119,7 +120,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             has_expired    : [0],
             users_assigned    : [[]],
             checklist:'',
-            file:['',[Validators.required]]
+            file:['']
         });
 
 
@@ -205,7 +206,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((task: Task2) => {
 
-
+  
             // Open the drawer in case it is closed
             this._tasksListComponent.matDrawer.open();
 
@@ -265,6 +266,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 // Focus on the title field
                 this._titleField.nativeElement.focus();
             });
+            this.taskFile = this.taskForm.get('file').value;
+        
+
     }
 
 

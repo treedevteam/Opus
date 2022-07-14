@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -119,7 +120,7 @@ import { MentionModule } from 'angular-mentions';
                 }
             }
         },
-    ]
+    ],
 })
 export class TasksModule
 {

@@ -30,6 +30,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { AsignUsersToBoardComponent } from '../asign-users-to-board/asign-users-to-board.component';
 import { MatDialog } from '@angular/material/dialog';
 import { OpenimageTaskComponent } from '../openimage-task/openimage-task.component';
+import { TasksDetailsComponent } from '../details/details.component';
 
 @Component({
     selector       : 'tasks-list',
@@ -43,7 +44,8 @@ import { OpenimageTaskComponent } from '../openimage-task/openimage-task.compone
           state('expanded', style({ height: '*' })),
           transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),
-      ],
+    ],
+    // providers :[TasksDetailsComponent],
 })
 
 export class TasksListComponent implements OnInit, OnDestroy
@@ -260,7 +262,7 @@ export class TasksListComponent implements OnInit, OnDestroy
         private _formBuilder: FormBuilder,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-        private dialog: MatDialog
+        private dialog: MatDialog,
 
 
     )
@@ -775,11 +777,14 @@ export class TasksListComponent implements OnInit, OnDestroy
 
         })
       }
+      reloadMatdrawer(){
+        this.ngOnInit();
+      }
       
     menuOpened() {
         console.log('menuOpened @configbug')
     }
-    getAssignedUsers(assignedUsers:Users[]): Users[]{
+    getAssignedUsers(assignedUsers: Users[]): Users[]{
         return assignedUsers.slice(0, 5)
     }
     /**
