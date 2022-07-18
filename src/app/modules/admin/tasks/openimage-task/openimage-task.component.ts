@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   selector: 'app-openimage-task',
   templateUrl: './openimage-task.component.html',
   styleUrls: ['./openimage-task.component.scss']
+
 })
 export class OpenimageTaskComponent implements OnInit {
 

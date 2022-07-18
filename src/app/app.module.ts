@@ -15,6 +15,7 @@ import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { HttpClientModule } from '@angular/common/http';
 
 
 const routerConfig: ExtraOptions = {
@@ -30,6 +31,7 @@ const routerConfig: ExtraOptions = {
         BrowserModule,
         BrowserAnimationsModule,
         RouterModule.forRoot(appRoutes, routerConfig),
+        HttpClientModule,
 
         // Fuse, FuseConfig & FuseMockAPI
         FuseModule,

@@ -49,9 +49,10 @@ import { ScrumboardBoardAddListComponent } from './kanban-view/kanban-board/boar
 import { ScrumboardBoardAddCardComponent } from './kanban-view/kanban-board/board/add-card/add-card.component';
 import { ScrumboardCardDetailsComponent } from './kanban-view/kanban-board/card/details/details.component';
 import { ScrumboardCardComponent } from './kanban-view/kanban-board/card/card.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './task-details/task-details.component';
 import { MentionModule } from 'angular-mentions';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -102,7 +103,8 @@ import { MentionModule } from 'angular-mentions';
         ChecklistModule,
         MatChipsModule,
         MatCardModule,
-        MentionModule
+        MentionModule,
+        HttpClientModule
     ],
     providers   : [
 
@@ -120,6 +122,7 @@ import { MentionModule } from 'angular-mentions';
                 }
             }
         },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
     ],
 })
 export class TasksModule
