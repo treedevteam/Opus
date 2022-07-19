@@ -63,33 +63,37 @@ export class NotificationsComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        // new Notification("Notifications", {
+        //     body: "hi"
+        // });
 
-        this.getEachNotifications();
-                 // Enable pusher logging - don't include this in production
+        // this.getEachNotifications();
+        //          // Enable pusher logging - don't include this in production
 
-         this.pusherService.channel.bind('my-event', (data: any) => {
-             console.log(data);
-             this._notificationsService.create(data).subscribe((res)=>{
-                 console.log(res,'res from not service'); 
+        // this.pusherService.channel.bind('my-event', (data: any) => {
+        //     console.log(data, "notifications ooo");
 
-                        if(Notification.permission === "granted"){
-                            new Notification("Notifications",{
-                                body: res.text   
-                            });
-        }
-        else if (Notification.permission !== "denied"){
-            Notification.requestPermission().then(premission =>{
-                if(premission === "granted"){
-                    new Notification("Notifications",{
-                        body:  res.text      
-                    });
-                }
-            }); 
-        }
+        //     if (Notification.permission === "granted") {
+        //         new Notification("Notifications", {
+        //             body: "hi"
+        //         });
+        //     }
+        //     else if (Notification.permission !== "denied") {
+        //         Notification.requestPermission().then(premission => {
+        //             if (premission === "granted") {
+        //                 new Notification("Notifications", {
+        //                     body: "hi"
+        //                 });
+        //             }
+        //         });
+        //     }
+        //      this._notificationsService.create(data).subscribe((res)=>{
+        //          console.log(res,'res from not service'); 
 
-             });
+
+        //      });
             
-        });
+        // });
 
     
 

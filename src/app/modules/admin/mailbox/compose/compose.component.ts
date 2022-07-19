@@ -11,6 +11,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AsignUsersToBoardComponent } from '../../tasks/asign-users-to-board/asign-users-to-board.component';
 import { TasksService } from '../../tasks/tasks.service';
 import { Users } from '../../users/model/users';
@@ -29,7 +30,9 @@ export class MailboxComposeComponent implements OnInit
     items;
     newEmail;
     allFiles: any;
-    // file: File = null;
+    url: any;
+    uploaded: boolean;
+    file = null;
     composeForm: FormGroup;
     allusers: Users[] =[];
     mentionConfig = {
@@ -57,6 +60,7 @@ export class MailboxComposeComponent implements OnInit
         private _tasksService: TasksService,
         private _mailbox: MailboxService,
         private dialog: MatDialog,
+        private _snackBar: MatSnackBar
     )
     {
     }
@@ -80,7 +84,7 @@ export class MailboxComposeComponent implements OnInit
             users:['',Validators.required],
             subject: [''],
             content   : ['', [Validators.required]],
-            files: [ '',[Validators.required]]
+            files: ['']
         });
 
         this._mailbox.getAllUsers().subscribe((res: any)=>{
@@ -120,16 +124,16 @@ export class MailboxComposeComponent implements OnInit
 
       /**On file select */
 
-      onFileSelect(event)
-      {
-        debugger;
-        if(event){          
-            this.allFiles = event;
-            this.composeForm.patchValue({
-                files: event
-                });
-        }
-      }
+    //   onFileSelect(event)
+    //   {
+    //     debugger;
+    //     if(event){          
+    //         this.allFiles = event;
+    //         this.composeForm.patchValue({
+    //             files: event
+    //             });
+    //     }
+    //   }
 
 
     /**
@@ -176,6 +180,51 @@ export class MailboxComposeComponent implements OnInit
     saveAsDraft(): void
     {
 
+    }
+
+    
+  onFileChange(pFileList: File): void{
+    console.warn(pFileList);
+    if (pFileList[0]) {
+        if (
+            pFileList[0].type === 'image/png' ||
+            pFileList[0].type === 'image/jpg'
+        ) {
+            if (pFileList[0].size < 200 * 200) {
+                /* Checking height * width*/
+            }
+            if (pFileList[0].size < 512000) {
+                this.uploaded = true;
+                this.file = pFileList[0];
+                const file = pFileList[0];
+                this.composeForm.patchValue({
+                    files: pFileList[0]
+                    });
+                    this._snackBar.open('Successfully upload!', 'Close', {
+                        duration: 2000,
+                    });
+                    const reader = new FileReader();
+                    reader.readAsDataURL(pFileList[0]);
+                    reader.onload = (event): any => {
+                        this.url = event.target.result;
+                    };
+                } else {
+                    this._snackBar.open('File is too large!', 'Close', {
+                        duration: 2000,
+                    });
+                    this.uploaded = false;
+                    this.file = null;
+                    this.url = null;
+                }
+            } else {
+                this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
+                    duration: 2000,
+                });
+                this.uploaded = false;
+                this.file = null;
+                this.url = null;
+            }
+        }
     }
 
     /**

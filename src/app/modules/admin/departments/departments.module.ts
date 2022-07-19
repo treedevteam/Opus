@@ -14,7 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from 'app/shared/shared.module';
 import {  MAT_DATE_FORMATS } from '@angular/material/core';
 import moment from 'moment';
@@ -54,7 +54,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatProgressBarModule,
     SharedModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    HttpClientModule
   ],
   providers   : [
     {

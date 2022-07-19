@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import Pusher from 'pusher-js';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WebSocketServiceService {
   pusher: any;

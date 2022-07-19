@@ -19,6 +19,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { MatTableModule } from '@angular/material/table';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatListModule} from '@angular/material/list';
+import { HttpClientModule } from '@angular/common/http';
 
 export const routes: Route[] = [
     {
@@ -56,7 +57,8 @@ export const routes: Route[] = [
     SharedModule,
     MatTableModule,
     MatSnackBarModule,
-    MatListModule
+    MatListModule,
+    HttpClientModule
   ]
 })
 export class UsersModule { }

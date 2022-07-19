@@ -7,6 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MailboxService } from 'app/modules/admin/mailbox/mailbox.service';
 import { Mail, MailFolder, Maill, MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
 import { labelColorDefs } from 'app/modules/admin/mailbox/mailbox.constants';
+import { environment } from 'environments/environment';
 
 @Component({
     selector     : 'mailbox-details',
@@ -24,6 +25,7 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     mail: Maill;
     mails: Maill;
     replyFormActive: boolean = false;
+    apiUrl = environment.apiUrl;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
