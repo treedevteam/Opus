@@ -464,4 +464,29 @@ export class MailboxService
             })
         )
        }
+       markAsUnread(id: string | number): Observable<any>
+       {
+        debugger
+        return this.allEmails$.pipe(take(1),switchMap(emails =>this._httpClient.post(this.apiUrl +`api/email/markasunread/${id}`,id).pipe(map((deletedemail:any) => {
+            const index = emails.findIndex(item => item.id === id);
+            this._userEmails.next(emails);
+            return deletedemail;
+        })
+        ))
+    //   return  this._httpClient.delete(this.apiUrl +`api/email/${id}`)
+        );
+       }
+       deleteEmail(id: number)
+       {
+        debugger
+        return this.allEmails$.pipe(take(1),switchMap(emails => this._httpClient.delete(this.apiUrl +`api/email/${id}`).pipe(map((deletedemail:any) => {
+            const index = emails.findIndex(item => item.id === id);
+            emails.splice(index, 1);
+            this._userEmails.next(emails);
+            return deletedemail;
+        })
+        ))
+    //   return  this._httpClient.delete(this.apiUrl +`api/email/${id}`)
+        );
+}
 }

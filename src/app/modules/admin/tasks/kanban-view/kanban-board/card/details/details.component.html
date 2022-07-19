@@ -22,6 +22,14 @@
         class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto"
         [formGroup]="cardForm"
     >
+        <ng-container >
+            <div class="w-25 h-25 m-3">
+                <div style="justify-content:flex-end ;" class="d-flex ">
+                    <mat-icon (click)="deleteFile(taskById.id)"  style="cursor: pointer;" color="warn" >delete</mat-icon>
+                </div>
+                <img [src]="apiUrl+'storage/' + taskById.file">
+            </div>
+        </ng-container>
         <!-- Title -->
         <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
             <mat-label>Title</mat-label>
@@ -70,7 +78,6 @@
                 <mat-icon>attach_file</mat-icon>
             </button>
         </div>
-        {{ cardForm.get("priority").value }}
         <!-- Due date -->
         <div>
             <div class="font-medium">Deadline</div>

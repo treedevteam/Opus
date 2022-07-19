@@ -16,6 +16,7 @@ import { TasksService } from 'app/modules/admin/tasks/tasks.service';
 import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TasksListComponent } from 'app/modules/admin/tasks/list/list.component';
+import { environment } from 'environments/environment';
 
 @Component({
     selector       : 'scrumboard-card-details',
@@ -27,6 +28,7 @@ import { TasksListComponent } from 'app/modules/admin/tasks/list/list.component'
 export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
 {
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
+    apiUrl = environment.apiUrl
     board: Board;
     card: Card;
     cardForm: FormGroup;
@@ -392,7 +394,13 @@ uploadTaskImage(){
         console.log(res,'EEWRWERWERWERw');
     }); 
 }
-
+deleteFile(id){
+    console.log(id)
+    this._tasksService.deleteFileFromTask(id).subscribe((res)=>{
+        this._snackBar.open('Successfully deleted!', 'Close', {});
+        this.ngOnInit();
+    });
+}
      
 }
 

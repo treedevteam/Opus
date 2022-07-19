@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -913,6 +914,13 @@ uploadTaskImage(){
     this._tasksService.addfileToTask(formData,this.taskForm.get('id').value).subscribe((res)=>{
         console.log(res,'EEWRWERWERWERw');
     }); 
+}
+
+deleteFile(id){
+    this._tasksService.deleteFileFromTask(id).subscribe((res)=>{
+        this._snackBar.open('Successfully deleted!', 'Close', {});
+        this.ngOnInit();
+    });
 }
 
 }

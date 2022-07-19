@@ -52,7 +52,7 @@
                     <ng-container  *ngIf="taskFile !== null"  class="mb-3 mt-2 w-25 h-25 ">
                         <div class="d-flex justify-content-center">
                             <img class="w-50" [src]="apiUrl + 'storage/' + taskFile " alt="">
-                            <mat-icon color="warn" >delete</mat-icon>
+                            <mat-icon (click)="deleteFile(task2.id)"  style="cursor: pointer;" color="warn" >delete</mat-icon>
                             <mat-divider ></mat-divider>
                         </div>
                     </ng-container>

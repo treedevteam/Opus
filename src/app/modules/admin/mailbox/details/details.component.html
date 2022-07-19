@@ -68,20 +68,13 @@
                     <!-- Mark as read / unread -->
                     <button
                         mat-menu-item
-                        *ngIf="mail.unread"
-                        (click)="toggleUnread(false)">
-                        <mat-icon [svgIcon]="'heroicons_outline:mail-open'"></mat-icon>
-                        <span>Mark as read</span>
-                    </button>
-                    <button
-                        mat-menu-item
-                        *ngIf="!mail.unread"
-                        (click)="toggleUnread(true)">
+                       
+                        (click)="toogleUnread(mail.id)">
                         <mat-icon [svgIcon]="'heroicons_outline:mail'"></mat-icon>
                         <span>Mark as unread</span>
                     </button>
                     <!-- Marks as spam / not span-->
-                    <button
+                    <!-- <button
                         mat-menu-item
                         *ngIf="getCurrentFolder() !== 'spam' && getCurrentFolder() !== 'drafts'"
                         (click)="moveToFolder('spam')">
@@ -94,12 +87,12 @@
                         (click)="moveToFolder('inbox')">
                         <mat-icon [svgIcon]="'heroicons_outline:exclamation'"></mat-icon>
                         <span>Not spam</span>
-                    </button>
+                    </button> -->
                     <!-- Delete -->
                     <button
                         mat-menu-item
                         *ngIf="getCurrentFolder() !== 'trash'"
-                        (click)="moveToFolder('trash')">
+                        (click)="deleteEmail(mail.id)">
                         <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         <span>Delete</span>
                     </button>

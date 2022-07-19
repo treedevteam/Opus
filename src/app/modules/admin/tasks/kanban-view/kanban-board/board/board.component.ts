@@ -1,3 +1,6 @@
+/* eslint-disable quotes */
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable arrow-parens */
 /* eslint-disable @typescript-eslint/semi */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -18,6 +21,8 @@ import { TaskOrSub } from './add-card/add-card.component';
 import { AsignUsersToBoardComponent } from '../../../asign-users-to-board/asign-users-to-board.component';
 import { MatDialog } from '@angular/material/dialog';
 import { OpenimageTaskComponent } from '../../../openimage-task/openimage-task.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from 'app/core/user/user.service';
 @Component({
     selector       : 'scrumboard-board',
     templateUrl    : './board.component.html',
@@ -43,7 +48,9 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     apiUrl = environment.apiUrl;
     expandedSubtasks: number | null = null;
     usersList = this._taskService.currentBoardUsers$;
-
+    currentBoardId
+    userId
+    boardData$
 
     tasksData$ = combineLatest([
         this._taskService.currentBoardTasks$,
@@ -79,7 +86,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         departments.map(departmet =>({
             ...departmet,
             boards: board.filter(x=> +x.department_id === departmet.id)
-            
+ 
         }))),
         shareReplay(1),
         tap((res)=>{
@@ -199,7 +206,9 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         private _fuseConfirmationService: FuseConfirmationService,
         private _scrumboardService: ScrumboardService,
         private _taskService: TasksService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private _snackBar: MatSnackBar,
+        private userService: UserService,
     )
     {
     }
@@ -216,6 +225,9 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         this.formShare = this._formBuilder.group({
             boards: ['', Validators.required],
         });
+        this._taskService.currentBoard$.subscribe(res=>{
+            this.boardData$ = res;
+        })
         // Initialize the list title form
         this.listTitleForm = this._formBuilder.group({
             title: ['']
@@ -224,7 +236,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         this._taskService.currentBoard$.pipe(takeUntil(this._unsubscribeAll))
         .subscribe((board: Boards) => {
             console.log(board,'BOARD');
-
+            this.currentBoardId = board.id
             this.board = {...board};
             this._taskService.getUsersBoard(board.id).subscribe((res)=>{
                 console.log(res,'TTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEESST');
@@ -236,7 +248,9 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             this._changeDetectorRef.markForCheck();
         });
         // Get the board
-
+        this.userService.user$.subscribe((res)=>{
+            this.userId = res.id;
+        })
     }
 
     /**
@@ -274,7 +288,12 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
               });
         });
       }
-
+      assignUserToBoard(userId: number){
+        debugger
+        this._taskService.assignUserToBoard(this.currentBoardId , userId).subscribe((res)=>{
+          console.log(res);
+        });
+      }
       openImagePopup(file)
       {
         console.log(file);
@@ -397,14 +416,26 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             status:list.status.id
         };
         if(event.type === 'task'){
-            this._taskService.storeTask(newTask).subscribe();
+            this._taskService.storeTask(newTask).subscribe(res=>{}
+                ,err=>{
+                    console.log(err);
+                    this.handleError(err.error.fail);
+                    this._snackBar.open("You are not assigned to this board", 'close', {}).onAction()
+                });
         }else{
-            this._taskService.storeSubtask(newTask).subscribe();
+            this._taskService.storeSubtask(newTask).subscribe(res=>{},err=>{
+                this.handleError(err.error.fail)
+                this._snackBar.open("You are not assigned to this board", 'close', {}).onAction()
+
+            });
         }
         console.log(newTask);
         // Save the card
     }
 
+    handleError(err){
+        console.log(err);
+    }
     /**
      * List dropped
      *

@@ -1145,4 +1145,8 @@ export class TasksService
         debugger;
         return this._httpClient.post(this.apiUrl+`api/task_file/${id}`, file);
     }
+    deleteFileFromTask(id): any{
+        return this._httpClient.delete(this.apiUrl+`api/delete_file/${id}`);
+    }
+
 }

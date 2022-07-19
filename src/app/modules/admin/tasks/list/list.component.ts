@@ -31,6 +31,8 @@ import { AsignUsersToBoardComponent } from '../asign-users-to-board/asign-users-
 import { MatDialog } from '@angular/material/dialog';
 import { OpenimageTaskComponent } from '../openimage-task/openimage-task.component';
 import { TasksDetailsComponent } from '../details/details.component';
+import { BoardsService } from '../../departments/boards/boards.service';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
     selector       : 'tasks-list',
@@ -56,6 +58,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     formShare: FormGroup;
 
     apiUrl = environment.apiUrl;
+    userId
     statusTask: Task2;
     board_department: number;
     subtaskTrigger: Task2;
@@ -68,7 +71,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     order;
     board_id: number;
     getDepartments: Departments[];
-
+    boardData$
     DeaprtmentsData$ = this._tasksService.departments$;
     statusData$ = this._tasksService.getStatus$;
     private _usersPanelOverlayRef: OverlayRef;
@@ -257,12 +260,14 @@ export class TasksListComponent implements OnInit, OnDestroy
         @Inject(DOCUMENT) private _document: any,
         private _router: Router,
         private _tasksService: TasksService,
+        private _boardsService: BoardsService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService,
         private _formBuilder: FormBuilder,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
         private dialog: MatDialog,
+        private userService: UserService,
 
 
     )
@@ -319,8 +324,12 @@ export class TasksListComponent implements OnInit, OnDestroy
         }
     }
 
+
     ngOnInit(): void
     {
+        this._tasksService.currentBoard$.subscribe(res=>{
+            this.boardData$ = res;
+        })
 
         this.formShare = this._formBuilder.group({
             boards: [''],
@@ -451,6 +460,10 @@ export class TasksListComponent implements OnInit, OnDestroy
                     this.createTask('section');
                 }
             });
+
+            this.userService.user$.subscribe((res)=>{
+                this.userId = res.id;
+            } )
     }
 
     /**
@@ -608,6 +621,12 @@ export class TasksListComponent implements OnInit, OnDestroy
         // console.log(this.filteredUsers);
 
     }
+    assignUserToBoard(userId: number){
+        debugger
+        this._tasksService.assignUserToBoard(this.board_id , userId).subscribe((res)=>{
+          console.log(res);
+        });
+      }
     /**
      * Create task
      *
