@@ -24,7 +24,6 @@ export class PrioritiesComponent implements OnInit {
         private _snackBar: MatSnackBar,
         private _router: Router
     ) { }
-
     ngOnInit(): void {
         this.getPriorities();
     }
@@ -53,7 +52,7 @@ export class PrioritiesComponent implements OnInit {
     }
 
     navigateTo(id: number): void{
-        this._router.navigate([`/priorities/${id}`]);
+        this._router.navigate([`/admin/priorities/${id}`]);
 
     }
 }

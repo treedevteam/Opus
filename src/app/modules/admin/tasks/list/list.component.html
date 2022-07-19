@@ -28,18 +28,18 @@
                     <div class="mt-4 sm:mt-0 flex">
                         <div class="flex">
                             <div class="flex items-center justify-center inset-y-0 left-0 me-3">
-                                <div *ngFor="let test of (usersList | async).slice(0, 3)">
+                                <div *ngFor="let test of (usersList$ | async).slice(0, 3)">
                                     <!-- User -->
                                         <img [matTooltip]="test.name" [matTooltipPosition]="'above'"
                                             class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
                                             src="{{apiUrl+ 'storage/'+test.user_image}}" alt=""
                                             onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                                 </div>
-                                <ng-container *ngIf="(usersList | async).length > 3">
+                                <ng-container *ngIf="(usersList$ | async).length > 3">
                                     <div
                                         class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500">
                                         <div class="text-md font-semibold">
-                                            +{{ ((usersList | async).slice(3)).length }}
+                                            +{{ ((usersList$ | async).slice(3)).length }}
                                         </div>
                                     </div>
                                 </ng-container>
@@ -83,6 +83,7 @@
                                         bottom: 0; right: 0;" class="three-dots">more_vert</mat-icon>
                                     </button>
                                 </div>
+
                                 <mat-menu #menu="matMenu">
                                     <button (click)="sahreTaskPopover()"  [matMenuTriggerFor]="dateTimeMenu" (menuOpened)="menuOpened()" mat-menu-item>Share task</button>
                                     <mat-menu class="date-range-menu" #dateTimeMenu="matMenu" >
@@ -102,7 +103,7 @@
                                                         </mat-select>
                                                     </mat-form-field> 
                                                 </div>
-                                                <button type="submit" mat-raised-button color="primary">Share</button>
+                                                <button type="submit" mat-raised-button color="primary">Share {{tas.id}}</button>
                                             </form>
                                         </div>
                                     </mat-menu>
@@ -196,51 +197,6 @@
                                                 class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
                                                 src="assets/images/dapulse-person-column.svg" alt="Member avatar">
                                             </div>
-
-                                            <!-- <ng-container
-                                                *ngFor="let item of tas.users_assigned">
-                                                <img [matTooltip]="item.name" [matTooltipPosition]="'above'"
-                                                    class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                                    [src]="apiUrl+ 'storage/' + item.image" alt="Member avatar"
-                                                    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
-                                            </ng-container>
-                                             
-                                        -->
-
-                                            <!-- Tags panel -->
-                                          <!-- Tags panel -->
-                                            <ng-template #usersPanel>
-                                                <div class="w-60 rounded border shadow-md bg-card userListSelect">
-                                                    <!-- Tags panel header -->
-                                                    <div class="flex items-center m-3 mr-2">
-                                                        <div class="flex items-center">
-                                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                                                            <div class="ml-2">
-                                                                <input class="w-full min-w-0 py-1 border-0" type="text"
-                                                                    placeholder="Enter user name" (input)="filterDepartments($event)"
-                                                                    (keydown)="filterTagsInputKeyDown($event)" [maxLength]="30"
-                                                                    #newTagInput>
-                                                            </div>
-                                                        </div>
-                                                        <button class="ml-1" mat-icon-button >
-                                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'">
-                                                            </mat-icon>
-                                                        </button>
-                                                    </div>
-                                                    <div class="flex flex-col max-h-64 py-2 border-t ">
-                                                        <!-- Tags -->
-                                                        <ng-container *ngFor="let tag of filteredUsers; trackBy: trackByFn">
-                                                            <div class="flex items-center h-10 min-h-10 px-4">
-                                                                <mat-checkbox class="flex items-center h-10 min-h-10" [color]="'primary'"
-                                                                [checked]="tag.checked" (change)="toggleTaskUser(tag.id)">
-                                                                </mat-checkbox>
-                                                                <div class="ml-1">{{tag.name}}</div>
-                                                            </div>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="filteredUsers?.length === 0" class="pl-3">No result</ng-container>
-                                                    </div>
-                                                </div>
-                                            </ng-template>
                                         </div>
 
                                         <!-- Users Assign -->
@@ -263,11 +219,6 @@
                                                 <input matInput [formControl]="getControl(index, 'deadline')" [matDatepicker]="dueDatePicker">
                                                 <mat-datepicker #dueDatePicker>
                                                     <mat-datepicker-actions>
-                                                        <!-- <button
-                                                        mat-button
-                                                        (click)="taskForm.get('deadline').setValue(null)"
-                                                        matDatepickerCancel>Clear
-                                                    </button> -->
                                                         <button class="" mat-flat-button [color]="'primary'"
                                                             (click)="updateField(index, 'deadline',tas.id)"
                                                             matDatepickerApply>Select
@@ -339,7 +290,8 @@
                                                         <div class="flex items-center justify-center inset-y-0 left-0 me-3">
                                                             <img [matTooltip]="subtaskTask.user.name" [matTooltipPosition]="'above'"
                                                                 style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
-                                                                src="{{apiUrl+'storage/'+subtaskTask.user.user_image}}" alt="">
+                                                                src="{{apiUrl+'storage/'+subtaskTask.user.user_image}}" alt=""
+                                                                onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                                                         </div>
                                                         <!-- Task title -- link -->
                                                         <div class="flex flex-auto items-center min-w-0 h-full pr-7" >
@@ -365,7 +317,8 @@
                                                             *ngFor="let subtaskitem of subtaskTask.users_assigned">
                                                             <img [matTooltip]="subtaskitem.name" [matTooltipPosition]="'above'"
                                                                 class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                                                [src]="apiUrl+ 'storage/' + subtaskitem.image" alt="Member avatar">
+                                                                [src]="apiUrl+ 'storage/' + subtaskitem.image" alt="Member avatar"
+                                                                onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                                                         </ng-container>
                                                         <!-- Users Assign -->
                                                         <!-- Due date -->

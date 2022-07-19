@@ -14,24 +14,20 @@ import { Task2, TaskLogs } from '../../tasks.types';
 })
 export class TasksLogsComponent implements OnInit {
   taskId: number;
-  taskLogsData$: Observable<TaskLogs[]>;
+  taskLogsData$ = this._tasksService.tagsLogs$;
   apiUrl = environment.apiUrl;
-
   constructor(private _tasksService: TasksService) { }
 
 
-  taskLogs(){
+  ngOnInit(): void {
+
     this._tasksService.taskById$
     .subscribe((task: Task2) => {
       console.warn('loGIIII',task);
         this.taskId = task.id;
-        this.taskLogsData$ =  this._tasksService.getTasksLogs(this.taskId);
+        this._tasksService.getTasksLogs(this.taskId).subscribe();
     });
-  }
-
-
-  ngOnInit(): void {
-    this.taskLogs();
+    
   }
 
   getRelativeFormat(date: string): string

@@ -32,68 +32,24 @@ export class CommentsComponent implements OnInit {
     return output;
   }
 
-  taskLogs() {
-
-    this._tasksService.taskById$
-      .subscribe((task: Task2) => {
-        this.taskId = task.id;
-      });
-  }
-
-
-  taskComments$ = combineLatest([
-
-    this._tasksService.taskComments$,
-    this._tasksService.taskComment$,
-    this._tasksService.getUsersData$,
-    this._tasksService.deletedComment$
-  ], (g, p, u, de) => {
-
-    if (p) {
-      const index = g.findIndex(x => x.id === p.id);
-      if (index < 0) {
-        g.unshift(p);
-      };
-
-    } else if (de) {
-      const index = g.findIndex(x => x.id === de);
-      if (index > -1) { g.splice(index, 1); }
-    }
-    let d = null;
-    if (g) {
-      d = g.map(res => ({
-        ...res,
-        user_id: u.find(user => user.id === res.user_id)
-      }));
-    }
-    return d ? d : g;
-  });
+  taskComments$ = this._tasksService.taskComments$
 
   constructor(private _tasksService: TasksService,
     private _fuseConfirmationService: FuseConfirmationService,
     private _formBuilder: FormBuilder
   ) { }
 
-
-
   ngOnInit(): void {
 
     this._tasksService.currentBoardUsers$.subscribe((res) => {
       this.items = res;
-      // this.mentionConfig1 = {
-      //   mentions: [
-      //     {
-      //         items: res.map(res=>res.email),
-      //         triggerChar: '@'
-      //     },
-      //     {
-      //         items: [ "Red", "Yellow", "Green"],
-      //         triggerChar: '#'
-      //     }
-      //   ]
-      // }
     });
-    this.taskLogs();
+
+    this._tasksService.taskById$
+      .subscribe((task: Task2) => {
+        this.taskId = task.id;
+      });
+
     this.commentForm = this._formBuilder.group({
       id: [''],
       newComment: '',
@@ -121,7 +77,6 @@ export class CommentsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'confirmed') {
         this._tasksService.deleteComment(id).subscribe((res) => {
-          console.log(res);
         });
       }
     });

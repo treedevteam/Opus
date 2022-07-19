@@ -51,9 +51,9 @@ export class AuthSignInComponent implements OnInit {
                 [Validators.required, Validators.minLength(8)],
             ],
             grant_type   : ['password'],
-            client_id    : ['2'],
+            client_id    : ['1'],
             scope        : [''],
-            client_secret: ['hciRR8XShpFCTuN5jXrmmjYKCDoeCyUQVsEFc7l1'] 
+            client_secret: ['3nF89zVqf2Ri8sC3FHB3xPT6JP3VsFOZ8O6OmpJO'] 
         });
     }
 

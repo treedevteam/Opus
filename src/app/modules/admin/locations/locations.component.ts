@@ -52,7 +52,7 @@ export class LocationsComponent implements OnInit {
     }
 
     navigateTo(id: number): void{
-        this._router.navigate([`/locations/${id}`]);
+        this._router.navigate([`/admin/locations/${id}`]);
 
     }
 }

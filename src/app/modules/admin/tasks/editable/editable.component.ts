@@ -24,8 +24,6 @@ export class EditableComponent implements AfterViewInit{
   editMode$ = this.editMode.asObservable();
 
   mode: 'view' | 'edit' = 'view';
-  // relevantElem: HTMLElement = document.querySelector(`.testttt`) as HTMLElement;
-
 
   constructor(private host: ElementRef) {
   }

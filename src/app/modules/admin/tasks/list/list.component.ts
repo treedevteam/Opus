@@ -50,46 +50,38 @@ import { TasksDetailsComponent } from '../details/details.component';
 
 export class TasksListComponent implements OnInit, OnDestroy
 {
+    apiUrl = environment.apiUrl;
+    private _usersPanelOverlayRef: OverlayRef;
+    drawerMode: 'side' | 'over';
+    @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     @ViewChild('shareTaskNgForm') shareTaskNgForm: NgForm;
     @ViewChild('usersPanelOrigin') private _usersPanelOrigin: ElementRef;
     @ViewChild('usersPanel') private _usersPanel: TemplateRef<any>;
     formShare: FormGroup;
-
-    apiUrl = environment.apiUrl;
+    controls: FormArray;
+    //Users
+    usersList$ = this._tasksService.currentBoardUsers$;
+    //Statuset
+    statuses = this._tasksService.getStatus$;
+    //Prioriteti
+    priority = this._tasksService.getPriorities$;
     statusTask: Task2;
+
+    //Departmetns
+    getDepartments: Departments[];
+
+
+
     board_department: number;
     subtaskTrigger: Task2;
-    taskForm: FormGroup;
-    usersList = this._tasksService.currentBoardUsers$;
-    @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     expandedSubtasks: number | null = null;
-    controls: FormArray;
     subtaskControls: FormArray;
     order;
     board_id: number;
-    getDepartments: Departments[];
-
-    DeaprtmentsData$ = this._tasksService.departments$;
-    statusData$ = this._tasksService.getStatus$;
-    private _usersPanelOverlayRef: OverlayRef;
+    selectedTask: Task;
     filteredUsers: any[];
 
-    drawerMode: 'side' | 'over';
-    selectedTask: Task;
-    tags: Tag[];
-    tasks: Task[];
     myTask: TaskWithDepartment[];
-    checklistCount: any = {
-        completed : 0,
-        total     : 0
-    };
-
-    tasksCount: any = {
-        completed : 0,
-        incomplete: 0,
-        total     : 0
-    };
-    taskss: TaskWithDepartment[];
 
     orderModified$ = this._tasksService.currentBoardOrderTasks$;
 
@@ -109,75 +101,14 @@ export class TasksListComponent implements OnInit, OnDestroy
         })
       );
 
+    tasksData$ = this._tasksService.currentBoardTasks$;
+    tasksDataCheckList$= this.tasksData$;
 
-
-
-    tasksData$ = combineLatest([
-        this._tasksService.currentBoardTasks$,
-        this._tasksService.newTask$,
-        this._tasksService.taskUpdated$,
-        this._tasksService.deletedTask$
-    ],(g,p,u,d) => {
-         if(p){
-            const id = g.findIndex(t=> t.id === p.id);
-            if(id === -1){
-                g.push(p);
-            }
-         }
-         else if(u){
-            const id = g.findIndex(t=> t.id === u.id);
-            if(id > -1){
-                g.splice(id,1,u);
-            }
-         }else if(d){
-                const deletedTask = g.findIndex(t => t.id === +d.id);
-                if(deletedTask > -1){
-                    g.splice(deletedTask,1);
-                }
-         }
-       return g;
-     });
-
-
-
-
-
-     tasksDataCheckList$= combineLatest([
-        this.tasksData$,
-        this._tasksService.newCheckList$,
-        this._tasksService.udatedCheckList$,
-        this._tasksService.deletedCheckList$
-    ],(tasksWithDepartment,newCL,updatedCL,deletedCL) => {
-            if(newCL){
-                tasksWithDepartment.find(t=>t.id === newCL.task_id)?.checklists.push(newCL);
-            }else if(updatedCL){
-                const taskIndex = tasksWithDepartment.findIndex(t=>t.id === updatedCL.task_id);
-                if(taskIndex > -1){
-                    const checkListIndex = tasksWithDepartment[taskIndex].checklists.findIndex(c => c.id === updatedCL.id);
-                    if(checkListIndex > -1){
-                        tasksWithDepartment[taskIndex].checklists.splice(checkListIndex,1,updatedCL);
-                    }
-                }
-            }else if(deletedCL){
-                const taskIndex = tasksWithDepartment.findIndex(t=>t.id === deletedCL.task_id);
-                const checkListIndex = tasksWithDepartment[taskIndex].checklists.findIndex(c => c.id === deletedCL.id);
-                if(checkListIndex > -1){
-                    tasksWithDepartment[taskIndex].checklists.splice(checkListIndex,1);
-                }
-            }
-        return tasksWithDepartment;
-    });
-
-    statuses = this._tasksService.getStatus$;
-    priority = this._tasksService.getPriorities$;
-
-
-
-    //  subtasksData$ = this._tasksService.subtasks$;
+    //Move to task Service
      subtasksData$ = combineLatest([
         this._tasksService.subtasksList$,
-        this._tasksService.getStatus$,
-        this._tasksService.getPriorities$,
+        this.statuses,
+        this.priority,
         this._tasksService.getUsersData$
       ]).pipe(
         map(([subtasks, statuses, priority,users]) =>
@@ -199,11 +130,12 @@ export class TasksListComponent implements OnInit, OnDestroy
         })
       );
 
+      //   move to task service
      departmentTasksWithStatusPriority$ = combineLatest([
         this._tasksService.currentBoard$,
         this.tasksDataCheckList$,
-        this._tasksService.getStatus$,
-        this._tasksService.getPriorities$,
+        this.statuses,
+        this.priority,
         this._tasksService.getUsersData$
       ]).pipe(
         map(([currentBoard,tasksBoard, statuses, priority,users]) =>(
@@ -235,19 +167,8 @@ export class TasksListComponent implements OnInit, OnDestroy
             this.controls = new FormArray(test);
         })
         );
-
-
-        // $controls = combineLatest([
-        //     this.departmentTasksWithStatusPriority$
-        // ],(g) => {
-        //     return g;
-        // });
-
-
-    // tasksaks = this._tasksService.tasksWithDepartment$;
-
+        
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
     /**
      * Constructor
      */
@@ -258,55 +179,15 @@ export class TasksListComponent implements OnInit, OnDestroy
         private _router: Router,
         private _tasksService: TasksService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _fuseNavigationService: FuseNavigationService,
         private _formBuilder: FormBuilder,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
         private dialog: MatDialog,
-
-
     )
     {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
-    triggerStatusMenu(task: Task2){
-        this.statusTask = task;
-    }
-
-    triggerStatusSubtask(task: Task2){
-        this.subtaskTrigger = task;
-    }
-
-    selectStatus(status: Status){
-        this._tasksService.updateTaskStatus(status.id,this.order,this.board_id, this.statusTask.id).subscribe((res)=>{
-        });
-    }
-    selectPriority(priority: Priorities){
-        this._tasksService.updateTaskPriority(priority.id, this.statusTask.id, this.board_id).subscribe(res=>{
-        });
-    }
-
-
-    subtaskSelectStatus(status: Status){
-        this._tasksService.subtaskUpdateTaskStatus(status.id, this.subtaskTrigger.id).subscribe((res)=>{
-        });
-    }
-
-
-    subtaskSelectPriority(priority: Priorities){
-        console.log(this.subtaskTrigger);
-        console.log(priority);
-
-        this._tasksService.subtaskUpdateTaskPriority(priority.id, this.subtaskTrigger.id).subscribe((res)=>{
-        });
-    }
+    
 
     toggleTableRows(id: number) {
         if(this.expandedSubtasks === id){
@@ -321,15 +202,16 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {
-
+        //fORM
         this.formShare = this._formBuilder.group({
             boards: [''],
         });
-
-
+        //Order i taskave subsribe
         this.orderModified$.subscribe((res)=>{
             this.order = res;
         });
+
+        //Users
         this._tasksService.getUsersData$.subscribe((res)=>{
             let boardId: number;
             this._tasksService.currentBoard$.subscribe((res)=>{
@@ -339,72 +221,6 @@ export class TasksListComponent implements OnInit, OnDestroy
             this._tasksService.getUsersBoard(boardId).subscribe((res)=>{
             });
         });
-
-
-
-
-        this.taskForm = this._formBuilder.group({
-            deadline    : [''],
-        });
-
-        this._tasksService.taskCheckList$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((checkList: TaskCheckList[])=>{
-                this.checklistCount.completed = checkList.filter(x => x.value === 1).length;
-                this.checklistCount.total = checkList.length;
-            });
-            // .subscribe((tasks: Task[]) => {
-            //     this.tasks = tasks;
-
-            //     // Update the counts
-            //     this.tasksCount.total = this.tasks.filter(task => task.type === 'task').length;
-            //     this.tasksCount.completed = this.tasks.filter(task => task.type === 'task' && task.completed).length;
-            //     this.tasksCount.incomplete = this.tasksCount.total - this.tasksCount.completed;
-        //Get the departments
-        // Get the tags
-        this._tasksService.tags$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((tags: Tag[]) => {
-                this.tags = tags;
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-
-        // Get the tasks
-        // this._tasksService.tasks$
-        //     .pipe(takeUntil(this._unsubscribeAll))
-        //     .subscribe((tasks: Task[]) => {
-        //         this.tasks = tasks;
-
-        //         // Update the counts
-        //         this.tasksCount.total = this.tasks.filter(task => task.type === 'task').length;
-        //         this.tasksCount.completed = this.tasks.filter(task => task.type === 'task' && task.completed).length;
-        //         this.tasksCount.incomplete = this.tasksCount.total - this.tasksCount.completed;
-
-        //         // Mark for check
-        //         this._changeDetectorRef.markForCheck();
-
-        //         // Update the count on the navigation
-        //         setTimeout(() => {
-
-        //             // Get the component -> navigation data -> item
-        //             const mainNavigationComponent = this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>('mainNavigation');
-
-        //             // If the main navigation component exists...
-        //             if ( mainNavigationComponent )
-        //             {
-        //                 const mainNavigation = mainNavigationComponent.navigation;
-        //                 const menuItem = this._fuseNavigationService.getItem('apps.tasks', mainNavigation);
-
-        //                 // Update the subtitle of the item
-        //                 // menuItem.subtitle = this.tasksCount.incomplete + ' remaining tasks';
-
-        //                 // Refresh the navigation
-        //                 mainNavigationComponent.refresh();
-        //             }
-        //         });
-        //     });
 
         // Get the task
         this._tasksService.task$
@@ -474,6 +290,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     isOverdue(data): boolean {
         return moment(data, moment.ISO_8601).isBefore(moment(), 'days');
     }
+    
     filterTagsInputKeyDown(event): void
     {
         // Return if the pressed key is not 'Enter'
@@ -481,51 +298,11 @@ export class TasksListComponent implements OnInit, OnDestroy
         {
             return;
         }
-
-        // If there is no tag available...
-
-
-        // If there is a tag...
     }
 
-    // userCheck(user: any): boolean{
-
-    //     if(this.task2.users_assigned.includes(user)){
-    //         return true;
-    //     }else{
-    //         return false;
-    //     }
-    // }
-    toggleTaskUser(user: number): void
-    {
-
-    }
-
-    // addUsersToTask(userId: number): void{
-    //     this._tasksService.assignUserTask(this.task2.id, userId).subscribe(res=>{
-    //         const usersAssigned = this.taskForm.get('users_assigned').value;
-    //         const index = usersAssigned.findIndex(object => +object === +userId);
-    //         if (index < 0) {
-    //             usersAssigned.push(userId);
-    //         }else{
-    //             usersAssigned.splice(index,1);
-    //         }
-    //         this.taskForm.get('users_assigned').patchValue(usersAssigned);
-    //         console.log(this.taskForm.get('users_assigned').value);
-    //     })
-
-
-
-    // }
+    //Sna duhet permomentin
     openUsersPanel(): void
     {
-        // this.filteredUsers = null;
-
-        // this.userList = this.userList.map(user=>({
-        //     ...user,
-        //     checked: userAssigned.findIndex(x=>x.id === user.id) > -1 ? true: false
-        // }));
-
         // Create the overlay
         this._usersPanelOverlayRef = this._overlay.create({
             backdropClass   : '',
@@ -598,7 +375,7 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     filterDepartments(event): void
     {
-        console.log(this.usersList);
+        console.log(this.usersList$);
 
         // Get the value
         const value = event.target.value.toLowerCase();
@@ -638,7 +415,7 @@ export class TasksListComponent implements OnInit, OnDestroy
         task.completed = !task.completed;
 
         // Update the task on the server
-        this._tasksService.updateTask(task.id, task).subscribe();
+        // this._tasksService.updateTask(task.id, task).subscribe();
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -672,12 +449,13 @@ export class TasksListComponent implements OnInit, OnDestroy
         // menu doesn't have any openMenu() function
         // which is of course not a trigger object but a menu itself.
         console.log(menu);
-     }
-     convertDate(time: any): string
-     {
-        const convert = time._i.year + '-' + (time._i.month + 1) + '-' + time._i.date + '  00:00';
-        return convert;
-     }
+    }
+
+    convertDate(time: any): string
+    {
+    const convert = time._i.year + '-' + (time._i.month + 1) + '-' + time._i.date + '  00:00';
+    return convert;
+    }
 
     updateField(index, field,taskid) {
         const control = this.getControl(index, field);
@@ -694,11 +472,6 @@ export class TasksListComponent implements OnInit, OnDestroy
                 break;
             default:
         }
-        // if (control.valid) {
-        //     this._tasksService.updateTaskTitle(control.value, taskid).subscribe(res=>{
-        //         console.log(res);
-        //     })
-        // }
     }
 
     updateSubtaskField(index, field,taskid) {
@@ -716,11 +489,6 @@ export class TasksListComponent implements OnInit, OnDestroy
                 break;
             default:
         }
-        // if (control.valid) {
-        //     this._tasksService.updateTaskTitle(control.value, taskid).subscribe(res=>{
-        //         console.log(res);
-        //     })
-        // }
     }
 
     getControl(index, fieldName) {
@@ -731,12 +499,6 @@ export class TasksListComponent implements OnInit, OnDestroy
     getSubtaskControl(index, fieldName) {
         const a  = this.subtaskControls.at(index).get(fieldName) as FormControl;
         return this.subtaskControls.at(index).get(fieldName) as FormControl;
-    }
-
-
-
-    getDepartmentUsers(id: number){
-
     }
 
     assignUserPopup(): void {
@@ -753,39 +515,63 @@ export class TasksListComponent implements OnInit, OnDestroy
         });
       }
 
-      sahreTaskPopover(){
-        this._tasksService.getDepartmentsData$.subscribe(res=>{
-            
-        })
-      }
+    sahreTaskPopover(){
+    this._tasksService.getDepartmentsData$.subscribe(res=>{
+        
+    })
+    }
 
 
-      onSubmit(id: number){
+    onSubmit(id: number){
         if (this.formShare.valid) {
-           console.log(this.formShare.value);
+        console.log(this.formShare.value);
         }
-      }
-      openImagePopup(file)
-      {
-        console.log(file);
-        this.dialog.open(OpenimageTaskComponent, {
-            width: '50vh',
-            height:'50vh',
-            data:{
-                file:file
-            }
+    }
+    openImagePopup(file)
+    {
+    console.log(file);
+    this.dialog.open(OpenimageTaskComponent, {
+        width: '50vh',
+        height:'50vh',
+        data:{
+            file:file
+        }
 
-        })
-      }
-      reloadMatdrawer(){
-        this.ngOnInit();
-      }
-      
+    })
+    }
     menuOpened() {
         console.log('menuOpened @configbug')
     }
     getAssignedUsers(assignedUsers: Users[]): Users[]{
         return assignedUsers.slice(0, 5)
+    }
+
+
+
+
+    //Selected Task
+    triggerStatusMenu(task: Task2){
+        this.statusTask = task;
+    }
+    //Selected SubTask
+    triggerStatusSubtask(task: Task2){
+        this.subtaskTrigger = task;
+    }
+    selectStatus(status: Status){
+        this._tasksService.updateTaskStatus(status.id,this.order,this.board_id, this.statusTask.id).subscribe((res)=>{
+        });
+    }
+    selectPriority(priority: Priorities){
+        this._tasksService.updateTaskPriority(priority.id, this.statusTask.id, this.board_id).subscribe(res=>{
+        });
+    }
+    subtaskSelectStatus(status: Status){
+        this._tasksService.subtaskUpdateTaskStatus(status.id, this.subtaskTrigger.id).subscribe((res)=>{
+        });
+    }
+    subtaskSelectPriority(priority: Priorities){
+        this._tasksService.subtaskUpdateTaskPriority(priority.id, this.subtaskTrigger.id).subscribe((res)=>{
+        });
     }
     /**
      * Track by function for ngFor loops
