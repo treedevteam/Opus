@@ -375,8 +375,8 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
                     this.handleError(err.error.fail);
                     console.log(err);
                     const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
-                        width: '228px',
-                        height: '200px',
+                        width: '320px',
+                        height: '250px',
                       data:{userid:this.userId,boardId:this.currentBoardId }
                     });
                 });
@@ -384,8 +384,8 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             this._taskService.storeSubtask(newTask).subscribe(res=>{},err=>{
                 console.log(err);
                 const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
-                    width: '228px',
-                    height: '200px',
+                    width: '320px',
+                    height: '250px',
                   data:{userid:this.userId,boardId:this.currentBoardId }
 
                 });
