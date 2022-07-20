@@ -72,7 +72,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _usersPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    taskCheckList$ = this._tasksService.taskCheckListservice$;
+    taskCheckList$ = this._tasksService.taskCheckList$;
     /**
      * Constructor
      */
@@ -249,8 +249,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             )
             .subscribe((value) => {
 
-                // Update the task on the server
-                // this._tasksService.updateTask(value.id, value).subscribe();
+               
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();

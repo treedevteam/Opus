@@ -61,7 +61,7 @@ export class StatusComponent implements OnInit {
     }
 
     navigateTo(id: number): void{
-        this._router.navigate([`/statuses/${id}`]);
+        this._router.navigate([`/admin/statuses/${id}`]);
 
     }
 }

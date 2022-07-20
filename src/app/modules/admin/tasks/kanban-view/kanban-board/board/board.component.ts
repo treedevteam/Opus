@@ -52,31 +52,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     userId
     boardData$
 
-    tasksData$ = combineLatest([
-        this._taskService.currentBoardTasks$,
-        this._taskService.newTask$,
-        this._taskService.taskUpdated$,
-        this._taskService.deletedTask$
-    ],(g,p,u,d) => {
-         if(p){
-            const id = g.findIndex(t=> t.id === p.id);
-            if(id === -1){
-                g.push(p);
-            }
-         }
-         else if(u){
-            const id = g.findIndex(t=> t.id === u.id);
-            if(id > -1){
-                g.splice(id,1,u);
-            }
-         }else if(d){
-                const deletedTask = g.findIndex(t => t.id === +d.id);
-                if(deletedTask > -1){
-                    g.splice(deletedTask,1);
-                }
-         }
-       return g;
-     });
+    tasksData$ = this._taskService.currentBoardTasks$;
 
      departmentsWithBoard$ = combineLatest([
         this._taskService.getDepartmentsData$,
@@ -95,31 +71,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
       );
 
 
-     tasksDataCheckList$= combineLatest([
-        this.tasksData$,
-        this._taskService.newCheckList$,
-        this._taskService.udatedCheckList$,
-        this._taskService.deletedCheckList$
-    ],(tasksWithDepartment,newCL,updatedCL,deletedCL) => {
-            if(newCL){
-                tasksWithDepartment.find(t=>t.id === newCL.task_id)?.checklists.push(newCL);
-            }else if(updatedCL){
-                const taskIndex = tasksWithDepartment.findIndex(t=>t.id === updatedCL.task_id);
-                if(taskIndex > -1){
-                    const checkListIndex = tasksWithDepartment[taskIndex].checklists.findIndex(c => c.id === updatedCL.id);
-                    if(checkListIndex > -1){
-                        tasksWithDepartment[taskIndex].checklists.splice(checkListIndex,1,updatedCL);
-                    }
-                }
-            }else if(deletedCL){
-                const taskIndex = tasksWithDepartment.findIndex(t=>t.id === deletedCL.task_id);
-                const checkListIndex = tasksWithDepartment[taskIndex].checklists.findIndex(c => c.id === deletedCL.id);
-                if(checkListIndex > -1){
-                    tasksWithDepartment[taskIndex].checklists.splice(checkListIndex,1);
-                }
-            }
-        return tasksWithDepartment;
-    });
+     tasksDataCheckList$= this.tasksData$;
 
     orderModified$ = this._taskService.currentBoardOrderTasks$.pipe(
         map(e=>e.split(',').filter(t=>t !== '').map(e=>+e))
