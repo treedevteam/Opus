@@ -53,6 +53,7 @@ import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './task-details/task-details.component';
 import { MentionModule } from 'angular-mentions';
 import { HttpClientModule } from '@angular/common/http';
+import { JoinTaskDialogComponent } from './join-task-dialog/join-task-dialog.component';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -73,6 +74,7 @@ import { HttpClientModule } from '@angular/common/http';
         ScrumboardCardDetailsComponent,
         ScrumboardCardComponent,
         TaskDetailsComponent,
+        JoinTaskDialogComponent,
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),

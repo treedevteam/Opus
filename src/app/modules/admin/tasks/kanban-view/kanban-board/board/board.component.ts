@@ -23,6 +23,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { OpenimageTaskComponent } from '../../../openimage-task/openimage-task.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'app/core/user/user.service';
+import { JoinTaskDialogComponent } from '../../../join-task-dialog/join-task-dialog.component';
 @Component({
     selector       : 'scrumboard-board',
     templateUrl    : './board.component.html',
@@ -372,13 +373,22 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
                 ,err=>{
                     console.log(err);
                     this.handleError(err.error.fail);
-                    this._snackBar.open("You are not assigned to this board", 'close', {}).onAction()
+                    console.log(err);
+                    const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
+                        width: '228px',
+                        height: '200px',
+                      data:{userid:this.userId,boardId:this.currentBoardId }
+                    });
                 });
         }else{
             this._taskService.storeSubtask(newTask).subscribe(res=>{},err=>{
-                this.handleError(err.error.fail)
-                this._snackBar.open("You are not assigned to this board", 'close', {}).onAction()
+                console.log(err);
+                const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
+                    width: '228px',
+                    height: '200px',
+                  data:{userid:this.userId,boardId:this.currentBoardId }
 
+                });
             });
         }
         console.log(newTask);
