@@ -96,6 +96,13 @@ export const appRoutes: Route[] = [
     canLoad: [AuthGuard], loadChildren: () => import('app/modules/admin/tasks/tasks.module').then(m => m.TasksModule)},
 
 
+    {path: 'task-managment',component  : LayoutComponent,
+    resolve    : {
+        initialData: InitialDataResolver,
+    },  canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    canLoad: [AuthGuard], loadChildren: () => import('app/modules/admin/task-managment/task-managment.module').then(m => m.TaskManagmentModule)},
+
     {
         path       : 'departments',
         canActivate: [AuthGuard],

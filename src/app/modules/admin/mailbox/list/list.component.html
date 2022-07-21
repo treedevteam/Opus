@@ -65,15 +65,20 @@
 
                             <!-- Subject -->
                             <div class="flex items-center w-full mt-1">
-                                <span class="leading-4 truncate">{{mail.subject}}</span>
+                                <span *ngIf="mail.read === 1" class="leading-4 truncate">{{mail.subject}}</span>
+                                <span *ngIf="mail.read === 0" class="leading-4 truncate" style="font-weight:bold ;">{{mail.subject}}</span>
+
                                 <!-- Indicators -->
                             </div>
 
                             <!-- Excerpt -->
-                            <div class="mt-2 leading-normal line-clamp-2 text-secondary paragrafi" [innerHTML]="mail.content">
+                            <div *ngIf="mail.read === 1"  class="mt-2 leading-normal line-clamp-2 text-secondary paragrafi" [innerHTML]="mail.content">
                          {{mail.content[0].trim()}}...
                             </div>
 
+                            <div  *ngIf="mail.read === 0" style="font-weight:bold ;" class="mt-2 leading-normal line-clamp-2 text-secondary paragrafi" [innerHTML]="mail.content">
+                                {{mail.content[0].trim()}}...
+                                   </div>
                         </div>
 
                     </a>

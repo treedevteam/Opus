@@ -4,7 +4,6 @@ import { DepartmentsComponent } from './departments.component';
 import { BoardsResolver, BoardTaskResolve, DepartmentsResolver } from './departments.resolver';
 import { StoreDepartmentsComponent } from './store-departments/store-departments.component';
 import { BoardsComponent } from './boards/boards.component';
-import { TasksComponent } from './boards/tasks/tasks.component';
 
 export const departmentsRoutingModule: Route[] = [
   {

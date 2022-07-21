@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { catchError, map, Observable, BehaviorSubject } from 'rxjs';
+import { catchError, map, Observable, BehaviorSubject, take, switchMap } from 'rxjs';
 import { Status } from '../model/status';
 
 @Injectable({
@@ -9,60 +9,40 @@ import { Status } from '../model/status';
 })
 export class StatusService {
   apiUrl = environment.apiUrl;
-
-  private addedStatus = new BehaviorSubject<Status>(null);
-  private updateStatus = new BehaviorSubject<Status>(null);
-  private deletedStatus = new BehaviorSubject<number>(null);
+  private _statuses: BehaviorSubject<Status[] | null> = new BehaviorSubject(null);
 
   constructor(private http: HttpClient) { }
-  getStatuses$ = this.http.get<Status[]>(this.apiUrl+'api/statuses').pipe(
-    map((data: any): Status[] => data),
-   catchError((err) => {
-     console.error(err);
-     throw err;
-   }
- )
-);
 
-get addedStatus$(): Observable<Status>
-{
-    return this.addedStatus.asObservable();
-}
-
-get updatedStatus$(): Observable<Status>
-{
-    return this.updateStatus.asObservable();
-}
-
-get deletedStatus$(): Observable<number>
-{
-    return this.deletedStatus.asObservable();
-}
-
-_addStatus(data: any): Observable<Status>{
-    return this.http.post<Status>(this.apiUrl+'api/status/store', data).pipe(
-        map((res: any) => {
-          this.resetObserv();
-          this.addedStatus.next(res);
-          return res;
-        }),
-       catchError((err) => {
-         console.error(err);
-         throw err;
-       }
-     )
-    );
-}
-  _getStatus(): Observable<Status>{
-    return this.http.get<Status>(this.apiUrl+'api/statuses').pipe(
-        map((data: any) => data),
-       catchError((err) => {
-         console.error(err);
-         throw err;
-       }
-     )
-    );
+  get statuses$(): Observable<Status[]>
+  {
+      return this._statuses.asObservable();
   }
+  
+  getStatuses(): Observable<Status[]>{
+      return this.http.get<Status[]>(this.apiUrl+'api/statuses').pipe(
+          map((data: any) => {
+            this._statuses.next(data)
+            return data
+          }),
+        catchError((err) => {
+          console.error(err);
+          throw err;
+        }
+      )
+      );
+    }
+
+    _addStatus(data: any): Observable<Status>{
+        return this.statuses$.pipe(
+          take(1),
+          switchMap(statuses => this.http.post<Status>(this.apiUrl+'api/status/store', data).pipe(
+              map((newStatus: Status) => {
+                  this._statuses.next([newStatus,...statuses]);
+                  return newStatus;
+              })
+          ))
+        );
+    }
 
   _getStatusById($id: any): Observable<Status>{
     return this.http.get<Status>(this.apiUrl+'api/status/'+$id).pipe(
@@ -76,38 +56,33 @@ _addStatus(data: any): Observable<Status>{
   }
 
   _deleteStatus($id): Observable<Status>{
-    return this.http.delete<Status>(this.apiUrl+'api/status/delete/'+$id).pipe(
-        map((data: any) => {
-          this.resetObserv();
-          this.deletedStatus.next($id);
-          return data;
-        }),
-       catchError((err) => {
-         console.error(err);
-         throw err;
-       }
-     )
+    return this.statuses$.pipe(
+      take(1),
+      switchMap(statuses => this.http.delete<Status>(this.apiUrl+'api/status/delete/'+ $id).pipe(
+          map((deletedStatus: any) => {
+            const index = statuses.findIndex(x=>x.id == $id);
+            statuses.splice(index,1);
+            this._statuses.next(statuses)
+            return deletedStatus;
+          })
+      ))
     );
   }
 
   _updateStatus( datas: Status, $id: number,): Observable<Status>{
-    return this.http.post<Status>(this.apiUrl+'api/status/update/'+$id, datas).pipe(
-        map((data: any) => {
-          this.resetObserv();
-          this.updateStatus.next(data);
-          return data;
-        }),
-       catchError((err) => {
-         console.error(err);
-         throw err;
-       }
-     )
+    return this.statuses$.pipe(
+      take(1),
+      switchMap(statuses => this.http.post<Status>(this.apiUrl+'api/status/update/'+$id, datas).pipe(
+          map((updatedStatus: Status) => {
+            const statusIndex = statuses.findIndex(d => d.id === updatedStatus.id);
+            if(statusIndex > -1){
+              statuses.splice(statusIndex,1,updatedStatus);
+            }
+            this._statuses.next(statuses);
+            return updatedStatus;
+          })
+      ))
     );
   }
 
-  resetObserv(): any{
-    this.addedStatus.next(null);
-    this.updateStatus.next(null);
-    this.deletedStatus.next(null);
-}
 }

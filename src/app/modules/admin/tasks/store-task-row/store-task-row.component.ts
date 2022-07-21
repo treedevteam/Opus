@@ -2,6 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { environment } from '../../../../../environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { JoinTaskDialogComponent } from '../join-task-dialog/join-task-dialog.component';
 
 @Component({
   selector: 'app-store-task-row',
@@ -16,7 +19,10 @@ export class StoreTaskRowComponent implements OnInit {
   apiUrl = environment.apiUrl;
 
   constructor(private _tasksService: TasksService,
-    private _formBuilder: FormBuilder) { }
+    private _formBuilder: FormBuilder,
+    private _snackBar: MatSnackBar,
+    private _dialog: MatDialog
+    ) { }
 
   ngOnInit(): void {
     this.userInfo = JSON.parse(localStorage.getItem('user_info') ?? '');
@@ -33,6 +39,8 @@ export class StoreTaskRowComponent implements OnInit {
     this._tasksService.currentBoard$.subscribe((res)=>{
       this.currentDepartment = res.id;
     });
+    
+    
   }
 
 
@@ -44,6 +52,11 @@ export class StoreTaskRowComponent implements OnInit {
        this.taskForm.reset();
     },(err)=>{
         console.log(err);
+        const dialogRef = this._dialog.open(JoinTaskDialogComponent,{
+          width: '228px',
+          height: '200px',
+          data:{userid: this.userInfo.id, boardId:this.currentDepartment }
+        });
         this.taskForm.reset();
     });
   }

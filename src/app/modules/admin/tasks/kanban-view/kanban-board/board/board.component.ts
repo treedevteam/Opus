@@ -1,3 +1,8 @@
+/* eslint-disable quotes */
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable arrow-parens */
+/* eslint-disable @typescript-eslint/semi */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
@@ -15,6 +20,10 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { TaskOrSub } from './add-card/add-card.component';
 import { AsignUsersToBoardComponent } from '../../../asign-users-to-board/asign-users-to-board.component';
 import { MatDialog } from '@angular/material/dialog';
+import { OpenimageTaskComponent } from '../../../openimage-task/openimage-task.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from 'app/core/user/user.service';
+import { JoinTaskDialogComponent } from '../../../join-task-dialog/join-task-dialog.component';
 @Component({
     selector       : 'scrumboard-board',
     templateUrl    : './board.component.html',
@@ -40,33 +49,11 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     apiUrl = environment.apiUrl;
     expandedSubtasks: number | null = null;
     usersList = this._taskService.currentBoardUsers$;
+    currentBoardId
+    userId
+    boardData$
 
-
-    tasksData$ = combineLatest([
-        this._taskService.currentBoardTasks$,
-        this._taskService.newTask$,
-        this._taskService.taskUpdated$,
-        this._taskService.deletedTask$
-    ],(g,p,u,d) => {
-         if(p){
-            const id = g.findIndex(t=> t.id === p.id);
-            if(id === -1){
-                g.push(p);
-            }
-         }
-         else if(u){
-            const id = g.findIndex(t=> t.id === u.id);
-            if(id > -1){
-                g.splice(id,1,u);
-            }
-         }else if(d){
-                const deletedTask = g.findIndex(t => t.id === +d.id);
-                if(deletedTask > -1){
-                    g.splice(deletedTask,1);
-                }
-         }
-       return g;
-     });
+    tasksData$ = this._taskService.currentBoardTasks$;
 
      departmentsWithBoard$ = combineLatest([
         this._taskService.getDepartmentsData$,
@@ -76,7 +63,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         departments.map(departmet =>({
             ...departmet,
             boards: board.filter(x=> +x.department_id === departmet.id)
-            
+ 
         }))),
         shareReplay(1),
         tap((res)=>{
@@ -85,31 +72,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
       );
 
 
-     tasksDataCheckList$= combineLatest([
-        this.tasksData$,
-        this._taskService.newCheckList$,
-        this._taskService.udatedCheckList$,
-        this._taskService.deletedCheckList$
-    ],(tasksWithDepartment,newCL,updatedCL,deletedCL) => {
-            if(newCL){
-                tasksWithDepartment.find(t=>t.id === newCL.task_id)?.checklists.push(newCL);
-            }else if(updatedCL){
-                const taskIndex = tasksWithDepartment.findIndex(t=>t.id === updatedCL.task_id);
-                if(taskIndex > -1){
-                    const checkListIndex = tasksWithDepartment[taskIndex].checklists.findIndex(c => c.id === updatedCL.id);
-                    if(checkListIndex > -1){
-                        tasksWithDepartment[taskIndex].checklists.splice(checkListIndex,1,updatedCL);
-                    }
-                }
-            }else if(deletedCL){
-                const taskIndex = tasksWithDepartment.findIndex(t=>t.id === deletedCL.task_id);
-                const checkListIndex = tasksWithDepartment[taskIndex].checklists.findIndex(c => c.id === deletedCL.id);
-                if(checkListIndex > -1){
-                    tasksWithDepartment[taskIndex].checklists.splice(checkListIndex,1);
-                }
-            }
-        return tasksWithDepartment;
-    });
+     tasksDataCheckList$= this.tasksData$;
 
     orderModified$ = this._taskService.currentBoardOrderTasks$.pipe(
         map(e=>e.split(',').filter(t=>t !== '').map(e=>+e))
@@ -196,7 +159,9 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         private _fuseConfirmationService: FuseConfirmationService,
         private _scrumboardService: ScrumboardService,
         private _taskService: TasksService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private _snackBar: MatSnackBar,
+        private userService: UserService,
     )
     {
     }
@@ -213,6 +178,9 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         this.formShare = this._formBuilder.group({
             boards: ['', Validators.required],
         });
+        this._taskService.currentBoard$.subscribe(res=>{
+            this.boardData$ = res;
+        })
         // Initialize the list title form
         this.listTitleForm = this._formBuilder.group({
             title: ['']
@@ -221,7 +189,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         this._taskService.currentBoard$.pipe(takeUntil(this._unsubscribeAll))
         .subscribe((board: Boards) => {
             console.log(board,'BOARD');
-
+            this.currentBoardId = board.id
             this.board = {...board};
             this._taskService.getUsersBoard(board.id).subscribe((res)=>{
                 console.log(res,'TTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEESST');
@@ -233,7 +201,9 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             this._changeDetectorRef.markForCheck();
         });
         // Get the board
-
+        this.userService.user$.subscribe((res)=>{
+            this.userId = res.id;
+        })
     }
 
     /**
@@ -270,6 +240,24 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
               dialogRef.afterClosed().subscribe((result) => {
               });
         });
+      }
+      assignUserToBoard(userId: number){
+        debugger
+        this._taskService.assignUserToBoard(this.currentBoardId , userId).subscribe((res)=>{
+          console.log(res);
+        });
+      }
+      openImagePopup(file)
+      {
+        console.log(file);
+        this.dialog.open(OpenimageTaskComponent, {
+            width: '50vh',
+            height:'50vh',
+            data:{
+                file:file
+            }
+
+        })
       }
     /**
      * Focus on the given element to start editing the list title
@@ -381,14 +369,35 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             status:list.status.id
         };
         if(event.type === 'task'){
-            this._taskService.storeTask(newTask).subscribe();
+            this._taskService.storeTask(newTask).subscribe(res=>{}
+                ,err=>{
+                    console.log(err);
+                    this.handleError(err.error.fail);
+                    console.log(err);
+                    const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
+                        width: '228px',
+                        height: '200px',
+                      data:{userid:this.userId,boardId:this.currentBoardId }
+                    });
+                });
         }else{
-            this._taskService.storeSubtask(newTask).subscribe();
+            this._taskService.storeSubtask(newTask).subscribe(res=>{},err=>{
+                console.log(err);
+                const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
+                    width: '228px',
+                    height: '200px',
+                  data:{userid:this.userId,boardId:this.currentBoardId }
+
+                });
+            });
         }
         console.log(newTask);
         // Save the card
     }
 
+    handleError(err){
+        console.log(err);
+    }
     /**
      * List dropped
      *

@@ -23,7 +23,9 @@
                                     <div class="relative flex flex-auto">
                                         <!-- Icon -->
                                         <ng-container *ngIf="log.type.image ">
-                                                <img class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400" [src]="log.type.image" alt="">
+                                            <div style="padding-right: 18px;">
+                                                <img style="width:40px; height:auto; border-radius: 50%;margin-left: 5px;"[src]="apiUrl+log.type.image" alt="">
+                                            </div>
                                         </ng-container>
                                         <!-- Content -->
                                         <div class="flex flex-col flex-auto items-start">

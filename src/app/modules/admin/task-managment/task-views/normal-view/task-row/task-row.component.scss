@@ -1,0 +1,111 @@
+.priority_class{
+    width: 160px!important;
+}
+.subtasks mat-icon{
+    font-size: 18px;
+    margin-right: 5px;
+}
+.subtasks mat-icon:hover{
+    cursor: pointer;
+    color: blue;
+}
+.subtask_list{
+    padding-left: 40px;
+}
+
+.checkListTable{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 9px 10px;
+    border-radius: 25px;
+}
+
+.checkListTablegrey{
+    background-color: rgba(30, 41, 59,0.2)!important;
+}
+.checkListTablegreen{
+    background-color: #61bd4f;
+    color: #fff;
+}
+.checkListTablegreen mat-icon{
+    color: #fff;
+}
+
+.users_asiggn_task{
+    background-color: #fff;
+    padding: 5px;
+    display: flex;
+    position: relative;
+    border-radius: 21px;
+    height: 41px;
+}
+.add_userToTasl{
+    position: absolute;
+    top: calc(50% - 10px);
+    left: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: blue;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+.users_asiggn_task:hover .add_userToTasl{
+    cursor: pointer;
+    display: flex;
+}
+
+.kanban_view_button a{
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #fff;
+
+    transition: border 0.6s;
+
+}
+.kanban_view_button a:hover{
+    border: 1px solid #00000065;
+    transition: border 0.6s;
+}
+.kanban_view_button{
+    margin-top: 20px;
+}
+
+.share_task_popover{
+    max-width: 100%;
+    width: 270px;
+    padding: 15px;
+}
+.share_task_popover_header{
+    border-bottom: 1px solid #0000002a;
+    padding: 0 0 10px 0;
+    text-align: center;
+    font-size: 18px;
+}
+.form_body_popover{
+    padding-top: 10px;
+}
+
+
+.editbutton{
+    display: none;
+    padding: 4px 8px;
+    background: #fff;
+    color: rgba(0, 0, 0, 0.7)!important;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.editable_title_input:hover .editbutton{
+    display: block!important;
+}
+.title_task_rwo{
+    padding: 5px;
+}
+.editbutton:hover .title_task_rwo{
+    border: 1px dotted #00000070;
+}

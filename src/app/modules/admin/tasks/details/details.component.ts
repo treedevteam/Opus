@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/member-ordering */
@@ -7,7 +9,7 @@ import { TasksListComponent } from './../list/list.component';
 import { Tag, Task, Task2 } from './../tasks.types';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
@@ -21,6 +23,7 @@ import { Users } from '../tasks.types';
 import { Departments } from '../../departments/departments.types';
 import { TaskCheckList } from '../tasks.types';
 import { environment } from 'environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector       : 'tasks-details',
@@ -46,7 +49,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     usersList: Users[];
     usersAssignedSelected: number[];
     isXyzChecked = true;
-
+    file: any = null;
+    fileName: any;
+    taskFile: any = null;
     tags: Tag[];
     tagsEditMode: boolean = false;
     filteredTags2: Departments[];
@@ -55,7 +60,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     task2: Task2;
     taskForm: FormGroup;
     tasks: Task[];
-
+    uploaded: boolean;
+    url ;
     checkListtotal = 0;
     checkListcompleted = 0;
     checkList: TaskCheckList[];
@@ -66,7 +72,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _usersPanelOverlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    taskCheckList$ = this._tasksService.taskCheckListservice$;
+    taskCheckList$ = this._tasksService.taskCheckList$;
     /**
      * Constructor
      */
@@ -80,7 +86,8 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _tasksService: TasksService,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private _snackBar: MatSnackBar,
     )
     {
 
@@ -95,7 +102,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     ngOnInit(): void
     {
-
         // Open the drawer
         this._tasksListComponent.matDrawer.open();
 
@@ -115,7 +121,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             has_expired    : [0],
             users_assigned    : [[]],
             checklist:'',
-            file:''
+            file:['']
         });
 
 
@@ -201,7 +207,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((task: Task2) => {
 
-
+  
             // Open the drawer in case it is closed
             this._tasksListComponent.matDrawer.open();
 
@@ -243,8 +249,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             )
             .subscribe((value) => {
 
-                // Update the task on the server
-                // this._tasksService.updateTask(value.id, value).subscribe();
+               
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -261,6 +266,9 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 // Focus on the title field
                 this._titleField.nativeElement.focus();
             });
+            this.taskFile = this.taskForm.get('file').value;
+        
+
     }
 
 
@@ -818,8 +826,100 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     {
         return item.id || index;
     }
-    addFiletoTask(file){
+    // onFileChange(event): void{
+    //     debugger;
+    //     const file: File = event.target.files[0];
+    //     console.log(file);
+    //     if(file){
+    //         this.fileName = file.name;
+    //         const formData = new FormData();
+    //         const result  = Object.assign({},this.taskForm.value);
+    //         formData.append('id',this.taskForm.get('id').value);  
+    //         formData.append('title',this.taskForm.get('title').value);  
+    //         formData.append('description',this.taskForm.get('description').value);  
+    //         formData.append('deadline',this.taskForm.get('deadline').value);  
+    //         formData.append('priority',this.taskForm.get('priority').value);  
+    //         formData.append('raport',this.taskForm.get('raport').value);  
+    //         formData.append('restrictions',this.taskForm.get('restrictions').value);  
+    //         formData.append('status',this.taskForm.get('status').value);  
+    //         formData.append('file', file);
+    //         this.file = file;
+    //         console.log(this.file,'try this ');
+    //         this._tasksService.updateTaskservice(formData,this.taskForm.get('id').value).subscribe((res)=>{
+    //             console.log(res,'EEWRWERWERWERw');
+    //         });
 
+
+
+    //     }
+        
+    //   }
+
+        
+  onFileChange(pFileList: File): void {
+    debugger;
+    this.uploaded = true;
+    this.file = pFileList[0];
+
+    if (pFileList[0]) {
+        if (
+            pFileList[0].type === 'image/jpeg' ||
+            pFileList[0].type === 'image/png' ||
+            pFileList[0].type === 'image/jpg'
+        ) {
+            if (pFileList[0].size < 200 * 200) {
+                /* Checking height * width*/
+            }
+            if (pFileList[0].size < 512000) {
+                this._snackBar.open('Successfully upload!', 'Close', {
+                    duration: 2000,
+                });
+
+                const reader = new FileReader();
+                reader.readAsDataURL(pFileList[0]);
+                reader.onload = (event): any => {
+                    this.url = event.target.result;
+                };
+                this.taskForm.get('file').patchValue(this.file);
+
+                this.uploadTaskImage();
+                console.warn(this.url, 'url');
+                console.warn(this.file, 'url');
+            }else{
+                this._snackBar.open('File is too large!', 'Close', {
+                    duration: 2000,
+                });
+                this.uploaded = false;
+                this.file = null;
+                this.taskForm.get('file').patchValue(null);
+                this.url = null;
+            }
+        }else{
+            this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
+                duration: 2000,
+            });
+            this.uploaded = false;
+            this.file = null;
+            this.taskForm.get('file').patchValue(null);
+            this.url = null;
+        }
     }
+}
+
+uploadTaskImage(){
+    const formData = new FormData();
+    const result = Object.assign({}, this.taskForm.value);
+    formData.append('file', this.taskForm.get('file').value);
+    this._tasksService.addfileToTask(formData,this.taskForm.get('id').value).subscribe((res)=>{
+        console.log(res,'EEWRWERWERWERw');
+    }); 
+}
+
+deleteFile(id){
+    this._tasksService.deleteFileFromTask(id).subscribe((res)=>{
+        this._snackBar.open('Successfully deleted!', 'Close', {});
+        this.ngOnInit();
+    });
+}
 
 }

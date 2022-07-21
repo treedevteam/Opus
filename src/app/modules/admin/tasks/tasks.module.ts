@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -48,10 +49,11 @@ import { ScrumboardBoardAddListComponent } from './kanban-view/kanban-board/boar
 import { ScrumboardBoardAddCardComponent } from './kanban-view/kanban-board/board/add-card/add-card.component';
 import { ScrumboardCardDetailsComponent } from './kanban-view/kanban-board/card/details/details.component';
 import { ScrumboardCardComponent } from './kanban-view/kanban-board/card/card.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './task-details/task-details.component';
 import { MentionModule } from 'angular-mentions';
-import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
+import { HttpClientModule } from '@angular/common/http';
+import { JoinTaskDialogComponent } from './join-task-dialog/join-task-dialog.component';
 @NgModule({
     declarations: [
         TasksComponent,
@@ -72,7 +74,7 @@ import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
         ScrumboardCardDetailsComponent,
         ScrumboardCardComponent,
         TaskDetailsComponent,
-        TasksHeaderComponent
+        JoinTaskDialogComponent,
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),
@@ -103,7 +105,8 @@ import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
         ChecklistModule,
         MatChipsModule,
         MatCardModule,
-        MentionModule
+        MentionModule,
+        HttpClientModule
     ],
     providers   : [
 
@@ -121,7 +124,8 @@ import { TasksHeaderComponent } from './tasks-header/tasks-header.component';
                 }
             }
         },
-    ]
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+    ],
 })
 export class TasksModule
 {

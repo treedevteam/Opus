@@ -153,27 +153,6 @@ export class StoreComponent implements OnInit, AfterViewInit, OnDestroy {
                 // Mark for check
             });
 
-
-        // Update task when there is a value change on the task form
-        this.taskForm.valueChanges
-            .pipe(
-                tap((value) => {
-
-                    // Update the task object
-                    this.task = assign(this.task, value);
-                }),
-                debounceTime(300),
-                takeUntil(this._unsubscribeAll)
-            )
-            .subscribe((value) => {
-
-                // Update the task on the server
-                this._tasksService.updateTask(value.id, value).subscribe();
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-
         // Listen for NavigationEnd event to focus on the title field
         this._router.events
             .pipe(

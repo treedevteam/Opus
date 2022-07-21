@@ -14,7 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from 'app/shared/shared.module';
 import {  MAT_DATE_FORMATS } from '@angular/material/core';
 import moment from 'moment';
@@ -25,7 +25,6 @@ import { UpdateDepartmentsComponent } from './update-departments/update-departme
 import { BoardsComponent } from './boards/boards.component';
 import { StoreBoardsComponent } from './boards/store-boards/store-boards.component';
 import { UpdateBoardsComponent } from './boards/update-boards/update-boards.component';
-import { TasksComponent } from './boards/tasks/tasks.component';
 import {MatSelectModule} from '@angular/material/select';
 
 
@@ -38,7 +37,6 @@ import {MatSelectModule} from '@angular/material/select';
     BoardsComponent,
     StoreBoardsComponent,
     UpdateBoardsComponent,
-    TasksComponent
   ],
   imports: [
     RouterModule.forChild(departmentsRoutingModule),
@@ -56,7 +54,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatProgressBarModule,
     SharedModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    HttpClientModule
   ],
   providers   : [
     {

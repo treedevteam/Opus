@@ -25,37 +25,11 @@ export class StatusComponent implements OnInit {
         private _snackBar: MatSnackBar,
         private _router: Router
     ) { }
-
-    getstatuses$ = combineLatest([
-        this._statusService.getStatuses$,
-        this._statusService.addedStatus$,
-        this._statusService.updatedStatus$,
-        this._statusService.deletedStatus$
-    ],(g,p,u,d) => {
-        console.log(g,'g');
-        console.log(p,'p');
-        console.log(u,'u');
-        console.log(d,'d');
-         if(p){
-             g.unshift(p);
-         }else if(u){
-             const index = g.findIndex(x => x.id === u.id);
-             g.splice(index,1,u);
-         }else if(d){
-            const index = g.findIndex(x => x.id === d);
-            if (index > -1) {
-                g.splice(index, 1);
-              }
-         }
-       return g;
-     });
+    getstatuses$ = this._statusService.statuses$;
 
     ngOnInit(): void {
-
+        this._statusService.getStatuses().subscribe();
     }
-
-
-
     wcHexIsLight(color: any): string {
         const hex = color.replace('#', '');
         const cr = parseInt(hex.substr(0, 2), 16);
@@ -87,7 +61,7 @@ export class StatusComponent implements OnInit {
     }
 
     navigateTo(id: number): void{
-        this._router.navigate([`/statuses/${id}`]);
+        this._router.navigate([`/admin/statuses/${id}`]);
 
     }
 }

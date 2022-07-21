@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TasksHeaderComponent } from './tasks-header.component';
+import { KanbanViewComponent } from './kanban-view.component';
 
-describe('TasksHeaderComponent', () => {
-  let component: TasksHeaderComponent;
-  let fixture: ComponentFixture<TasksHeaderComponent>;
+describe('KanbanViewComponent', () => {
+  let component: KanbanViewComponent;
+  let fixture: ComponentFixture<KanbanViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TasksHeaderComponent ]
+      declarations: [ KanbanViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TasksHeaderComponent);
+    fixture = TestBed.createComponent(KanbanViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -7,6 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MailboxService } from 'app/modules/admin/mailbox/mailbox.service';
 import { Mail, MailFolder, Maill, MailLabel } from 'app/modules/admin/mailbox/mailbox.types';
 import { labelColorDefs } from 'app/modules/admin/mailbox/mailbox.constants';
+import { environment } from 'environments/environment';
 
 @Component({
     selector     : 'mailbox-details',
@@ -23,7 +25,9 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     labels: MailLabel[];
     mail: Maill;
     mails: Maill;
-    replyFormActive: boolean = false;
+    replyFormActive: number = 0;
+    mailReaded: any = null;
+    apiUrl = environment.apiUrl;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -80,7 +84,7 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
             .subscribe(() => {
 
                 // De-activate the reply form
-                this.replyFormActive = false;
+                // this.replyFormActive = false;
             });
     }
 
@@ -231,6 +235,13 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     //     // Update the mail on the server
     //     this._mailboxService.updateMail(this.mail.id, {unread: this.mail.unread}).subscribe();
     // }
+    toogleUnread(id: number)
+    {
+              this._mailboxService.markAsUnread(id).subscribe((res)=>{
+                console.log(res,'readiiii');
+            });
+        }
+
 
     /**
      * Reply
@@ -238,7 +249,7 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     reply(): void
     {
         // Activate the reply form
-        this.replyFormActive = true;
+        // this.replyFormActive = true;
 
         // Scroll to the bottom of the details pane
         setTimeout(() => {
@@ -252,7 +263,7 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     replyAll(): void
     {
         // Activate the reply form
-        this.replyFormActive = true;
+        // this.replyFormActive = true;
 
         // Scroll to the bottom of the details pane
         setTimeout(() => {
@@ -266,7 +277,7 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     forward(): void
     {
         // Activate the reply form
-        this.replyFormActive = true;
+        // this.replyFormActive = true;
 
         // Scroll to the bottom of the details pane
         setTimeout(() => {
@@ -280,7 +291,7 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     discard(): void
     {
         // Deactivate the reply form
-        this.replyFormActive = false;
+        // this.replyFormActive = false;
     }
 
     /**
@@ -289,7 +300,7 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     send(): void
     {
         // Deactivate the reply form
-        this.replyFormActive = false;
+        // this.replyFormActive = false;
     }
 
     /**
@@ -370,4 +381,12 @@ export class MailboxDetailsComponent implements OnInit, OnDestroy
     {
         return item.id || index;
     }
+
+    deleteEmail(id: number){
+        this._mailboxService.deleteEmail(id).subscribe((res)=>{
+            console.log(res,'deleted');
+            this.ngOnInit();
+        });
+        }
+
 }

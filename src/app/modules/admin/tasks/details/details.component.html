@@ -1,7 +1,6 @@
 <div class="flex flex-col flex-auto p-6 pt-5 sm:p-8 sm:pt-10 w-full ">
     <!-- Header -->
     <div class="flex items-center justify-between -mt-3 -ml-4">
-
         <!-- Mark as ... button -->
         <button class="pr-4 pl-3.5" mat-button (click)="toggleCompleted()">
 
@@ -17,7 +16,6 @@
 
             </ng-container>
         </button>
-
         <div class="flex items-center">
             <!-- More menu -->
             <button mat-icon-button [matMenuTriggerFor]="moreMenu">
@@ -48,6 +46,14 @@
                         <div class="w-12 h-1 mt-4 "></div>
                         <div class="flex items-center -space-x-1.5">
                            
+                        </div>
+                    </ng-container>
+                    <!-- Task file -->
+                    <ng-container  *ngIf="taskFile !== null"  class="mb-3 mt-2 w-25 h-25 ">
+                        <div class="d-flex justify-content-center">
+                            <img class="w-50" [src]="apiUrl + 'storage/' + taskFile " alt="">
+                            <mat-icon (click)="deleteFile(task2.id)"  style="cursor: pointer;" color="warn" >delete</mat-icon>
+                            <mat-divider ></mat-divider>
                         </div>
                     </ng-container>
                     <!-- Members -->
@@ -164,10 +170,32 @@
                                     </button>
                                 </mat-form-field>
                             </li>
-
+                            <li>
+                                <input
+                                style="display: none"
+                                type="file"
+                                class="file-input"
+                                (change)="onFileChange($event.target.files)"
+                                #fileUpload
+                            />
+                    
+                            <div class="file-upload">
+                                {{ fileName }}
+                    
+                                <button
+                                    mat-mini-fab
+                                    color="primary"
+                                    class="upload-btn"
+                                    (click)="fileUpload.click()"
+                                >
+                                    <mat-icon>attach_file</mat-icon>
+                                </button>
+                            </div>
+                            </li>
                         </ul>
                     </div>
                 </form>
+   
             </div>
         </div>
     </mat-tab>
