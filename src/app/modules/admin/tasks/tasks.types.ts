@@ -37,7 +37,10 @@ export interface Boards{
     department_id: string;
     name: string;
     description: string;
+    users_assigned:any;
+    board_order: string;
     type: any;
+    is_his: any;
 }
 export interface Task2
 {

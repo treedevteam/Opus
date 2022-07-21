@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable eqeqeq */
 /* eslint-disable @typescript-eslint/semi */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/adjacent-overload-signatures */
@@ -8,7 +10,7 @@
 import { Tag, Task, Task2, TaskLogs, TaskWithDepartment, TaskComment, TaskCheckList, Users } from './tasks.types';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, shareReplay, switchMap, take, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, shareReplay, switchMap, take, tap, throwError, withLatestFrom } from 'rxjs';
 import { parseInt } from 'lodash';
 import { Priorities } from '../priorities/model/priorities';
 import { Location } from '../locations/model/location';
@@ -36,9 +38,8 @@ export class TasksService
     private _currentDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null);
     private _currentDepartmentTasks: BehaviorSubject<TaskWithDepartment | null> = new BehaviorSubject(null);
     private _currentDepartmentId: BehaviorSubject<number | null> = new BehaviorSubject(null);
-
-
-    private _currentBoard: BehaviorSubject<Boards | null> = new BehaviorSubject(null);
+    private _boardData : BehaviorSubject <any> = new BehaviorSubject(null);
+    private _currentBoard: BehaviorSubject<any| null> = new BehaviorSubject(null);
     private _allBoards: BehaviorSubject<Boards[] | null> = new BehaviorSubject(null);
     private _currentBoardOrderTasks: BehaviorSubject<string | null> = new BehaviorSubject(null);
     private _currentBoardUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
@@ -172,6 +173,9 @@ export class TasksService
     get currentBoard$(): Observable<Boards>{
         return this._currentBoard.asObservable();
     }
+    get joinedBoard$(): Observable<Boards>{
+        return this._boardData.asObservable();
+    }
     get allBoards$(): Observable<Boards[]>{
         return this._allBoards.asObservable();
     }
@@ -263,6 +267,10 @@ export class TasksService
     {
         return this._users.asObservable();
     }
+    // get taskData$(): Observable<Any>
+    // {
+    //     return this._boardData.asObservable();
+    // }
 
 
     //nuk na duhet 
@@ -316,13 +324,17 @@ export class TasksService
 
     assignUserToBoard(boardId: number, userId: number): Observable<Users[]>
     {
+        debugger;
         return this._httpClient.post<Users[]>(this.apiUrl+'api/board/'+ boardId +'/'+userId,null).pipe(
             map((data: any): Users[] => {
                 this._currentBoardUsers.next(data.data);
+                this.getBoard(boardId).subscribe((board: Boards) => {
+                })
                 return data.data;
             }),
         );
     }
+
     getTasksLogs(id): Observable<TaskLogs[]> {
         return this._httpClient.get<TaskLogs[]>(this.apiUrl+'api/logs/'+ id).pipe(
             map((data: any): TaskLogs[] => {

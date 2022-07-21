@@ -17,7 +17,6 @@ export class JoinTaskDialogComponent implements OnInit {
     assignUserToBoard(){
       this._tasksService.assignUserToBoard(this.data.boardId , this.data.userid).subscribe((res)=>{
         console.log(res);
-        window.location.reload();
       });
     }
 

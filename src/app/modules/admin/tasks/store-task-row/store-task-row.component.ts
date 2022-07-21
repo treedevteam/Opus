@@ -53,8 +53,8 @@ export class StoreTaskRowComponent implements OnInit {
     },(err)=>{
         console.log(err);
         const dialogRef = this._dialog.open(JoinTaskDialogComponent,{
-          width: '320px',
-          height: '250px',
+          width: '350px',
+          height: '300px',
           data:{userid: this.userInfo.id, boardId:this.currentDepartment }
         });
         this.taskForm.reset();

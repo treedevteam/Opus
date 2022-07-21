@@ -43,14 +43,15 @@
                                         </div>
                                     </div>
                                 </ng-container>
+                                
                             </div>
 
-                            <button *ngIf="boardData$.is_his === 1 " class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserPopup()">
+                            <button *ngIf="(boardData$ | async).is_his === 1  " class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserPopup()">
                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                 <span class="ml-2 mr-1">Invite</span>
                             </button>
                             
-                            <button  *ngIf="boardData$.is_his === 0"  class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserToBoard(userId)">
+                            <button  *ngIf="(boardData$ | async).is_his === 0  "  class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserToBoard(userId)">
                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                 <span class="ml-2 mr-1">Join</span>
                             </button>

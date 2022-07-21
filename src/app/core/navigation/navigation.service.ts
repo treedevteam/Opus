@@ -9,6 +9,7 @@ export interface Boards{
     name: string;
     description: string;
     type: any;
+    is_his: number;
 }
 @Injectable({
     providedIn: 'root'
