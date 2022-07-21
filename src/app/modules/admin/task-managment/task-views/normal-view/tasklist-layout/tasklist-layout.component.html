@@ -1,0 +1,10 @@
+    <div
+        class="divide-y"
+        cdkDropList
+        [cdkDropListData]="boardsTasks$ | async"
+        (cdkDropListDropped)="dropped($event)">
+        <!-- Task -->
+        <ng-container *ngFor="let task of (boardsTasks$ | async); let first = first;">
+            <app-task-row [task]="task"></app-task-row>
+        </ng-container>
+    </div>

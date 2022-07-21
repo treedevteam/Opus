@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -9,6 +9,9 @@ import { Subject, takeUntil } from 'rxjs';
   selector: 'app-kanban-view',
   templateUrl: './kanban-view.component.html',
   styleUrls: ['./kanban-view.component.scss']
+})
+@Injectable({
+  providedIn: 'root'
 })
 export class KanbanViewComponent implements OnInit {
   drawerMode: 'side' | 'over';
