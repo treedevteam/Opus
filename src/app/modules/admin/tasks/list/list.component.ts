@@ -82,7 +82,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     subtaskControls: FormArray;
     order;
     board_id: number;
-    boardData$
+    boardData$ = this._tasksService.currentBoard$;
     DeaprtmentsData$ = this._tasksService.departments$;
     statusData$ = this._tasksService.getStatus$;
     selectedTask: Task;
@@ -214,10 +214,6 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {
-        this._tasksService.currentBoard$.subscribe(res=>{
-            this.boardData$ = res;
-        })
-
         //fORM
         this.formShare = this._formBuilder.group({
             boards: [''],
@@ -406,10 +402,10 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     }
     assignUserToBoard(userId: number){
-        debugger
-        this._tasksService.assignUserToBoard(this.board_id , userId).subscribe((res)=>{
-          console.log(res);
-        });
+        debugger;
+     this._tasksService.assignUserToBoard(this.board_id , userId).subscribe((res)=>{
+        console.warn(res);
+     })
       }
     /**
      * Create task

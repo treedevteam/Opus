@@ -51,8 +51,8 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     usersList = this._taskService.currentBoardUsers$;
     currentBoardId
     userId
-    boardData$
-
+    boardData$ = this._taskService.currentBoard$;
+    
     tasksData$ = this._taskService.currentBoardTasks$;
 
      departmentsWithBoard$ = combineLatest([
@@ -178,9 +178,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         this.formShare = this._formBuilder.group({
             boards: ['', Validators.required],
         });
-        this._taskService.currentBoard$.subscribe(res=>{
-            this.boardData$ = res;
-        })
+
         // Initialize the list title form
         this.listTitleForm = this._formBuilder.group({
             title: ['']
@@ -375,8 +373,8 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
                     this.handleError(err.error.fail);
                     console.log(err);
                     const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
-                        width: '228px',
-                        height: '200px',
+                        width: '350px',
+                        height: '300px',
                       data:{userid:this.userId,boardId:this.currentBoardId }
                     });
                 });
@@ -384,8 +382,8 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
             this._taskService.storeSubtask(newTask).subscribe(res=>{},err=>{
                 console.log(err);
                 const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
-                    width: '228px',
-                    height: '200px',
+                    width: '350px',
+                    height: '300px',
                   data:{userid:this.userId,boardId:this.currentBoardId }
 
                 });
