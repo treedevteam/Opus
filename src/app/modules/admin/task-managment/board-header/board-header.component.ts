@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TaskServiceService } from '../_services/task-service.service';
 
 @Component({
   selector: 'app-board-header',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BoardHeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _taskServiceService:TaskServiceService) { }
+
+  currentBoard$ = this._taskServiceService.currentBoard$;
 
   ngOnInit(): void {
   }

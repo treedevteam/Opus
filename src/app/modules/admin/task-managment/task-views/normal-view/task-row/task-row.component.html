@@ -1,0 +1,200 @@
+<div [id]="'task-' + task.id"
+    class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted"
+    >
+    <!-- Task content -->
+    <div class="relative flex items-center h-full pl-4 ">
+        <div class="relative" style="position: relative;">
+            <button style="position: relative;" mat-icon-button  aria-label="Example icon-button with a menu">
+                <mat-icon style="position: relative !important;top: 0;left: 0;
+                bottom: 0; right: 0;" class="three-dots">more_vert</mat-icon>
+            </button>
+        </div>
+
+            <div class="subtasks" matBadgeColor="warn" [matBadge]="task.subtasks_count" matBadgeSize="small" matBadgePosition="before">
+                <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+            </div>
+                    
+
+                <!-- Selected indicator -->
+                <div>
+                    <div
+                        class="z-10 absolute -top-px right-0 -bottom-px flex flex-0 w-1 bg-primary">
+                    </div>
+                </div>
+                <!-- User -->
+                <div class="flex items-center justify-center inset-y-0 left-0 me-3">
+                    <img [matTooltip]="task.user.name" [matTooltipPosition]="'above'"
+                        style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
+                        src="{{apiUrl+ 'storage/'+task.user.user_image}}" alt=""
+                        onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                </div>
+                <!-- Task title -- link -->
+                <div class="flex flex-auto items-center min-w-0 h-full pr-7" >
+                    <!-- Title & Placeholder -->
+                    <div class="flex-auto mr-2 editable_title_input">
+                        <!-- ////////////////////// -->
+                        
+                        <editable style="display: flex; align-items: center; width: fit-content;">
+                            <ng-template viewMode>
+                                <a [routerLink]="task.id" class="title_task_rwo truncate">
+                                    {{task.title}}
+                                </a>
+                            </ng-template>
+                            <ng-template editMode>
+                                <div [formGroup]="myGroup">
+                                    <input style="padding: 5px; border: 1px dotted #00000070;" [formControlName]="'title'"  focusable editableOnEnter>
+                                  </div>
+                            </ng-template>
+                        </editable>
+
+                        <!-- ////////////////////// -->
+                        
+                    </div>
+                </div>
+                <!-- Task file -->
+
+                <ng-container  *ngIf="task.file !== null">
+                    <button
+                    mat-mini-fab
+                    color="primary"
+                    class="upload-btn mr-4"
+                >
+                    <mat-icon>attach_file</mat-icon>
+                </button>
+                </ng-container>
+
+                <!-- Users Assign -->
+                <ng-container>
+                    <div class="checkListTable mr-4"
+                    [ngClass]="{
+                        'checkListTablegrey': task.checkListInfo.completed !== task.checkListInfo.total || task.checkListInfo.total === 0,
+                        'checkListTablegreen': task.checkListInfo.completed === task.checkListInfo.total && task.checkListInfo.total !== 0}">
+                        <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
+                        {{task.checkListInfo.completed}}/{{task.checkListInfo.total}}
+                    </div>
+                </ng-container>
+                <!-- Users Assign -->
+                <div class="">
+                    <ng-container class="mt-5">
+                        <div class="flex items-center  -space-x-1.5">
+                            <ng-container
+                                *ngFor="let member of task.users_assigned.slice(0, 3); trackBy: trackByFn">
+                                <img [matTooltip]="member.name" [matTooltipPosition]="'above'"
+                                    class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                                    [src]="apiUrl+'storage/' + member.image" alt="Member avatar"
+                                    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                            </ng-container>
+                            <ng-container *ngIf="task.users_assigned.length > 3">
+                                <div
+                                    class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500">
+                                    <div class="text-md font-semibold">
+                                        +{{ (task.users_assigned.slice(3)).length }}
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                    <div *ngIf="task.users_assigned.length === 0" >
+                        <img
+                        class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                        src="assets/images/dapulse-person-column.svg" alt="Member avatar">
+                    </div>
+                </div>
+                <!-- Priority -->
+                <div [ngStyle]="{'background-color': task.priority.color + '80'}"
+                    class="flex items-center mt-1.5 px-4 leading-9 rounded-full  text-gray-800 dark:text-gray-100 priority_class"
+                    *ngIf="task.priority"  [matMenuTriggerFor]="priorityMenu">
+                    <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                        [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+                        <div class="flex-auto mr-2 truncate">
+                            <span class="ml-2 mr-1 text-md" style="color: #000;">{{task.priority.name}}</span>
+                        </div>
+                </div>
+                <ng-container *ngIf="!task.priority" >
+                    <div class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
+                        [matMenuTriggerFor]="priorityMenu">
+                        <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                            [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
+                        <span class="ml-2 mr-1 text-md " style="color: #000;">Choose priority</span>
+                    </div>
+                </ng-container> 
+                <!-- Priority -->
+                <!-- Status -->
+                <div [ngStyle]="{'background-color': task.status.color + '80'}"
+                    class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full text-gray-800 dark:text-gray-100 priority_class"
+                    *ngIf="task.status" [matMenuTriggerFor]="stautsMenu">
+                    <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                        [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
+                        <div class="flex-auto mr-2 truncate">
+                    <span class="ml-2 mr-1 text-md" style="color: #000;">{{task.status.name}}</span>
+                    </div>
+                </div>
+                <!-- Status -->
+                <ng-container *ngIf="!task.status" >
+                    <div class="flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100 priority_class"
+                        [matMenuTriggerFor]="stautsMenu">
+                        <mat-icon class="icon-size-5 text-current" style="color: #000;"
+                            [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
+                        <span class="ml-2 mr-1 text-md " style="color: #000;">Choose status</span>
+                    </div>
+                </ng-container> 
+
+
+                <!-- Due date -->
+                <div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
+                [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !task.deadline,
+                        'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task.deadline && !isOverdue(task.deadline),
+                        'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task.deadline && isOverdue(task.deadline)}"
+                        (click)="dueDatePicker.open()">
+                <mat-icon class="icon-size-5 text-current"
+                    [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+                <span class="ml-2 text-md font-medium">
+                    <ng-container *ngIf="task.deadline">{{task.deadline |
+                        date:'LLL dd yyyy'}}</ng-container>
+                    <ng-container *ngIf="!task.deadline">Not set</ng-container>
+                </span>
+
+                <mat-form-field
+                    class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
+                    <div [formGroup]="myGroup">
+                        <input matInput [formControlName]="'deadline'" [matDatepicker]="dueDatePicker">
+                      </div>
+                    <mat-datepicker #dueDatePicker>
+                        <mat-datepicker-actions>
+                            <button class="" mat-flat-button [color]="'primary'"
+                                
+                                matDatepickerApply>Select
+                            </button>
+                        </mat-datepicker-actions>
+                    </mat-datepicker>
+                </mat-form-field>
+            </div>
+            </div>
+        </div>
+
+
+
+
+        
+<mat-menu #stautsMenu="matMenu">
+    <!-- Low -->
+    <button *ngFor="let status of statuses$ | async" mat-menu-item (click)="selectStatus(status)">
+        <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+            <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
+            <!-- <mat-icon
+        class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+        [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+        </span>
+    </button>
+</mat-menu>
+<mat-menu #priorityMenu="matMenu">
+    <!-- Low -->
+    <button *ngFor="let status of priorities$ | async" mat-menu-item (click)="selectPriority(status)">
+        <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
+            <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
+            <!-- <mat-icon
+        class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
+        [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
+        </span>
+    </button>
+</mat-menu>

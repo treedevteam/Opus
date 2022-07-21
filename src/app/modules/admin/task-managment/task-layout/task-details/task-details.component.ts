@@ -2,15 +2,15 @@ import {  OverlayRef } from '@angular/cdk/overlay';
 import { AfterViewInit,  Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
+import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.component';
+import { NormalViewComponent } from '../../task-views/normal-view/normal-view.component';
 
 
-import { KanbanViewComponent } from '../../kanban-view/kanban-view.component';
-import { NormalViewComponent } from '../../normal-view/normal-view.component';
 
 @Component({
   selector: 'app-task-details',
   templateUrl: './task-details.component.html',
-  styleUrls: ['./task-details.component.scss']
+  styleUrls: ['./task-details.component.scss'],
 })
 export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   private _tagsPanelOverlayRef: OverlayRef;
@@ -19,23 +19,27 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   normal:any;
   kanban:any;
   constructor(
-        private _kanbanviewComponent: KanbanViewComponent,
-        private _normal: NormalViewComponent,
+        private _normalView: NormalViewComponent,
+        private _kanbanView: KanbanViewComponent,
         private _activatedroute :ActivatedRoute
   ) {
    }
 
   ngOnInit(): void {
-      this._activatedroute.data.subscribe(data => {
-        if(data.component === "kanban"){
-          this._kanbanviewComponent.matDrawer.open();
-    
-        }
-      })
+
+    //dont touch
+    this._activatedroute.data.subscribe(res=>{
+      if(res.component === "normal"){
+        this._normalView.matDrawer.open();
+      }else{
+        this._kanbanView.matDrawer.open();
+      }
+    })
   }
 
   ngAfterViewInit(): void
   {
+    // this._normal.matDrawer.open();
   }
 
   ngOnDestroy(): void

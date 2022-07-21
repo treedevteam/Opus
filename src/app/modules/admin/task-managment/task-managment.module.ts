@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskManagmentComponent } from './task-managment.component';
-import { NormalViewComponent } from './normal-view/normal-view.component';
-import { KanbanViewComponent } from './kanban-view/kanban-view.component';
 import { TaskLayoutComponent } from './task-layout/task-layout.component';
 import { RouterModule } from '@angular/router';
 import { tasksRoutes } from './task-managment.routing';
@@ -27,8 +25,19 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FuseFindByKeyPipeModule } from '../../../../@fuse/pipes/find-by-key/find-by-key.module';
-import { FormsModule } from '@angular/forms';
-
+import { TaskViewsComponent } from './task-views/task-views.component';
+import { KanbanViewComponent } from './task-views/kanban-view/kanban-view.component';
+import { TasklistLayoutComponent } from './task-views/normal-view/tasklist-layout/tasklist-layout.component';
+import { TaskRowComponent } from './task-views/normal-view/task-row/task-row.component';
+import { StoreTaskRowComponent } from './task-views/normal-view/store-task-row/store-task-row.component';
+import { NormalViewComponent } from './task-views/normal-view/normal-view.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { FocusableDirective } from './focusable.directive';
+import { EditableOnEnterDirective } from './editable/edit-on-enter.directive';
+import { EditModeDirective } from './editable/edit-mode.directive';
+import { EditableComponent } from './editable/editable.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { ViewModeDirective } from './editable/view-mode.directive';
 
 
 @NgModule({
@@ -39,12 +48,22 @@ import { FormsModule } from '@angular/forms';
     TaskLayoutComponent,
     TaskDetailsComponent,
     SubtaskDetailsComponent,
-    BoardHeaderComponent
+    BoardHeaderComponent,
+    TasklistLayoutComponent,
+    TaskRowComponent,
+    StoreTaskRowComponent,
+    TaskViewsComponent,
+    FocusableDirective,
+    EditableOnEnterDirective,
+    EditModeDirective,
+    EditableComponent,
+    ViewModeDirective,
   ],
   imports: [
     RouterModule.forChild(tasksRoutes),
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatSidenavModule,
     DragDropModule,
     MatAutocompleteModule,
@@ -63,6 +82,7 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatTooltipModule,
     FuseFindByKeyPipeModule,
+    MatBadgeModule
   ]
 })
 export class TaskManagmentModule { }

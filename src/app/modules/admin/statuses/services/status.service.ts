@@ -10,11 +10,14 @@ import { Status } from '../model/status';
 export class StatusService {
   apiUrl = environment.apiUrl;
   private _statuses: BehaviorSubject<Status[] | null> = new BehaviorSubject(null);
+
   constructor(private http: HttpClient) { }
+
   get statuses$(): Observable<Status[]>
   {
       return this._statuses.asObservable();
   }
+  
   getStatuses(): Observable<Status[]>{
       return this.http.get<Status[]>(this.apiUrl+'api/statuses').pipe(
           map((data: any) => {

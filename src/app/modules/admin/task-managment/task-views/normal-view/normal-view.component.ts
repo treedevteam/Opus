@@ -1,16 +1,21 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Subject, takeUntil } from 'rxjs';
+import { TaskServiceService } from '../../_services/task-service.service';
 
 @Component({
   selector: 'app-normal-view',
   templateUrl: './normal-view.component.html',
   styleUrls: ['./normal-view.component.scss']
 })
+@Injectable({
+  providedIn: 'root'
+})
 export class NormalViewComponent implements OnInit {
+  
   drawerMode: 'side' | 'over';
   @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
 
@@ -20,8 +25,12 @@ export class NormalViewComponent implements OnInit {
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _fuseMediaWatcherService: FuseMediaWatcherService,
+    private _taskServiceService:TaskServiceService
 
   ) { }
+
+  statuses$ = this._taskServiceService.statuses$
+  priorities$ = this._taskServiceService.priorities$
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 

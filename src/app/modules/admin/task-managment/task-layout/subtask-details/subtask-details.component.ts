@@ -1,8 +1,9 @@
 import {  OverlayRef } from '@angular/cdk/overlay';
 import { AfterViewInit,  Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { Subject } from 'rxjs';
-import { NormalViewComponent } from '../../normal-view/normal-view.component';
-import { KanbanViewComponent } from '../../kanban-view/kanban-view.component';
+import { ActivatedRoute } from '@angular/router';
+import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.component';
+import { NormalViewComponent } from '../../task-views/normal-view/normal-view.component';
 
 @Component({
   selector: 'app-subtask-details',
@@ -14,13 +15,21 @@ export class SubtaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
-        private _normalviewComponent: NormalViewComponent,
-        private _kanbanViewComponent: KanbanViewComponent,
+        private _normalView: NormalViewComponent,
+        private _kanbanView: KanbanViewComponent,
+        private _activatedroute: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
-        // Open the drawer
-        this._normalviewComponent.matDrawer.open();
+
+        //dont touch
+        this._activatedroute.data.subscribe(res=>{
+            if(res.component === "normal"){
+              this._normalView.matDrawer.open();
+            }else{
+              this._kanbanView.matDrawer.open();
+            }
+          })
     }
 
     ngAfterViewInit(): void
