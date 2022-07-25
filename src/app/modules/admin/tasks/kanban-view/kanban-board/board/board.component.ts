@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable quotes */
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable arrow-parens */
@@ -79,7 +81,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
     );
 
     usersAssigned$ = combineLatest([
-        this.tasksDataCheckList$,
+        this.tasksDataCheckList$,   
         this._taskService.getStatus$,
         this._taskService.getPriorities$,
         this._taskService.getUsersData$,

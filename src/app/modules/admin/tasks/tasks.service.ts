@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable eqeqeq */
 /* eslint-disable @typescript-eslint/semi */
@@ -322,9 +323,16 @@ export class TasksService
         );
     }
 
+    assingUserToBoard$ = (boardId: number, userId: number) => combineLatest([this.assignUserToBoard(boardId,userId), this.getBoard(boardId)]).pipe(
+        map(([response, board]: [any, Boards]) => {
+            this._currentBoard.next({...response.board, is_his: board.is_his});
+            return response.data;
+        })
+    )
+
     assignUserToBoard(boardId: number, userId: number): Observable<Users[]>
     {
-        debugger;
+      
         return this._httpClient.post<Users[]>(this.apiUrl+'api/board/'+ boardId +'/'+userId,null).pipe(
             map((data: any): Users[] => {
                 this._currentBoardUsers.next(data.data);
@@ -877,7 +885,7 @@ subtaskUpdateTaskPriority(priorityId: any, subtaskId: number): Observable<Task2>
     getBoard(id: number): Observable<Boards>{
         return this._httpClient.get<Boards>(this.apiUrl+'api/board/'+ id).pipe(
             map((data: any): Boards => {
-                this._currentBoard.next({...data.board, is_his: data.is_his});
+                // this._currentBoard.next({...data.board, is_his: data.is_his});
                 return data;
             }),
              shareReplay(1),
@@ -885,7 +893,7 @@ subtaskUpdateTaskPriority(priorityId: any, subtaskId: number): Observable<Task2>
     }
 
     deleteFileFromTask(id): any{
-        return this._httpClient.delete(this.apiUrl+`api/delete_file/${id}`);
+        return this._httpClient.post(this.apiUrl+`api/delete_file/${id}`,'delete');
     }
 
 subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task2>{
