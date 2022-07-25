@@ -87,7 +87,6 @@ export class TasksListComponent implements OnInit, OnDestroy
     statusData$ = this._tasksService.getStatus$;
     selectedTask: Task;
     filteredUsers: any[];
-
     myTask: TaskWithDepartment[];
 
     orderModified$ = this._tasksService.currentBoardOrderTasks$;
@@ -605,4 +604,5 @@ export class TasksListComponent implements OnInit, OnDestroy
     {
         return item.id || index;
     }
+
 }
