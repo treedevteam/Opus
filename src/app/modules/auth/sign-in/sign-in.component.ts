@@ -51,10 +51,10 @@ export class AuthSignInComponent implements OnInit {
                 [Validators.required, Validators.minLength(8)],
             ],
             grant_type   : ['password'],
-            client_id    : ['1'],
+            client_id    : ['3'],
             scope        : [''],
-            client_secret: ['N70W9BYYHevFvhKHTeWgRHMH68hKRr0roXtscUxU'],
-        });
+            client_secret: ['mnrqWI7x2fr1DuqD066wE3jfibe3M7E7rkrCiRqB'] 
+        }); 
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -76,6 +76,7 @@ export class AuthSignInComponent implements OnInit {
         // Hide the alert
         this.showAlert = false;
         // Sign in
+        debugger;
         this._authService.signIn(this.signInForm.value).subscribe(
             (res) => {
                 console.log(res);
