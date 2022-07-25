@@ -314,6 +314,7 @@ export class TasksService
 
     getUsersBoard(boardId: number): Observable<Users[]>
     {
+        debugger
         return this._httpClient.get<Users[]>(this.apiUrl+'api/board/'+ boardId +'/users').pipe(
             map((data: any): Users[] => {
                 console.log(data,'USSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
@@ -323,12 +324,12 @@ export class TasksService
         );
     }
 
-    assingUserToBoard$ = (boardId: number, userId: number) => combineLatest([this.assignUserToBoard(boardId,userId), this.getBoard(boardId)]).pipe(
-        map(([response, board]: [any, Boards]) => {
-            this._currentBoard.next({...response.board, is_his: board.is_his});
-            return response.data;
-        })
-    )
+    // assingUserToBoard$ = (boardId: number, userId: number) => combineLatest([this.assignUserToBoard(boardId,userId), this.getBoard(boardId)]).pipe(
+    //     map(([response, board]: [any, Boards]) => {
+    //         this._currentBoard.next({...response.board, is_his: board.is_his});
+    //         return response.data;
+    //     })
+    // )
 
     assignUserToBoard(boardId: number, userId: number): Observable<Users[]>
     {
@@ -885,7 +886,7 @@ subtaskUpdateTaskPriority(priorityId: any, subtaskId: number): Observable<Task2>
     getBoard(id: number): Observable<Boards>{
         return this._httpClient.get<Boards>(this.apiUrl+'api/board/'+ id).pipe(
             map((data: any): Boards => {
-                // this._currentBoard.next({...data.board, is_his: data.is_his});
+                this._currentBoard.next({...data.board, is_his: data.is_his});
                 return data;
             }),
              shareReplay(1),
