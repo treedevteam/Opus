@@ -22,7 +22,7 @@
         class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto"
         [formGroup]="cardForm"
     >
-        <ng-container >
+        <ng-container  *ngIf="taskById.file !== null">
             <div class="w-25 h-25 m-3">
                 <div style="justify-content:flex-end ;" class="d-flex ">
                     <mat-icon (click)="deleteFile(taskById.id)"  style="cursor: pointer;" color="warn" >delete</mat-icon>

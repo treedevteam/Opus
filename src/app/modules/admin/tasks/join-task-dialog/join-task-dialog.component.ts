@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, Inject, OnInit } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
@@ -9,7 +10,9 @@ import { TasksService } from '../tasks.service';
 })
 export class JoinTaskDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA)public data: any, private _tasksService: TasksService) { 
+  constructor(@Inject(MAT_DIALOG_DATA)public data: any, private _tasksService: TasksService,
+
+  ) { 
   }
 
   ngOnInit(): void {

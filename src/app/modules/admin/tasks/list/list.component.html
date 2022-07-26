@@ -46,6 +46,54 @@
                                 
                             </div>
 
+             <!-- Filter -->
+             <ng-template #popContent>
+                <form action="">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Keyword</mat-label>
+                        <input matInput placeholder="ex: Done">
+                    </mat-form-field>
+                </form>
+
+                <mat-label>Members</mat-label>
+                <mat-selection-list #shoes>
+                    <mat-list-option>
+                        <img
+                        class="w-full h-full rounded-full"
+                        style="object-fit: cover;"
+         
+                        alt="User avatar"
+                        onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                     asdsadsadsa
+                    </mat-list-option>
+                  </mat-selection-list>
+
+                  <mat-label>Due date</mat-label>
+                  <mat-selection-list>
+                    <mat-list-option >
+                        <img
+                        class="w-full h-full rounded-full"
+                        style="object-fit: cover;"
+         
+                        alt="User avatar"
+                        onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                 sadsad
+                    </mat-list-option>
+                  </mat-selection-list>
+                  
+                  <mat-label>Labels</mat-label>
+                  <mat-selection-list>
+                    <mat-list-option >
+                 
+                      dsadasd
+                    </mat-list-option>
+                  </mat-selection-list>
+            </ng-template>
+            <button  type="button" class="btn  " [ngbPopover]="popContent" placement="bottom" [autoClose]="false" triggers="manual" #p="ngbPopover" (click)="p.open()" popoverTitle="Filters">
+                <mat-icon (click)="p.close()" svgIcon="heroicons_outline:filter"></mat-icon>
+              </button>
+              
+
                             <button *ngIf="(boardData$ | async).is_his === 1  " class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserPopup()">
                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                 <span class="ml-2 mr-1">Invite</span>
@@ -55,6 +103,11 @@
                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                 <span class="ml-2 mr-1">Join</span>
                             </button>
+
+
+
+               
+                              
                         </div>
                     </div>
                 </div>

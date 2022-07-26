@@ -16,6 +16,7 @@ import { appRoutes } from 'app/app.routing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { HttpClientModule } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -47,7 +48,8 @@ const routerConfig: ExtraOptions = {
         MatSnackBarModule,
         CKEditorModule,
         // 3rd party modules that require global configuration via forRoot
-        MarkdownModule.forRoot({})
+        MarkdownModule.forRoot({}),
+        NgbModule
     ],
     bootstrap   : [
         AppComponent

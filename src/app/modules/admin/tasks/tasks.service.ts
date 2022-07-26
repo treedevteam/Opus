@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable eqeqeq */
 /* eslint-disable @typescript-eslint/semi */
@@ -313,6 +314,7 @@ export class TasksService
 
     getUsersBoard(boardId: number): Observable<Users[]>
     {
+        debugger
         return this._httpClient.get<Users[]>(this.apiUrl+'api/board/'+ boardId +'/users').pipe(
             map((data: any): Users[] => {
                 console.log(data,'USSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
@@ -322,9 +324,16 @@ export class TasksService
         );
     }
 
+    // assingUserToBoard$ = (boardId: number, userId: number) => combineLatest([this.assignUserToBoard(boardId,userId), this.getBoard(boardId)]).pipe(
+    //     map(([response, board]: [any, Boards]) => {
+    //         this._currentBoard.next({...response.board, is_his: board.is_his});
+    //         return response.data;
+    //     })
+    // )
+
     assignUserToBoard(boardId: number, userId: number): Observable<Users[]>
     {
-        debugger;
+      
         return this._httpClient.post<Users[]>(this.apiUrl+'api/board/'+ boardId +'/'+userId,null).pipe(
             map((data: any): Users[] => {
                 this._currentBoardUsers.next(data.data);
@@ -885,7 +894,7 @@ subtaskUpdateTaskPriority(priorityId: any, subtaskId: number): Observable<Task2>
     }
 
     deleteFileFromTask(id): any{
-        return this._httpClient.delete(this.apiUrl+`api/delete_file/${id}`);
+        return this._httpClient.post(this.apiUrl+`api/delete_file/${id}`,'delete');
     }
 
 subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task2>{
