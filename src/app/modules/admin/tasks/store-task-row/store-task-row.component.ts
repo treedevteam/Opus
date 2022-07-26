@@ -1,3 +1,5 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, Input, OnInit } from '@angular/core';
 import { TasksService } from '../tasks.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';

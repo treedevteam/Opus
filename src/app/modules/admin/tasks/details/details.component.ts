@@ -267,6 +267,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 this._titleField.nativeElement.focus();
             });
             this.taskFile = this.taskForm.get('file').value;
+     
         
 
     }

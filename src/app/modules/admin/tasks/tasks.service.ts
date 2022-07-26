@@ -642,9 +642,11 @@ deleteComment(id: number): Observable<any>
 
 ///////////////////////////TASKS////////////////////////////////////////////////////
     getBoardTasks(id: number): Observable<Task2[]>{
+        debugger
         return this._httpClient.get<Task2[]>(this.apiUrl+'api/board/'+id+'/tasks').pipe(
         map((data: any): Task2[] => {
             this._currentBoardTasks.next(data.tasks);
+            console.warn(data.tasks,'TASKS');
             this._currentBoardOrderTasks.next(data.order);
             return data.data;
         }),
@@ -671,7 +673,6 @@ deleteComment(id: number): Observable<any>
         take(1),
         switchMap(tasks => this._httpClient.delete(this.apiUrl+'api/task/delete/'+id).pipe(
             map((deletedTask: any) => {
-                debugger;
                 const index = tasks.findIndex(x=>x.id === id)
                 tasks.splice(index,1);
                 this._currentBoardTasks.next(tasks)
@@ -680,6 +681,24 @@ deleteComment(id: number): Observable<any>
         ))
         );
     }
+
+    deleteFileFromTask(id): any{
+        console.log('tes')
+        debugger;
+        return this.currentBoardTasks$.pipe(
+            take(1),
+            switchMap(tasks => this._httpClient.post(this.apiUrl+`api/delete_file/${id}`,'delete').pipe(
+                map((deletedTask: any) => {
+                    debugger
+                    const index  = tasks.findIndex(x=> x.id === id)
+                    console.warn( tasks[index].file)
+                    tasks[index].file = null;
+                    this._currentBoardTasks.next(tasks)
+                    return deletedTask;
+                }) 
+                ))
+                );
+            }
 
     updateTaskStatus(statusId: any, order: any,board_id: number, taskId: number): Observable<Task2>{
         return this.currentBoardTasks$.pipe(
@@ -893,9 +912,7 @@ subtaskUpdateTaskPriority(priorityId: any, subtaskId: number): Observable<Task2>
             );
     }
 
-    deleteFileFromTask(id): any{
-        return this._httpClient.post(this.apiUrl+`api/delete_file/${id}`,'delete');
-    }
+
 
 subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task2>{
     return this.subtasks$.pipe(
