@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { TaskServiceService } from '../_services/task-service.service';
 
 @Component({
   selector: 'app-task-views',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TaskViewsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _taskService: TaskServiceService,
+    private route: ActivatedRoute,
+
+    ) { }
 
   ngOnInit(): void {
+    this._taskService.getBoardUsersData$(+this.route.snapshot.paramMap.get('boardId')
+    ).subscribe()
   }
 
 }

@@ -63,5 +63,6 @@ export interface Board{
     name: string;
     description: string;
     type: any;
-    is_his:number
+    is_his:number,
+    board_order: any;
 }
