@@ -14,5 +14,19 @@ export class BoardHeaderComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  filterStatus(){
+    this._taskServiceService.statusFilter$.next([1])
+  }
+
+  filterPriority(){
+    this._taskServiceService.priorityFilter$.next([3])
+  }
+  filterUserasign(){
+    this._taskServiceService.usersAssignedFilter$.next([1,2])
+  }
+
+  filterTasksCreatedByMe(){
+    this._taskServiceService.createdByMe$.next(1)
+  }
 
 }

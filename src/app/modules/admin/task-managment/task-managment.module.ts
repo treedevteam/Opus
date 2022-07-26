@@ -38,6 +38,8 @@ import { EditModeDirective } from './editable/edit-mode.directive';
 import { EditableComponent } from './editable/editable.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ViewModeDirective } from './editable/view-mode.directive';
+import { TasklistKanbanLayoutComponent } from './task-views/kanban-view/tasklist-kanban-layout/tasklist-kanban-layout.component';
+import { KanbanTaskCardComponent } from './task-views/kanban-view/kanban-task-card/kanban-task-card.component';
 
 
 @NgModule({
@@ -58,6 +60,8 @@ import { ViewModeDirective } from './editable/view-mode.directive';
     EditModeDirective,
     EditableComponent,
     ViewModeDirective,
+    TasklistKanbanLayoutComponent,
+    KanbanTaskCardComponent,
   ],
   imports: [
     RouterModule.forChild(tasksRoutes),

@@ -3,7 +3,7 @@ import { TaskLayoutComponent } from './task-layout/task-layout.component';
 import { TaskManagmentComponent } from './task-managment.component';
 import { TaskDetailsComponent } from './task-layout/task-details/task-details.component';
 import { SubtaskDetailsComponent } from './task-layout/subtask-details/subtask-details.component';
-import { BoardResolver, TaskManagmentResolver } from './task-managment.resolver';
+import { BoardResolver, SubtaskResolver, TaskManagmentResolver, TaskResolver } from './task-managment.resolver';
 import { KanbanViewComponent } from './task-views/kanban-view/kanban-view.component';
 import { TaskViewsComponent } from './task-views/task-views.component';
 import { NormalViewComponent } from './task-views/normal-view/normal-view.component';
@@ -32,13 +32,19 @@ export const tasksRoutes: Route[] = [
                                 component: TaskLayoutComponent,
                                 children:[
                                     {
-                                        path:'task',
+                                        path:'task/:taskId',
                                         component: TaskDetailsComponent,
+                                        resolve  : {
+                                            tags: TaskResolver
+                                        },
                                         data: {component: 'normal'}
                                     },
                                     {
-                                        path:'subtask',
+                                        path:'subtask/:subtaskId',
                                         component: SubtaskDetailsComponent,
+                                        resolve  : {
+                                            tags: SubtaskResolver
+                                        },
                                         data: {component: 'normal'}
                                     }
                                 ]
@@ -54,16 +60,21 @@ export const tasksRoutes: Route[] = [
                                 component: TaskLayoutComponent,
                                 children:[
                                     {
-                                        path:'task',
+                                        path:'task/:taskId',
                                         component: TaskDetailsComponent,
+                                        resolve  : {
+                                            tags: TaskResolver
+                                        },
                                         data: {component: 'kanban'}
         
                                     },
                                     {
-                                        path:'subtask',
+                                        path:'subtask/:subtaskId',
                                         component: SubtaskDetailsComponent,
+                                        resolve  : {
+                                            tags: SubtaskResolver
+                                        },
                                         data: {component: 'kanban'}
-        
                                     }
                                 ]
                             }

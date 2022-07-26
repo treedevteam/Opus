@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.component';
 import { NormalViewComponent } from '../../task-views/normal-view/normal-view.component';
+import { TaskServiceService } from '../../_services/task-service.service';
 
 
 
@@ -16,14 +17,17 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   private _tagsPanelOverlayRef: OverlayRef;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  normal:any;
-  kanban:any;
+
   constructor(
         private _normalView: NormalViewComponent,
         private _kanbanView: KanbanViewComponent,
-        private _activatedroute :ActivatedRoute
+        private _activatedroute :ActivatedRoute,
+        private _taskService: TaskServiceService
   ) {
    }
+
+  taskSelected$ = this._taskService.taskSelected$
+
 
   ngOnInit(): void {
 

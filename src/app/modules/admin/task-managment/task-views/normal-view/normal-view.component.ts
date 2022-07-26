@@ -46,6 +46,9 @@ export class NormalViewComponent implements OnInit {
         // Mark for check
         this._changeDetectorRef.markForCheck();
     });
+
+    
+
   }
 
   ngOnDestroy(): void

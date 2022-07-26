@@ -1,3 +1,8 @@
 <div class="header_task_managment">
     {{(currentBoard$ | async) | json}}
 </div>
+
+<button (click)="filterStatus()">Filter status</button>
+<button (click)="filterPriority()">Filter priority</button>
+<button (click)="filterUserasign()">Filter userasign</button>
+<button (click)="filterTasksCreatedByMe()">created by me</button>

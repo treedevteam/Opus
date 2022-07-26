@@ -1,18 +1,61 @@
 <div [id]="'task-' + task.id"
     class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted"
+    cdkDrag
+    [cdkDragLockAxis]="'y'"
     >
+
+    <!-- Drag preview -->
+    <div
+    class="flex flex-0 w-0 h-0"
+    *cdkDragPreview></div>
     <!-- Task content -->
     <div class="relative flex items-center h-full pl-4 ">
+        <!-- Drag handle -->
+        <div style="width: 24px;">
+            <div
+            class="md:hidden  flex items-center justify-center inset-y-0 left-0 w-8 cursor-move md:group-hover:flex"
+            cdkDragHandle>
+            <mat-icon
+                class="icon-size-5 text-hint"
+                [svgIcon]="'heroicons_solid:menu'"></mat-icon>
+            </div>
+
+        </div>
+
         <div class="relative" style="position: relative;">
-            <button style="position: relative;" mat-icon-button  aria-label="Example icon-button with a menu">
+            <button style="position: relative;" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                 <mat-icon style="position: relative !important;top: 0;left: 0;
                 bottom: 0; right: 0;" class="three-dots">more_vert</mat-icon>
             </button>
         </div>
+        <mat-menu #menu="matMenu">
+            <button (click)="sahreTaskPopover()"  [matMenuTriggerFor]="dateTimeMenu" mat-menu-item>Share task</button>
+            <mat-menu class="date-range-menu" #dateTimeMenu="matMenu" >
+                <div class="share_task_popover"  (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                    <div class="share_task_popover_header">
+                        <span class="">Share task</span>
+                        <a href="#" class=""></a>
+                    </div>
 
-            <div class="subtasks" matBadgeColor="warn" [matBadge]="task.subtasks_count" matBadgeSize="small" matBadgePosition="before">
-                <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
-            </div>
+                    <form [formGroup]="formShare" (ngSubmit)="onSubmit()"  #shareTaskNgForm="ngForm">
+                        <div class="form_body_popover">
+                            <mat-form-field style="width: 100%;" >
+                                <mat-select multiple [formControlName]="'boards'" disableOptionCentering>
+                                <!-- <mat-optgroup label="{{department.name}}" *ngFor="let department of departmentsWithBoard$ | async">
+                                    <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
+                                </mat-optgroup> -->
+                                </mat-select>
+                            </mat-form-field> 
+                        </div>
+                        <button type="submit" mat-raised-button color="primary">Share</button>
+                    </form>
+                </div>
+            </mat-menu>
+         </mat-menu>
+
+        <div class="subtasks" matBadgeColor="warn" [matBadge]="task.subtasks_count" matBadgeSize="small" matBadgePosition="before">
+            <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+        </div>
                     
 
                 <!-- Selected indicator -->
@@ -33,11 +76,11 @@
                     <!-- Title & Placeholder -->
                     <div class="flex-auto mr-2 editable_title_input">
                         <!-- ////////////////////// -->
-                        
-                        <editable style="display: flex; align-items: center; width: fit-content;">
+                        <editable (update)="updateTitle()" style="display: flex; align-items: center; width: fit-content;">
                             <ng-template viewMode>
-                                <a [routerLink]="task.id" class="title_task_rwo truncate">
-                                    {{task.title}}
+                                <a [routerLink]="'task/' + task.id" class="title_task_rwo truncate">
+                                    {{task.title}} 
+                                   
                                 </a>
                             </ng-template>
                             <ng-template editMode>
@@ -46,9 +89,7 @@
                                   </div>
                             </ng-template>
                         </editable>
-
                         <!-- ////////////////////// -->
-                        
                     </div>
                 </div>
                 <!-- Task file -->
@@ -74,7 +115,7 @@
                     </div>
                 </ng-container>
                 <!-- Users Assign -->
-                <div class="">
+                <div class="me-3">
                     <ng-container class="mt-5">
                         <div class="flex items-center  -space-x-1.5">
                             <ng-container
@@ -111,7 +152,7 @@
                         </div>
                 </div>
                 <ng-container *ngIf="!task.priority" >
-                    <div class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
+                    <div class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100 priority_class"
                         [matMenuTriggerFor]="priorityMenu">
                         <mat-icon class="icon-size-5 text-current" style="color: #000;"
                             [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
@@ -162,7 +203,7 @@
                     <mat-datepicker #dueDatePicker>
                         <mat-datepicker-actions>
                             <button class="" mat-flat-button [color]="'primary'"
-                                
+                            (click)="updateField()"
                                 matDatepickerApply>Select
                             </button>
                         </mat-datepicker-actions>
@@ -189,9 +230,9 @@
 </mat-menu>
 <mat-menu #priorityMenu="matMenu">
     <!-- Low -->
-    <button *ngFor="let status of priorities$ | async" mat-menu-item (click)="selectPriority(status)">
+    <button *ngFor="let priority of priorities$ | async" mat-menu-item (click)="selectPriority(priority)">
         <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
-            <span class="font-medium" [ngStyle]="{'color': status.color}">{{status.name}}</span>
+            <span class="font-medium" [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
             <!-- <mat-icon
         class="mr-0 icon-size-4 text-green-600 dark:text-green-500"
         [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon> -->
