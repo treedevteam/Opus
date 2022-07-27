@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap } from 'rxjs';
-import { Board, Task, Users } from '../_models/task'
+import { Board, DueData, Task, Users } from '../_models/task';
 import { environment } from 'environments/environment';
 import { Priorities } from '../../priorities/model/priorities';
 import { Status } from '../../statuses/model/status';
+import moment from 'moment';
+import { MatRadioChange } from '@angular/material/radio';
 
 
 @Injectable({
@@ -41,8 +43,10 @@ export class TaskServiceService {
   //Filters for tasks
     public statusFilter$ = new BehaviorSubject<number[] | null>(null);
     public priorityFilter$ = new BehaviorSubject<number[] | null>(null);
+    public titleTaskFilter$ = new BehaviorSubject<string | null>(null);
     public usersAssignedFilter$ = new BehaviorSubject<number[] | null>(null);
     public createdByMe$ = new BehaviorSubject<number | null>(null);
+    public dueData$ = new BehaviorSubject<MatRadioChange | null>(null);
     // public channelIdFilter$ = new BehaviorSubject<string | null>(null);
     // public teamIdFilter$ = new BehaviorSubject<string | null>(null);
     // public idFilter$ = new BehaviorSubject<string[] | null>(null);
@@ -157,21 +161,44 @@ export class TaskServiceService {
     this.statusFilter$,
     this.priorityFilter$,
     this.usersAssignedFilter$,
-    this.createdByMe$
+    this.createdByMe$,
+    this.titleTaskFilter$,
+    this.dueData$
   ]).pipe(map(
-    ([files, channel, teamId,userAssignedFilter,createdByMe]) =>
-      files.filter(file => 
-        (channel ? channel.some(e=>e === file.status) : true) &&
-        (teamId ? teamId.some(e=>e === file.priority) : true) &&
+    ([tasks, status, priority,userAssignedFilter,createdByMe, titleFilter,dueData]) =>
+    tasks.filter(file => 
+        (status ? status.some(e=>e === file.status) : true) &&
+        (priority ? priority.some(e=>e === file.priority) : true) &&
         (createdByMe ? createdByMe === file.user.id : true) &&
-        (userAssignedFilter ? file.users_assigned.some(r=> userAssignedFilter.indexOf(r) >= 0)
-        : true)
+        (userAssignedFilter ? file.users_assigned.some(r=> userAssignedFilter.indexOf(r) >= 0): true) &&
+        (titleFilter ? file.title.includes(titleFilter) : true)&&
+        (dueData ? this.dataFilter(file.deadline ,dueData) : true)
       )
   ),
   tap(res=>console.log(res)
   ));
-
   
+  dataFilter(data, type:MatRadioChange):boolean{
+    debugger;
+        switch(type.value) {
+            case 0:
+                return moment(data, moment.ISO_8601).isSame(moment(), 'day')
+            case 1:
+                return moment(data, moment.ISO_8601).isSame(moment().add(1), 'day')
+            case 7:
+            return moment(data, moment.ISO_8601).isBetween
+                    (moment(), moment().add(7, 'days')); // true
+            case 30:
+                return moment(data, moment.ISO_8601).isBetween
+                    (moment(), moment().add(30, 'days')); // true
+            case -1:
+                return moment(data, moment.ISO_8601).isBefore(moment(), 'day')
+            default:
+            // code block
+        }
+  }
+  
+
   allTasks$ = combineLatest([
     this.filterasks$,
     this.getStatus$,
