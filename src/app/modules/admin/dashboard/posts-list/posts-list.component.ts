@@ -22,7 +22,6 @@ import { UserService } from 'app/core/user/user.service';
     styleUrls: ['./posts-list.component.scss'],
 })
 export class PostsListComponent implements OnInit {
-    
     isShowDivIf = true;
 
     toggleDisplayDivIf() {
@@ -30,7 +29,7 @@ export class PostsListComponent implements OnInit {
     }
     @ViewChild('supportNgForm') supportNgForm: NgForm;
     apiUrl = environment.apiUrl;
-    currentDepartment:Departments
+    currentDepartment: Departments;
     supportForm: FormGroup;
     url: any;
     file: any;
@@ -41,26 +40,26 @@ export class PostsListComponent implements OnInit {
     postsWithReplies$ = combineLatest([
         this._dashboardService.departmentPosts$,
         this._dashboardService.currentDepartmentUsers$,
-        this._user.user$
-      ]).pipe(
+        this._user.user$,
+    ]).pipe(
         map(([posts, users, myUser]) =>
-        posts.map(post =>({
-            ...post,
-            likes: post.likes.length + 1,
-            liked: post.likes.findIndex(x=> x === +myUser.id) > -1,
-            replies: post.replies.map(rep=>({
-                ...rep,
-                user: users.find(x=>x.id === rep.user_id),
-                isHis: +myUser.id === rep.user_id
+            posts.map((post) => ({
+                ...post,
+                likes: post.likes.length,
+                liked: post.likes.findIndex((x) => x === +myUser.id) > -1,
+                replies: post.replies.map((rep) => ({
+                    ...rep,
+                    user: users.find((x) => x.id === rep.user_id),
+                    isHis: +myUser.id === rep.user_id,
+                })),
             }))
-        }))),
-        tap(res=>{
+        ),
+        tap((res) => {
             debugger;
             console.log(res);
         }),
-        shareReplay(1),
-      );
-   
+        shareReplay(1)
+    );
 
     // departmentPostsWithReplies$ = combineLatest([
     //     this._dashboardService.departmentPosts$,
@@ -79,12 +78,9 @@ export class PostsListComponent implements OnInit {
     //     }))),
     //     shareReplay(1),
     //     tap(res=>{
-    //         console.log(res); 
+    //         console.log(res);
     //     })
     //   );
-
-
-
 
     constructor(
         private _dashboardService: DashboardService,
@@ -94,33 +90,30 @@ export class PostsListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._user.user$.subscribe(res=>{
+        this._user.user$.subscribe((res) => {
             this.supportForm = this._formBuilder.group({
                 description: ['', Validators.required],
                 file: [''],
-                departments: "[" + res.department.id + "]"
+                departments: '[' + res.department.id + ']',
             });
-        })
-        
+        });
     }
 
-
-
-  onFileChange(pFileList: File): void{
-    if (pFileList[0]) {
-        if (
-            pFileList[0].type === 'image/png' ||
-            pFileList[0].type === 'image/jpg'
-        ) {
-            if (pFileList[0].size < 200 * 200) {
-                /* Checking height * width*/
-            }
-            if (pFileList[0].size < 512000) {
-                this.uploaded = true;
-                this.file = pFileList[0];
-                const file = pFileList[0];
-                this.supportForm.patchValue({
-                    file: pFileList[0]
+    onFileChange(pFileList: File): void {
+        if (pFileList[0]) {
+            if (
+                pFileList[0].type === 'image/png' ||
+                pFileList[0].type === 'image/jpg'
+            ) {
+                if (pFileList[0].size < 200 * 200) {
+                    /* Checking height * width*/
+                }
+                if (pFileList[0].size < 512000) {
+                    this.uploaded = true;
+                    this.file = pFileList[0];
+                    const file = pFileList[0];
+                    this.supportForm.patchValue({
+                        file: pFileList[0],
                     });
                     this._snackBar.open('Successfully upload!', 'Close', {
                         duration: 2000,
@@ -151,7 +144,11 @@ export class PostsListComponent implements OnInit {
 
     clearForm(): void {
         // Reset the form
-        this.supportNgForm.resetForm();
+         this.supportForm.patchValue({
+             description: ' ',
+             file: "",
+         });
+        
     }
 
     sendForm(): void {
@@ -168,20 +165,21 @@ export class PostsListComponent implements OnInit {
             this.supportForm.get('departments').value
         );
         this._dashboardService.storePost(formData).subscribe((res) => {
-           this.clearForm();
+            this.clearForm();
         });
     }
 
-
-    LikeButtonClick(postId){
-        this._dashboardService.likeorUnlikePost(postId).subscribe(res=>{
+    LikeButtonClick(postId) {
+        this._dashboardService.likeorUnlikePost(postId).subscribe((res) => {
             console.log(res);
-        })
+        });
     }
 
-    deleteReplyPost(id: number,postId:number){
-        this._dashboardService.deleteReply(id, postId).subscribe(res=>{
+    deleteReplyPost(id: number, postId: number) {
+        this._dashboardService.deleteReply(id, postId).subscribe((res) => {});
+    }
 
-        })
+    deleteLatestPost(postId: number) {
+        this._dashboardService.deletePost(postId).subscribe((res) => {});
     }
 }
