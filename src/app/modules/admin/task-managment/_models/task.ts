@@ -66,3 +66,11 @@ export interface Board{
     is_his:number,
     board_order: any;
 }
+
+export enum DueData{
+    NODATA = 0,
+    NEXTDAY = 1,
+    NEXTWEEK = 7,
+    NEXTMONTH = 30,
+    OVERDUE = -1
+}

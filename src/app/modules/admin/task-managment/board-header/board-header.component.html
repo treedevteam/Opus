@@ -1,8 +1,85 @@
 <div class="header_task_managment">
-    {{(currentBoard$ | async) | json}}
 </div>
+members
+<input type="text" [(ngModel)]="keywordSerach" (ngModelChange)="onNgModelTitle($event)" placeholder="Search">
+<mat-selection-list #list [(ngModel)]="membersOptions" (ngModelChange)="onNgModelChangeMembers($event)">
+  <mat-list-option *ngIf="user$ | async as myself" [value]="myself.id">
+    <div class="flex items-center">
+        <div class=" inset-y-0 ">
+          <img [matTooltip]="myself.name" [matTooltipPosition]="'above'"
+              style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
+              src="{{apiUrl+ 'storage/'+myself.user_image}}" alt=""
+              onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+      </div> 
+      <p class="ms-3">Card assigned to me</p>
+    </div>
+  </mat-list-option>
+  <ng-container *ngFor="let user of boardUsers$ | async">
+    <mat-list-option *ngIf="(user$ | async).id !== user.id" [value]="user.id">
+      <div class="flex items-center">
+          <div class=" inset-y-0 ">
+            <img [matTooltip]="user.name" [matTooltipPosition]="'above'"
+                style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
+                src="{{apiUrl+ 'storage/'+user.user_image}}" alt=""
+                onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+        </div> 
+        <p class="ms-3">{{user.name}}</p>
+      </div>
+    </mat-list-option>
+  </ng-container>
+</mat-selection-list>
 
-<button (click)="filterStatus()">Filter status</button>
-<button (click)="filterPriority()">Filter priority</button>
-<button (click)="filterUserasign()">Filter userasign</button>
-<button (click)="filterTasksCreatedByMe()">created by me</button>
+status
+<mat-selection-list #list [(ngModel)]="statusOptions" (ngModelChange)="onNgModelChangeStatus($event)">
+  <mat-list-option *ngFor="let status of statuses$ | async" [value]="status.id">
+    <div class="w-100 flex items-center" [ngStyle]="{'background-color': status.color}" style="height: 30px;">
+      <p class="text-white ps-3">{{status.name}}</p>
+    </div>
+  </mat-list-option>
+</mat-selection-list>
+
+priority
+<mat-selection-list #list [(ngModel)]="priority" (ngModelChange)="onNgModelChangepriority($event)">
+  <mat-list-option *ngFor="let priority of priorities$ | async" [value]="priority.id">
+    <div class="w-100 flex items-center" [ngStyle]="{'background-color': priority.color}" style="height: 30px;">
+      <p class="text-white ps-3">{{priority.name}}</p>
+    </div>
+  </mat-list-option>
+</mat-selection-list>
+
+dueDate
+<mat-radio-group 
+    name="radioOpt1" 
+    [(ngModel)]="dueDate"
+    (change)="onNgModelChangedueDate($event)">
+    <mat-radio-button class="w-100 flex items-center" 
+      [value]="0">
+      <div class="w-100 flex items-center" style="height: 30px;">
+        <p class=" ps-3">Deadline for Today</p>
+      </div>
+    </mat-radio-button>
+    <mat-radio-button class="w-100 flex items-center" 
+      [value]="1">
+      <div class="w-100 flex items-center" style="height: 30px;">
+        <p class=" ps-3">Deadline for next day</p>
+      </div>
+    </mat-radio-button>
+    <mat-radio-button class="w-100 flex items-center" 
+    [value]="-1">
+    <div class="w-100 flex items-center" style="height: 30px;">
+      <p class=" ps-3">Overdue deadline</p>
+    </div>
+  </mat-radio-button>
+  <mat-radio-button class="w-100 flex items-center" 
+    [value]="7">
+    <div class="w-100 flex items-center" style="height: 30px;">
+      <p class=" ps-3">Next week deadline</p>
+    </div>
+  </mat-radio-button>
+  <mat-radio-button class="w-100 flex items-center" 
+    [value]="30">
+    <div class="w-100 flex items-center" style="height: 30px;">
+      <p class=" ps-3">Next month deadline</p>
+    </div>
+  </mat-radio-button>
+</mat-radio-group>
