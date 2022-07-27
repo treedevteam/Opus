@@ -40,6 +40,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ViewModeDirective } from './editable/view-mode.directive';
 import { TasklistKanbanLayoutComponent } from './task-views/kanban-view/tasklist-kanban-layout/tasklist-kanban-layout.component';
 import { KanbanTaskCardComponent } from './task-views/kanban-view/kanban-task-card/kanban-task-card.component';
+import { MatListModule } from '@angular/material/list';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import { KanbanTaskCardComponent } from './task-views/kanban-view/kanban-task-ca
     ViewModeDirective,
     TasklistKanbanLayoutComponent,
     KanbanTaskCardComponent,
+
   ],
   imports: [
     RouterModule.forChild(tasksRoutes),
@@ -86,7 +88,9 @@ import { KanbanTaskCardComponent } from './task-views/kanban-view/kanban-task-ca
     MatSelectModule,
     MatTooltipModule,
     FuseFindByKeyPipeModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatListModule
+
   ]
 })
 export class TaskManagmentModule { }

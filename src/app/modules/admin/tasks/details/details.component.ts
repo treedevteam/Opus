@@ -24,6 +24,9 @@ import { Departments } from '../../departments/departments.types';
 import { TaskCheckList } from '../tasks.types';
 import { environment } from 'environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { OpenimageTaskComponent } from '../openimage-task/openimage-task.component';
+import { saveAs} from 'file-saver';
 
 @Component({
     selector       : 'tasks-details',
@@ -51,7 +54,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     isXyzChecked = true;
     file: any = null;
     fileName: any;
-    taskFile: any = null;
+    taskFile$ = this._tasksService.taskById$;
     tags: Tag[];
     tagsEditMode: boolean = false;
     filteredTags2: Departments[];
@@ -73,6 +76,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     taskCheckList$ = this._tasksService.taskCheckList$;
+
     /**
      * Constructor
      */
@@ -88,6 +92,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _viewContainerRef: ViewContainerRef,
         private route: ActivatedRoute,
         private _snackBar: MatSnackBar,
+        private dialog: MatDialog,
     )
     {
 
@@ -102,6 +107,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     ngOnInit(): void
     {
+        console.warn(this.taskFile$)
         // Open the drawer
         this._tasksListComponent.matDrawer.open();
 
@@ -215,7 +221,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             this.task2 = task;
             console.log(this.task2,'this.task2');
 
-            console.log(this.task2,'this.task2this.task2this.task2this.task2');
 
             this._tasksService.getTaskComments(+this.task2.id).subscribe((res)=>{
             });
@@ -266,12 +271,29 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 // Focus on the title field
                 this._titleField.nativeElement.focus();
             });
-            this.taskFile = this.taskForm.get('file').value;
+            
      
         
 
     }
+    openImagePopup(file)
+    {
 
+    this.dialog.open(OpenimageTaskComponent, {
+        width: '50vh',
+        height:'50vh',
+        data:{
+            file:file
+        }
+
+    })
+    }
+    downloadImg(url){
+        this._tasksService.dowloadFile(url).subscribe((data: Blob | MediaSource)=>{
+            const downloadUrl = window.URL.createObjectURL(data);
+            saveAs(downloadUrl);
+        });
+      }
 
     /**
      * After view init
@@ -922,5 +944,6 @@ deleteFile(id){
         this.ngOnInit();
     });
 }
+
 
 }

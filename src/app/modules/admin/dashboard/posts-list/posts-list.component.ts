@@ -96,7 +96,9 @@ export class PostsListComponent implements OnInit {
                 file: [''],
                 departments: '[' + res.department.id + ']',
             });
-        });
+        })
+        console.log(this.postsWithReplies$)
+        
     }
 
     onFileChange(pFileList: File): void {

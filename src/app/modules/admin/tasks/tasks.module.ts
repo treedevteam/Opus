@@ -56,6 +56,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { JoinTaskDialogComponent } from './join-task-dialog/join-task-dialog.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatListModule} from '@angular/material/list';
+
 @NgModule({
     declarations: [
         TasksComponent,
@@ -109,7 +110,6 @@ import {MatListModule} from '@angular/material/list';
         MatCardModule,
         MentionModule,
         HttpClientModule,
-        NgbModule,
         MatListModule
     ],
     providers   : [
