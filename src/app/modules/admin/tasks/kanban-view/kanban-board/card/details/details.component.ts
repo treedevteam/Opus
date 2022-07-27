@@ -34,6 +34,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
     cardForm: FormGroup;
     fileForm: FormGroup;
     taskById$: Observable<Task2>;
+    taskFile$ = this._tasksService.taskById$;
     file: any = null;
     uploaded: boolean;
     url ;

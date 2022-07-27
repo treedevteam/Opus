@@ -56,7 +56,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { JoinTaskDialogComponent } from './join-task-dialog/join-task-dialog.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatListModule} from '@angular/material/list';
-import { PopOverComponent } from './pop-over/pop-over.component';
 
 @NgModule({
     declarations: [
@@ -79,7 +78,6 @@ import { PopOverComponent } from './pop-over/pop-over.component';
         ScrumboardCardComponent,
         TaskDetailsComponent,
         JoinTaskDialogComponent,
-        PopOverComponent,
     ],
     imports     : [
         RouterModule.forChild(tasksRoutes),

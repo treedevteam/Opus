@@ -101,6 +101,7 @@ export class PostsListComponent implements OnInit {
                 departments: "[" + res.department.id + "]"
             });
         })
+        console.log(this.postsWithReplies$)
         
     }
 

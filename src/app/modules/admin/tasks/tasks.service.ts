@@ -682,23 +682,7 @@ deleteComment(id: number): Observable<any>
         );
     }
 
-    deleteFileFromTask(id): any{
-        console.log('tes')
-        debugger;
-        return this.currentBoardTasks$.pipe(
-            take(1),
-            switchMap(tasks => this._httpClient.post(this.apiUrl+`api/delete_file/${id}`,'delete').pipe(
-                map((deletedTask: any) => {
-                    debugger
-                    const index  = tasks.findIndex(x=> x.id === id)
-                    console.warn( tasks[index].file)
-                    tasks[index].file = null;
-                    this._currentBoardTasks.next(tasks)
-                    return deletedTask;
-                }) 
-                ))
-                );
-            }
+
 
     updateTaskStatus(statusId: any, order: any,board_id: number, taskId: number): Observable<Task2>{
         return this.currentBoardTasks$.pipe(
@@ -843,9 +827,37 @@ deleteComment(id: number): Observable<any>
         );
     }
     addfileToTask(file,id): any{
-        debugger;
+        return this.taskById$.pipe(
+            take(1),
+            switchMap(tasks => this._httpClient.post(this.apiUrl+`api/task_file/${id}`, file).pipe(
+                map((updatedTask: any) => {
+                    console.warn(updatedTask)
+                    // this.tasks.file = file
+                    // console.log(tasks)
+                    this._mytask.next(updatedTask)
+                })
+            ))
+        );
+        
         return this._httpClient.post(this.apiUrl+`api/task_file/${id}`, file);
     }
+    deleteFileFromTask(id): any{
+        console.log('tes')
+        debugger;
+        return this.currentBoardTasks$.pipe(
+            take(1),
+            switchMap(tasks => this._httpClient.post(this.apiUrl+`api/delete_file/${id}`,'delete').pipe(
+                map((deletedTask: any) => {
+                    debugger
+                    const index  = tasks.findIndex(x=> x.id === id)
+                    console.warn( tasks[index].file)
+                    tasks[index].file = null;
+                    this._currentBoardTasks.next(tasks)
+                    return deletedTask;
+                }) 
+                ))
+                );
+            }
 ///////////////////////////TASKS////////////////////////////////////////////////////
 
 ///////////////////////////SUBTASK////////////////////////////////////////////////////
