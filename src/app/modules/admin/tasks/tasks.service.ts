@@ -712,10 +712,14 @@ deleteComment(id: number): Observable<any>
                     }
                     this._currentBoardTasks.next(tasks)
                     this._currentBoardOrderTasks.next(updatedTask.order);
-                    return updatedTask;
+                    return updatedTask; 
                 })
             ))
         );
+    }
+    dowloadFile(url:any){
+        console.warn(url)
+        return this._httpClient.get(url);
     }
     updateTaskStatusOrder(statusId: any, order: string, board_id: number, taskId: number): Observable<Task2>{
         return this.currentBoardTasks$.pipe(

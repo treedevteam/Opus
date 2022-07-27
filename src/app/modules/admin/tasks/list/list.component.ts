@@ -1,15 +1,8 @@
-/* eslint-disable @typescript-eslint/semi */
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable quotes */
-/* eslint-disable arrow-parens */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable */
+
 import { TasksService } from '../tasks.service';
 import { Tag, Task, Task2, TaskWithDepartment, Users } from '../tasks.types';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Directive, ElementRef, Inject, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -33,6 +26,8 @@ import { OpenimageTaskComponent } from '../openimage-task/openimage-task.compone
 import { TasksDetailsComponent } from '../details/details.component';
 import { BoardsService } from '../../departments/boards/boards.service';
 import { UserService } from 'app/core/user/user.service';
+import { MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
 
 @Component({
     selector       : 'tasks-list',
@@ -49,6 +44,7 @@ import { UserService } from 'app/core/user/user.service';
     ],
     // providers :[TasksDetailsComponent],
 })
+
 
 export class TasksListComponent implements OnInit, OnDestroy
 {
@@ -550,7 +546,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     }
     openImagePopup(file)
     {
-    console.log(file);
+
     this.dialog.open(OpenimageTaskComponent, {
         width: '50vh',
         height:'50vh',

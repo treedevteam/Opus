@@ -24,6 +24,9 @@ import { Departments } from '../../departments/departments.types';
 import { TaskCheckList } from '../tasks.types';
 import { environment } from 'environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { OpenimageTaskComponent } from '../openimage-task/openimage-task.component';
+import { saveAs} from 'file-saver';
 
 @Component({
     selector       : 'tasks-details',
@@ -73,6 +76,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     taskCheckList$ = this._tasksService.taskCheckList$;
+
     /**
      * Constructor
      */
@@ -88,6 +92,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _viewContainerRef: ViewContainerRef,
         private route: ActivatedRoute,
         private _snackBar: MatSnackBar,
+        private dialog: MatDialog,
     )
     {
 
@@ -271,7 +276,24 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         
 
     }
+    openImagePopup(file)
+    {
 
+    this.dialog.open(OpenimageTaskComponent, {
+        width: '50vh',
+        height:'50vh',
+        data:{
+            file:file
+        }
+
+    })
+    }
+    downloadImg(url){
+        this._tasksService.dowloadFile(url).subscribe((data: Blob | MediaSource)=>{
+            const downloadUrl = window.URL.createObjectURL(data);
+            saveAs(downloadUrl);
+        });
+      }
 
     /**
      * After view init
