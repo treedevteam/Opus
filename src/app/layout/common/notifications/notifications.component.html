@@ -84,23 +84,24 @@
                         <button
                             class="w-6 h-6 min-h-6"
                             mat-icon-button
-                            (click)="toggleRead(notification)"
+                            (click)="markAllAsRead()"
                             [matTooltip]="notification.read ? 'Mark as unread' : 'Mark as read'">
                             <span
                                 class="w-2 h-2 rounded-full"
-                                [ngClass]="{'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': notification.read,
-                                            'bg-primary': !notification.read}"></span>
+                                [ngClass]="{'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': notification.read ?
+                                            'bg-primary': !notification.read}">
+                                        </span>
                         </button>
                         <!-- Remove -->
-                        <button
+                        <!-- <button
                             class="w-6 h-6 min-h-6 sm:opacity-0 sm:group-hover:opacity-100"
                             mat-icon-button
-                            (click)="delete(notification)"
+                            (click)="delete(notification.id)"
                             [matTooltip]="'Remove'">
                             <mat-icon
                                 class="icon-size-4"
                                 [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                        </button>
+                        </button> -->
                     </div>
 
                 </div>
@@ -109,11 +110,11 @@
                 <ng-template #notificationContent>
                     <!-- Icon -->
                     <ng-container *ngIf="!notification.image">
-                        <div class="flex shrink-0 items-center justify-center w-8 h-8 mr-4 rounded-full bg-gray-100 dark:bg-gray-700">
+                        <!-- <div class="flex shrink-0 items-center justify-center w-8 h-8 mr-4 rounded-full bg-gray-100 dark:bg-gray-700">
                             <mat-icon
                                 class="icon-size-4"
                                 [svgIcon]="'heroicons_solid:x'"></mat-icon>
-                        </div>
+                        </div> -->
                     </ng-container>
                     <!-- Image -->
                     <!-- <ng-container *ngIf="notification.image">

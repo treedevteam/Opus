@@ -115,13 +115,12 @@ export class NotificationsService
      *
      * @param id
      */
-    // delete(id: string): Observable<boolean>
+    // delete(id: any): Observable<boolean>
     // {
     //     return this.notifications$.pipe(
     //         take(1),
     //         switchMap(notifications => this._httpClient.delete<boolean>('api/common/notifications', {params: {id}}).pipe(
     //             map((isDeleted: boolean) => {
-
     //                 // Find the index of the deleted notification
     //                 const index = notifications.findIndex(item => item.id === id);
 
@@ -141,25 +140,28 @@ export class NotificationsService
     /**
      * Mark all notifications as read
      */
-    // markAllAsRead(): Observable<boolean>
-    // {
-    //     return this.notifications$.pipe(
-    //         take(1),
-    //         switchMap(notifications => this._httpClient.get<boolean>('api/common/notifications/mark-all-as-read').pipe(
-    //             map((isUpdated: boolean) => {
+    markAllAsRead(): Observable<boolean>
+    {
+        return this.notifications$.pipe(
+            take(1),
+            switchMap(notifications => this._httpClient.get<boolean>('api/common/notification/1/read').pipe(
+                map((isUpdated: boolean) => {
 
-    //                 // Go through all notifications and set them as read
-    //                 notifications.forEach((notification, index) => {
-    //                     notifications[index].read = true;
-    //                 });
+                    // Go through all notifications and set them as read
+                    notifications.forEach((notification, index) => {
+                        notifications[index].status = 0;
+                    });
 
-    //                 // Update the notifications
-    //                 this._notifications.next(notifications);
+                    // Update the notifications
+                    this._notifications.next(notifications);
 
-    //                 // Return the updated status
-    //                 return isUpdated;
-    //             })
-    //         ))
-    //     );
-    // }
+                    // Return the updated status
+                    return isUpdated;
+                })
+            ))
+        );
+    }
+
+    
+
 }
