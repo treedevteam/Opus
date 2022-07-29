@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export interface User
 {
-    id: string;
+    id: number;
     name: string;
     email: string;
     department: Department;
     avatar?: string;
+    user_image: string;
     status?: string;
     role?:Role
 }

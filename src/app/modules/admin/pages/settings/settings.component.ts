@@ -39,12 +39,12 @@ export class SettingsComponent implements OnInit, OnDestroy
     {
         // Setup available panels
         this.panels = [
-            // {
-            //     id         : 'account',
-            //     icon       : 'heroicons_outline:user-circle',
-            //     title      : 'Account',
-            //     description: 'Manage your public profile and private information'
-            // },
+            {
+                id         : 'account',
+                icon       : 'heroicons_outline:user-circle',
+                title      : 'Account',
+                description: 'Manage your public profile and private information'
+            },
             {
                 id         : 'security',
                 icon       : 'heroicons_outline:lock-closed',

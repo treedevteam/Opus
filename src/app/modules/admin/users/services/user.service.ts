@@ -93,6 +93,21 @@ export class UserService {
       ))
     );
   }
+  _updateSingleUser($id: number, data: any): Observable<Users>{
+    return this.users$.pipe(
+      take(1),
+      switchMap(users => this.http.post<Users>(this.apiUrl+'api/user/update/' + $id, data).pipe(
+          map((updatedUsers: Users) => {
+            const statusIndex = users.findIndex(d => d.id === updatedUsers.id);
+            if(statusIndex > -1){
+              users.splice(statusIndex,1,updatedUsers);
+            }
+            this._users.next(users);
+            return updatedUsers;
+          })
+      ))
+    );
+  }
 
   _getDepartments(): Observable<Departments[]>{
       return this.http.get<Departments[]>(this.apiUrl+'api/departments').pipe(

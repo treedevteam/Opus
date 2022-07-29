@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/semi */
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, Subject, takeUntil } from 'rxjs';
@@ -24,7 +25,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
     isScreenSmall: boolean;
     navigation: FuseNavigationItem[];
     user: User;
-    userInfo: any;
+    userInfo = this._userService._user$
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -63,7 +64,8 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        this.userLoginInfo();
+        console.warn(this._userService._user$)
+        // this.userLoginInfo();
         this._navigationService.getmyBoards().subscribe();
         // Subscribe to navigation data
         combineLatest(this._navigationService.navigation$, this._userService.user$,this._navigationService.myboards$)
@@ -111,7 +113,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
                 // Check if the screen is small
                 this.isScreenSmall = !matchingAliases.includes('md');
             });
-        this.userLoginInfo();
+        // this.userLoginInfo();
     }
 
     /**
@@ -147,8 +149,9 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
         }
     }
 
-    userLoginInfo(): void{
-        this.userInfo = JSON.parse(localStorage.getItem('user_info') ?? '');
-        console.log(this.userInfo);
-    }
+    // userLoginInfo(): void{
+
+    //     this.userInfo = JSON.parse(localStorage.getItem('user_info') ?? '');
+    //     console.log(this.userInfo);
+    // }
 }
