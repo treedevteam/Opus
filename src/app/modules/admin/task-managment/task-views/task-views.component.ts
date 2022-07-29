@@ -15,8 +15,7 @@ export class TaskViewsComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this._taskService.getBoardUsersData$(+this.route.snapshot.paramMap.get('boardId')
-    ).subscribe()
+    this._taskService.getBoardUsersData$(+this.route.snapshot.paramMap.get('boardId')).subscribe()
   }
 
 }

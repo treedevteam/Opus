@@ -41,6 +41,9 @@ import { ViewModeDirective } from './editable/view-mode.directive';
 import { TasklistKanbanLayoutComponent } from './task-views/kanban-view/tasklist-kanban-layout/tasklist-kanban-layout.component';
 import { KanbanTaskCardComponent } from './task-views/kanban-view/kanban-task-card/kanban-task-card.component';
 import { MatListModule } from '@angular/material/list';
+import { AsignUsersToBoardComponent } from './board-header/asign-users-to-board/asign-users-to-board.component';
+import { MultiselectAutocompleteComponent } from './board-header/multiselect-autocomplete/multiselect-autocomplete.component';
+import { ScrumboardBoardAddCardComponent } from './task-views/kanban-view/add-card/add-card.component';
 
 
 @NgModule({
@@ -63,7 +66,9 @@ import { MatListModule } from '@angular/material/list';
     ViewModeDirective,
     TasklistKanbanLayoutComponent,
     KanbanTaskCardComponent,
-
+    AsignUsersToBoardComponent,
+    MultiselectAutocompleteComponent,
+    ScrumboardBoardAddCardComponent,
   ],
   imports: [
     RouterModule.forChild(tasksRoutes),
@@ -89,7 +94,8 @@ import { MatListModule } from '@angular/material/list';
     MatTooltipModule,
     FuseFindByKeyPipeModule,
     MatBadgeModule,
-    MatListModule
+    MatListModule,
+    MatIconModule
 
   ]
 })

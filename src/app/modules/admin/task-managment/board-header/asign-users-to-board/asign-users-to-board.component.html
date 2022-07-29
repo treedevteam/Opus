@@ -1,0 +1,25 @@
+<h1 class="invite_title">Assign Users</h1>
+<div class="wrapper">
+    <multiselect-autocomplete
+      placeholder="Select Users Here ..."
+      key="options"
+      [data]="selectOptions"
+      [boardId]="currentBoard.id"
+      (result)="selectChange($event)">
+    </multiselect-autocomplete>
+</div>
+
+<div *ngFor="let test of (usersAssigned$ | async).assigned">
+    <div class="user_row">
+        <div class="user_logo">
+            <img src="{{apiUrl+'storage/'+test.user_image}}" alt="">
+        </div>
+        <div class="userInfo">
+            <h3 class="name"> {{test.name}}</h3>
+            <div class="flex">
+              <p class="role">{{test.role.name}}</p> <a class="remove_user_from_board" (click)="assignUserToBoard(test.id)">remove</a>
+            </div>
+        </div>
+    </div>
+</div>
+

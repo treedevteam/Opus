@@ -3,3 +3,34 @@
     height: 200px;
     background-color: blue;
 }
+.is-active{
+    background-color: #4f46e5!important;
+    color: #fff!important;
+}
+.mat-list-item-content{
+    flex-direction: row!important;
+}
+.filterTitle{
+    text-align: left;
+    margin: 5px 0;
+    font-size: 16px;
+    color: rgba(0, 0, 0);
+}
+.myInputKeyword{
+    border: 1px solid rgba(0, 0, 0, 0.67);
+    border-radius: 5px;
+    width: 100%;
+    height: 40px;
+    padding: 5px;
+}
+.mat_menu_header{
+    padding: 10px 0;
+}
+.mat_menu_header h1{
+    font-size: 18px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+    padding-bottom: 5px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.6);
+}
