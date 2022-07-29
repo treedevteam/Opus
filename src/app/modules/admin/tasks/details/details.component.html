@@ -1,25 +1,27 @@
-<div class="flex flex-col flex-auto p-6 pt-5 sm:p-8 sm:pt-10 w-full ">
+<div class="flex flex-col flex-auto p-6 pt-5 sm:p-8 sm:pt-10 w-full">
     <!-- Header -->
     <div class="flex items-center justify-between -mt-3 -ml-4">
         <!-- Mark as ... button -->
         <button class="pr-4 pl-3.5" mat-button (click)="toggleCompleted()">
-
-
-
             <!-- Mark as incomplete -->
             <ng-container>
-                <img class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover mr-5"
-                    [src]="apiUrl+ 'storage/' + task2.user.user_image"
-                    alt="Member avatar" [matTooltip]="task2.user.name" [matTooltipPosition]="'above'"
-                    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                <img
+                    class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover mr-5"
+                    [src]="apiUrl + 'storage/' + task2.user.user_image"
+                    alt="Member avatar"
+                    [matTooltip]="task2.user.name"
+                    [matTooltipPosition]="'above'"
+                    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';"
+                />
                 <span>- Created by</span>
-
             </ng-container>
         </button>
         <div class="flex items-center">
             <!-- More menu -->
             <button mat-icon-button [matMenuTriggerFor]="moreMenu">
-                <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                <mat-icon
+                    [svgIcon]="'heroicons_outline:dots-vertical'"
+                ></mat-icon>
             </button>
             <mat-menu #moreMenu="matMenu">
                 <button mat-menu-item (click)="deleteTask()">
@@ -33,103 +35,224 @@
                 <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
             </button>
         </div>
-        
     </div>
     <mat-divider class="mt-6"></mat-divider>
 </div>
 <mat-tab-group class="mt-5" #logsTab>
-    <mat-tab label="Checklists" class="overflow-y-auto ">
+    <mat-tab label="Checklists" class="overflow-y-auto">
         <div class="flex flex-auto">
-            <div class="flex flex-col flex-auto  pt-0 sm:p-2 sm:pt-0 w-full ">
+            <div class="flex flex-col flex-auto pt-0 sm:p-2 sm:pt-0 w-full">
                 <form class="" [formGroup]="taskForm">
                     <ng-container>
-                        <div class="w-12 h-1 mt-4 "></div>
-                        <div class="flex items-center -space-x-1.5">
-                           
-                        </div>
+                        <div class="w-12 h-1 mt-4"></div>
+                        <div class="flex items-center -space-x-1.5"></div>
                     </ng-container>
+
                     <!-- Task file -->
-                    <ng-container  *ngIf="taskFile !== null"  class="mb-3 mt-2 w-25 h-25 ">
-                        <div class="d-flex justify-content-center">
-                            <img class="w-50" [src]="apiUrl + 'storage/' + taskFile" alt="" (click)="openImagePopup(apiUrl + 'storage/' + taskFile)" >
-                            <button (click)="downloadImg(apiUrl + 'storage/' + taskFile)" >
-                                <a>Download</a>
+                    <ng-container
+                        *ngIf="(taskFile$ | async).file !== null"
+                        class="mb-3 mt-2 w-25 h-25"
+                    >
+                        <div
+                            class="d-flex justify-content-center"
+                            *ngIf="taskFile$ | async as file"
+                        >
+                            <img
+                                class="w-50"
+                                [src]="
+                                    apiUrl +
+                                    'storage/' +
+                                    (taskFile$ | async).file
+                                "
+                                alt=""
+                                (click)="
+                                    openImagePopup(
+                                        apiUrl + 'storage/' + taskFile$.file
+                                    )
+                                "
+                            />
+                            <!-- <button>
+                                <a [href]="apiUrl + 'storage/' + file.file" [download]="file.file" target="_blank">Download</a>
                             </button>
                             <mat-icon (click)="deleteFile(task2.id)"  style="cursor: pointer;" color="warn" >delete</mat-icon>
-                            <mat-divider ></mat-divider>
+                            <mat-divider ></mat-divider> -->
+                        </div>
+                        <div
+                            class="grid grid-cols-2 gap-4 w-full mt-8"
+                            *ngIf="taskFile$ | async as file"
+                        >
+                            <a
+                                class="flex-auto"
+                                mat-flat-button
+                                [color]="'primary'"
+                                [href]="apiUrl + 'storage/' + file.file"
+                                [download]="file.file"
+                                target="_blank"
+                                >Download</a
+                            >
+                            <button
+                                (click)="deleteFile(task2.id)"
+                                class="flex-auto"
+                                mat-stroked-button
+                            >
+                                Delete
+                            </button>
                         </div>
                     </ng-container>
-            
+
                     <!-- Members -->
-                    <ng-container class="mt-5" *ngIf="task2.users_assigned?.length && usersList?.length ">
+                    <ng-container
+                        class="mt-5"
+                        *ngIf="
+                            task2.users_assigned?.length && usersList?.length
+                        "
+                    >
                         <div class="w-12 h-1 mt-6 border-t-2"></div>
                         <div class="flex items-center mt-6 -space-x-1.5">
                             <ng-container
-                                *ngFor="let member of getAssignedUsers(task2.users_assigned).slice(0, 5); trackBy: trackByFn">
-                                <img [matTooltip]="member.name" [matTooltipPosition]="'above'"
+                                *ngFor="
+                                    let member of getAssignedUsers(
+                                        task2.users_assigned
+                                    ).slice(0, 5);
+                                    trackBy: trackByFn
+                                "
+                            >
+                                <img
+                                    [matTooltip]="member.name"
+                                    [matTooltipPosition]="'above'"
                                     class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                                    [src]="apiUrl+'storage/' + member.image" alt="Member avatar"
-                                    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                                    [src]="apiUrl + 'storage/' + member.image"
+                                    alt="Member avatar"
+                                    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';"
+                                />
                             </ng-container>
-                            <ng-container *ngIf="task2.users_assigned.length > 5">
-                                <div 
-                                    class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500">
+                            <ng-container
+                                *ngIf="task2.users_assigned.length > 5"
+                            >
+                                <div
+                                    class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500"
+                                >
                                     <div class="text-md font-semibold">
-                                        +{{ task2.users_assigned.slice(5).length }}
+                                        +{{
+                                            task2.users_assigned.slice(5).length
+                                        }}
                                     </div>
                                 </div>
                             </ng-container>
                         </div>
                     </ng-container>
                     <ng-container>
-                        <div style="width: fit-content" (click)="openUsersPanel()"
+                        <div
+                            style="width: fit-content"
+                            (click)="openUsersPanel()"
                             class="flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-800 bg-gray-100 dark:text-gray-100"
-                            #usersPanelOrigin>
-                            <mat-icon class="icon-size-5 text-current" style="color: #000;"
-                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                            <span class="ml-2 mr-1 text-md " style="color: #000;">Assign users</span>
+                            #usersPanelOrigin
+                        >
+                            <mat-icon
+                                class="icon-size-5 text-current"
+                                style="color: #000"
+                                [svgIcon]="'heroicons_solid:plus-circle'"
+                            ></mat-icon>
+                            <span class="ml-2 mr-1 text-md" style="color: #000"
+                                >Assign users</span
+                            >
                         </div>
 
                         <!-- Tags panel -->
                         <ng-template #usersPanel>
-                            <div class="w-60 rounded border shadow-md bg-card userListSelect">
+                            <div
+                                class="w-60 rounded border shadow-md bg-card userListSelect"
+                            >
                                 <!-- Tags panel header -->
                                 <div class="flex items-center m-3 mr-2">
                                     <div class="flex items-center">
-                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="'heroicons_solid:search'"
+                                        ></mat-icon>
                                         <div class="ml-2">
-                                            <input class="w-full min-w-0 py-1 border-0" type="text"
-                                                placeholder="Enter user name" (input)="filterDepartments($event)"
-                                                (keydown)="filterTagsInputKeyDown($event)" [maxLength]="30"
-                                                #newTagInput>
+                                            <input
+                                                class="w-full min-w-0 py-1 border-0"
+                                                type="text"
+                                                placeholder="Enter user name"
+                                                (input)="
+                                                    filterDepartments($event)
+                                                "
+                                                (keydown)="
+                                                    filterTagsInputKeyDown(
+                                                        $event
+                                                    )
+                                                "
+                                                [maxLength]="30"
+                                                #newTagInput
+                                            />
                                         </div>
                                     </div>
-                                    <button class="ml-1" mat-icon-button (click)="toggleTagsEditMode()">
-                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'">
+                                    <button
+                                        class="ml-1"
+                                        mat-icon-button
+                                        (click)="toggleTagsEditMode()"
+                                    >
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="
+                                                'heroicons_solid:pencil-alt'
+                                            "
+                                        >
                                         </mat-icon>
                                     </button>
                                 </div>
-                                <div class="flex flex-col max-h-64 py-2 border-t ">
+                                <div
+                                    class="flex flex-col max-h-64 py-2 border-t"
+                                >
                                     <!-- Tags -->
-                                    <ng-container *ngFor="let tag of filteredUsers; trackBy: trackByFn">
-                                        <div class="flex items-center h-10 min-h-10 px-4">
-                                            <mat-checkbox [checked]="userCheck(tag.id)" (change)="toggleTaskUser(tag.id)" class="flex items-center h-10 min-h-10" [color]="'primary'"
-                                           >
+                                    <ng-container
+                                        *ngFor="
+                                            let tag of filteredUsers;
+                                            trackBy: trackByFn
+                                        "
+                                    >
+                                        <div
+                                            class="flex items-center h-10 min-h-10 px-4"
+                                        >
+                                            <mat-checkbox
+                                                [checked]="userCheck(tag.id)"
+                                                (change)="
+                                                    toggleTaskUser(tag.id)
+                                                "
+                                                class="flex items-center h-10 min-h-10"
+                                                [color]="'primary'"
+                                            >
                                             </mat-checkbox>
-                                            <div class="ml-1">{{tag.name}}</div>
+                                            <div class="ml-1">
+                                                {{ tag.name }}
+                                            </div>
                                         </div>
                                     </ng-container>
-                                    <ng-container *ngIf="filteredUsers?.length === 0" class="pl-3">No result</ng-container>
+                                    <ng-container
+                                        *ngIf="filteredUsers?.length === 0"
+                                        class="pl-3"
+                                        >No result</ng-container
+                                    >
                                 </div>
                             </div>
                         </ng-template>
                     </ng-container>
                     <mat-menu #usersMenu="matMenu">
                         <!-- Low -->
-                        <button *ngFor="let priority of priorities" mat-menu-item
-                            (click)="setTaskPriority(priority.id)">
-                            <span class="inline-flex items-center justify-between w-full min-w-30 leading-5">
-                                <span class="font-medium" [ngStyle]="{'color': priority.color}">{{priority.name}}</span>
+                        <button
+                            *ngFor="let priority of priorities"
+                            mat-menu-item
+                            (click)="setTaskPriority(priority.id)"
+                        >
+                            <span
+                                class="inline-flex items-center justify-between w-full min-w-30 leading-5"
+                            >
+                                <span
+                                    class="font-medium"
+                                    [ngStyle]="{ color: priority.color }"
+                                    >{{ priority.name }}</span
+                                >
                             </span>
                         </button>
                     </mat-menu>
@@ -137,82 +260,131 @@
                     <!-- DEPARTMETNS -->
                     <ng-template *ngIf="usersList">
                         <div class="font-medium mb-1.5">Departments</div>
-                            <div class="flex flex-wrap items-center -m-1.5">
-                                <div
-                                    class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
-                                    <span class="text-md font-medium whitespace-nowrap">{{getNameOfDepartmentbyId()}}</span>
-                                </div>
+                        <div class="flex flex-wrap items-center -m-1.5">
+                            <div
+                                class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
+                            >
+                                <span
+                                    class="text-md font-medium whitespace-nowrap"
+                                    >{{ getNameOfDepartmentbyId() }}</span
+                                >
                             </div>
+                        </div>
                     </ng-template>
-                        
+
                     <!-- checklist -->
                     <div class="col-md-12 align-items-center mt-5">
                         <ul class="list-group">
-                                <div class="w-full py-4" >
-                                    <div *ngIf="checkListtotal">
-                                        {{(checkListcompleted / checkListtotal) * 100 | number: '1.0-0'}}%
-                                    </div>
-                                    <div *ngIf="!checkListtotal">
-                                        0%
-                                    </div>
-                                    <mat-progress-bar mode="determinate" value="{{(checkListcompleted / checkListtotal) * 100}}"></mat-progress-bar>
+                            <div class="w-full py-4">
+                                <div *ngIf="checkListtotal">
+                                    {{
+                                        (checkListcompleted / checkListtotal) *
+                                            100 | number: "1.0-0"
+                                    }}%
                                 </div>
-                                <li class="list-group-item checkListLi" style="display: flex;align-items: center;" *ngFor="let item of taskCheckList$ | async">
-                                    <div class="flex" style="align-items: center;">
-                                        <input class="mr-3" type="checkbox" value="{{item.id}}" [checked]="item.value === 1"
-                                        (change)="isAllSelected(item)"/>
-                                        <p [ngStyle]="{'text-decoration': item.value === 1 ? 'line-through' : 'none'}" >{{item.text}}</p>
-                                    </div>
-                                    <mat-icon class="delete_iconChecklist" (click)="deleteCheckList(item.id)">delete</mat-icon>
-                                </li>
+                                <div *ngIf="!checkListtotal">0%</div>
+                                <mat-progress-bar
+                                    mode="determinate"
+                                    value="{{
+                                        (checkListcompleted / checkListtotal) *
+                                            100
+                                    }}"
+                                ></mat-progress-bar>
+                            </div>
+                            <li
+                                class="list-group-item checkListLi"
+                                style="display: flex; align-items: center"
+                                *ngFor="let item of taskCheckList$ | async"
+                            >
+                                <div class="flex" style="align-items: center">
+                                    <input
+                                        class="mr-3"
+                                        type="checkbox"
+                                        value="{{ item.id }}"
+                                        [checked]="item.value === 1"
+                                        (change)="isAllSelected(item)"
+                                    />
+                                    <p
+                                        [ngStyle]="{
+                                            'text-decoration':
+                                                item.value === 1
+                                                    ? 'line-through'
+                                                    : 'none'
+                                        }"
+                                    >
+                                        {{ item.text }}
+                                    </p>
+                                </div>
+                                <mat-icon
+                                    class="delete_iconChecklist"
+                                    (click)="deleteCheckList(item.id)"
+                                    >delete</mat-icon
+                                >
+                            </li>
 
-                            <li class="" style="width: 100%;">
-                                <mat-form-field class="flex-auto" style="width: 100%;">
-                                    <input placeholder="Add an item" style="width: 100%;" matInput [formControlName]="'checklist'" >
-                                    <button mat-raised-button color="primary" (click)="addNewCheckList()" style="border-radius: 4px!important;">
-                                            add
+                            <li class="" style="width: 100%">
+                                <mat-form-field
+                                    class="flex-auto"
+                                    style="width: 100%"
+                                >
+                                    <input
+                                        placeholder="Add an item"
+                                        style="width: 100%"
+                                        matInput
+                                        [formControlName]="'checklist'"
+                                    />
+                                    <button
+                                        mat-raised-button
+                                        color="primary"
+                                        (click)="addNewCheckList()"
+                                        style="border-radius: 4px !important"
+                                    >
+                                        add
                                     </button>
                                 </mat-form-field>
                             </li>
                             <li>
                                 <input
-                                style="display: none"
-                                type="file"
-                                class="file-input"
-                                (change)="onFileChange($event.target.files)"
-                                #fileUpload
-                            />
-                    
-                            <div class="file-upload">
-                                {{ fileName }}
-                    
-                                <button
-                                    mat-mini-fab
-                                    color="primary"
-                                    class="upload-btn"
-                                    (click)="fileUpload.click()"
-                                >
-                                    <mat-icon>attach_file</mat-icon>
-                                </button>
-                            </div>
+                                    style="display: none"
+                                    type="file"
+                                    class="file-input"
+                                    (change)="onFileChange($event.target.files)"
+                                    #fileUpload
+                                />
+
+                                <div class="file-upload">
+                                    {{ fileName }}
+
+                                    <button
+                                        mat-mini-fab
+                                        color="primary"
+                                        class="upload-btn"
+                                        (click)="fileUpload.click()"
+                                    >
+                                        <mat-icon>attach_file</mat-icon>
+                                    </button>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </form>
-   
             </div>
         </div>
     </mat-tab>
     <mat-tab label="Comments">
         <div class="flex flex-auto">
-            <div class="flex flex-col flex-auto p-3 pt-10 sm:p-4 sm:pt-10 overflow-y-auto">
+            <div
+                class="flex flex-col flex-auto p-3 pt-10 sm:p-4 sm:pt-10 overflow-y-auto"
+            >
                 <app-comments></app-comments>
             </div>
         </div>
     </mat-tab>
     <mat-tab label="Logs">
         <div class="flex flex-auto">
-            <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
+            <div
+                class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto"
+            >
                 <app-tasks-logs [id]="task2.id"></app-tasks-logs>
             </div>
         </div>

@@ -23,7 +23,7 @@ const ELEMENT_DATA: Users[] = [
 })
 export class UsersComponent implements OnInit {
     apiUrl = environment.apiUrl;
-    displayedColumns: string[] = ['position', 'name', 'email', 'department', 'role', 'image','edit', 'delete'];
+    displayedColumns: string[] = ['name', 'email', 'department', 'image','edit', 'delete'];
     constructor(private _usersService: UserService,
         private fuseConfirmationService: FuseConfirmationService,
         private _snackBar: MatSnackBar,

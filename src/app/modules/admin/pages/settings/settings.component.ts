@@ -49,7 +49,7 @@ export class SettingsComponent implements OnInit, OnDestroy
                 id         : 'security',
                 icon       : 'heroicons_outline:lock-closed',
                 title      : 'Security',
-                description: 'Manage your password and 2-step verification preferences'
+                description: 'Change your password'
             },
             // {
             //     id         : 'plan-billing',

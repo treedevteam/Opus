@@ -54,7 +54,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     isXyzChecked = true;
     file: any = null;
     fileName: any;
-    taskFile: any = null;
+    taskFile$ = this._tasksService.taskById$;
     tags: Tag[];
     tagsEditMode: boolean = false;
     filteredTags2: Departments[];
@@ -107,6 +107,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
      */
     ngOnInit(): void
     {
+        console.warn(this.taskFile$)
         // Open the drawer
         this._tasksListComponent.matDrawer.open();
 
@@ -220,7 +221,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             this.task2 = task;
             console.log(this.task2,'this.task2');
 
-            console.log(this.task2,'this.task2this.task2this.task2this.task2');
 
             this._tasksService.getTaskComments(+this.task2.id).subscribe((res)=>{
             });
@@ -271,7 +271,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
                 // Focus on the title field
                 this._titleField.nativeElement.focus();
             });
-            this.taskFile = this.taskForm.get('file').value;
+            
      
         
 
@@ -944,5 +944,6 @@ deleteFile(id){
         this.ngOnInit();
     });
 }
+
 
 }
