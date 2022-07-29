@@ -1,0 +1,35 @@
+
+<div class="chip-list-wrapper">
+  <!-- <mat-chip-list #chipList>
+    <ng-container *ngFor="let select of selectData">
+      <mat-chip class="cardinal-colors" (click)="removeChip(select)">
+        {{ select.name }}
+        <mat-icon class="mat-chip-remove">cancel</mat-icon>
+      </mat-chip>
+    </ng-container>
+  </mat-chip-list> -->
+</div>
+
+<mat-form-field class="full-width">
+  <input matInput type="text"
+  [placeholder]="placeholder"
+  [matAutocomplete]="auto"
+  [formControl]="selectControl"
+  >
+</mat-form-field>
+
+<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+  <mat-option *ngFor="let data of (datatest$ | async).users">
+    <div (click)="optionClicked($event, data)">
+      <mat-checkbox [checked]="false" 
+        (change)="toggleSelection(data)" 
+        (click)="$event.stopPropagation()">
+        {{ data.name }}
+      </mat-checkbox>
+    </div>
+  </mat-option>
+  
+  <mat-option *ngIf="!(datatest$ | async).users.length">
+    No result
+  </mat-option>
+</mat-autocomplete>

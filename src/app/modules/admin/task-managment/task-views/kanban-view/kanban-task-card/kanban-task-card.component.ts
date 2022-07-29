@@ -11,7 +11,7 @@ import { Task } from '../../../_models/task';
 export class KanbanTaskCardComponent implements OnInit {
   @Input() card: Task;
   formShare: FormGroup;
-
+  expandedSubtasks = null
 
   constructor(
     private _formBuilder: FormBuilder
@@ -28,4 +28,14 @@ export class KanbanTaskCardComponent implements OnInit {
         return moment(date, moment.ISO_8601).isBefore(moment(), 'days');
     }
 
+  sahreTaskPopover(){
+
+  }
+
+  onSubmit(id:number){
+
+  }
+  toggleTableRows(id:number){
+
+  }
 }

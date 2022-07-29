@@ -47,7 +47,9 @@
                             </div>
 
              <!-- Filter -->
-             <mat-menu #appMenu="matMenu" >
+             <mat-menu #appMenu="matMenu"  (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                <div class="w-100 h-100" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+
                 <ng-template matMenuContent class="d-flex justify-content-center" >
                     <form>
                         <mat-form-field appearance="fill">
@@ -56,8 +58,8 @@
                         </mat-form-field>
                     </form>
                     <mat-label>Members</mat-label>
-                    <mat-selection-list #shoes>
-                        <mat-list-option>
+                    <mat-selection-list #shoes (click)="$event.stopPropagation()">
+                        <mat-list-option >
                             <img
                             class="w-full h-full rounded-full"
                             style="object-fit: cover;"
@@ -68,7 +70,7 @@
                         </mat-list-option>
                       </mat-selection-list>
                       <mat-label>Due date</mat-label>
-                      <mat-selection-list>
+                      <mat-selection-list (click)="$event.stopPropagation()">
                         <mat-list-option >
                             <img
                             class="w-full h-full rounded-full"
@@ -87,6 +89,8 @@
                         </mat-list-option>
                       </mat-selection-list>
                 </ng-template>
+            </div>
+
               </mat-menu>
               <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Sally'}">
                 <mat-icon>more_vert</mat-icon>
