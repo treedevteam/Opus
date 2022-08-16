@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap } from 'rxjs';
-import { Board, DueData, Task, Users } from '../_models/task';
+import { Board, Comments, DueData, Logs, Task, Users } from '../_models/task';
 import { environment } from 'environments/environment';
 import { Priorities } from '../../priorities/model/priorities';
 import { Status } from '../../statuses/model/status';
@@ -21,6 +21,13 @@ export class TaskServiceService {
   private _taskSelected: BehaviorSubject<Task | null> = new BehaviorSubject(null);
   private _subtaskSelected: BehaviorSubject<Task | null> = new BehaviorSubject(null);
 
+  private _taskSelectedLogs: BehaviorSubject<Logs[] | null> = new BehaviorSubject(null);
+  private _taskSelectedcomments: BehaviorSubject<Comments[] | null> = new BehaviorSubject(null);
+
+
+
+  
+
   private _priorities: BehaviorSubject<Priorities[] | null> = new BehaviorSubject(null);
   private _statuses: BehaviorSubject<Status[] | null> = new BehaviorSubject(null);
   private _users: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
@@ -28,6 +35,8 @@ export class TaskServiceService {
   private _departmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
 
 
+  private _subtask: BehaviorSubject<Task[] | null> = new BehaviorSubject(null);
+  private _curretnSubtasksOpened: BehaviorSubject<number | null> = new BehaviorSubject(null);
 
 
   private productCrudActionSubject = new Subject<CrudAction<Task>>();
@@ -71,7 +80,14 @@ export class TaskServiceService {
       return this._currentBoard.asObservable();
   }
 
-
+  get subtasks$(): Observable<Task[]>
+  {
+      return this._subtask.asObservable();
+  }
+  get curretnSubtasksOpened$(): Observable<number| null>
+  {
+      return this._curretnSubtasksOpened.asObservable();
+  }
   get priorities$(): Observable<Priorities[]>
   {
       return this._priorities.asObservable();
@@ -101,10 +117,23 @@ export class TaskServiceService {
   {
       return this._subtaskSelected.asObservable();
   }
+
+  get taskSelectedLogs$(): Observable<Logs[]>
+  {
+      return this._taskSelectedLogs.asObservable();
+  }
+
+  get taskSelectedComments$(): Observable<Comments[]>
+  {
+      return this._taskSelectedcomments.asObservable();
+  }
   
   orderModified$ = this.tasksOrder$.pipe(
         map(e=>e.split(',').filter(t=>t !== '').map(e=>+e))
     );
+
+
+
 
   
   //BoardTasks
@@ -187,6 +216,24 @@ export class TaskServiceService {
     })),
     shareReplay(1),
     );
+    taskSelectedDetails$ = combineLatest([
+    this.taskSelected$,
+    this.getUsersData$
+  ]).pipe(
+        map(([tasksBoard, users ]) =>(
+            {
+                ...tasksBoard,
+                users_assigned: tasksBoard.users_assigned?.map(u => (
+                    users.find(user => u === user.id)
+                )),
+                checkListcompleted: tasksBoard.checklists.filter(x=>x.value === 1).length
+            }
+            )),
+    shareReplay(1),
+    tap(res=>{
+        console.log(res);
+    })
+    );
 
 
   filterasks$ = combineLatest([
@@ -259,6 +306,30 @@ export class TaskServiceService {
     ])),
     shareReplay(1),
     );
+
+
+    allSubTasks$ = combineLatest([
+        this.subtasks$,
+        this.getStatus$,
+        this.getPriorities$,
+        this.getUsersData$,
+      ]).pipe(
+        map(([tasksBoard, statuses, priority, users]) =>(
+           [ 
+            ...tasksBoard.map(res=>({
+                ...res,
+                status: statuses.find(s => +res.status === +s.id),
+                priority: priority.find(p => +res.priority === +p.id),
+                users_assigned: res.users_assigned?.map(u => (
+                    users.find(user => u === +user.id)
+                )),
+            })),
+        ])),
+        shareReplay(1),
+        tap(res=>{
+            console.log(res);
+        })
+        );
 
     updateTaskPriority(priorityId: any, taskId:number): Observable<Task>{
         return this.currentBoard$.pipe(
@@ -358,6 +429,23 @@ export class TaskServiceService {
         )
     }
 
+    deleteTask(id: number, departments: number): Observable<Task>{
+
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.tasks$.pipe(
+                take(1),
+                switchMap(tasks => this._httpClient.delete<Task>(this.apiUrl+'api/task/delete/'+id).pipe(
+                    map((deletedTask: any) => {
+                        const taskindex = tasks.findIndex(x=>x.id === id);
+                        tasks.splice(taskindex,1);
+                        this._tasks.next([...tasks])
+                        return deletedTask;
+                    })
+                ))
+            ))
+        )
+    }
+
 
 
     updateTaskStatusOrder(statusId: any, order: string, taskId: number): Observable<Task>{
@@ -417,6 +505,128 @@ export class TaskServiceService {
             }),
         );
     }
+
+    getSubtasks$= (id: number) => this._httpClient.get<Task[]>(this.apiUrl+'api/task/subtasks/'+ id).pipe(
+        map((data: any): Task[] => {
+            this._subtask.next(data.data)
+            this._curretnSubtasksOpened.next(id);
+            return data.data;
+        }),
+        shareReplay(1),
+      );
+    closeSubtasks(){
+        this._curretnSubtasksOpened.next(null)
+    }
+
+
+
+    getSelectedTaskLogs$= (id: number) => this._httpClient.get<Logs[]>(this.apiUrl+'api/logs/'+ id).pipe(
+        map((data: any): Logs[] => {
+            this._taskSelectedLogs.next(data.data)
+            return data.data;
+        }),
+        shareReplay(1),
+      );
+
+
+    taskSelectedcomments$= (id: number) => this._httpClient.get<Comments[]>(this.apiUrl+'api/comments/'+ id).pipe(
+    map((data: any): Comments[] => {
+        this._taskSelectedcomments.next(data.data)
+        return data.data;
+    }),
+    shareReplay(1),
+    );
+
+
+
+      
+    subtaskUpdateTaskStatus(statusId: any, subtaskId: number): Observable<Task>{
+        return this.subtasks$.pipe(
+            take(1),
+            switchMap(subtasks => this._httpClient.post<Task>(this.apiUrl+'api/subtask_status/' + subtaskId ,  {status: statusId}).pipe(
+                map((updatedSubTask: any) => {
+
+                    updatedSubTask= updatedSubTask.data
+                    const index = subtasks.findIndex(d => d.id === updatedSubTask.id);
+                    if(index > -1){
+                        subtasks.splice(index,1,updatedSubTask);
+                    }
+                    this._subtask.next(subtasks)
+                    return updatedSubTask;
+                })
+            ))
+        );
+    }
+
+    subtaskUpdateTaskPriority(priorityId: any, subtaskId: number): Observable<Task>{
+        return this.subtasks$.pipe(
+            take(1),
+            switchMap(subtasks => this._httpClient.post<Task>(this.apiUrl+'api/subtask_priority/' + subtaskId ,  {priority: priorityId}).pipe(
+                map((updatedSubTask: any) => {
+                    updatedSubTask= updatedSubTask.data
+                    const index = subtasks.findIndex(d => d.id === updatedSubTask.id);
+                    if(index > -1){
+                        subtasks.splice(index,1,updatedSubTask);
+                    }
+                    this._subtask.next(subtasks)
+                    return updatedSubTask;
+                })
+            ))
+        );
+    }
+
+    
+updateSubtaskTitle(title: any, subtaskId: number): Observable<Task>{
+    return this.subtasks$.pipe(
+        take(1),
+        switchMap(subtasks => this._httpClient.post<Task>(this.apiUrl+'api/subtask_title/' + subtaskId ,  {title: title}).pipe(
+            map((updatedSubTask: any) => {
+                updatedSubTask= updatedSubTask.data
+                const index = subtasks.findIndex(d => d.id === updatedSubTask.id);
+                if(index > -1){
+                    subtasks.splice(index,1,updatedSubTask);
+                }
+                this._subtask.next(subtasks)
+                return updatedSubTask;
+            })
+        ))
+    );
+}
+
+subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
+    return this.subtasks$.pipe(
+        take(1),
+        switchMap(subtasks => this._httpClient.post<Task>(this.apiUrl+'api/subtask_deadline/' + subtaskId ,  {deadline: deadline}).pipe(
+            map((updatedSubTask: any) => {
+                updatedSubTask= updatedSubTask.data
+                const index = subtasks.findIndex(d => d.id === updatedSubTask.id);
+                if(index > -1){
+                    subtasks.splice(index,1,updatedSubTask);
+                }
+                this._subtask.next(subtasks)
+                return updatedSubTask;
+            })
+        ))
+    );
+}
+        
+    
+    storeSubtask(data): Observable<Task>{
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.subtasks$.pipe(
+                take(1),
+                switchMap(subtasks => this._httpClient.post<Task>(this.apiUrl+'api/subtask/store', {...data,board_id:board.id}).pipe(
+                    map((newSubTask: any) => {
+                        this._subtask.next([...subtasks, newSubTask.data])
+                        return newSubTask;
+                    })
+                ))
+            ))
+        )
+    }
+
+    
+
 
 }
 

@@ -29,7 +29,6 @@ import { TaskViewsComponent } from './task-views/task-views.component';
 import { KanbanViewComponent } from './task-views/kanban-view/kanban-view.component';
 import { TasklistLayoutComponent } from './task-views/normal-view/tasklist-layout/tasklist-layout.component';
 import { TaskRowComponent } from './task-views/normal-view/task-row/task-row.component';
-import { StoreTaskRowComponent } from './task-views/normal-view/store-task-row/store-task-row.component';
 import { NormalViewComponent } from './task-views/normal-view/normal-view.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { FocusableDirective } from './focusable.directive';
@@ -44,6 +43,12 @@ import { MatListModule } from '@angular/material/list';
 import { AsignUsersToBoardComponent } from './board-header/asign-users-to-board/asign-users-to-board.component';
 import { MultiselectAutocompleteComponent } from './board-header/multiselect-autocomplete/multiselect-autocomplete.component';
 import { ScrumboardBoardAddCardComponent } from './task-views/kanban-view/add-card/add-card.component';
+import { StoreTaskRowComponent } from './task-views/normal-view/store-task-row/store-task-row.component';
+import { SubtaskRowComponent } from './task-views/normal-view/subtask-row/subtask-row.component';
+import { KanbanSubtaskCardComponent } from './task-views/kanban-view/kanban-subtask-card/kanban-subtask-card.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { TaskLogsComponent } from './task-layout/task-details/task-logs/task-logs.component';
+import { TaskCommentsComponent } from './task-layout/task-details/task-comments/task-comments.component';
 
 
 @NgModule({
@@ -57,7 +62,6 @@ import { ScrumboardBoardAddCardComponent } from './task-views/kanban-view/add-ca
     BoardHeaderComponent,
     TasklistLayoutComponent,
     TaskRowComponent,
-    StoreTaskRowComponent,
     TaskViewsComponent,
     FocusableDirective,
     EditableOnEnterDirective,
@@ -69,6 +73,11 @@ import { ScrumboardBoardAddCardComponent } from './task-views/kanban-view/add-ca
     AsignUsersToBoardComponent,
     MultiselectAutocompleteComponent,
     ScrumboardBoardAddCardComponent,
+    StoreTaskRowComponent,
+    SubtaskRowComponent,
+    KanbanSubtaskCardComponent,
+    TaskLogsComponent,
+    TaskCommentsComponent
   ],
   imports: [
     RouterModule.forChild(tasksRoutes),
@@ -95,8 +104,8 @@ import { ScrumboardBoardAddCardComponent } from './task-views/kanban-view/add-ca
     FuseFindByKeyPipeModule,
     MatBadgeModule,
     MatListModule,
-    MatIconModule
-
+    MatIconModule,
+    MatTabsModule,
   ]
 })
 export class TaskManagmentModule { }

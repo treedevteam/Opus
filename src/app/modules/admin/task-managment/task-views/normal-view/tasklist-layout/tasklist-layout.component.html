@@ -7,4 +7,6 @@
         <ng-container *ngFor="let task of (boardsTasks$ | async); let first = first;">
             <app-task-row [task]="task"></app-task-row>
         </ng-container>
+
+        <app-store-task-row></app-store-task-row>
     </div>

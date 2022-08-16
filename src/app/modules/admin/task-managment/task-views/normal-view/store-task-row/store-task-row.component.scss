@@ -1,0 +1,25 @@
+.new_task_row{
+    padding: 5px; 
+    border: 1px solid #00000020; 
+    width: 100%;
+}
+.new_task_row:hover{
+    border: 1px solid #000000; 
+}
+.new_task_row:focus{
+    border: 1px solid #4f46e5; 
+}
+
+.new_task_button{
+    border-radius: 0px!important;
+}
+.new_task_row:focus .new_task_button{
+    width: 100%;
+}
+.fileup{
+    display: none;
+}
+label{
+    cursor: pointer;
+}
+

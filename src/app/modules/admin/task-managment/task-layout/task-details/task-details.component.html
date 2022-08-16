@@ -1,1 +1,161 @@
-{{taskSelected$ | async | json}}
+<div class="flex flex-auto" *ngIf="taskSelected$ | async as task">
+    <div
+        class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto"
+    >
+        <!-- Header -->
+        <div class="flex items-center justify-between -mt-3 -ml-4">
+            <!-- Mark as ... button -->
+            <button class="pr-4 pl-3.5" mat-button (click)="toggleCompleted()">
+                <!-- Mark as incomplete -->
+                <ng-container>
+                    <img
+                        class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover mr-5"
+                        [src]="apiUrl + 'storage/' + task.user.user_image"
+                        alt="Member avatar"
+                        [matTooltip]="task.user.name"
+                        [matTooltipPosition]="'above'"
+                        onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';"
+                    />
+                    <span>- Created by</span>
+                </ng-container>
+            </button>
+            <div class="flex items-center">
+                <!-- More menu -->
+                <button mat-icon-button (click)="deleteTask()">
+                    <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                </button>
+
+                <!-- Close button -->
+                <button mat-icon-button (click)="closeTaskDetails()">
+                    <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                </button>
+            </div>
+        </div>
+        <br />
+        <h1 style="font-size: 22px">{{ task.title }}</h1>
+        <mat-divider class="mt-6"></mat-divider>
+
+        <!-- Users Assign -->
+
+        <div class="mt-5 body_content">
+
+            <mat-tab-group class="mt-5" #logsTab>
+                <mat-tab label="Checklists" class="overflow-y-auto">
+                    <div class="me-3">
+                        <ng-container class="mt-5">
+                            <div class="flex items-center -space-x-1.5">
+                                <ng-container
+                                    *ngFor="
+                                        let member of task.users_assigned.slice(0, 3);
+                                        trackBy: trackByFn
+                                    "
+                                >
+                                    <img
+                                        [matTooltip]="member.name"
+                                        [matTooltipPosition]="'above'"
+                                        class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                                        [src]="apiUrl + 'storage/' + member.image"
+                                        alt="Member avatar"
+                                        onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';"
+                                    />
+                                </ng-container>
+                                <ng-container *ngIf="task.users_assigned.length > 3">
+                                    <div
+                                        class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500"
+                                    >
+                                        <div class="text-md font-semibold">
+                                            +{{ task.users_assigned.slice(3).length }}
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div *ngIf="task.users_assigned.length === 0">
+                                    <img
+                                        class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                                        src="assets/images/dapulse-person-column.svg"
+                                        alt="Member avatar"
+                                    />
+                                </div>
+                                <p style="margin-left: 25px !important">
+                                    - users assigned
+                                </p>
+                            </div>
+                        </ng-container>
+                        
+                    </div>
+
+                    <div class="checklists_section">
+                        <div class="col-md-12 align-items-center mt-5">
+                            <ul class="list-group">
+                                <div class="w-full py-4">
+                                    <div *ngIf="task.checklists.length">
+                                        {{
+                                            (task.checkListcompleted / task.checklists.length) *
+                                                100 | number: "1.0-0"
+                                        }}%
+                                    </div>
+                                    <div *ngIf="!task.checklists.length">0%</div>
+                                    <mat-progress-bar
+                                        mode="determinate"
+                                        value="{{
+                                            (task.checkListcompleted / task.checklists.length) *
+                                                100
+                                        }}"
+                                    ></mat-progress-bar>
+                                </div>
+                                <li
+                                    class="list-group-item checkListLi"
+                                    style="display: flex; align-items: center"
+                                    *ngFor="let item of task.checklists"
+                                >
+                                    <div class="flex" style="align-items: center">
+                                        <input
+                                            class="mr-3"
+                                            type="checkbox"
+                                            value="{{ item.id }}"
+                                            [checked]="item.value === 1"
+                                            (change)="isAllSelected(item)"
+                                        />
+                                        <p
+                                            [ngStyle]="{
+                                                'text-decoration':
+                                                    item.value === 1
+                                                        ? 'line-through'
+                                                        : 'none'
+                                            }"
+                                        >
+                                            {{ item.text }}
+                                        </p>
+                                    </div>
+                                    <mat-icon
+                                        class="delete_iconChecklist"
+                                        (click)="deleteCheckList(item.id)"
+                                        >delete</mat-icon
+                                    >
+                                </li>
+    
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Comments">
+                    <div class="flex flex-auto">
+                        <div class="flex flex-col flex-auto p-3 pt-10 sm:p-4 sm:pt-10 overflow-y-auto">
+                            <app-task-comments [taskId]="taskSeleced.id"></app-task-comments>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Logs">
+                    <div class="flex flex-auto">
+                        <div
+                            class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto"
+                        >
+                            <app-task-logs [taskId]="taskSeleced.id"></app-task-logs>
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+
+        </div>
+    </div>
+</div>

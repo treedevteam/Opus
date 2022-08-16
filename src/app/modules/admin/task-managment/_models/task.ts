@@ -31,7 +31,7 @@ export interface Users{
     selected: boolean;
 }
 
-export interface TaskLogs{
+export interface Logs{
     message?: string;
     created_at: string;
     type: {
@@ -47,7 +47,7 @@ export interface TaskCheckList{
     value: number;
 }
 
-export interface TaskComment{
+export interface Comments{
     id: number;
     text: string;
     image: string;

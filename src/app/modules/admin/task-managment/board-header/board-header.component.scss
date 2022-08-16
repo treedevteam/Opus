@@ -34,3 +34,14 @@
     font-weight: bold;
     color: rgba(0, 0, 0, 0.6);
 }
+.mat-checkbox-inner-container {
+    margin: 2px 8px auto 0 !important;
+  }
+
+  .mat-list-base .mat-list-item .mat-list-item-content-reverse, .mat-list-base .mat-list-option .mat-list-item-content-reverse{
+    flex-direction: row!important;
+    padding: 0!important;
+  }
+  .mat-pseudo-checkbox{
+    margin: 0 10px!important;
+  }

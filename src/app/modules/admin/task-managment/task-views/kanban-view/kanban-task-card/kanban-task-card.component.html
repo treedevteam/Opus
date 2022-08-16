@@ -1,7 +1,9 @@
-<a
+<div cdkDrag>
+
+<div
     class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card"
     [routerLink]="['task', card.id]"
-    cdkDrag
+    
     >
     <!-- Cover image -->
     <div (click)="openImagePopup(apiUrl+'storage/'+card.file)" class="cover-image" *ngIf="card.file ! null">
@@ -82,48 +84,29 @@
 
 
 
-    <!-- <div class="subtasks_button">
-        <div class="subtasks " (click)="toggleTableRows(card.id)" matBadgeColor="warn" [matBadge]="card.subtasks_count" matBadgeSize="small" matBadgePosition="before">
+    <div class="">
+        <div class=" " (click)="showSubtasks()"  matBadgeColor="warn" [matBadge]="card.subtasks_count" matBadgeSize="small" matBadgePosition="before">
             <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
         </div>
-    </div> -->
+    </div>
 
-    </a>
-    <!-- <ng-container *ngIf="expandedSubtasks === card.id">
-        <div class="position-relative" *ngIf="(subtasksData$ | async).length" style="height: 16px;margin-top: -0.75rem;">
-            <div class="subitem-kanban-card">
-                <div class="subitem-kanban-card-arrow-wrapper" style="width: 16px;height:16px;"><div class="subitem-arrow-component" style="border-color: rgb(226, 68, 92);right: auto;left: 0;"><div class="subitem-arrow-component-top subitem-arrow-no-line" style="border-color: rgb(226, 68, 92);"></div><div class="subitem-arrow-component-bottom" style="border-color: rgb(226, 68, 92);"></div></div></div>
-            </div>
-        </div>
 
-        <ng-container *ngFor="let subtaskTask of subtasksData$ | async; let firsttt = first; let lasttt = last; trackBy: trackByFn;">
-            <div class="flex position-relative">
-                <div class="subitem-kanban-card" *ngIf="firsttt && !lasttt">
-                    <div class="subitem-kanban-card-arrow-wrapper"><div class="subitem-arrow-component" style="border-color: rgb(226, 68, 92);"><div class="subitem-arrow-component-top" style="border-color: rgb(226, 68, 92);"></div><div class="subitem-arrow-component-bottom" style="border-color: rgb(226, 68, 92);"></div></div></div>
-                </div>
-                <div class="subitem-kanban-card" *ngIf="!firsttt && !lasttt">
-                    <div class="subitem-kanban-card-arrow-wrapper"><div class="subitem-arrow-component" style="border-color: rgb(226, 68, 92);"><div class="subitem-arrow-component-top" style="border-color: rgb(226, 68, 92);"></div><div class="subitem-arrow-component-bottom" style="border-color: rgb(226, 68, 92);"></div></div></div>
-                </div> 
-                <div class="subitem-kanban-card" *ngIf="lasttt">
-                    <div class="subitem-kanban-card-arrow-wrapper"><div class="subitem-arrow-component" style="border-color: rgb(226, 68, 92);"><div class="subitem-arrow-component-top" style="border-color: rgb(226, 68, 92);"></div></div></div>
-                </div>
-                <a
-                    class="flex flex-col items-start mb-3 p-5 space-y-1 shadow rounded-lg overflow-hidden bg-card"
-                    [routerLink]="['subtask', subtaskTask.id]"
-                    style="width: 100%;
-                    margin-left: 25px;"
-                    >
-                    <div class="subtask_list not_collapsed" >
-                        <div >
-                            {{subtaskTask.title}}
-                        </div>
-                    </div>
-                </a>
-            </div>
+
+    
+</div>
+<ng-container *ngIf="subtasksOpened$ | async"></ng-container>
+    <ng-container *ngIf="showTasks">
+        <ng-container *ngFor="let subtask of subtask$ | async; let firsttt = first; let lasttt = last; trackBy: trackByFn;" >
+            <app-kanban-subtask-card [card]="subtask"></app-kanban-subtask-card>
         </ng-container>
-    <scrumboard-board-add-card 
-        (saved)="addCard(card, $event)"
-        [taskType]="'subtask'"
-        [buttonTitle]="list.tasks.length ? 'Add another subtask' : 'Add a subtask'">
-    </scrumboard-board-add-card>
-    </ng-container> -->
+        <scrumboard-board-add-card 
+            (saved)="addCard(card, $event)"
+            [taskType]="'subtask'"
+            [buttonTitle]="'Add a subtask'">
+        </scrumboard-board-add-card>
+    </ng-container>
+
+</div>
+
+
+
