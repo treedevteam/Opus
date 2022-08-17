@@ -43,6 +43,10 @@
                 <mat-tab label="Checklists" class="overflow-y-auto">
                     <div class="me-3">
                         <ng-container class="mt-5">
+                            <button class="pr-4 pl-3.5 pt-2 pb-2" mat-button (click)="openUsersPanel()"
+                            #usersPanelOrigin
+                            >
+                               
                             <div class="flex items-center -space-x-1.5">
                                 <ng-container
                                     *ngFor="
@@ -79,9 +83,12 @@
                                     - users assigned
                                 </p>
                             </div>
+                        </button>
+
                         </ng-container>
                         
                     </div>
+                    <form class="" [formGroup]="taskForm">
 
                     <div class="checklists_section">
                         <div class="col-md-12 align-items-center mt-5">
@@ -132,11 +139,33 @@
                                         >delete</mat-icon
                                     >
                                 </li>
+                                <li class="" style="width: 100%">
+                                    <mat-form-field
+                                        class="flex-auto"
+                                        style="width: 100%"
+                                    >
+                                        <input
+                                            placeholder="Add an item"
+                                            style="width: 100%"
+                                            matInput
+                                            [formControlName]="'checklist'"
+                                        />
+                                        <button
+                                            mat-raised-button
+                                            color="primary"
+                                            (click)="addNewCheckList()"
+                                            style="border-radius: 4px !important"
+                                        >
+                                            add
+                                        </button>
+                                    </mat-form-field>
+                                </li>
     
                                 
                             </ul>
                         </div>
                     </div>
+                    </form>
                 </mat-tab>
                 <mat-tab label="Comments">
                     <div class="flex flex-auto">

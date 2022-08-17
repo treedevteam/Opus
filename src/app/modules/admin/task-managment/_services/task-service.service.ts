@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap } from 'rxjs';
-import { Board, Comments, DueData, Logs, Task, Users } from '../_models/task';
+import { Board, Comments, DueData, Logs, Task, TaskCheckList, Users } from '../_models/task';
 import { environment } from 'environments/environment';
 import { Priorities } from '../../priorities/model/priorities';
 import { Status } from '../../statuses/model/status';
@@ -385,6 +385,68 @@ export class TaskServiceService {
                         }
                         this._tasks.next(tasks)
                         return updatedTask;
+                    })
+                ))
+            ))
+        )
+    }
+
+    addNewCheckListItem(form: any): Observable<TaskCheckList>{
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.tasks$.pipe(
+                take(1),
+                switchMap(tasks => this._httpClient.post<TaskCheckList>(this.apiUrl+'api/checklist/store', form).pipe(
+                    map((newChecklist: any) => {
+                        const taskId = tasks.findIndex(x=>x.id === form.task_id);
+                        tasks[taskId].checklists = [...tasks[taskId].checklists,newChecklist.data]
+                        this._tasks.next(tasks)
+                        this._taskSelected.next(tasks[taskId])
+                        return newChecklist.data;
+                    })
+                ))
+            ))
+        )
+    }
+
+    deletedCheckListItem(id: number,task_id): Observable<TaskCheckList>{
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.tasks$.pipe(
+                take(1),
+                switchMap(tasks => this._httpClient.delete<number>(this.apiUrl+'api/checklist/delete/'+id).pipe(
+                    map((deletedTask: any) => {
+                        debugger;
+                        const taskId = tasks.findIndex(x=>x.id === task_id);
+                        const checkListId = tasks[taskId].checklists.findIndex(y=>y.id === id);
+                        if(checkListId > -1){
+                            tasks[taskId].checklists.splice(checkListId,1);
+                        }
+                        this._tasks.next(tasks)
+                        this._taskSelected.next(tasks[taskId])
+                        return deletedTask.data;
+                    })
+                ))
+            ))
+        )
+    }
+
+
+    editCheckList(id: number,form): Observable<TaskCheckList>{
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.tasks$.pipe(
+                take(1),
+                switchMap(tasks => this._httpClient.post<TaskCheckList>(this.apiUrl+'api/checklist/update/'+id, form).pipe(
+                    map((updatedChecklist: any) => {
+                        debugger;
+                        updatedChecklist = updatedChecklist.data
+                        debugger;
+                        const taskId = tasks.findIndex(x=>x.id === form.task_id);
+                        const checkListId = tasks[taskId].checklists.findIndex(y=>y.id === updatedChecklist.id);
+                        if(checkListId > -1){
+                            tasks[taskId].checklists.splice(checkListId,1,updatedChecklist);
+                        }
+                        this._tasks.next(tasks)
+                        this._taskSelected.next(tasks[taskId]);
+                        return updatedChecklist;
                     })
                 ))
             ))

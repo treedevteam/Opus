@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { environment } from 'environments/environment';
 import { TaskServiceService } from '../../../_services/task-service.service';
 
 @Component({
@@ -8,6 +9,7 @@ import { TaskServiceService } from '../../../_services/task-service.service';
 })
 export class TaskLogsComponent implements OnInit, OnChanges {
   @Input() taskId: any;
+  apiUrl = environment.apiUrl
   constructor(private _taskService: TaskServiceService) { }
   
   taskSelectedLogs$ = this._taskService.taskSelectedLogs$;

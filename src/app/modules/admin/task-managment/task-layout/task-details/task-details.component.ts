@@ -1,13 +1,15 @@
-import {  OverlayRef } from '@angular/cdk/overlay';
+import {  Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
 import { AfterViewInit,  ChangeDetectorRef,  Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { environment } from 'environments/environment';
-import { Subject } from 'rxjs';
+import { combineLatest, Subject, Observable, map, filter } from 'rxjs';
 import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.component';
 import { NormalViewComponent } from '../../task-views/normal-view/normal-view.component';
-import { Task } from '../../_models/task';
+import { Task, Users } from '../../_models/task';
 import { TaskServiceService } from '../../_services/task-service.service';
 
 
@@ -18,11 +20,12 @@ import { TaskServiceService } from '../../_services/task-service.service';
   styleUrls: ['./task-details.component.scss'],
 })
 export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-  private _tagsPanelOverlayRef: OverlayRef;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   apiUrl = environment.apiUrl
   taskSeleced:Task|any;
   taskOrSubtask = "";
+  taskForm: FormGroup;
+
 
   constructor(
         private _activatedRoute: ActivatedRoute,
@@ -33,6 +36,10 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         private _taskService: TaskServiceService,
         private _fuseConfirmationService: FuseConfirmationService,
         private _router: Router,
+        private _formBuilder: FormBuilder,
+        private _overlay: Overlay,
+        private _viewContainerRef: ViewContainerRef,
+
   ) {
    }
 
@@ -40,7 +47,10 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnInit(): void {
-
+    this.taskForm = this._formBuilder.group({
+      checklist:'',
+      file:['']
+  });
     //dont touch
     this._activatedroute.data.subscribe(res=>{
       this.taskOrSubtask = res.component
@@ -72,16 +82,22 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       this._unsubscribeAll.complete();
 
       // Dispose the overlay
-      if ( this._tagsPanelOverlayRef )
-      {
-          this._tagsPanelOverlayRef.dispose();
-      }
+      
   }
   closeDrawer(): Promise<MatDrawerToggleResult>
     {
       return this.taskOrSubtask === "normal" ? this._normalView.matDrawer.close() : this._kanbanView.matDrawer.close()
   }
 
+
+  addNewCheckList(){
+    this._taskService.addNewCheckListItem(
+      {text: this.taskForm.get('checklist').value, task_id: this.taskSeleced.id}
+      ).subscribe(()=> this.taskForm.get('checklist').setValue('')
+      );
+  }
+
+  
   deleteTask(): void
   {
       // Open the confirmation dialog
@@ -123,27 +139,23 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
     this.closeDrawer();
   }
+
   deleteCheckList(id:number){
-
+    this._taskService.deletedCheckListItem(id,this.taskSeleced.id).subscribe();
   }
+
   isAllSelected(item) {
+    this.taskSeleced.checklists.forEach((val) => {
+      if (val.id === item.id) {
+        if(item.value){
+          this._taskService.editCheckList(item.id, {value: 0, text: item.text, task_id: this.taskSeleced.id}).subscribe();
+        }else{
+            this._taskService.editCheckList(item.id, {value: 1, text: item.text, task_id: this.taskSeleced.id}).subscribe();
+        }
+      };
+    });
+  }
    
-  //  this.checkList.forEach((val) => {
-  //    if (val.id === item.id) {
-  //          if(item.value){
-  //              this._tasksService.editCheckList({value: 0, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe((res)=>{
-  //                  console.log(res);
-  //              });
-  //          }else{
-  //              this._tasksService.editCheckList({value: 1, text: item.text, task_id: this.taskForm.get('id').value}, item.id).subscribe((res)=>{
-  //                  console.log(res);
-  //              });
-  //          }
-  //      };
-
-  //  });
- }
-
   /**
    * Track by function for ngFor loops
    *
