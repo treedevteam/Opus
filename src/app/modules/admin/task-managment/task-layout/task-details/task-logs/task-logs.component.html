@@ -23,7 +23,12 @@
                                     <div class="relative flex flex-auto">
                                         <!-- Icon -->
                                         <ng-container *ngIf="log.type.image">
-                                            <div style="padding-right: 18px;">
+                                            <div style="    padding-right: 18px;
+                                            background-color: #fff;
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                            border-radius: 50%;">
                                                 <img style="width:40px; height:auto; border-radius: 50%;margin-left: 5px;"[src]="apiUrl+log.type.image" alt="">
                                             </div>
                                         </ng-container>

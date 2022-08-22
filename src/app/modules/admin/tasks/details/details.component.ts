@@ -548,7 +548,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         this.filteredTags2 = this.departments.filter(tag => tag.name.toLowerCase().includes(value));
     }
 
-    filterDepartments(event): void
+    filterDepartments(event): void 
     {
         // Get the value
         const value = event.target.value.toLowerCase();

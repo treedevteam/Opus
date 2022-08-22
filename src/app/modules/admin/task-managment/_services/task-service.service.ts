@@ -193,6 +193,23 @@ export class TaskServiceService {
     shareReplay(1),
   );
 
+
+  boardUsersData(): Observable<Users[]>{
+    return this.currentBoard$.pipe(
+        switchMap(board=> this._httpClient.get<Users[]>(this.apiUrl+`api/board/${board.id}/users`).pipe(
+            map((data: any): Users[] => {
+                debugger;
+                this._boardUsers.next(data.data);
+                return data.data;
+            }),
+            shareReplay(1),
+          ))
+    )
+}
+
+
+
+
   getUsersDepartment(depId: number): Observable<Users[]>
     {
         return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department/'+depId).pipe(
@@ -598,6 +615,38 @@ export class TaskServiceService {
     }),
     shareReplay(1),
     );
+
+
+
+    
+//add comment
+storeComment(comment: any): Observable<Comments[]>{
+    return this.taskSelectedComments$.pipe(
+        take(1),
+        switchMap(taskComments => this._httpClient.post<Comments[]>(this.apiUrl+'api/comment/store', comment).pipe(
+            map((newComment: any) => {
+                this._taskSelectedcomments.next([newComment.data,...taskComments])
+                return newComment;
+            })
+        ))
+        );
+}
+
+//delete comment
+deleteComment(id: number): Observable<any>
+{   
+    return this.taskSelectedComments$.pipe(
+        take(1),
+        switchMap(taskComments => this._httpClient.delete(this.apiUrl+'api/comment/delete/'+id).pipe(
+            map((deleted: any) => {
+                const index = taskComments.findIndex(x=>x.id === id);
+                taskComments.splice(index,1);
+                this._taskSelectedcomments.next(taskComments)
+                return deleted;
+            })
+        ))
+        );
+}
 
 
 

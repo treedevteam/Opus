@@ -49,6 +49,7 @@ import { KanbanSubtaskCardComponent } from './task-views/kanban-view/kanban-subt
 import { MatTabsModule } from '@angular/material/tabs';
 import { TaskLogsComponent } from './task-layout/task-details/task-logs/task-logs.component';
 import { TaskCommentsComponent } from './task-layout/task-details/task-comments/task-comments.component';
+import { MentionModule } from 'angular-mentions';
 
 
 @NgModule({
@@ -106,6 +107,8 @@ import { TaskCommentsComponent } from './task-layout/task-details/task-comments/
     MatListModule,
     MatIconModule,
     MatTabsModule,
+    MentionModule,
+
   ]
 })
 export class TaskManagmentModule { }
