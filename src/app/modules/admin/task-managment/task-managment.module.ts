@@ -109,6 +109,32 @@ import { MentionModule } from 'angular-mentions';
     MatTabsModule,
     MentionModule,
 
+
+
+
+    DragDropModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatDividerModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatMenuModule,
+    MatMomentDateModule,
+    MatProgressBarModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatTooltipModule,
+    FuseFindByKeyPipeModule,
+    MatTabsModule,
+    MatBadgeModule,
+    MentionModule,
+    MatListModule
+
   ]
 })
 export class TaskManagmentModule { }

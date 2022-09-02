@@ -5,7 +5,7 @@ import { Status } from 'app/modules/admin/statuses/model/status';
 import { environment } from 'environments/environment';
 import moment from 'moment';
 import { map, mergeMap, tap, Observable, take, switchMap, finalize } from 'rxjs';
-import { Task, Board } from '../../../_models/task';
+import { Task, Board, TaskModified } from '../../../_models/task';
 import { TaskServiceService } from '../../../_services/task-service.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { TaskServiceService } from '../../../_services/task-service.service';
   styleUrls: ['./subtask-row.component.scss']
 })
 export class SubtaskRowComponent implements OnInit {
-  @Input() task: Task;
+  @Input() task: TaskModified;
   apiUrl = environment.apiUrl;
   myGroup: FormGroup;
   board:Board;

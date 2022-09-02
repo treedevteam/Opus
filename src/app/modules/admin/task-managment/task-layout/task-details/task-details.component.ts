@@ -25,10 +25,10 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   taskSeleced:Task|any;
   taskOrSubtask = "";
   taskForm: FormGroup;
-  private _tagsPanelOverlayRef: OverlayRef;
   filteredTags: Task[];
   tagsEditMode: boolean = false;
   tags: Task[];
+  private _tagsPanelOverlayRef: OverlayRef;
 
 
   constructor(
@@ -198,68 +198,65 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
+  openTagsPanel(): void
+  {
+      // Create the overlay
+      this._tagsPanelOverlayRef = this._overlay.create({
+          backdropClass   : '',
+          hasBackdrop     : true,
+          scrollStrategy  : this._overlay.scrollStrategies.block(),
+          positionStrategy: this._overlay.position()
+                                .flexibleConnectedTo(this._tagsPanelOrigin.nativeElement)
+                                .withFlexibleDimensions(true)
+                                .withViewportMargin(64)
+                                .withLockedPosition(true)
+                                .withPositions([
+                                    {
+                                        originX : 'start',
+                                        originY : 'bottom',
+                                        overlayX: 'start',
+                                        overlayY: 'top'
+                                    }
+                                ])
+      });
 
+      // Subscribe to the attachments observable
+      this._tagsPanelOverlayRef.attachments().subscribe(() => {
 
-openTagsPanel(): void
-    {
-        // Create the overlay
-        this._tagsPanelOverlayRef = this._overlay.create({
-            backdropClass   : '',
-            hasBackdrop     : true,
-            scrollStrategy  : this._overlay.scrollStrategies.block(),
-            positionStrategy: this._overlay.position()
-                                  .flexibleConnectedTo(this._tagsPanelOrigin.nativeElement)
-                                  .withFlexibleDimensions(true)
-                                  .withViewportMargin(64)
-                                  .withLockedPosition(true)
-                                  .withPositions([
-                                      {
-                                          originX : 'start',
-                                          originY : 'bottom',
-                                          overlayX: 'start',
-                                          overlayY: 'top'
-                                      }
-                                  ])
-        });
+          // Focus to the search input once the overlay has been attached
+          this._tagsPanelOverlayRef.overlayElement.querySelector('input').focus();
+      });
 
-        // Subscribe to the attachments observable
-        this._tagsPanelOverlayRef.attachments().subscribe(() => {
+      // Create a portal from the template
+      const templatePortal = new TemplatePortal(this._tagsPanel, this._viewContainerRef);
 
-            // Focus to the search input once the overlay has been attached
-            this._tagsPanelOverlayRef.overlayElement.querySelector('input').focus();
-        });
+      // Attach the portal to the overlay
+      this._tagsPanelOverlayRef.attach(templatePortal);
 
-        // Create a portal from the template
-        const templatePortal = new TemplatePortal(this._tagsPanel, this._viewContainerRef);
+      // Subscribe to the backdrop click
+      this._tagsPanelOverlayRef.backdropClick().subscribe(() => {
 
-        // Attach the portal to the overlay
-        this._tagsPanelOverlayRef.attach(templatePortal);
+          // If overlay exists and attached...
+          if ( this._tagsPanelOverlayRef && this._tagsPanelOverlayRef.hasAttached() )
+          {
+              // Detach it
+              this._tagsPanelOverlayRef.detach();
 
-        // Subscribe to the backdrop click
-        this._tagsPanelOverlayRef.backdropClick().subscribe(() => {
+              // Reset the tag filter
+              this.filteredTags = this.tags;
 
-            // If overlay exists and attached...
-            if ( this._tagsPanelOverlayRef && this._tagsPanelOverlayRef.hasAttached() )
-            {
-                // Detach it
-                this._tagsPanelOverlayRef.detach();
+              // Toggle the edit mode off
+              this.tagsEditMode = false;
+          }
 
-                // Reset the tag filter
-                this.filteredTags = this.tags;
-
-                // Toggle the edit mode off
-                this.tagsEditMode = false;
-            }
-
-            // If template portal exists and attached...
-            if ( templatePortal && templatePortal.isAttached )
-            {
-                // Detach it
-                templatePortal.detach();
-            }
-        });
-    }
-
+          // If template portal exists and attached...
+          if ( templatePortal && templatePortal.isAttached )
+          {
+              // Detach it
+              templatePortal.detach();
+          }
+      });
+  }
     /**
      * Toggle the tags edit mode
      */
