@@ -880,7 +880,6 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
         
   onFileChange(pFileList: File): void {
-    debugger;
     this.uploaded = true;
     this.file = pFileList[0];
 

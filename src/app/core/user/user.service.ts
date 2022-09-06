@@ -85,7 +85,6 @@ export class UserService
     }
 
     _updateSingleUser($id: number, data: any): Observable<User>{
-        debugger
         return this.user$.pipe(
             take(1),
           switchMap((users) => this._httpClient.post<User> (this.apiUrl+'api/user/update/' + $id, data).pipe(

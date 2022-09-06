@@ -29,7 +29,6 @@ export class TaskCommentsComponent implements OnInit, OnChanges{
 
   ngOnInit(): void {
     this._tasksService.boardUsersData().subscribe(res=>{
-      debugger;
       console.log(res);
       this.items = res;
     });
@@ -50,7 +49,6 @@ export class TaskCommentsComponent implements OnInit, OnChanges{
 
   
   addCommentTask() {
-    debugger;
     const ids = this.data
       .replace(/(\r\n|\n|\r)/gm, '')
       .split('@')

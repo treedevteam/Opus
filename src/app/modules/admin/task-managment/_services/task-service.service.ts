@@ -142,7 +142,6 @@ export class TaskServiceService {
     map((data: any): Task[] => {
         this._tasks.next(data.tasks)
         console.log(data.order,"ODERRIIIIIIIK");
-        debugger
         console.log(data);
         this._taskOrder.next(data.order)
         return data.tasks;
@@ -198,7 +197,6 @@ export class TaskServiceService {
     return this.currentBoard$.pipe(
         switchMap(board=> this._httpClient.get<Users[]>(this.apiUrl+`api/board/${board.id}/users`).pipe(
             map((data: any): Users[] => {
-                debugger;
                 this._boardUsers.next(data.data);
                 return data.data;
             }),
@@ -277,7 +275,6 @@ export class TaskServiceService {
   
   //Ko duhet te ndrrohet
   dataFilter(data, type:MatRadioChange):boolean{
-    debugger;
         switch(type.value) {
             case 0:
                 return moment(data, moment.ISO_8601).isSame(moment(), 'day')
@@ -374,7 +371,6 @@ export class TaskServiceService {
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task_status/' + taskId , {status: statusId,order: board.board_order,board_id:board.id}).pipe(
                     map((updatedTask: any) => {
                         updatedTask = updatedTask.task;
-                        debugger
                         const checklistIndex = tasks.findIndex(d => d.id === updatedTask.id);
                         if(checklistIndex > -1){
                             tasks.splice(checklistIndex,1,updatedTask);
@@ -431,7 +427,6 @@ export class TaskServiceService {
                 take(1),
                 switchMap(tasks => this._httpClient.delete<number>(this.apiUrl+'api/checklist/delete/'+id).pipe(
                     map((deletedTask: any) => {
-                        debugger;
                         const taskId = tasks.findIndex(x=>x.id === task_id);
                         const checkListId = tasks[taskId].checklists.findIndex(y=>y.id === id);
                         if(checkListId > -1){
@@ -453,9 +448,7 @@ export class TaskServiceService {
                 take(1),
                 switchMap(tasks => this._httpClient.post<TaskCheckList>(this.apiUrl+'api/checklist/update/'+id, form).pipe(
                     map((updatedChecklist: any) => {
-                        debugger;
                         updatedChecklist = updatedChecklist.data
-                        debugger;
                         const taskId = tasks.findIndex(x=>x.id === form.task_id);
                         const checkListId = tasks[taskId].checklists.findIndex(y=>y.id === updatedChecklist.id);
                         if(checkListId > -1){
@@ -498,7 +491,6 @@ export class TaskServiceService {
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task/store/board' , {...form,board_id:board.id}).pipe(
                     map((newTask: any) => {
                         this._tasks.next([newTask.task,...tasks])
-                        debugger;
                         console.log(newTask);
                         this._taskOrder.next(newTask.board_order)
                         return newTask;
@@ -509,7 +501,6 @@ export class TaskServiceService {
     }
 
     deleteTask(id: number, departments: number): Observable<Task>{
-
         return this.currentBoard$.pipe(
             switchMap(board=> this.tasks$.pipe(
                 take(1),
@@ -525,7 +516,25 @@ export class TaskServiceService {
         )
     }
 
-
+    assignUserTask(taskId: number, userId: number): Observable<Task>{
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.tasks$.pipe(
+                take(1),
+                switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task/'+ taskId+'/'+ userId, null).pipe(
+                    map((updatedTask: any) => {
+                        updatedTask= updatedTask.data
+                        const taskindex = tasks.findIndex(x=>x.id === updatedTask.id);
+                        if(taskindex > -1){
+                            tasks.splice(taskindex,1,updatedTask);
+                        }
+                        this._tasks.next([...tasks])
+                        this._taskSelected.next(updatedTask)
+                        return updatedTask;
+                    })
+                ))
+            ))
+        )
+    }
 
     updateTaskStatusOrder(statusId: any, order: string, taskId: number): Observable<Task>{
         return this.currentBoard$.pipe(
@@ -538,7 +547,6 @@ export class TaskServiceService {
                             tasks.splice(checklistIndex,1,updatedTask.task);
                         }
                         this._tasks.next(tasks)
-                        debugger;
                         console.log(updatedTask);
                         this._taskOrder.next(updatedTask.order);
                         return updatedTask;
@@ -577,6 +585,7 @@ export class TaskServiceService {
     {
         return this._httpClient.post<Users[]>(this.apiUrl+'api/board/'+ boardId +'/'+userId,null).pipe(
             map((data: any): Users[] => {
+                debugger;
                 this.getBoard(boardId).subscribe((board: Board) => {
                 })
                 this._boardUsers.next(data.data);

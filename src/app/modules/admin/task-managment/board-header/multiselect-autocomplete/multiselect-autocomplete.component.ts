@@ -66,10 +66,11 @@ export class MultiselectAutocompleteComponent implements OnInit {
 
   optionClicked = (event: Event, data: Users): void => {
     event.stopPropagation();
-    this.toggleSelection(data);
+    // this.toggleSelection(data);
   };
 
   toggleSelection = (data: Users): void => {
+
     data.selected = !data.selected;
 
     if (data.selected === true) {

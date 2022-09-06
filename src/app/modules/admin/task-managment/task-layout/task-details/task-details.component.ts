@@ -21,6 +21,8 @@ import { combineLatest, debounceTime, filter, map, shareReplay, Subject, takeUnt
 export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
   @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
+  private _tagsPanelOverlayRef: OverlayRef;
+
   apiUrl = environment.apiUrl
   taskSeleced:Task|any;
   taskOrSubtask = "";
@@ -28,8 +30,8 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   filteredTags: Task[];
   tagsEditMode: boolean = false;
   tags: Task[];
-  private _tagsPanelOverlayRef: OverlayRef;
-
+  boardUsers$= this._taskService.boardUsers$;
+  task: { users_assigned: Users[]; checkListcompleted: number; id: number; title: string; raport: string; deadline: string; restrictions: string; description: string; status: number; priority: number; location: number; board_id: number; user: Users; departments: number[]; has_expired: boolean; subtasks_count: number; checklists: import("c:/Users/Bleron Restelica/Desktop/Opus/src/app/modules/admin/task-managment/_models/task").TaskCheckList[]; file: any; checkListInfo: any; };
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -56,7 +58,9 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.taskForm = this._formBuilder.group({
       checklist:'',
-      file:['']
+      file:[''],
+      users_assigned    : [[]],
+
   });
     //dont touch
     this._activatedroute.data.subscribe(res=>{
@@ -68,9 +72,9 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         this._kanbanView.matDrawer.open();
       }
     })
-
     this._taskService.taskSelectedDetails$.subscribe(res=>{
       this.taskSeleced = res;
+      this.task = res
     })
     
 
@@ -192,11 +196,33 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
+  addUsersToTask(userId: number): void{
+    this._taskService.assignUserTask(this.task.id, userId).subscribe((res)=>{
+        const usersAssigned = this.taskForm.get('users_assigned').value;
+        const index = usersAssigned.findIndex(object => +object === +userId);
+        if (index < 0) {
+            usersAssigned.push(userId);
+        }else{
+            usersAssigned.splice(index,1);
+        }
+        this.taskForm.get('users_assigned').patchValue(usersAssigned);
+        console.log(this.taskForm.get('users_assigned').value);
+    });
+  }
 
+  toggleTaskUser(user: number): void
+  {
+      this.addUsersToTask(user);
+  }
 
-
-
-
+  userCheck(user: any): boolean{
+    const index = this.task.users_assigned.map(x=>x.id).findIndex(x=>x === user)
+    if(index >= 0){
+        return true;
+    }else{
+        return false;
+    }
+}
 
   openTagsPanel(): void
   {
@@ -284,40 +310,24 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
      *
      * @param event
      */
-    filterTagsInputKeyDown(event): void
-    {
-        // Return if the pressed key is not 'Enter'
-        if ( event.key !== 'Enter' )
-        {
-            return;
-        }
-
-        // If there is no tag available...
-        if ( this.filteredTags.length === 0 )
-        {
-            // Create the tag
-
-            // Clear the input
-            event.target.value = '';
-
-            // Return
-            return;
-        }
-
-        // If there is a tag...
-        const tag = this.filteredTags[0];
-        const isTagApplied = this.taskSeleced.find(id => id.id === tag.id);
-
-        // If the found tag is already applied to the task...
-        if ( isTagApplied )
-        {
-            // Remove the tag from the task
-        }
-        else
-        {
-            // Otherwise add the tag to the task
-        }
-    }
+    //  filterDepartments(event): void 
+    //  {
+    //      // Get the value
+    //      const value = event.target.value.toLowerCase();
+ 
+    //      // Filter the tags
+    //      this.filteredUsers = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
+    //  }
+ 
+     /**
+      * Filter tags input key down event
+      *
+      * @param event
+      */
+     filterTagsInputKeyDown(event): void
+     {
+       
+     }
 
    
   
