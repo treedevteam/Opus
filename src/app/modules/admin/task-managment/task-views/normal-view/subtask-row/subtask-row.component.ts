@@ -9,39 +9,37 @@ import { Task, Board, TaskModified } from '../../../_models/task';
 import { TaskServiceService } from '../../../_services/task-service.service';
 
 @Component({
-  selector: 'app-task-row',
-  templateUrl: './task-row.component.html',
-  styleUrls: ['./task-row.component.scss']
+  selector: 'app-subtask-row',
+  templateUrl: './subtask-row.component.html',
+  styleUrls: ['./subtask-row.component.scss']
 })
-export class TaskRowComponent implements OnInit {
+export class SubtaskRowComponent implements OnInit {
   @Input() task: TaskModified;
   apiUrl = environment.apiUrl;
   myGroup: FormGroup;
   board:Board;
   formShare: FormGroup;
   showTasks = false;
-  subtask$= this._taskServiceService.allSubTasks$;
+  subtask$ = this._taskServiceService.allSubTasks$;
+  
   constructor(private _taskServiceService:TaskServiceService,
     private _formBuilder:FormBuilder) { }
+
+    
   statuses$ = this._taskServiceService.statuses$
   priorities$ = this._taskServiceService.priorities$
-  subtasksOpened$ = this._taskServiceService.curretnSubtasksOpened$.pipe(
-    tap(res=>{
-      console.log(res);
-      this.showTasks = this.task.id === res;
-    })
-  )
   
-  ngOnInit(): void {
 
+
+  ngOnInit(): void {
     this.formShare = this._formBuilder.group({
-        boards: [''],
-    });
-    
-    this.myGroup = this._formBuilder.group({
-        title: [this.task.title, Validators.required],
-        deadline: [this.task.deadline, Validators.required],
-    });
+      boards: [''],
+  });
+  
+  this.myGroup = this._formBuilder.group({
+      title: [this.task.title, Validators.required],
+      deadline: [this.task.deadline, Validators.required],
+  });
   }
 
   isOverdue(data): boolean {
@@ -49,18 +47,18 @@ export class TaskRowComponent implements OnInit {
   }
 
   selectPriority(priority: Priorities){
-      this._taskServiceService.updateTaskPriority(priority.id, this.task.id).subscribe(res=>{
+      this._taskServiceService.subtaskUpdateTaskPriority(priority.id, this.task.id).subscribe(res=>{
       })
   }
 
   selectStatus(status: Status){
-      this._taskServiceService.updateTaskStatus(status.id, this.task.id).subscribe((res)=>{
+      this._taskServiceService.subtaskUpdateTaskStatus(status.id, this.task.id).subscribe((res)=>{
       });
   }
 
   updateField() {
     this.myGroup.controls['deadline'].value
-    this._taskServiceService.updateTaskDeadline(this.convertDate(this.myGroup.controls['deadline'].value), this.task.id).subscribe(res=>{
+    this._taskServiceService.subtaskUpdateTaskDeadline(this.convertDate(this.myGroup.controls['deadline'].value), this.task.id).subscribe(res=>{
         console.log(res);
     });
   }
@@ -72,7 +70,7 @@ export class TaskRowComponent implements OnInit {
   }
 
   updateTitle(){
-    this._taskServiceService.updateTaskTitle(this.myGroup.controls['title'].value, this.task.id).subscribe();
+    this._taskServiceService.updateSubtaskTitle(this.myGroup.controls['title'].value, this.task.id).subscribe();
   }
 
   sahreTaskPopover(){
@@ -81,14 +79,6 @@ export class TaskRowComponent implements OnInit {
 
 
 
-  showSubtasks(){
-    if(!this.showTasks){
-      this._taskServiceService.getSubtasks$(this.task.id).subscribe()
-    }else{
-      this._taskServiceService.closeSubtasks();
-
-    }
-  }
 
 
 
@@ -101,5 +91,4 @@ export class TaskRowComponent implements OnInit {
   {
       return item.id || index;
   }
-
 }

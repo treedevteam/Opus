@@ -1,3 +1,5 @@
+import { Status } from "../../statuses/model/status";
+
 export interface Task
 {
     id: number;
@@ -20,6 +22,27 @@ export interface Task
     checkListInfo:any
 }
 
+export interface TaskModified
+{
+    id: number;
+    title: string;
+    raport: string;
+    deadline: string;
+    restrictions: string;
+    description: string ;
+    status: Status;
+    priority: number;
+    location: number;
+    board_id: number;
+    user: Users;
+    users_assigned: number[];
+    departments: number[];
+    has_expired: boolean;
+    subtasks_count: number;
+    checklists: TaskCheckList[];
+    file: any;
+    checkListInfo:any
+}
 export interface Users{
     id: number;
     name: string;
@@ -31,7 +54,7 @@ export interface Users{
     selected: boolean;
 }
 
-export interface TaskLogs{
+export interface Logs{
     message?: string;
     created_at: string;
     type: {
@@ -47,7 +70,7 @@ export interface TaskCheckList{
     value: number;
 }
 
-export interface TaskComment{
+export interface Comments{
     id: number;
     text: string;
     image: string;
@@ -56,6 +79,7 @@ export interface TaskComment{
     created_at: string;
     mentions: number[];
 }
+
 
 export interface Board{
     id: number;

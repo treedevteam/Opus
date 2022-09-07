@@ -90,7 +90,6 @@ export class BoardHeaderComponent implements OnInit {
    dueDateSelect;
    onNgModelChangedueDate($event){
       this.dueDateSelect=$event;
-      ;
       if($event.length === 0){
         this._taskServiceService.dueData$.next(null)
       }else{

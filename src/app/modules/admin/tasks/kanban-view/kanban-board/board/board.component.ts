@@ -249,7 +249,6 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         });
       }
       assignUserToBoard(userId: number){
-        
         this._taskService.assignUserToBoard(this.currentBoardId , userId).subscribe((res)=>{
           console.log(res);
         });

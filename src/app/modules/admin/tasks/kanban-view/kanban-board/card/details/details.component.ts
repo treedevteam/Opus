@@ -138,7 +138,6 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
                     
                     console.log(value,'value');
                     // Update the card on the server
-                    
                     if(this.data === 'Task'){
                          const formData = new FormData();
                         const result  = Object.assign({},this.cardForm.value);
@@ -338,7 +337,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
 
     
   onFileChange(pFileList: File): void {
-    ;
+    debugger;
     this.uploaded = true;
     this.file = pFileList[0];
 

@@ -1,0 +1,43 @@
+<a
+    class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card"
+    [routerLink]="['subtask', card.id]"
+    
+    >
+    <!-- Cover image -->
+    <div (click)="openImagePopup(apiUrl+'storage/'+card.file)" class="cover-image" *ngIf="card.file ! null">
+        <img class="w-100 h-25"  [src]="apiUrl+'storage/' + card.file">
+    </div>
+    <!-- Title -->
+    <div class="flex align-center" style="width: 100%; justify-content: space-between; align-items: center;">
+        <a 
+        [routerLink]="['task', card.id]">
+        <div class="text-lg font-medium leading-5 mb-2">{{card.title}}</div>
+        </a>
+    </div>
+
+    <!-- Labels -->
+    <ng-container *ngIf="card.priority">
+        <div >
+            <div class="flex flex-wrap -mx-1 -mb-2 mb-2">
+                    <div class="mx-1 mb-2 py-0.5 px-3 rounded-full text-sm font-medium text-gray-500  dark:text-gray-300 " style="color: #000!important;" [ngStyle]="{'background-color': card.priority.color + '80'}">
+                        {{card.priority.name}}
+                    </div>
+            </div>
+        </div>
+    </ng-container>
+    <!-- Due date -->
+    <ng-container *ngIf="card.deadline">
+        <div
+            class="flex items-center rounded text-sm font-medium leading-5 text-secondary mb-2"
+            [ngClass]="{'text-red-600': isOverdue(card.deadline)}">
+            <mat-icon
+                class="icon-size-4 text-current"
+                [svgIcon]="'heroicons_outline:clock'"></mat-icon>
+            <div class="ml-1">
+                {{card.deadline | date: 'longDate'}}
+            </div>
+        </div>
+        
+    </ng-container>
+    </a>
+   

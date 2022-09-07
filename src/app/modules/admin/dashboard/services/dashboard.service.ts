@@ -48,7 +48,6 @@ export class DashboardService {
     getPostsDepartment(): Observable<Posts[]> {
         return this._httpClient.get<Posts[]>(this.apiUrl + 'api/posts').pipe(
             map((data: any): Posts[] => {
-                ;
                 this._departmentPosts.next(data.data);
                 return data.data;
             })

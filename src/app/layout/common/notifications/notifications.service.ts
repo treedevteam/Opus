@@ -117,6 +117,7 @@ export class NotificationsService
      *
      * @param id
      */
+<<<<<<< HEAD
     delete(id: string): Observable<any>
     {
         return this.notifications$.pipe(
@@ -126,6 +127,16 @@ export class NotificationsService
 
                     // Find the index of the deleted notification
                     const index = notifications.findIndex(item => item.id ===isDeleted.id);
+=======
+    // delete(id: any): Observable<boolean>
+    // {
+    //     return this.notifications$.pipe(
+    //         take(1),
+    //         switchMap(notifications => this._httpClient.delete<boolean>('api/common/notifications', {params: {id}}).pipe(
+    //             map((isDeleted: boolean) => {
+    //                 // Find the index of the deleted notification
+    //                 const index = notifications.findIndex(item => item.id === id);
+>>>>>>> 0e0231863fd94cb34917d903412f1f7e713b8018
 
                     // Delete the notification
                     notifications.splice(index, 1);
@@ -143,21 +154,31 @@ export class NotificationsService
     /**
      * Mark all notifications as read
      */
-    // markAllAsRead(): Observable<boolean>
-    // {
-    //     return this.notifications$.pipe(
-    //         take(1),
-    //         switchMap(notifications => this._httpClient.get<boolean>('api/common/notifications/mark-all-as-read').pipe(
-    //             map((isUpdated: boolean) => {
+    markAllAsRead(): Observable<boolean>
+    {
+        return this.notifications$.pipe(
+            take(1),
+            switchMap(notifications => this._httpClient.get<boolean>('api/common/notification/1/read').pipe(
+                map((isUpdated: boolean) => {
 
-    //                 // Go through all notifications and set them as read
-    //                 notifications.forEach((notification, index) => {
-    //                     notifications[index].read = true;
-    //                 });
+                    // Go through all notifications and set them as read
+                    notifications.forEach((notification, index) => {
+                        notifications[index].status = 0;
+                    });
 
-    //                 // Update the notifications
-    //                 this._notifications.next(notifications);
+                    // Update the notifications
+                    this._notifications.next(notifications);
 
+                    // Return the updated status
+                    return isUpdated;
+                })
+            ))
+        );
+    }
+
+    
+
+<<<<<<< HEAD
     //                 // Return the updated status
     //                 return isUpdated;
     //             })
@@ -184,4 +205,6 @@ export class NotificationsService
             )
         ));
     }
+=======
+>>>>>>> 0e0231863fd94cb34917d903412f1f7e713b8018
 }

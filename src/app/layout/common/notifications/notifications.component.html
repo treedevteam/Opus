@@ -89,19 +89,20 @@
                             [matTooltip]="notification.read ? 'Mark as unread' : 'Mark as read'">
                             <span
                                 class="w-2 h-2 rounded-full"
-                                [ngClass]="{'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': notification.read,
-                                            'bg-primary': !notification.read}"></span>
+                                [ngClass]="{'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': notification.read ?
+                                            'bg-primary': !notification.read}">
+                                        </span>
                         </button>
                         <!-- Remove -->
-                        <button
+                        <!-- <button
                             class="w-6 h-6 min-h-6 sm:opacity-0 sm:group-hover:opacity-100"
                             mat-icon-button
-                            (click)="delete(notification.id)"
+                            (click)="delete(notification.id.id)"
                             [matTooltip]="'Remove'">
                             <mat-icon
                                 class="icon-size-4"
                                 [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                        </button>
+                        </button> -->
                     </div>
 
                 </div>

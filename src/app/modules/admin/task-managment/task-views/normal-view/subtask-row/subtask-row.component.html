@@ -1,4 +1,4 @@
-<div [id]="'task-' + task.id"
+<div [id]="'subtask-' + task.id"
     class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted"
     cdkDrag
     [cdkDragLockAxis]="'y'"
@@ -10,60 +10,7 @@
     *cdkDragPreview></div>
     <!-- Task content -->
     <div class="relative flex items-center h-full pl-4 ">
-        <!-- Drag handle -->
-        <div style="width: 24px;">
-            <div
-            class="md:hidden  flex items-center justify-center inset-y-0 left-0 w-8 cursor-move md:group-hover:flex"
-            cdkDragHandle>
-            <mat-icon
-                class="icon-size-5 text-hint"
-                [svgIcon]="'heroicons_solid:menu'"></mat-icon>
-            </div>
-
-        </div>
-
-        <div class="relative" style="position: relative;">
-            <button style="position: relative;" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                <mat-icon style="position: relative !important;top: 0;left: 0;
-                bottom: 0; right: 0;" class="three-dots">more_vert</mat-icon>
-            </button>
-        </div>
-        <mat-menu #menu="matMenu">
-            <button (click)="sahreTaskPopover()"  [matMenuTriggerFor]="dateTimeMenu" mat-menu-item>Share task</button>
-            <mat-menu class="date-range-menu" #dateTimeMenu="matMenu" >
-                <div class="share_task_popover"  (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-                    <div class="share_task_popover_header">
-                        <span class="">Share task</span>
-                        <a href="#" class=""></a>
-                    </div>
-
-                    <form [formGroup]="formShare" (ngSubmit)="onSubmit()"  #shareTaskNgForm="ngForm">
-                        <div class="form_body_popover">
-                            <mat-form-field style="width: 100%;" >
-                                <mat-select multiple [formControlName]="'boards'" disableOptionCentering>
-                                <!-- <mat-optgroup label="{{department.name}}" *ngFor="let department of departmentsWithBoard$ | async">
-                                    <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
-                                </mat-optgroup> -->
-                                </mat-select>
-                            </mat-form-field> 
-                        </div>
-                        <button type="submit" mat-raised-button color="primary">Share</button>
-                    </form>
-                </div>
-            </mat-menu>
-         </mat-menu>
-
-        <div class="subtasks" matBadgeColor="warn" (click)="showSubtasks()" [matBadge]="task.subtasks_count" matBadgeSize="small" matBadgePosition="before">
-            <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
-        </div>
-                    
-
-                <!-- Selected indicator -->
-                <div>
-                    <div
-                        class="z-10 absolute -top-px right-0 -bottom-px flex flex-0 w-1 bg-primary">
-                    </div>
-                </div>
+        
                 <!-- User -->
                 <div class="flex items-center justify-center inset-y-0 left-0 me-3">
                     <img [matTooltip]="task.user.name" [matTooltipPosition]="'above'"
@@ -78,9 +25,8 @@
                         <!-- ////////////////////// -->
                         <editable (update)="updateTitle()" style="display: flex; align-items: center; width: fit-content;">
                             <ng-template viewMode>
-                                <a [routerLink]="'task/' + task.id" class="title_task_rwo truncate">
+                                <a [routerLink]="'subtask/' + task.id" class="title_task_rwo truncate">
                                     {{task.title}} 
-                                   
                                 </a>
                             </ng-template>
                             <ng-template editMode>
@@ -104,16 +50,6 @@
                 </button>
                 </ng-container>
 
-                <!-- Users Assign -->
-                <ng-container>
-                    <div class="checkListTable mr-4"
-                    [ngClass]="{
-                        'checkListTablegrey': task.checkListInfo.completed !== task.checkListInfo.total || task.checkListInfo.total === 0,
-                        'checkListTablegreen': task.checkListInfo.completed === task.checkListInfo.total && task.checkListInfo.total !== 0}">
-                        <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
-                        {{task.checkListInfo.completed}}/{{task.checkListInfo.total}}
-                    </div>
-                </ng-container>
                 <!-- Users Assign -->
                 <div class="me-3">
                     <ng-container class="mt-5">
@@ -180,13 +116,14 @@
                     </div>
                 </ng-container> 
 
+
                 <!-- Due date -->
-                <div  class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
+                <div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
+                
                 [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !task.deadline,
-                        'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task.deadline && !isOverdue(task.deadline) || task.status?.name ==='Done',
-                        'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task.deadline && isOverdue(task.deadline) && task.status?.name !=='Done'}"
+                        'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task.deadline && !isOverdue(task.deadline) || task.status?.name === 'Done',
+                        'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task.deadline && isOverdue(task.deadline) && task.status?.name !== 'Done' }"
                         (click)="dueDatePicker.open()">
-                        
                 <mat-icon class="icon-size-5 text-current"
                     [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                 <span class="ml-2 text-md font-medium">
@@ -194,6 +131,7 @@
                         date:'LLL dd yyyy'}}</ng-container>
                     <ng-container *ngIf="!task.deadline">Not set</ng-container>
                 </span>
+
                 <mat-form-field
                     class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
                     <div [formGroup]="myGroup">
@@ -212,17 +150,6 @@
             </div>
         </div>
 
-            <ng-container *ngIf="subtasksOpened$ | async"></ng-container>
-            <ng-container *ngIf="showTasks">
-                <ng-container *ngFor="let subtask of subtask$ | async; let first = first;" >
-                    <app-subtask-row [task]="subtask"></app-subtask-row>
-                </ng-container>
-                <app-store-task-row [taskId]="task.id"></app-store-task-row>
-            </ng-container>
-
-
-
-        
 <mat-menu #stautsMenu="matMenu">
     <!-- Low -->
     <button *ngFor="let status of statuses$ | async" mat-menu-item (click)="selectStatus(status)">
