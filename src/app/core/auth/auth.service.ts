@@ -88,7 +88,7 @@ export class AuthService
     signIn(credentials): Observable<any>
     {
 
-        debugger;
+        ;
         // Throw error, if the user is already logged in
         if ( this._authenticated )
         {

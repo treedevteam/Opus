@@ -40,7 +40,7 @@ export class CommentsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+    console.warn(this.taskComments$);
     this._tasksService.currentBoardUsers$.subscribe((res) => {
       this.items = res;
     });

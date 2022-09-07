@@ -1,3 +1,4 @@
+/* eslint-disable  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap } from 'rxjs';
@@ -113,7 +114,7 @@ export class TaskServiceService {
     map((data: any): Task[] => {
         this._tasks.next(data.tasks)
         console.log(data.order,"ODERRIIIIIIIK");
-        debugger
+        
         console.log(data);
         this._taskOrder.next(data.order)
         return data.tasks;
@@ -213,7 +214,7 @@ export class TaskServiceService {
   
   //Ko duhet te ndrrohet
   dataFilter(data, type:MatRadioChange):boolean{
-    debugger;
+    ;
         switch(type.value) {
             case 0:
                 return moment(data, moment.ISO_8601).isSame(moment(), 'day')
@@ -286,7 +287,7 @@ export class TaskServiceService {
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task_status/' + taskId , {status: statusId,order: board.board_order,board_id:board.id}).pipe(
                     map((updatedTask: any) => {
                         updatedTask = updatedTask.task;
-                        debugger
+                        
                         const checklistIndex = tasks.findIndex(d => d.id === updatedTask.id);
                         if(checklistIndex > -1){
                             tasks.splice(checklistIndex,1,updatedTask);
@@ -348,7 +349,7 @@ export class TaskServiceService {
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task/store/board' , {...form,board_id:board.id}).pipe(
                     map((newTask: any) => {
                         this._tasks.next([newTask.task,...tasks])
-                        debugger;
+                        ;
                         console.log(newTask);
                         this._taskOrder.next(newTask.board_order)
                         return newTask;
@@ -371,7 +372,7 @@ export class TaskServiceService {
                             tasks.splice(checklistIndex,1,updatedTask.task);
                         }
                         this._tasks.next(tasks)
-                        debugger;
+                        ;
                         console.log(updatedTask);
                         this._taskOrder.next(updatedTask.order);
                         return updatedTask;

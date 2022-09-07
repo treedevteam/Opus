@@ -26,7 +26,7 @@ import { BoardsComponent } from './boards/boards.component';
 import { StoreBoardsComponent } from './boards/store-boards/store-boards.component';
 import { UpdateBoardsComponent } from './boards/update-boards/update-boards.component';
 import {MatSelectModule} from '@angular/material/select';
-
+import { Title } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -71,7 +71,9 @@ import {MatSelectModule} from '@angular/material/select';
                 monthYearA11yLabel: 'MMMM YYYY'
             }
         }
-    }
-]
+    },
+  Title
+],
+
 })
 export class DepartmentsModule { }

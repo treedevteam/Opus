@@ -6,6 +6,7 @@ export interface FuseNavigationItem
     title?: string;
     subtitle?: string;
     admin?:boolean;
+    private?:any;
     type:
         | 'aside'
         | 'basic'

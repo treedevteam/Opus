@@ -24,7 +24,7 @@
     >
         <ng-container   *ngIf="taskFile$ | async as file">
             <div class="w-40 h-40 m-3 pb-3 d-flex justify-content-center align-items-center">
-                <img [src]="apiUrl+'storage/' + file.file">
+        <img [src]="apiUrl+'storage/' + file.file">
             </div>
         </ng-container>
         <div

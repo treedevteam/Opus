@@ -20,6 +20,7 @@ import { MatTableModule } from '@angular/material/table';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatListModule} from '@angular/material/list';
 import { HttpClientModule } from '@angular/common/http';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 export const routes: Route[] = [
     {
@@ -58,7 +59,8 @@ export const routes: Route[] = [
     MatTableModule,
     MatSnackBarModule,
     MatListModule,
-    HttpClientModule
+    HttpClientModule,
+    MatCheckboxModule
   ]
 })
 export class UsersModule { }

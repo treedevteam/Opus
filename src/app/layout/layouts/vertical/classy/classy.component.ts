@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/semi */
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -67,9 +68,10 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
         console.warn(this._userService._user$)
         // this.userLoginInfo();
         this._navigationService.getmyBoards().subscribe();
+        this._navigationService.getPrivateBoards().subscribe()
         // Subscribe to navigation data
-        combineLatest(this._navigationService.navigation$, this._userService.user$,this._navigationService.myboards$)
-        .subscribe(([navigation, user, boards])=>{
+        combineLatest(this._navigationService.navigation$, this._userService.user$,this._navigationService.myboards$, this._navigationService.privateBoards$)
+        .subscribe(([navigation, user, boards,privateBoards])=>{
             console.log(navigation,user);
             if(user.role.name === Role.Admin){
                 this.navigation = navigation.default.filter(x=> x.admin === true)
@@ -83,9 +85,9 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
                 //     link : '/departments',
                 //     admin: false,
                 // }
-                
                 const myBoards = boards.map(x=>
                     (
+                        console.log(x),
                         {
                             id   : 'Boards',
                             title: x.name,

@@ -1,0 +1,74 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+
+
+    <!-- Main -->
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+        <div class="w-full max-w-screen-xl mx-auto">
+            <!-- Tabs -->
+            <mat-tab-group
+                [animationDuration]="'0'">
+                <!-- Home -->
+                <mat-tab >
+                    <ng-template matTabContent>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
+                            <!-- Summary -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Users</div>
+         
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">{{(userCount$ |  async).users}}</div>
+                                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500">Amount of users</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Overdue -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Boards</div>
+  
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">{{(userCount$ |  async).board}}</div>
+                                    <div class="text-lg font-medium text-red-600 dark:text-red-500">Boards</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Issues -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Posts</div>
+
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">{{(userCount$ |  async).posts}}</div>
+                                    <div class="text-lg font-medium text-amber-600 dark:text-amber-500">Posts</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Features -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="text-lg font-medium tracking-tight leading-6 truncate">Tasks</div>
+
+                                <div class="flex flex-col items-center mt-2">
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">{{(userCount$ |  async).tasks}}</div>
+                                    <div class="text-lg font-medium text-green-600 dark:text-green-500">Tasks active</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                        <div class="text-md font-medium truncate">Subtasks:</div>
+                                        <div class="ml-1.5 text-lg font-semibold">{{(userCount$ |  async).subtasks}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+
+</div>

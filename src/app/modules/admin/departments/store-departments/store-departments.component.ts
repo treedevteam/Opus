@@ -111,6 +111,7 @@ export class StoreDepartmentsComponent implements OnInit {
   }
 
   storeDepartmentfunc(): any {
+    ;
     const formData = new FormData();
     const result = Object.assign({}, this.storeDepartment.value);
     formData.append('name', this.storeDepartment.get('name').value);

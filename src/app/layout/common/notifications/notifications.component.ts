@@ -284,10 +284,23 @@ export class NotificationsComponent implements OnInit, OnDestroy
         if ( this.notifications && this.notifications.length )
         {
             //per ma von
-            // count = this.notifications.filter(notification => notification.status === 0).length;
-            count = this.notifications.length;
+            count = this.notifications.filter(notification => notification.status === 0).length;
+            // count = this.notifications.length;
         }
 
         this.unreadCount = count;
+    }
+
+    markAsread(id:any){
+        this._notificationsService.markAsRead(id).subscribe((res)=>{
+            console.warn(res,'res from  service');
+        })
+    }
+
+    ///Delete
+    delete(id:any){
+        this._notificationsService.delete(id).subscribe((res)=>{ 
+            console.log(res,'res from vservice');
+        })
     }
 }

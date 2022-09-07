@@ -7,7 +7,7 @@ import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDrawer } from '@angular/material/sidenav';
-import { BehaviorSubject, catchError, combineLatest, EMPTY, filter, fromEvent, map, shareReplay, Subject, takeUntil, tap, Subscription } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, EMPTY, filter, fromEvent, map, shareReplay, Subject, takeUntil, tap, Subscription, mergeMap } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import moment from 'moment';
@@ -27,6 +27,8 @@ import { TasksDetailsComponent } from '../details/details.component';
 import { BoardsService } from '../../departments/boards/boards.service';
 import { UserService } from 'app/core/user/user.service';
 import { MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { NavigationEnd } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 
 @Component({
@@ -84,7 +86,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     selectedTask: Task;
     filteredUsers: any[];
     myTask: TaskWithDepartment[];
-
+    departmentName:any
     orderModified$ = this._tasksService.currentBoardOrderTasks$;
 
     departmentsWithBoard$ = combineLatest([
@@ -187,6 +189,7 @@ export class TasksListComponent implements OnInit, OnDestroy
         private _viewContainerRef: ViewContainerRef,
         private dialog: MatDialog,
         private userService: UserService,
+        private titleService: Title,
 
 
     )
@@ -209,6 +212,14 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {
+        this.departmentTasksWithStatusPriority$.subscribe((res)=>{
+            debugger;
+            console.log(res.name)
+            this.departmentName = res.name;
+            this.titleService.setTitle(this.departmentName);
+        }),
+
+ 
         //fORM
         this.formShare = this._formBuilder.group({
             boards: [''],
@@ -397,7 +408,7 @@ export class TasksListComponent implements OnInit, OnDestroy
 
     }
     assignUserToBoard(userId: number){
-        debugger;
+        ;
      this._tasksService.assignUserToBoard(this.board_id , userId).subscribe((res)=>{
         console.warn(res);
      })

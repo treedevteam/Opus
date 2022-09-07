@@ -8,6 +8,8 @@ import { environment } from '../../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class DepartmentsService {
   apiUrl = environment.apiUrl;
 
@@ -82,4 +84,6 @@ export class DepartmentsService {
       map((res: any): Departments =>res)
     );
   }
+
+  
 }

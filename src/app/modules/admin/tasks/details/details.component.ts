@@ -850,7 +850,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         return item.id || index;
     }
     // onFileChange(event): void{
-    //     debugger;
+    //     ;
     //     const file: File = event.target.files[0];
     //     console.log(file);
     //     if(file){
@@ -880,7 +880,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
         
   onFileChange(pFileList: File): void {
-    debugger;
+    ;
     this.uploaded = true;
     this.file = pFileList[0];
 

@@ -38,6 +38,7 @@
                 <!-- {{taskComments | json}} -->
                 <ng-container *ngFor="let comment of taskComments$ | async">
                     <div class="one_comment d-flex" *ngIf="!comment.is_his">
+                        {{  apiUrl + 'storage/' + comment.user_image}}
                         <img
                             style="
                                 width: 35px;
@@ -46,14 +47,14 @@
                                 margin: 5px 0;
                                 object-fit: cover;
                             "
-                            src="{{
-                                apiUrl + 'storage/' + comment.user_id.image
-                            }}"
+                            [src]="
+                                apiUrl + 'storage/' + comment.user_image
+                            "
                             alt=""
                         />
                         <!-- {{comment.user | json}} -->
                         <div class="px-3">
-                            <h5 class="bold">{{ comment.user_id.name }}</h5>
+                            <h5 class="bold">{{ comment.user_name}}</h5>
                             <div class="relative max-w-3/4 py-2 rounded-lg">
                                 <!-- Speech bubble tail -->
                                 <div
@@ -87,9 +88,18 @@
                             <div
                                 class="absolute bottom-0 w-3 text-blue-500 -right-1 -mr-px mb-px"
                             ></div>
+                            <!-- user proifle -->
+                            <div class="flex items-center justify-end inset-y-0 left-0 me-3">
+                                <img [matTooltip]="comment.user_name" [matTooltipPosition]="'above'"
+                                style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
+                                src="{{apiUrl+ 'storage/'+comment.user_image}}" alt=""
+                                onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                                <p>{{comment.user_name | uppercase}}:</p>
+                            </div>
                             <!-- Message -->
                             <div
                                 class="leading-5 cursor-pointer text_container"
+                                style="word-break: break-all;"
                             >
                                 {{ comment.text }}
                                 <mat-icon

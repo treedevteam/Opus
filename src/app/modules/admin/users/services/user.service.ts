@@ -58,7 +58,7 @@ export class UserService {
       take(1),
       switchMap(users => this.http.delete<Users>(this.apiUrl+'api/user/delete/' + $id).pipe(
           map((deletedUser: any) => {
-            const index = users.findIndex(x=>x.id == $id);
+            const index = users.findIndex(x=>x.id === $id);
             users.splice(index,1);
             this._users.next(users)
             return deletedUser;

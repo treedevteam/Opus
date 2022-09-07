@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { combineLatest, map, shareReplay, tap } from 'rxjs';
@@ -40,7 +41,7 @@ export class TasklistLayoutComponent implements OnInit {
   dropped(event: CdkDragDrop<Task[]>): void
   {
       // Move the item in the array
-      debugger;
+      ;
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       let order = event.container.data.map(x=>x.id) 
       const currentTask = event.container.data[event.currentIndex];

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -23,6 +25,7 @@ export class BoardsComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    console.warn(this.$boards);
   }
 
 
