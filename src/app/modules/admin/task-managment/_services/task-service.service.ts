@@ -536,6 +536,27 @@ export class TaskServiceService {
         )
     }
 
+
+    assignUserSubtask(taskId: number, userId: number): Observable<Task>{
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.subtasks$.pipe(
+                take(1),
+                switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/subtask/'+ taskId+'/'+ userId, null).pipe(
+                    map((updatedTask: any) => {
+                        updatedTask= updatedTask.data
+                        const taskindex = tasks.findIndex(x=>x.id === updatedTask.id);
+                        if(taskindex > -1){
+                            tasks.splice(taskindex,1,updatedTask);
+                        }
+                        this._subtask.next([...tasks])
+                        this._subtaskSelected.next(updatedTask)
+                        return updatedTask;
+                    })
+                ))
+            ))
+        )
+    }
+
     updateTaskStatusOrder(statusId: any, order: string, taskId: number): Observable<Task>{
         return this.currentBoard$.pipe(
             switchMap(board=> this.tasks$.pipe(
@@ -571,8 +592,9 @@ export class TaskServiceService {
 
     getSubtask(id: number): Observable<Task>
     {
-        return this._httpClient.get<Task>(this.apiUrl+'api/task/'+ id).pipe(
+        return this._httpClient.get<Task>(this.apiUrl+'api/subtask/'+ id).pipe(
             map((data: any): Task => {
+                debugger;
                 this._subtaskSelected.next(data.data);
                 return data.tasks;
             }),
@@ -743,6 +765,27 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
                 ))
             ))
         )
+    }
+
+    deleteSubtask(subtaskId: number): Observable<Task>{
+        return this.subtasks$.pipe(
+            take(1),
+            switchMap(subtasks => this._httpClient.delete<Task>(this.apiUrl+'api/subtask/delete/'+subtaskId).pipe(
+                map((deletedSubtask: any) => {
+                    const taskindex = subtasks.findIndex(x=>x.id === subtaskId);
+                    subtasks.splice(taskindex,1);
+                    this._subtask.next([...subtasks])
+                    return deletedSubtask;
+                    // updatedSubTask= updatedSubTask.data
+                    // const index = subtasks.findIndex(d => d.id === updatedSubTask.id);
+                    // if(index > -1){
+                    //     subtasks.splice(index,1,updatedSubTask);
+                    // }
+                    // this._subtask.next(subtasks)
+                    // return updatedSubTask;
+                })
+            ))
+        );
     }
 
     
