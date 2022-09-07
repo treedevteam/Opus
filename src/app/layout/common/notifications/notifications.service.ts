@@ -117,7 +117,6 @@ export class NotificationsService
      *
      * @param id
      */
-<<<<<<< HEAD
     delete(id: string): Observable<any>
     {
         return this.notifications$.pipe(
@@ -127,7 +126,7 @@ export class NotificationsService
 
                     // Find the index of the deleted notification
                     const index = notifications.findIndex(item => item.id ===isDeleted.id);
-=======
+
     // delete(id: any): Observable<boolean>
     // {
     //     return this.notifications$.pipe(
@@ -136,7 +135,7 @@ export class NotificationsService
     //             map((isDeleted: boolean) => {
     //                 // Find the index of the deleted notification
     //                 const index = notifications.findIndex(item => item.id === id);
->>>>>>> 0e0231863fd94cb34917d903412f1f7e713b8018
+
 
                     // Delete the notification
                     notifications.splice(index, 1);
@@ -178,7 +177,6 @@ export class NotificationsService
 
     
 
-<<<<<<< HEAD
     //                 // Return the updated status
     //                 return isUpdated;
     //             })
@@ -205,6 +203,5 @@ export class NotificationsService
             )
         ));
     }
-=======
->>>>>>> 0e0231863fd94cb34917d903412f1f7e713b8018
+
 }
