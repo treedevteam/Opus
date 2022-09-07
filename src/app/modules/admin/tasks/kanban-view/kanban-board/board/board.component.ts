@@ -10,7 +10,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { combineLatest, map, of, shareReplay, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, filter, map, of, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import * as moment from 'moment';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ScrumboardService } from '../scrumboard.service';
@@ -26,6 +26,8 @@ import { OpenimageTaskComponent } from '../../../openimage-task/openimage-task.c
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'app/core/user/user.service';
 import { JoinTaskDialogComponent } from '../../../join-task-dialog/join-task-dialog.component';
+import { NavigationEnd, Router } from '@angular/router';
+
 @Component({
     selector       : 'scrumboard-board',
     templateUrl    : './board.component.html',
@@ -164,6 +166,7 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
         private dialog: MatDialog,
         private _snackBar: MatSnackBar,
         private userService: UserService,
+        private _router: Router,
     )
     {
     }
@@ -177,6 +180,10 @@ export class ScrumboardBoardComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+
+
+
+
         this.formShare = this._formBuilder.group({
             boards: ['', Validators.required],
         });

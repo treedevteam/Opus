@@ -90,7 +90,7 @@ export class TasksService
         })),
         shareReplay(1),
         tap((res)=>{
-            debugger;
+            ;
             this._notAssignedDepartmentUsers.next(res.users);
         })
         );
@@ -303,7 +303,7 @@ export class TasksService
 
     getUsersDepartment(depId: number): Observable<Users[]>
     {
-        debugger;
+        ;
         return this._httpClient.get<Users[]>(this.apiUrl+'api/users/department/'+depId).pipe(
             map((data: any): Users[] => {
                 this._currentDepartmentUsers.next(data.data);
@@ -314,7 +314,7 @@ export class TasksService
 
     getUsersBoard(boardId: number): Observable<Users[]>
     {
-        debugger
+        
         return this._httpClient.get<Users[]>(this.apiUrl+'api/board/'+ boardId +'/users').pipe(
             map((data: any): Users[] => {
                 console.log(data,'USSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
@@ -552,7 +552,7 @@ editCheckList(form, id: number): Observable<TaskCheckList>{
         switchMap(taskwithchecklist => this._httpClient.post<TaskCheckList>(this.apiUrl+'api/checklist/update/'+id, form).pipe(
             map((updatedcheckList: any) => {
                 updatedcheckList = updatedcheckList.data
-                debugger;
+                ;
                 const taskId = taskwithchecklist.findIndex(x=>x.id === form.task_id);
                 const checkListId = taskwithchecklist[taskId].checklists.findIndex(y=>y.id === updatedcheckList.id);
                 if(checkListId > -1){
@@ -642,7 +642,7 @@ deleteComment(id: number): Observable<any>
 
 ///////////////////////////TASKS////////////////////////////////////////////////////
     getBoardTasks(id: number): Observable<Task2[]>{
-        debugger
+        
         return this._httpClient.get<Task2[]>(this.apiUrl+'api/board/'+id+'/tasks').pipe(
         map((data: any): Task2[] => {
             this._currentBoardTasks.next(data.tasks);
@@ -710,7 +710,7 @@ deleteComment(id: number): Observable<any>
             take(1),
             switchMap(tasks => this._httpClient.post<Task2>(this.apiUrl+'api/task_status/' + taskId ,  {board_id:board_id,status: statusId,order}).pipe(
                 map((updatedTask: any) => {
-                    debugger;
+                    ;
                     const checklistIndex = tasks.findIndex(d => d.id === updatedTask.data.id);
                     if(checklistIndex > -1){
                         tasks.splice(checklistIndex,1,updatedTask.data);
@@ -843,12 +843,12 @@ deleteComment(id: number): Observable<any>
     }
     deleteFileFromTask(id): any{
         console.log('tes')
-        debugger;
+        ;
         return this.currentBoardTasks$.pipe(
             take(1),
             switchMap(tasks => this._httpClient.post(this.apiUrl+`api/delete_file/${id}`,'delete').pipe(
                 map((deletedTask: any) => {
-                    debugger
+                    
                     const index  = tasks.findIndex(x=> x.id === id)
                     console.warn( tasks[index].file)
                     tasks[index].file = null;
@@ -876,7 +876,7 @@ storeSubtask(data): Observable<Task2>{
     take(1),
     switchMap(subTasks => this._httpClient.post<Task2>(this.apiUrl+'api/subtask/store', data).pipe(
         map((newSubTask: any) => {
-            debugger;
+            ;
             this._subtasks.next([...subTasks, newSubTask.data])
             return newSubTask;
         })

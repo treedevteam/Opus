@@ -126,7 +126,7 @@ export class MailboxComposeComponent implements OnInit
 
     //   onFileSelect(event)
     //   {
-    //     debugger;
+    //     ;
     //     if(event){          
     //         this.allFiles = event;
     //         this.composeForm.patchValue({
@@ -143,7 +143,7 @@ export class MailboxComposeComponent implements OnInit
      */
     showCopyField(name: string): void
     {
-        debugger;
+        ;
         // Return if the name is not one of the available names
         if ( name !== 'file' && name !== 'bcc' )
         {

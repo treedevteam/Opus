@@ -19,7 +19,7 @@ export class NavigationService
     apiUrl = environment.apiUrl
     private _navigation: ReplaySubject<Navigation> = new ReplaySubject<Navigation>(1);
     private _boards: ReplaySubject<Boards[]> = new ReplaySubject<Boards[]>(1);
-
+    private _privateBoards: ReplaySubject<Boards[]> = new ReplaySubject <Boards[]>(1);
     /**
      * Constructor
      */
@@ -43,7 +43,9 @@ export class NavigationService
     {
         return this._boards.asObservable();
     }
-
+    get privateBoards$(): Observable<Boards[]>{
+        return this._privateBoards.asObservable();
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
@@ -65,9 +67,19 @@ export class NavigationService
     {
         return this._httpClient.get(this.apiUrl+'api/user/boards/all').pipe(
             tap((navigation:any): any[] => {
-                
-                this._boards.next(navigation.public);
-                return navigation.public;
+                console.warn(navigation);
+                this._boards.next([...navigation.private,...navigation.public]);
+                return [...navigation.private,...navigation.public];
+            })
+        );
+    }
+    getPrivateBoards(): Observable<any[]>
+    {
+        return this._httpClient.get(this.apiUrl+'api/user/boards/all').pipe(
+            tap((navigation:any): any[] => {
+                console.warn(navigation);
+                this._privateBoards.next(navigation.private);
+                return navigation.private
             })
         );
     }

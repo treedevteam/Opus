@@ -14,7 +14,7 @@ export class UserService
 {
     apiUrl = environment.apiUrl
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
-    public _user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+    public _user$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>(null);
 
     /**
      * Constructor
@@ -36,7 +36,7 @@ export class UserService
      {
          return this._user.asObservable();
      }
-    get singleUser$(): Observable<User>
+    get singleUser$(): Observable<User[]>
     {
         return this._user$.asObservable();
     }
@@ -85,6 +85,7 @@ export class UserService
     }
 
     _updateSingleUser($id: number, data: any): Observable<User>{
+        debugger
         return this.user$.pipe(
             take(1),
           switchMap((users) => this._httpClient.post<User> (this.apiUrl+'api/user/update/' + $id, data).pipe(
@@ -100,7 +101,11 @@ export class UserService
       updatee(id,data):Observable<User>{
         return this._httpClient.post<User>(this.apiUrl+'api/user/update/'+id,data).pipe(
             tap((user:any) => {
+                console.warn(user,"user");
+                console.warn(data,"user.data");
                 this._user$.next(user)
             }))
       }
-}
+
+
+      }

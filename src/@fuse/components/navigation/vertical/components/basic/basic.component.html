@@ -15,6 +15,7 @@
             [matTooltip]="item.tooltip || ''">
             <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
         </a>
+        
     </ng-container>
 
     <!-- Item with an external link -->
@@ -101,13 +102,15 @@
     <div class="fuse-vertical-navigation-item-title-wrapper">
         <div class="fuse-vertical-navigation-item-title">
             <span [ngClass]="item.classes?.title">
-                {{item.title}}
+                                    {{item.title}}
             </span>
         </div>
         <ng-container *ngIf="item.subtitle">
             <div class="fuse-vertical-navigation-item-subtitle">
                 <span [ngClass]="item.classes?.subtitle">
                     {{item.subtitle}}
+                
+                    <!-- qetu -->
                 </span>
             </div>
         </ng-container>
@@ -123,5 +126,4 @@
             </div>
         </div>
     </ng-container>
-
 </ng-template>

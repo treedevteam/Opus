@@ -32,7 +32,7 @@
             <div class="dropzone" fileDragDrop (filesChangeEmiter)="onFileChange($event)">
                 <div class="text-wrapper">
                     <div class="centered">
-                        <input type="file" name="file" id="file" (change)="onFileChange($event.target.files)">
+                        <input [formControlName]="'user_image'" type="file" name="file" id="file" (change)="onFileChange($event.target.files)">
                         <label for="file"><span class="textLink"> <mat-icon svgIcon="heroicons_outline:cloud-upload"></mat-icon> Change profile picture</span> or Drop it here!</label>
 
                     </div>

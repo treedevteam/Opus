@@ -50,10 +50,11 @@ export class AuthSignInComponent implements OnInit {
                 '',
                 [Validators.required, Validators.minLength(8)],
             ],
+
             grant_type   : ['password'],
             client_id    : ['1'],
             scope        : [''],
-            client_secret: ['1YIRuSeekV3qK0rMZrJaS5iY0cXnj1dTi3G0W3HU'] 
+            client_secret: ['qda9TycIwSXT0i4RPnp9E6jUgZEhS0AnnFdz9H7R'] 
         }); 
     }
 
@@ -76,7 +77,7 @@ export class AuthSignInComponent implements OnInit {
         // Hide the alert
         this.showAlert = false;
         // Sign in
-        debugger;
+        ;
         this._authService.signIn(this.signInForm.value).subscribe(
             (res) => {
                 console.log(res);

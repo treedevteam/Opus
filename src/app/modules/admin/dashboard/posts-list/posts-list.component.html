@@ -128,7 +128,7 @@
                 <div class="row">
                     <div class="col-8">
                         <p class="like-text"> {{post.likes}} Likes</p>
-                            <mat-icon (click)="LikeButtonClick(post.id)" *ngIf="!post.liked"
+                            <mat-icon x (click)="LikeButtonClick(post.id)" *ngIf="!post.liked"
                             svgIcon="heroicons_outline:thumb-up" style="cursor: pointer; transform: translate(10px, 4px);"
                             ></mat-icon>
                             <mat-icon (click)="LikeButtonClick(post.id)" *ngIf="post.liked" svgIcon="heroicons_solid:thumb-up" style="cursor: pointer; transform: translate(10px, 4px);"></mat-icon>

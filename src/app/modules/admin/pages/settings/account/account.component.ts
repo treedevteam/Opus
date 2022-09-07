@@ -6,6 +6,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
 
 @Component({
     selector       : 'settings-account',
@@ -20,7 +21,8 @@ export class SettingsAccountComponent implements OnInit
     file: any = null;
     url: any = null;
     uploaded = false;
-    userInfo: any;
+    userInfo= this._userService.singleUser$
+    user
     /**
      * Constructor
      */
@@ -41,21 +43,24 @@ export class SettingsAccountComponent implements OnInit
      */
     ngOnInit(): void
     {
-        this._userService.user$.subscribe(res => {
-            this.userInfo = res
-        });
+        this.userInfo.subscribe((data:any)=>{
+            this.user = data
+        })
+        // this._userService.user$.subscribe(res => {
+        //     this.userInfo = res
+        // });
         // Create the form
         this.accountForm = this._formBuilder.group({
             id    : [''],
             name: [''],
             email   : [''],
-            department   : [''],
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            user_image : [],
+            department: {id:1},
+            role : {id:1},
+           user_image : [],
  
         });
-   
-        this.accountForm.controls.name.setValue(this.userInfo.name);
+        console.log(this.accountForm.get('role').value)
+        this.accountForm.controls.name.setValue(this.user.name);
    
     }
 
@@ -109,16 +114,21 @@ export class SettingsAccountComponent implements OnInit
 }
 }
     save(){
+        console.warn(this.user)
         debugger
         const formData2  = new FormData();
         const result = Object.assign({}, this.accountForm.value);
-        formData2.append('id', this.userInfo.id);
-        formData2.append('email', this.userInfo.email);
         formData2.append('name', this.accountForm.get('name').value);
-        formData2.append('department', this.userInfo.email);
-        console.log(this.file)
-         formData2.append('user_image', this.accountForm.get('user_image').value);
-        this._userService.updatee(this.userInfo.id,formData2).subscribe((res: any)=>{
+        if(this.file === null){
+            formData2.append('user_image', this.user.user_image);
+        }else{
+            formData2.append('user_image', this.file);
+        }
+        // formData2.append('role.id', this.user.role.id);
+        // formData2.append('department.id', this.user.department.id);
+        formData2.append('email', this.user.email);
+        console.warn(formData2)
+        this._userService.updatee(this.user.id,formData2).subscribe((res: any)=>{
                 console.warn(res);
                 this._snackBar.open('Updated successfuly!', 'close', {
                 duration: 3000,

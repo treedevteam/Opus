@@ -26,7 +26,7 @@ export class StoreBoardsComponent implements OnInit {
     this.storeBoard = this._formBuilder.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
-      type: ['', Validators.required],
+      type: [null, Validators.required],
       department_id:[this._boardService.currentDepartment, Validators.required]
   });
   }

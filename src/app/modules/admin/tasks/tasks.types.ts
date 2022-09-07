@@ -95,4 +95,10 @@ export interface TaskComment{
     created_at: string;
     mentions: number[];
 }
-
+export interface Data{
+    users:number;
+    board:number;
+    posts: number;
+    tasks:number;
+    subtasks:number;
+}

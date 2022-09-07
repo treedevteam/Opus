@@ -285,7 +285,7 @@ export class MailboxService
         return this._userEmails.pipe(
             take(1),
             map((mails) => {
-                debugger;
+                ;
                 // Find the mail
                 const mail = mails.find(item => item.id === +id) || null;
                 // Update the mail
@@ -428,7 +428,7 @@ export class MailboxService
         return this._httpClient.get<Users[]>(this.apiUrl+'api/users').pipe(
             map((data: any): Users[] => {
                 this._userList.next(data);
-            debugger;
+            ;
 
                 console.log(data,'All users');
                 return data;
@@ -466,7 +466,7 @@ export class MailboxService
        }
        markAsUnread(id: string | number): Observable<any>
        {
-        debugger
+        
         return this.allEmails$.pipe(take(1),switchMap(emails =>this._httpClient.post(this.apiUrl +`api/email/markasunread/${id}`,id).pipe(map((deletedemail:any) => {
             const index = emails.findIndex(item => item.id === id);
             this._userEmails.next(emails);
@@ -478,7 +478,7 @@ export class MailboxService
        }
        deleteEmail(id: number)
        {
-        debugger
+        
         return this.allEmails$.pipe(take(1),switchMap(emails => this._httpClient.delete(this.apiUrl +`api/email/${id}`).pipe(map((deletedemail:any) => {
             const index = emails.findIndex(item => item.id === id);
             emails.splice(index, 1);

@@ -6,17 +6,19 @@ export interface User
     email: string;
     department: Department;
     avatar?: string;
-    user_image: string;
     status?: string;
     role?:Role
+    user_image: string;
 }
 export interface Role
 {
-    name:string
+    name:string,
+    id:number
 }
 
 export interface Department
 {
     id: number
     name:string
+    image:string
 }

@@ -25,7 +25,7 @@ export class TasksLogsComponent implements OnInit {
     .subscribe((task: Task2) => {
       console.warn('loGIIII',task);
         this.taskId = task.id;
-        this._tasksService.getTasksLogs(this.taskId).subscribe();
+        this._tasksService.getTasksLogs(task.id).subscribe();
     });
     
   }

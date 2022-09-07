@@ -110,11 +110,24 @@ export class NotificationsService
         );
     }
 
+
+
     /**
      * Delete the notification
      *
      * @param id
      */
+<<<<<<< HEAD
+    delete(id: string): Observable<any>
+    {
+        return this.notifications$.pipe(
+            take(1),
+            switchMap(notifications => this._httpClient.delete<any>(this.apiUrl + 'api/notification/'+ id).pipe(
+                map((isDeleted: any) => {
+
+                    // Find the index of the deleted notification
+                    const index = notifications.findIndex(item => item.id ===isDeleted.id);
+=======
     // delete(id: any): Observable<boolean>
     // {
     //     return this.notifications$.pipe(
@@ -123,19 +136,20 @@ export class NotificationsService
     //             map((isDeleted: boolean) => {
     //                 // Find the index of the deleted notification
     //                 const index = notifications.findIndex(item => item.id === id);
+>>>>>>> 0e0231863fd94cb34917d903412f1f7e713b8018
 
-    //                 // Delete the notification
-    //                 notifications.splice(index, 1);
+                    // Delete the notification
+                    notifications.splice(index, 1);
 
-    //                 // Update the notifications
-    //                 this._notifications.next(notifications);
+                    // Update the notifications
+                    this._notifications.next(notifications);
 
-    //                 // Return the deleted status
-    //                 return isDeleted;
-    //             })
-    //         ))
-    //     );
-    // }
+                    // Return the deleted status
+                    return isDeleted;
+                })
+            ))
+        );
+    }
 
     /**
      * Mark all notifications as read
@@ -164,4 +178,33 @@ export class NotificationsService
 
     
 
+<<<<<<< HEAD
+    //                 // Return the updated status
+    //                 return isUpdated;
+    //             })
+    //         ))
+    //     );
+    // }
+
+
+    /** mark notification as read */
+
+    markAsRead(id: string): Observable<Notifications[]>{
+        debugger;
+        return this.notifications$.pipe(
+            take(1),
+            switchMap(notifications => this._httpClient.get<Notifications>(`${this.apiUrl}api/notification/${id}/read`).pipe(
+                map((_readedNotificaion: any)=>{
+                    console.log(_readedNotificaion,'_readedNotificaion');
+                    console.log(notifications,'notifications');
+                    const index = notifications.findIndex(item  => item.id === _readedNotificaion.id);
+                    notifications[index] = {...notifications[index], status: 1};
+                    this._notifications.next(notifications);
+                    return _readedNotificaion;
+                })
+            )
+        ));
+    }
+=======
+>>>>>>> 0e0231863fd94cb34917d903412f1f7e713b8018
 }

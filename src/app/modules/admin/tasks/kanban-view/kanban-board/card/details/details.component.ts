@@ -316,7 +316,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
         });
     }
     // onFileChange(event): void{
-    //     debugger
+    //     
     //     const file: File = event.target.files[0];
     //     console.log(file)
     //     if(file){
@@ -337,6 +337,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
 
     
   onFileChange(pFileList: File): void {
+    debugger;
     this.uploaded = true;
     this.file = pFileList[0];
 

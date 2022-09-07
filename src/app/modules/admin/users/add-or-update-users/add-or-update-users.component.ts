@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
@@ -11,6 +12,8 @@ import { EventEmitter } from '@angular/core';
 import { parseInt } from 'lodash';
 import { Roles, Users } from '../model/users';
 import { Departments } from '../../departments/departments.types';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { observable } from 'rxjs';
 export class AddOrUpdate {
     isUpdate?: boolean;
     data: any;
@@ -33,7 +36,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
     userId: number;
     userById: Users;
 
-
+    isChangeOptionsOn:boolean = false;
     file: any = null;
     url: any = null;
     uploaded = false;
@@ -199,5 +202,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
             }
         });
     }
-
+    toggle(event: MatCheckboxChange){
+        this.isChangeOptionsOn = event.source.checked;
+    }
 }

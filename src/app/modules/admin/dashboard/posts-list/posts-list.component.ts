@@ -55,7 +55,7 @@ export class PostsListComponent implements OnInit {
             }))
         ),
         tap((res) => {
-            debugger;
+            ;
             console.log(res);
         }),
         shareReplay(1)
