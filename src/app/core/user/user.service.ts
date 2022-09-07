@@ -14,7 +14,7 @@ export class UserService
 {
     apiUrl = environment.apiUrl
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
-    public _user$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>(null);
+    public _user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
     /**
      * Constructor
@@ -36,7 +36,7 @@ export class UserService
      {
          return this._user.asObservable();
      }
-    get singleUser$(): Observable<User[]>
+    get singleUser$(): Observable<User>
     {
         return this._user$.asObservable();
     }
