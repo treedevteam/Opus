@@ -6,9 +6,10 @@
         <!-- Header -->
         <div class="flex items-center justify-between -mt-3 -ml-4">
             <!-- Mark as ... button -->
-            <button class="pr-4 pl-3.5" mat-button (click)="toggleCompleted()">
+            <button class="pr-4 pl-3.5" mat-button >
                 <!-- Mark as incomplete -->
                 <ng-container>
+
                     <img
                         class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover mr-5"
                         [src]="apiUrl + 'storage/' + task.user.user_image"
@@ -54,9 +55,6 @@
             class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
             (click)="openTagsPanel()"
             #tagsPanelOrigin>
-
-           
-
             <ng-container >
                 <div>
                     <img
@@ -151,14 +149,8 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-                    
+             
                     <form class="" [formGroup]="taskForm">
-
                     <div class="checklists_section">
                         <div class="col-md-12 align-items-center mt-5">
                             <ul class="list-group">
@@ -226,7 +218,7 @@
                                             style="border-radius: 4px !important"
                                         >
                                             add
-                                        </button>
+                                        </button>\
                                     </mat-form-field>
                                 </li>
     
@@ -236,6 +228,7 @@
                     </div>
                     </form>
                 </mat-tab>
+
                 <mat-tab label="Comments">
                     <div class="flex flex-auto">
                         <div class="flex flex-col flex-auto p-3 pt-10 sm:p-4 sm:pt-10 overflow-y-auto">
@@ -253,7 +246,77 @@
                     </div>
                 </mat-tab>
             </mat-tab-group>
+            <ng-container
+    
+            class="mb-3 mt-2 w-25 h-25"
+        >
+            <div
+                class="d-flex justify-content-center"
 
+            >
+                <img
+                    class="w-50"
+                    [src]="
+                        apiUrl +
+                        'storage/' +
+                        taskSeleced.file
+                    "
+                    alt=""
+                    (click)="
+                        openImagePopup(
+                            apiUrl + 'storage/' + taskSeleced.file
+                        )
+                    " 
+                />
+                <!-- <button>
+                    <a [href]="apiUrl + 'storage/' + file.file" [download]="file.file" target="_blank">Download</a>
+                </button>
+                <mat-icon (click)="deleteFile(task2.id)"  style="cursor: pointer;" color="warn" >delete</mat-icon>
+                <mat-divider ></mat-divider> -->
+             </div>
+            <div
+            *ngIf="taskSeleced.file !== null"
+                class="grid grid-cols-2 gap-4 w-full mt-8"
+            >
+                <a
+                    class="flex-auto"
+                    mat-flat-button
+                    [color]="'primary'"
+                    [href]="apiUrl + 'storage/' + taskSeleced.file"
+                    [download]="taskSeleced.file"
+                    target="_blank"
+                    >Download</a
+                >
+                <button
+                    (click)="deleteFile(taskSeleced.id)"
+                    class="flex-auto"
+                    mat-stroked-button
+                >
+                    Delete
+                </button>
+            </div>
+            <input
+            style="display: none"
+            type="file"
+            class="file-input"
+            (change)="onFileChange($event.target.files)"
+            #fileUpload
+        />
+
+        <div class="file-upload">
+            {{ fileName }}
+
+            <button
+            *ngIf="taskSeleced.file === null"
+                mat-mini-fab
+                color="primary"
+                class="upload-btn"
+                (click)="fileUpload.click()"
+            >
+                <mat-icon>attach_file</mat-icon>
+            </button>
+        </div>
+        </ng-container>
         </div>
     </div>
 </div>

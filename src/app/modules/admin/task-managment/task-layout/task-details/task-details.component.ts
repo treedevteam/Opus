@@ -1,3 +1,4 @@
+/* eslint-disable  */
 import { environment } from 'environments/environment';
 import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.component';
 import { NormalViewComponent } from '../../task-views/normal-view/normal-view.component';
@@ -11,6 +12,8 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { combineLatest, debounceTime, filter, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import saveAs from 'file-saver';
 
 
 @Component({
@@ -32,6 +35,11 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   tags: Task[];
   boardUsers$= this._taskService.boardUsers$;
   task;
+  uploaded: boolean;
+  file: any = null;
+  url ;
+  taskFile$ = this._taskService.taskSelected$
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _normalView: NormalViewComponent,
@@ -44,6 +52,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
+        private _snackBar: MatSnackBar,
         
         ) {
         }
@@ -103,6 +112,81 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       return this.taskOrSubtask === "normal" ? this._normalView.matDrawer.close() : this._kanbanView.matDrawer.close()
   }
+
+  uploadTaskImage() {
+    const formData = new FormData();
+    const result = Object.assign({}, this.taskForm.value);
+    formData.append('file', this.taskForm.get('file').value);
+    this._taskService.addFileToTask(formData, this.task.id).subscribe((res) => {
+      console.log(res, 'EEWRWERWERWERw');
+    });
+  }
+
+  onFileChange(pFileList: File): void {
+    debugger;
+    this.uploaded = true;
+    this.file = pFileList[0];
+
+    if (pFileList[0]) {
+        if (
+            pFileList[0].type === 'image/jpeg' ||
+            pFileList[0].type === 'image/png' ||
+            pFileList[0].type === 'image/jpg'
+        ) {
+            if (pFileList[0].size < 200 * 200) {
+                /* Checking height * width*/
+            }
+            if (pFileList[0].size < 512000) {
+                this._snackBar.open('Successfully upload!', 'Close', {
+                    duration: 2000,
+                });
+
+                const reader = new FileReader();
+                reader.readAsDataURL(pFileList[0]);
+                reader.onload = (event): any => {
+                    this.url = event.target.result;
+                };
+                this.taskForm.get('file').patchValue(this.file);
+
+                this.uploadTaskImage();
+                console.warn(this.url, 'url');
+                console.warn(this.file, 'url');
+            }else{
+                this._snackBar.open('File is too large!', 'Close', {
+                    duration: 2000,
+                });
+                this.uploaded = false;
+                this.file = null;
+                this.taskForm.get('file').patchValue(null);
+                this.url = null;
+            }
+        }else{
+            this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
+                duration: 2000,
+            });
+            this.uploaded = false;
+            this.file = null;
+            this.taskForm.get('file').patchValue(null);
+            this.url = null;
+        }
+    }
+}
+
+downloadImg(url){
+  this._taskService.dowloadFile(url).subscribe((data: Blob | MediaSource)=>{
+      const downloadUrl = window.URL.createObjectURL(data);
+      saveAs(downloadUrl);
+  });
+}
+
+deleteFile(id){
+  this._taskService.deleteFileFromTask(id).subscribe((res)=>{
+      this._snackBar.open('Successfully deleted!', 'Close', {});
+      this.ngOnInit();
+  });
+}
+
+
 
 
   addNewCheckList(){

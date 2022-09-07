@@ -705,6 +705,7 @@ deleteComment(id: number): Observable<any>
         console.warn(url)
         return this._httpClient.get(url);
     }
+    
     updateTaskStatusOrder(statusId: any, order: string, board_id: number, taskId: number): Observable<Task2>{
         return this.currentBoardTasks$.pipe(
             take(1),
@@ -826,6 +827,7 @@ deleteComment(id: number): Observable<any>
             })
         );
     }
+
     addfileToTask(file,id): any{
         return this.taskById$.pipe(
             take(1),
@@ -839,7 +841,6 @@ deleteComment(id: number): Observable<any>
             ))
         );
         
-        return this._httpClient.post(this.apiUrl+`api/task_file/${id}`, file);
     }
     deleteFileFromTask(id): any{
         console.log('tes')

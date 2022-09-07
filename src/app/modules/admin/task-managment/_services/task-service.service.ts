@@ -537,6 +537,68 @@ export class TaskServiceService {
         )
     }
 
+    dowloadFile(url:any){
+        console.warn(url)
+        return this._httpClient.get(url);
+    }
+
+    //TODO ID NUK PO BAN
+    addFileToTask(file, id: number): Observable<Task>{
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.tasks$.pipe(
+                take(1),
+                switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+`api/task_file/${id}`, file).pipe( 
+                    map((updatedTask: any) => {
+                        updatedTask= updatedTask.task
+                        const taskindex = tasks.findIndex(x=>x.id === updatedTask.id);
+                        if(taskindex > -1){
+                            tasks.splice(taskindex,1,updatedTask);
+                        }
+                        this._tasks.next([...tasks])
+                        this._taskSelected.next(updatedTask)
+                        return updatedTask;
+                    })
+                ))
+            ))
+        )
+    }
+
+    
+
+    deleteFileFromTask( id: number): Observable<Task>{
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.tasks$.pipe(
+                take(1),
+                switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+`api/delete_file/${id}`,'delete').pipe(
+                    map((deletedFile: any) => {
+                        const taskindex = tasks.findIndex(x=>x.id === id);
+                        if(taskindex > -1){
+                            tasks[taskindex].file = null
+                        }
+                        this._tasks.next([...tasks])
+                        this._taskSelected.next(tasks[taskindex])
+                        return deletedFile;
+                    })
+                ))
+            ))
+        )
+    }
+    
+    // deleteFileFromTask(id): any{
+    //     console.log('tes')
+    //     return this.tasks$.pipe(
+    //         take(1),
+    //         switchMap(tasks => this._httpClient.post(this.apiUrl+`api/delete_file/${id}`,'delete').pipe(
+    //             map((deletedTask: any) => {
+    //                 const index  = tasks.findIndex(x=> x.id === id)
+    //                 tasks[index].file = null;
+    //                 this._taskSelected.next(tasks)
+    //                 return deletedTask;
+    //             }) 
+    //             ))
+    //             );
+    //         }
+
 
     assignUserSubtask(taskId: number, userId: number): Observable<Task>{
         return this.currentBoard$.pipe(

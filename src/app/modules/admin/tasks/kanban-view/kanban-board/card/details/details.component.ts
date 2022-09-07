@@ -84,6 +84,7 @@ export class ScrumboardCardDetailsComponent implements OnInit, OnDestroy
             });
 
         // Get the card details
+        
         if(this.data === 'Task'){
             this.taskById$ = this._tasksService.taskById$;
         }else{
