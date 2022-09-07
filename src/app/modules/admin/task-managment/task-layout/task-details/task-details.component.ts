@@ -31,8 +31,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   tagsEditMode: boolean = false;
   tags: Task[];
   boardUsers$= this._taskService.boardUsers$;
-  task: { users_assigned: Users[]; checkListcompleted: number; id: number; title: string; raport: string; deadline: string; restrictions: string; description: string; status: number; priority: number; location: number; board_id: number; user: Users; departments: number[]; has_expired: boolean; subtasks_count: number; checklists: import("c:/Users/Bleron Restelica/Desktop/Opus/src/app/modules/admin/task-managment/_models/task").TaskCheckList[]; file: any; checkListInfo: any; };
-
+  task;
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _normalView: NormalViewComponent,
