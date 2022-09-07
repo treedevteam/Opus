@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from 'environments/environment';
 import moment from 'moment';
 import { tap } from 'rxjs';
 import { Task } from '../../../_models/task';
@@ -17,6 +18,7 @@ export class KanbanTaskCardComponent implements OnInit {
   expandedSubtasks = null
   showTasks = false;
   subtask$= this._taskServiceService.allSubTasks$;
+  apiUrl = environment.apiUrl
   subtasksOpened$ = this._taskServiceService.curretnSubtasksOpened$.pipe(
     tap(res=>{
       console.log(res);
