@@ -123,7 +123,14 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onFileChange(pFileList: File): void {
-    debugger
+
+    if( this._taskService.boardInfo.is_his !== 1){
+      this._taskService.openAssignPopup()
+
+
+    }else{
+
+      debugger
 
       this.uploaded = true;
       this.file = pFileList[0];
@@ -171,6 +178,8 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.url = null;
         }
     }
+    }
+
 }
 
 downloadImg(url){
@@ -181,58 +190,76 @@ downloadImg(url){
 }
 
 deleteFile(id){
-  this._taskService.deleteFileFromTask(id).subscribe((res)=>{
+
+  if( this._taskService.boardInfo.is_his !== 1){
+    this._taskService.openAssignPopup()
+
+  }else{
+    this._taskService.deleteFileFromTask(id).subscribe((res)=>{
       this._snackBar.open('Successfully deleted!', 'Close', {});
       this.ngOnInit();
   });
+  }
+  
 }
 
 
 
 
   addNewCheckList(){
-    this._taskService.addNewCheckListItem(
-      {text: this.taskForm.get('checklist').value, task_id: this.taskSeleced.id}
-      ).subscribe(()=> this.taskForm.get('checklist').setValue('')
-      );
+    if( this._taskService.boardInfo.is_his !== 1){
+
+      this._taskService.openAssignPopup()
+
+
+    }else{
+      this._taskService.addNewCheckListItem(
+        {text: this.taskForm.get('checklist').value, task_id: this.taskSeleced.id}
+        ).subscribe(()=> this.taskForm.get('checklist').setValue('')
+        );
+    }
   }
 
   
   deleteTask(): void
   {
-      // Open the confirmation dialog
+    
+    if( this._taskService.boardInfo.is_his !== 1){
+      this._taskService.openAssignPopup()
+    }else{
       const confirmation = this._fuseConfirmationService.open({
-          title  : 'Delete task',
-          message: 'Are you sure you want to delete this task? This action cannot be undone!',
-          actions: {
-              confirm: {
-                  label: 'Delete'
-              }
-          }
-      });
-      // console.log(this.task2);
+        title  : 'Delete task',
+        message: 'Are you sure you want to delete this task? This action cannot be undone!',
+        actions: {
+            confirm: {
+                label: 'Delete'
+            }
+        }
+    });
+    // console.log(this.task2);
 
-      // Subscribe to the confirmation dialog closed action
-      confirmation.afterClosed().subscribe((result) => {
+    // Subscribe to the confirmation dialog closed action
+    confirmation.afterClosed().subscribe((result) => {
 
-          // If the confirm button pressed...
-          if ( result === 'confirmed' )
-          {
+        // If the confirm button pressed...
+        if ( result === 'confirmed' )
+        {
 
-              // Delete the task
-              this._taskService.deleteTask(this.taskSeleced.id, +this.taskSeleced.departments)
-                  .subscribe((res) => {
-                      this.closeDrawer().then(() => true);
-                      this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
-                  },(err)=>{
-                      console.log(err);
+            // Delete the task
+            this._taskService.deleteTask(this.taskSeleced.id, +this.taskSeleced.departments)
+                .subscribe((res) => {
+                    this.closeDrawer().then(() => true);
+                    this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+                },(err)=>{
+                    console.log(err);
 
-                  });
+                });
 
-              // Mark for check
-              this._changeDetectorRef.markForCheck();
-          }
-      });
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
+        }
+    });
+    }
   }
 
   closeTaskDetails(){
@@ -241,7 +268,12 @@ deleteFile(id){
   }
 
   deleteCheckList(id:number){
-    this._taskService.deletedCheckListItem(id,this.taskSeleced.id).subscribe();
+    if( this._taskService.boardInfo.is_his !== 1){
+      this._taskService.openAssignPopup()
+
+    }else{
+      this._taskService.deletedCheckListItem(id,this.taskSeleced.id).subscribe();
+    }
   }
 
   isAllSelected(item) {
@@ -281,7 +313,10 @@ deleteFile(id){
 
 
   addUsersToTask(userId: number): void{
-    this._taskService.assignUserTask(this.task.id, userId).subscribe((res)=>{
+    if( this._taskService.boardInfo.is_his !== 1){
+      this._taskService.openAssignPopup()
+    }else{
+      this._taskService.assignUserTask(this.task.id, userId).subscribe((res)=>{
         const usersAssigned = this.taskForm.get('users_assigned').value;
         const index = usersAssigned.findIndex(object => +object === +userId);
         if (index < 0) {
@@ -292,6 +327,8 @@ deleteFile(id){
         this.taskForm.get('users_assigned').patchValue(usersAssigned);
         console.log(this.taskForm.get('users_assigned').value);
     });
+    }
+    
   }
 
   toggleTaskUser(user: number): void
@@ -310,31 +347,34 @@ deleteFile(id){
 
   openTagsPanel(): void
   {
+    if( this._taskService.boardInfo.is_his !== 1){
+      this._taskService.openAssignPopup()
+    }else{
       // Create the overlay
       this._tagsPanelOverlayRef = this._overlay.create({
-          backdropClass   : '',
-          hasBackdrop     : true,
-          scrollStrategy  : this._overlay.scrollStrategies.block(),
-          positionStrategy: this._overlay.position()
-                                .flexibleConnectedTo(this._tagsPanelOrigin.nativeElement)
-                                .withFlexibleDimensions(true)
-                                .withViewportMargin(64)
-                                .withLockedPosition(true)
-                                .withPositions([
-                                    {
-                                        originX : 'start',
-                                        originY : 'bottom',
-                                        overlayX: 'start',
-                                        overlayY: 'top'
-                                    }
-                                ])
+        backdropClass   : '',
+        hasBackdrop     : true,
+        scrollStrategy  : this._overlay.scrollStrategies.block(),
+        positionStrategy: this._overlay.position()
+                              .flexibleConnectedTo(this._tagsPanelOrigin.nativeElement)
+                              .withFlexibleDimensions(true)
+                              .withViewportMargin(64)
+                              .withLockedPosition(true)
+                              .withPositions([
+                                  {
+                                      originX : 'start',
+                                      originY : 'bottom',
+                                      overlayX: 'start',
+                                      overlayY: 'top'
+                                  }
+                              ])
       });
 
       // Subscribe to the attachments observable
       this._tagsPanelOverlayRef.attachments().subscribe(() => {
 
-          // Focus to the search input once the overlay has been attached
-          this._tagsPanelOverlayRef.overlayElement.querySelector('input').focus();
+        // Focus to the search input once the overlay has been attached
+        this._tagsPanelOverlayRef.overlayElement.querySelector('input').focus();
       });
 
       // Create a portal from the template
@@ -346,26 +386,27 @@ deleteFile(id){
       // Subscribe to the backdrop click
       this._tagsPanelOverlayRef.backdropClick().subscribe(() => {
 
-          // If overlay exists and attached...
-          if ( this._tagsPanelOverlayRef && this._tagsPanelOverlayRef.hasAttached() )
-          {
-              // Detach it
-              this._tagsPanelOverlayRef.detach();
+        // If overlay exists and attached...
+        if ( this._tagsPanelOverlayRef && this._tagsPanelOverlayRef.hasAttached() )
+        {
+            // Detach it
+            this._tagsPanelOverlayRef.detach();
 
-              // Reset the tag filter
-              this.filteredTags = this.tags;
+            // Reset the tag filter
+            this.filteredTags = this.tags;
 
-              // Toggle the edit mode off
-              this.tagsEditMode = false;
-          }
+            // Toggle the edit mode off
+            this.tagsEditMode = false;
+        }
 
-          // If template portal exists and attached...
-          if ( templatePortal && templatePortal.isAttached )
-          {
-              // Detach it
-              templatePortal.detach();
-          }
+        // If template portal exists and attached...
+        if ( templatePortal && templatePortal.isAttached )
+        {
+            // Detach it
+            templatePortal.detach();
+        }
       });
+    }
   }
     /**
      * Toggle the tags edit mode

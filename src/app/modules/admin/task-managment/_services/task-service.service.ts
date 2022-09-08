@@ -1,13 +1,16 @@
 /* eslint-disable  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap, mergeMap } from 'rxjs';
 import { Board, Comments, DueData, Logs, Task, TaskCheckList, Users } from '../_models/task';
 import { environment } from 'environments/environment';
 import { Priorities } from '../../priorities/model/priorities';
 import { Status } from '../../statuses/model/status';
 import moment from 'moment';
 import { MatRadioChange } from '@angular/material/radio';
+import { UserService } from '../../../../core/user/user.service';
+import { JoinTaskDialogComponent } from '../join-task-dialog/join-task-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Injectable({
@@ -48,7 +51,7 @@ export class TaskServiceService {
   private postUpdateCompleteSubject = new Subject<Task>();
   postUpdateComplete$ = this.postUpdateCompleteSubject.asObservable();
 
-
+    private _boardInfo:Board;
 
 
   //Filters for tasks
@@ -66,7 +69,9 @@ export class TaskServiceService {
 
 
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient,
+    private _userService: UserService,
+    private _dialog:MatDialog) { }
 
   get tasks$(): Observable<Task[]>
   {
@@ -128,6 +133,11 @@ export class TaskServiceService {
   {
       return this._taskSelectedcomments.asObservable();
   }
+
+  get boardInfo(): Board
+  {
+      return this._boardInfo;
+  }
   
   orderModified$ = this.tasksOrder$.pipe(
         map(e=>e.split(',').filter(t=>t !== '').map(e=>+e))
@@ -156,6 +166,7 @@ export class TaskServiceService {
     return this._httpClient.get<Board>(this.apiUrl+'api/board/'+ id).pipe(
       map((data: any): Board => {
           this._currentBoard.next({...data.board, is_his: data.is_his});
+          this._boardInfo = {...data.board, is_his: data.is_his};
           return data;
       }),
         shareReplay(1),
@@ -679,6 +690,23 @@ export class TaskServiceService {
         );
     }
 
+    assignMeToBoard(boardId: number): Observable<Users[]>
+    {
+
+        return this._userService.user$.pipe(
+                take(1),
+                mergeMap(myUser => this._httpClient.post<Users[]>(this.apiUrl+'api/board/'+ boardId +'/'+myUser.id,null).pipe(
+                    take(1),
+                    map((data: any) => {
+                        this._boardUsers.next(data.data);
+                        this.getBoard(boardId).subscribe((board: Board) => {
+                        })
+                        return data.data;
+                    })
+                ))
+        )
+    }
+
     getSubtasks$= (id: number) => this._httpClient.get<Task[]>(this.apiUrl+'api/task/subtasks/'+ id).pipe(
         map((data: any): Task[] => {
             this._subtask.next(data.data)
@@ -851,7 +879,12 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
         );
     }
 
-    
+    openAssignPopup(){
+        const dialogRef = this._dialog.open(JoinTaskDialogComponent,{
+            width: '350px',
+            height: '300px',
+          });
+    }
 
 
 }

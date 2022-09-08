@@ -46,29 +46,41 @@ export class StoreTaskRowComponent implements OnInit {
 
 
   changeSubmitEventTask(): void {
-    console.log(this.taskForm.value);
-    this.taskForm.get('board_id').patchValue(this.currentDepartment);
-    this._tasksService.storeTask(this.taskForm.value).subscribe((res)=>{
-       this.taskForm.reset();
-    },(err)=>{
-        console.log(err);
-        // const dialogRef = this._dialog.open(JoinTaskDialogComponent,{
-        //   width: '350px',
-        //   height: '300px',
-        //   data:{userid: this.userInfo.id, boardId:this.currentDepartment }
-        // });
-        // this.taskForm.reset();
-    });
+    
+    if( this._tasksService.boardInfo.is_his !== 1){
+      this._tasksService.openAssignPopup()
+
+    }else{
+      console.log(this.taskForm.value);
+      this.taskForm.get('board_id').patchValue(this.currentDepartment);
+      this._tasksService.storeTask(this.taskForm.value).subscribe((res)=>{
+         this.taskForm.reset();
+      },(err)=>{
+          console.log(err);
+          // const dialogRef = this._dialog.open(JoinTaskDialogComponent,{
+          //   width: '350px',
+          //   height: '300px',
+          //   data:{userid: this.userInfo.id, boardId:this.currentDepartment }
+          // });
+          // this.taskForm.reset();
+      });
+    }
   }
 
   changeSubmitEventSubtask(): void{
-    this.taskForm.get('task_id').patchValue(this.taskId);
-    this._tasksService.storeSubtask(this.taskForm.value).subscribe((res)=>{
-       this.taskForm.reset();
-    },(err)=>{
-        console.log(err);
-        this.taskForm.reset();
-    });
+    if( this._tasksService.boardInfo.is_his !== 1){
+      this._tasksService.openAssignPopup()
+
+    }else{
+      this.taskForm.get('task_id').patchValue(this.taskId);
+      this._tasksService.storeSubtask(this.taskForm.value).subscribe((res)=>{
+         this.taskForm.reset();
+      },(err)=>{
+          console.log(err);
+          this.taskForm.reset();
+      });
+    }
+    
   }
 
 }

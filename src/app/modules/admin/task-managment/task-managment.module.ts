@@ -51,6 +51,8 @@ import { TaskLogsComponent } from './task-layout/task-details/task-logs/task-log
 import { TaskCommentsComponent } from './task-layout/task-details/task-comments/task-comments.component';
 import { MentionModule } from 'angular-mentions';
 import { FilePopupComponent } from './file-popup/file-popup.component';
+import { JoinTaskDialogComponent } from './join-task-dialog/join-task-dialog.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 
 @NgModule({
@@ -80,7 +82,10 @@ import { FilePopupComponent } from './file-popup/file-popup.component';
     KanbanSubtaskCardComponent,
     TaskLogsComponent,
     TaskCommentsComponent,
-    FilePopupComponent
+    FilePopupComponent,
+    JoinTaskDialogComponent,
+    UserProfileComponent,
+
   ],
   imports: [
     RouterModule.forChild(tasksRoutes),
@@ -110,7 +115,6 @@ import { FilePopupComponent } from './file-popup/file-popup.component';
     MatIconModule,
     MatTabsModule,
     MentionModule,
-
 
 
 

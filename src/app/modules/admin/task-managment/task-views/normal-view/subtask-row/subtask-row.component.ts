@@ -47,20 +47,36 @@ export class SubtaskRowComponent implements OnInit {
   }
 
   selectPriority(priority: Priorities){
+
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      this._taskServiceService.openAssignPopup()
+
+    }else{
       this._taskServiceService.subtaskUpdateTaskPriority(priority.id, this.task.id).subscribe(res=>{
       })
+    }
   }
 
   selectStatus(status: Status){
-      this._taskServiceService.subtaskUpdateTaskStatus(status.id, this.task.id).subscribe((res)=>{
-      });
+      if( this._taskServiceService.boardInfo.is_his !== 1){
+        this._taskServiceService.openAssignPopup()
+
+      }else{
+        this._taskServiceService.subtaskUpdateTaskStatus(status.id, this.task.id).subscribe((res)=>{
+        });
+      }
   }
 
   updateField() {
-    this.myGroup.controls['deadline'].value
-    this._taskServiceService.subtaskUpdateTaskDeadline(this.convertDate(this.myGroup.controls['deadline'].value), this.task.id).subscribe(res=>{
-        console.log(res);
-    });
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      this._taskServiceService.openAssignPopup()
+
+    }else{
+      this.myGroup.controls['deadline'].value
+      this._taskServiceService.subtaskUpdateTaskDeadline(this.convertDate(this.myGroup.controls['deadline'].value), this.task.id).subscribe(res=>{
+          console.log(res);
+      });
+    }
   }
   
   convertDate(time: any): string
@@ -70,7 +86,11 @@ export class SubtaskRowComponent implements OnInit {
   }
 
   updateTitle(){
-    this._taskServiceService.updateSubtaskTitle(this.myGroup.controls['title'].value, this.task.id).subscribe();
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      this._taskServiceService.openAssignPopup()
+    }else{
+      this._taskServiceService.updateSubtaskTitle(this.myGroup.controls['title'].value, this.task.id).subscribe();
+    }
   }
 
   sahreTaskPopover(){

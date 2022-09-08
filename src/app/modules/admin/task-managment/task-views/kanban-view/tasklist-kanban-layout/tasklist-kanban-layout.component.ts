@@ -125,91 +125,101 @@ export class TasklistKanbanLayoutComponent implements OnInit {
     }
     addCard(list: any, event: TaskOrSub): void
     {
-        console.log(list, event,'console.log(list, title,');
-        const newTask = {
-            task_id: list.id,
-            title: event.title,
-            status:list.status.id
-        };
-        if(event.type === 'task'){
-            this._taskService.storeTask(newTask).subscribe(res=>{}
-                ,err=>{
-                    console.log(err);
-                    console.log(err);
-                    // const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
-                    //     width: '350px',
-                    //     height: '300px',
-                    //   data:{userid:this.userId,boardId:this.currentBoardId }
-                    // });
-                });
+        if( this._taskService.boardInfo.is_his !== 1){
+            this._taskService.openAssignPopup()
         }else{
-           
+            console.log(list, event,'console.log(list, title,');
+            const newTask = {
+                task_id: list.id,
+                title: event.title,
+                status:list.status.id
+            };
+            if(event.type === 'task'){
+                this._taskService.storeTask(newTask).subscribe(res=>{}
+                    ,err=>{
+                        console.log(err);
+                        console.log(err);
+                        // const dialogRef = this.dialog.open(JoinTaskDialogComponent,{
+                        //     width: '350px',
+                        //     height: '300px',
+                        //   data:{userid:this.userId,boardId:this.currentBoardId }
+                        // });
+                    });
+            }else{
+               
+            }
+            console.log(newTask);
+            // Save the card
         }
-        console.log(newTask);
-        // Save the card
+        
     }
 
     cardDropped(event: CdkDragDrop<Card[]>): void
     {
-        let order;
-        console.log(event,'currentItem.position = this._positionStepcurrentItem.position = this._positionStep');
-        this._taskService.orderModified$.subscribe((res)=>{
-            order = res;
-        });
-
-        // Move or transfer the item
-        if ( event.previousContainer === event.container )
-        {
-            // Move the item
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-            const currentTask = event.container.data[event.currentIndex];
-            const currentIndex = event.currentIndex;
-            const taskuCurrent = event.container.data[currentIndex]?.id;
-            const previusTask = event.container.data[currentIndex - 1]?.id;
-            const nextTask = event.container.data[currentIndex + 1]?.id;
-            const currentTaskIndex = order.findIndex(d => d === +taskuCurrent);
-            if(currentTaskIndex > -1){
-                if(previusTask){
-                    order.splice(currentTaskIndex,1);
-                    const prevTaskIndex = order.findIndex(d => d === +previusTask);
-                    order.splice(prevTaskIndex+1, 0, +taskuCurrent);
-                }else if(nextTask){
-                    order.splice(currentTaskIndex,1);
-                    const nextTaskIndex = order.findIndex(d => d === +nextTask);
-                    order.splice(nextTaskIndex, 0, +taskuCurrent);
-                }else{
-                }
-            }
+        if( this._taskService.boardInfo.is_his !== 1){
+            this._taskService.openAssignPopup()
+        }else{
+            let order;
             console.log(event,'currentItem.position = this._positionStepcurrentItem.position = this._positionStep');
-            this._taskService.updateTaskStatusOrder(event.container.id, order.toString(), +currentTask.id).subscribe();
-        }
-        else
-        {
-            transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-            // Update the card's list it
-            event.container.data[event.currentIndex].listId = event.container.id;
-            const currentTask = event.container.data[event.currentIndex];
-            const currentIndex = event.currentIndex;
-            const taskuCurrent = event.container.data[currentIndex]?.id;
-            const previusTask = event.container.data[currentIndex - 1]?.id;
-            const nextTask = event.container.data[currentIndex + 1]?.id;
-            const currentTaskIndex = order.findIndex(d => d === +taskuCurrent);
-            if(currentTaskIndex > -1){
-                if(previusTask){
-                    order.splice(currentTaskIndex,1);
-                    const prevTaskIndex = order.findIndex(d => d === +previusTask);
-                    order.splice(prevTaskIndex+1, 0, +taskuCurrent);
-                }else if(nextTask){
-                    order.splice(currentTaskIndex,1);
-                    const nextTaskIndex = order.findIndex(d => d === +nextTask);
-                    order.splice(nextTaskIndex, 0, +taskuCurrent);
-                }else{
+            this._taskService.orderModified$.subscribe((res)=>{
+                order = res;
+            });
+    
+            // Move or transfer the item
+            if ( event.previousContainer === event.container )
+            {
+                // Move the item
+                moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+                const currentTask = event.container.data[event.currentIndex];
+                const currentIndex = event.currentIndex;
+                const taskuCurrent = event.container.data[currentIndex]?.id;
+                const previusTask = event.container.data[currentIndex - 1]?.id;
+                const nextTask = event.container.data[currentIndex + 1]?.id;
+                const currentTaskIndex = order.findIndex(d => d === +taskuCurrent);
+                if(currentTaskIndex > -1){
+                    if(previusTask){
+                        order.splice(currentTaskIndex,1);
+                        const prevTaskIndex = order.findIndex(d => d === +previusTask);
+                        order.splice(prevTaskIndex+1, 0, +taskuCurrent);
+                    }else if(nextTask){
+                        order.splice(currentTaskIndex,1);
+                        const nextTaskIndex = order.findIndex(d => d === +nextTask);
+                        order.splice(nextTaskIndex, 0, +taskuCurrent);
+                    }else{
+                    }
                 }
+                console.log(event,'currentItem.position = this._positionStepcurrentItem.position = this._positionStep');
+                this._taskService.updateTaskStatusOrder(event.container.id, order.toString(), +currentTask.id).subscribe();
             }
-            this._taskService.updateTaskStatusOrder(event.container.id, order.toString(), +currentTask.id).subscribe();
+            else
+            {
+                transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+                // Update the card's list it
+                event.container.data[event.currentIndex].listId = event.container.id;
+                const currentTask = event.container.data[event.currentIndex];
+                const currentIndex = event.currentIndex;
+                const taskuCurrent = event.container.data[currentIndex]?.id;
+                const previusTask = event.container.data[currentIndex - 1]?.id;
+                const nextTask = event.container.data[currentIndex + 1]?.id;
+                const currentTaskIndex = order.findIndex(d => d === +taskuCurrent);
+                if(currentTaskIndex > -1){
+                    if(previusTask){
+                        order.splice(currentTaskIndex,1);
+                        const prevTaskIndex = order.findIndex(d => d === +previusTask);
+                        order.splice(prevTaskIndex+1, 0, +taskuCurrent);
+                    }else if(nextTask){
+                        order.splice(currentTaskIndex,1);
+                        const nextTaskIndex = order.findIndex(d => d === +nextTask);
+                        order.splice(nextTaskIndex, 0, +taskuCurrent);
+                    }else{
+                    }
+                }
+                this._taskService.updateTaskStatusOrder(event.container.id, order.toString(), +currentTask.id).subscribe();
+            }
+            // Calculate the positions
+            const updated = this._calculatePositions(event);
         }
-        // Calculate the positions
-        const updated = this._calculatePositions(event);
+        
     }
 
   private _calculatePositions(event: CdkDragDrop<any[]>): any[]

@@ -66,10 +66,11 @@
                 </div>
                 <!-- User -->
                 <div class="flex items-center justify-center inset-y-0 left-0 me-3">
-                    <img [matTooltip]="task.user.name" [matTooltipPosition]="'above'"
+                    <app-user-profile [user]="task.user"></app-user-profile>
+                    <!-- <img [matTooltip]="task.user.name" [matTooltipPosition]="'above'"
                         style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
                         src="{{apiUrl+ 'storage/'+task.user.user_image}}" alt=""
-                        onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                        onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';"> -->
                 </div>
                 <!-- Task title -- link -->
                 <div class="flex flex-auto items-center min-w-0 h-full pr-7" >
@@ -94,7 +95,7 @@
                 </div>
                 <!-- Task file -->
 
-                <ng-container  *ngIf="task.file !== null">0
+                <ng-container  *ngIf="task.file !== null">
                     <button
                     mat-mini-fab
                     color="primary"

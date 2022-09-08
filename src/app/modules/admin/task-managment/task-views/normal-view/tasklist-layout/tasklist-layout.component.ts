@@ -40,6 +40,9 @@ export class TasklistLayoutComponent implements OnInit {
 
   dropped(event: CdkDragDrop<Task[]>): void
   {
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      this._taskServiceService.openAssignPopup()
+    }else{
       // Move the item in the array
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       let order = event.container.data.map(x=>x.id) 
@@ -64,6 +67,7 @@ export class TasklistLayoutComponent implements OnInit {
       this._taskServiceService.updateTaskStatusOrder(currentTask.status["id"], order.toString(), +currentTask.id).subscribe();
       // Mark for check
       this._changeDetectorRef.markForCheck();
+    }
   }
 
 }

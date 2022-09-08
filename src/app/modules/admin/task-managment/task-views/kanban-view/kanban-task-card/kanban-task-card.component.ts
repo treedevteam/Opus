@@ -71,11 +71,16 @@ export class KanbanTaskCardComponent implements OnInit {
   }
 
   addCard(list: any, event: TaskOrSub){
-    const newTask = {
-      task_id: list.id,
-      title: event.title,
-      status:list.status.id
-    };
-    this._taskServiceService.storeSubtask(newTask).subscribe()
+
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      alert("test")
+    }else{
+      const newTask = {
+        task_id: list.id,
+        title: event.title,
+        status:list.status.id
+      };
+      this._taskServiceService.storeSubtask(newTask).subscribe()
+    }
   }
 }

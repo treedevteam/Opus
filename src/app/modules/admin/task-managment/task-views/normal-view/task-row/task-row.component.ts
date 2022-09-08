@@ -12,6 +12,7 @@ import { map, mergeMap, tap, Observable, take, switchMap, finalize } from 'rxjs'
 import { FilePopupComponent } from '../../../file-popup/file-popup.component';
 import { Task, Board, TaskModified } from '../../../_models/task';
 import { TaskServiceService } from '../../../_services/task-service.service';
+import { JoinTaskDialogComponent } from '../../../join-task-dialog/join-task-dialog.component';
 
 @Component({
   selector: 'app-task-row',
@@ -28,7 +29,9 @@ export class TaskRowComponent implements OnInit {
   subtask$= this._taskServiceService.allSubTasks$;
   constructor(private _taskServiceService:TaskServiceService,
     private _formBuilder:FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _dialog: MatDialog
+
     ) { }
   statuses$ = this._taskServiceService.statuses$
   priorities$ = this._taskServiceService.priorities$
@@ -40,6 +43,7 @@ export class TaskRowComponent implements OnInit {
   )
   
   ngOnInit(): void {
+
 
     this.formShare = this._formBuilder.group({
         boards: [''],
@@ -56,20 +60,35 @@ export class TaskRowComponent implements OnInit {
   }
 
   selectPriority(priority: Priorities){
+       if( this._taskServiceService.boardInfo.is_his !== 1){
+        this._taskServiceService.openAssignPopup()
+    }else{
       this._taskServiceService.updateTaskPriority(priority.id, this.task.id).subscribe(res=>{
       })
+    }
   }
 
   selectStatus(status: Status){
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      this._taskServiceService.openAssignPopup()
+
+    }else{
       this._taskServiceService.updateTaskStatus(status.id, this.task.id).subscribe((res)=>{
       });
+    }
   }
 
   updateField() {
-    this.myGroup.controls['deadline'].value
-    this._taskServiceService.updateTaskDeadline(this.convertDate(this.myGroup.controls['deadline'].value), this.task.id).subscribe(res=>{
-        console.log(res);
-    });
+
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      this._taskServiceService.openAssignPopup()
+
+    }else{
+      this.myGroup.controls['deadline'].value
+      this._taskServiceService.updateTaskDeadline(this.convertDate(this.myGroup.controls['deadline'].value), this.task.id).subscribe(res=>{
+          console.log(res);
+      });
+    }
   }
   
   convertDate(time: any): string
@@ -79,7 +98,12 @@ export class TaskRowComponent implements OnInit {
   }
 
   updateTitle(){
-    this._taskServiceService.updateTaskTitle(this.myGroup.controls['title'].value, this.task.id).subscribe();
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      this._taskServiceService.openAssignPopup()
+
+    }else{
+      this._taskServiceService.updateTaskTitle(this.myGroup.controls['title'].value, this.task.id).subscribe();
+    }
   }
 
   sahreTaskPopover(){

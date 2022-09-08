@@ -49,7 +49,10 @@ export class TaskCommentsComponent implements OnInit, OnChanges{
 
   
   addCommentTask() {
-    const ids = this.data
+    if( this._tasksService.boardInfo.is_his !== 1){
+      this._tasksService.openAssignPopup()
+    }else{
+      const ids = this.data
       .replace(/(\r\n|\n|\r)/gm, '')
       .split('@')
       .filter(
@@ -60,6 +63,8 @@ export class TaskCommentsComponent implements OnInit, OnChanges{
     this._tasksService.storeComment({ text: this.commentForm.get('newComment').value, task_id: this.taskId, mentions: '[' + ids + ']' }).subscribe((res) => {
       this.commentForm.get('newComment').setValue('');
     });
+    }
+    
   }
 
   deleteCommentclick(id: number): void {
