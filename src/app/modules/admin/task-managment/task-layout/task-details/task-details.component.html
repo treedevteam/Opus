@@ -299,6 +299,7 @@
             style="display: none"
             type="file"
             class="file-input"
+            onclick="this.value = null"
             (change)="onFileChange($event.target.files)"
             #fileUpload
         />

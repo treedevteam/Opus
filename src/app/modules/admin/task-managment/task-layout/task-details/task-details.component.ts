@@ -123,9 +123,10 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onFileChange(pFileList: File): void {
-    debugger;
-    this.uploaded = true;
-    this.file = pFileList[0];
+    debugger
+
+      this.uploaded = true;
+      this.file = pFileList[0];
 
     if (pFileList[0]) {
         if (
