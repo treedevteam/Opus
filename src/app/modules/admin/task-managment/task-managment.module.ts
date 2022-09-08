@@ -50,6 +50,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TaskLogsComponent } from './task-layout/task-details/task-logs/task-logs.component';
 import { TaskCommentsComponent } from './task-layout/task-details/task-comments/task-comments.component';
 import { MentionModule } from 'angular-mentions';
+import { FilePopupComponent } from './file-popup/file-popup.component';
 
 
 @NgModule({
@@ -78,7 +79,8 @@ import { MentionModule } from 'angular-mentions';
     SubtaskRowComponent,
     KanbanSubtaskCardComponent,
     TaskLogsComponent,
-    TaskCommentsComponent
+    TaskCommentsComponent,
+    FilePopupComponent
   ],
   imports: [
     RouterModule.forChild(tasksRoutes),

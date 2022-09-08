@@ -36,11 +36,11 @@ export class KanbanTaskCardComponent implements OnInit {
   });
   }
 
-  showSubtasks(){
-    if(!this.showTasks){
-      this._taskServiceService.getSubtasks$(this.card.id).subscribe(res=>{
+    showSubtasks(){
+        if(!this.showTasks){
+        this._taskServiceService.getSubtasks$(this.card.id).subscribe(res=>{
         console.log(res);
-      })
+        })
     }else{
       this._taskServiceService.closeSubtasks();
 

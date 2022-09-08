@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Priorities } from 'app/modules/admin/priorities/model/priorities';
 import { Status } from 'app/modules/admin/statuses/model/status';
 import { environment } from 'environments/environment';
 import moment from 'moment';
 import { map, mergeMap, tap, Observable, take, switchMap, finalize } from 'rxjs';
+import { FilePopupComponent } from '../../../file-popup/file-popup.component';
 import { Task, Board, TaskModified } from '../../../_models/task';
 import { TaskServiceService } from '../../../_services/task-service.service';
 
@@ -22,7 +27,9 @@ export class TaskRowComponent implements OnInit {
   showTasks = false;
   subtask$= this._taskServiceService.allSubTasks$;
   constructor(private _taskServiceService:TaskServiceService,
-    private _formBuilder:FormBuilder) { }
+    private _formBuilder:FormBuilder,
+    private dialog: MatDialog
+    ) { }
   statuses$ = this._taskServiceService.statuses$
   priorities$ = this._taskServiceService.priorities$
   subtasksOpened$ = this._taskServiceService.curretnSubtasksOpened$.pipe(
@@ -101,5 +108,19 @@ export class TaskRowComponent implements OnInit {
   {
       return item.id || index;
   }
+
+  openImagePopup(file)
+  {
+
+  this.dialog.open(FilePopupComponent, {
+      width: '50vh',
+      height:'50vh',
+      data:{
+          file:file
+      }
+
+  })
+  }
+
 
 }

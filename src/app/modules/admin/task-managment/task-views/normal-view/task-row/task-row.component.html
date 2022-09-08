@@ -99,6 +99,7 @@
                     mat-mini-fab
                     color="primary"
                     class="upload-btn mr-4"
+                    (click)="openImagePopup(apiUrl+ 'storage/'+task.file)"
                 >
                     <mat-icon>attach_file</mat-icon>
                 </button>
