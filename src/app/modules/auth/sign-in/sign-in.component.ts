@@ -54,7 +54,7 @@ export class AuthSignInComponent implements OnInit {
             grant_type   : ['password'],
             client_id    : ['1'],
             scope        : [''],
-            client_secret: ['rav5a76qrMMEuDld1XQLvOHISCOn5OWZDOqtZ0Ia'] 
+            client_secret: ['psiqamcHTpHeHHIH4VjcaLevnB1KTFuzyR5UNrmc']
         }); 
     }
 

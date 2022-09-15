@@ -124,8 +124,8 @@ export class SettingsAccountComponent implements OnInit
         }else{
             formData2.append('user_image', this.file);
         }
-        // formData2.append('role.id', this.user.role.id);
-        // formData2.append('department.id', this.user.department.id);
+        formData2.append('role.id', this.user.role.id);
+        formData2.append('department.id', this.user.department.id);
         formData2.append('email', this.user.email);
         console.warn(formData2)
         this._userService.updatee(this.user.id,formData2).subscribe((res: any)=>{
