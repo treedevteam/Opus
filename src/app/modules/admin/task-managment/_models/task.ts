@@ -49,9 +49,11 @@ export interface Users{
     email: string;
     department_id: number;
     role: number;
-    user_image: string;
+    image: string;
     last_seen: string;
     selected: boolean;
+    color:string;
+    user_image:string
 }
 
 export interface Logs{
@@ -78,6 +80,7 @@ export interface Comments{
     user_id: number;
     created_at: string;
     mentions: number[];
+    user:Users;
 }
 
 

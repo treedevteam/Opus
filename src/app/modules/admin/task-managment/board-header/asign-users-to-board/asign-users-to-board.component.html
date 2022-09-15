@@ -12,9 +12,11 @@
 <div *ngFor="let test of (usersAssigned$ | async).assigned">
     <div class="user_row">
         <div class="user_logo">
-            <img src="{{apiUrl+'storage/'+test.user_image}}" alt="">
+            <app-user-profile [image]="test.user_image" [name]="test.name" [color]="test.color"></app-user-profile>
+
+            <!-- <img src="{{apiUrl+'storage/'+test.user_image}}" alt=""> -->
         </div>
-        <div class="userInfo">
+        <div class="userInfo" style="margin-left:10px;">
             <h3 class="name"> {{test.name}}</h3>
             <div class="flex">
               <p class="role">{{test.role.name}}</p> <a class="remove_user_from_board" (click)="assignUserToBoard(test.id)">remove</a>

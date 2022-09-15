@@ -60,7 +60,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
             password: ['', Validators.required],
             department_id: ['', Validators.required],
             role_id: ['', Validators.required],
-            file: ['', Validators.required],
+            file: [''],
         });
     }
 

@@ -11,6 +11,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { UserService } from '../../../../core/user/user.service';
 import { JoinTaskDialogComponent } from '../join-task-dialog/join-task-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Boards, Departments } from '../../departments/departments.types';
 
 
 @Injectable({
@@ -144,7 +145,19 @@ export class TaskServiceService {
     );
 
 
+    getDepartmentsData$ = this._httpClient.get<Departments[]>(this.apiUrl+'api/departments').pipe(
+        map((data: any): Departments[] => {
+            return data;
+        }),
+         shareReplay(1),
+    );
 
+    getBoardsData$ = this._httpClient.get<Boards[]>(this.apiUrl+'api/all/boards').pipe(
+        map((data: any): Boards[] => {
+            return data;
+        }),
+         shareReplay(1),
+    );
 
   
   //BoardTasks
@@ -217,7 +230,21 @@ export class TaskServiceService {
     )
 }
 
-
+departmentsWithBoard$ = combineLatest([
+    this.getDepartmentsData$,
+    this.getBoardsData$,
+    this.currentBoard$
+  ]).pipe(
+    map(([departments,board,currentBoard]) =>
+    departments.map(departmet =>({
+        ...departmet,
+        boards: board.filter(x=> +x.department_id === departmet.id).filter(x=>x.id !== currentBoard.id)
+    }))),
+    shareReplay(1),
+    tap((res)=>{
+        console.log(res);
+    })
+  );
 
 
   getUsersDepartment(depId: number): Observable<Users[]>
@@ -243,6 +270,7 @@ export class TaskServiceService {
     })),
     shareReplay(1),
     );
+    
     taskSelectedDetails$ = combineLatest([
     this.taskSelected$,
     this.getUsersData$
@@ -382,10 +410,10 @@ export class TaskServiceService {
                 take(1),
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task_status/' + taskId , {status: statusId,order: board.board_order,board_id:board.id}).pipe(
                     map((updatedTask: any) => {
-                        updatedTask = updatedTask.task;
-                        const checklistIndex = tasks.findIndex(d => d.id === updatedTask.id);
+                        // updatedTask = updatedTask.task;
+                        const checklistIndex = tasks.findIndex(d => d.id === updatedTask.task.id);
                         if(checklistIndex > -1){
-                            tasks.splice(checklistIndex,1,updatedTask);
+                            tasks.splice(checklistIndex,1,updatedTask.task);
                         }
                         this._tasks.next(tasks)
                         console.log(updatedTask);

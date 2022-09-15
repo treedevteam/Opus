@@ -8,7 +8,9 @@ export interface User
     avatar?: string;
     status?: string;
     role?:Role
+    image: string;
     user_image: string;
+    color:string;
 }
 export interface Role
 {

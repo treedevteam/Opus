@@ -26,12 +26,34 @@
         <!-- User -->
         <div class="flex flex-col items-center w-full p-4">
             <div class="relative w-24 h-24">
-              <img
+                <div *ngIf="userInfo | async as user" class="">
+                    <div *ngIf="user.user_image">
+                        <img
+                        class="w-full h-full rounded-full"
+                        style="min-height: 6rem ;min-width: 6rem;display: flex; justify-content: center;align-items: center;object-fit: cover;"
+                        [src]="apiUrl+ 'storage/'+user.user_image"
+                        alt="User avatar"
+                        onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                    </div>
+                    <div *ngIf="user.color">
+                        <div [matTooltip]="user.name" [matTooltipPosition]="'above'" class="w-full h-full rounded-full " style="min-height: 6rem ;min-width: 6rem;display: flex; justify-content: center;align-items: center;" [ngStyle]="{'background-color': user.color}"><div class={{wcHexIsLight(user.color)}} style="font-size:22px ;">{{user.name.charAt(0) | uppercase}}</div>
+                        </div>
+                    </div>
+                    <div class="w-full h-full" *ngIf="!user.color && !user.user_image">
+                        <img
+                        class="w-full h-full rounded-full"
+                        style="min-height: 6rem ;min-width: 6rem;display: flex; justify-content: center;align-items: center;object-fit: cover;"
+                        [src]="'/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png'"
+                        alt="User avatar"
+                        onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                    </div>
+                </div>
+              <!-- <img
                     class="w-full h-full rounded-full"
                     style="object-fit: cover;"
                     [src]="apiUrl+ 'storage/'+(userInfo| async).user_image"
                     alt="User avatar"
-                    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+                    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';"> -->
                 <!-- <mat-icon
                     class="icon-size-24"
                     *ngIf="!userInfo.user_image"

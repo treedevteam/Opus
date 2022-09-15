@@ -27,6 +27,8 @@ export class TaskRowComponent implements OnInit {
   formShare: FormGroup;
   showTasks = false;
   subtask$= this._taskServiceService.allSubTasks$;
+  departmentsWithBoard$= this._taskServiceService.departmentsWithBoard$
+
   constructor(private _taskServiceService:TaskServiceService,
     private _formBuilder:FormBuilder,
     private dialog: MatDialog,
@@ -78,6 +80,9 @@ export class TaskRowComponent implements OnInit {
     }
   }
 
+  shareTask(){
+    console.log(this.formShare.value,"this.formShare.valuethis.formShare.valuethis.formShare.value");
+  }
   updateField() {
 
     if( this._taskServiceService.boardInfo.is_his !== 1){

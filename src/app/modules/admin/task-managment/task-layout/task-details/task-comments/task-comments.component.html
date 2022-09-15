@@ -37,22 +37,12 @@
     <div class="py-4">
         <ng-container *ngFor="let comment of taskSelectedComments$ | async">
             <div class="one_comment d-flex" *ngIf="!comment.is_his">
-                <img
-                    style="
-                        width: 35px;
-                        height: 35px;
-                        border-radius: 50%;
-                        margin: 5px 0;
-                        object-fit: cover;
-                    "
-                    src="{{
-                        apiUrl + 'storage/' + comment.user_id.image
-                    }}"
-                    alt=""
-                />
+                <app-user-profile [image]="comment.user.image" [name]="comment.user.name" [color]="comment.user.color"></app-user-profile>
+
+               
                 <!-- {{comment.user | json}} -->
                 <div class="px-3">
-                    <h5 class="bold">{{ comment.user_id.name }}</h5>
+                    <h5 class="bold" style="margin-top: 8px;">{{ comment.user.name }}</h5>
                     <div class="relative max-w-3/4 py-2 rounded-lg">
                         <!-- Speech bubble tail -->
                         <div
