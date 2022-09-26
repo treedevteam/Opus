@@ -555,6 +555,9 @@ departmentsWithBoard$ = combineLatest([
             ))
         )
     }
+    shareTask(data:{attach_boards:string, task_id:number, detach_boards:string}){
+        return this._httpClient.post(this.apiUrl+'api/share/task',data)
+    }
 
     assignUserTask(taskId: number, userId: number): Observable<Task>{
         return this.currentBoard$.pipe(

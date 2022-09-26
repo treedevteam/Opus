@@ -40,7 +40,7 @@
                     <form [formGroup]="formShare" (ngSubmit)="onSubmit()"  #shareTaskNgForm="ngForm">
                         <div class="form_body_popover">
                             <mat-form-field style="width: 100%;" >
-                                <mat-select multiple [formControlName]="'boards'" disableOptionCentering>
+                                <mat-select multiple [formControlName]="'attach_boards'" disableOptionCentering>
                                 <mat-optgroup label="{{department.name}}" *ngFor="let department of departmentsWithBoard$ | async">
                                     <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
                                 </mat-optgroup>
