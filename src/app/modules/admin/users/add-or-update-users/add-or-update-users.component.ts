@@ -73,6 +73,7 @@ export class AddOrUpdateUsersComponent implements OnInit {
     }
 
     onFileChange(pFileList: File): void{
+        debugger
         if (pFileList[0]) {
             if (
                 pFileList[0].type === 'image/jpeg' ||

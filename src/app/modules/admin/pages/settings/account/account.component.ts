@@ -2,11 +2,12 @@
 
 
 import { style } from '@angular/animations';
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
+import { environment } from 'environments/environment';
 
 @Component({
     selector       : 'settings-account',
@@ -19,10 +20,11 @@ export class SettingsAccountComponent implements OnInit
 {
     accountForm: FormGroup;
     file: any = null;
-    url: any = null;
+    photoUrl: any = null;
     uploaded = false;
     userInfo= this._userService.singleUser$
     user
+    apiUrl = environment.apiUrl
     /**
      * Constructor
      */
@@ -56,7 +58,7 @@ export class SettingsAccountComponent implements OnInit
             email   : [''],
             department: {id:1},
             role : {id:1},
-           user_image : [],
+            image : [],
  
         });
         console.log(this.accountForm.get('role').value)
@@ -65,8 +67,9 @@ export class SettingsAccountComponent implements OnInit
     }
 
 
+
     onFileChange(pFileList: File): void{
-        console.log(pFileList[0])
+        console.log(this.photoUrl)
         if (pFileList[0]) {
             if (
                 pFileList[0].type === 'image/jpeg' ||
@@ -80,24 +83,27 @@ export class SettingsAccountComponent implements OnInit
                     this.uploaded = true;
                     this.file = pFileList[0];
                     const file = pFileList[0];
-                    this.accountForm.patchValue({ 
-                        user_image: pFileList[0]
+                    this.accountForm.patchValue({
+                        image: pFileList[0]
                         });
+                        const reader = new FileReader();
+                        reader.readAsDataURL(pFileList[0]); 
+                        reader.onload = (_event)=>{ 
+                            this.photoUrl = reader.result; 
+                            console.log(this.photoUrl)
+                        }   
+                        
                     this._snackBar.open('Successfully upload!', 'Close', {
                       duration: 2000,
                     });
-                    const reader = new FileReader();
-                    reader.readAsDataURL(pFileList[0]);
-                    reader.onload = (event): any => {
-                        this.url = event.target.result;
-                    };
+          
                 }else{
                     this._snackBar.open('File is too large!', 'Close', {
                         duration: 2000,
                     });
                     this.uploaded = false;
                     this.file = null;
-                    this.url = null;
+                    this.photoUrl = null;
                 }
             }else{
                 this._snackBar.open('Accepet just jpeg, png and jpg', 'Close', {
@@ -105,25 +111,17 @@ export class SettingsAccountComponent implements OnInit
                 });
                 this.uploaded = false;
                 this.file = null;
-                this.url = null;
+                this.photoUrl = null;
             }
-        } 
-      {
-
-
-}
-}
+        }
+      }
     save(){
-        console.warn(this.user)
         debugger
+        console.warn(this.user)
         const formData2  = new FormData();
         const result = Object.assign({}, this.accountForm.value);
         formData2.append('name', this.accountForm.get('name').value);
-        if(this.file === null){
-            formData2.append('user_image', this.user.user_image);
-        }else{
-            formData2.append('user_image', this.file);
-        }
+        formData2.append('image', this.file);
         formData2.append('role.id', this.user.role.id);
         formData2.append('department.id', this.user.department.id);
         formData2.append('email', this.user.email);
@@ -134,5 +132,16 @@ export class SettingsAccountComponent implements OnInit
                 duration: 3000,
             });
         });
+        }
+        deleteFile(): void{
+            this.uploaded = false;
+            this.file = null;
+            this.photoUrl = null;
+            this.accountForm.patchValue({
+                image: null
+            });
+            this._snackBar.open('Successfully delete!', 'Close', {
+              duration: 2000,
+            });
         }
       }
