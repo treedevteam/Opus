@@ -27,6 +27,7 @@ import { StoreBoardsComponent } from './boards/store-boards/store-boards.compone
 import { UpdateBoardsComponent } from './boards/update-boards/update-boards.component';
 import {MatSelectModule} from '@angular/material/select';
 import { Title } from '@angular/platform-browser';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { Title } from '@angular/platform-browser';
     BoardsComponent,
     StoreBoardsComponent,
     UpdateBoardsComponent,
+    UserProfileComponent
   ],
   imports: [
     RouterModule.forChild(departmentsRoutingModule),
