@@ -72,7 +72,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.realTimeService.channel$.subscribe(channel2=>{
       channel2.bind('task-data', data => {
-        console.log(data);
+        debugger;
           this._taskService.handleSingTaskRealtimeFunction(data);
         });
     })   
