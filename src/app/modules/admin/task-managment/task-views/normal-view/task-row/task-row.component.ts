@@ -83,7 +83,7 @@ export class TaskRowComponent implements OnInit {
 
   shareTask(){
     console.log(this.formShare.value,"this.formShare.valuethis.formShare.valuethis.formShare.value");
-    this._taskServiceService.shareTask({attach_boards:this.formShare.controls['attach_boards'].value.toString(), detach_boards:"",task_id: this.task.id}).subscribe(res=>{
+    this._taskServiceService.shareTask({attach_boards:"["+ this.formShare.controls['attach_boards'].value.map(r=>+r)+"]", detach_boards:"[]",task_id: this.task.id}).subscribe(res=>{
       console.log(res);
     })
   }

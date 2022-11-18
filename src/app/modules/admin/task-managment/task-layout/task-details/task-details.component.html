@@ -166,20 +166,20 @@
                                 <li
                                     class="list-group-item checkListLi"
                                     style="display: flex; align-items: center"
-                                    *ngFor="let item of task.checklists"
+                                    *ngFor="let item of (taskSelected$ | async).checklists"
                                 >
                                     <div class="flex" style="align-items: center">
                                         <input
                                             class="mr-3"
                                             type="checkbox"
                                             value="{{ item.id }}"
-                                            [checked]="item.value === 1"
+                                            [checked]="+item.value === 1"
                                             (change)="isAllSelected(item)"
                                         />
                                         <p
                                             [ngStyle]="{
                                                 'text-decoration':
-                                                    item.value === 1
+                                                    +item.value === 1
                                                         ? 'line-through'
                                                         : 'none'
                                             }"

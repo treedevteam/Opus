@@ -73,7 +73,6 @@ export class KanbanTaskCardComponent implements OnInit {
   addCard(list: any, event: TaskOrSub){
 
     if( this._taskServiceService.boardInfo.is_his !== 1){
-      alert("test")
     }else{
       const newTask = {
         task_id: list.id,

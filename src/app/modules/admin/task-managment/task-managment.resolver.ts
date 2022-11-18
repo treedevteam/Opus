@@ -104,9 +104,9 @@ export class TaskResolver implements Resolve<Task> {
 
                 // Log the error
                 console.error(error);
-
+                debugger;
                 // Get the parent url
-                const parentUrl = state.url.split('/').slice(0, -1).join('/');
+                const parentUrl = state.url.split('/').slice(0, -2).join('/');
 
                 // Navigate to there
                 this._router.navigateByUrl(parentUrl);
@@ -141,7 +141,7 @@ export class SubtaskResolver implements Resolve<Task> {
                 console.error(error);
 
                 // Get the parent url
-                const parentUrl = state.url.split('/').slice(0, -1).join('/');
+                const parentUrl = state.url.split('/').slice(0, -2).join('/');
 
                 // Navigate to there
                 this._router.navigateByUrl(parentUrl);

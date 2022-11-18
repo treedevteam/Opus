@@ -1,7 +1,7 @@
 /* eslint-disable  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap, mergeMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap, mergeMap, first } from 'rxjs';
 import { Board, Comments, DueData, Logs, Task, TaskCheckList, Users } from '../_models/task';
 import { environment } from 'environments/environment';
 import { Priorities } from '../../priorities/model/priorities';
@@ -178,6 +178,7 @@ export class TaskServiceService {
   getBoard(id: number): Observable<Board>{
     return this._httpClient.get<Board>(this.apiUrl+'api/board/'+ id).pipe(
       map((data: any): Board => {
+        
           this._currentBoard.next({...data.board, is_his: data.is_his});
           this._boardInfo = {...data.board, is_his: data.is_his};
           return data;
@@ -916,6 +917,291 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
             height: '300px',
           });
     }
+
+
+
+
+    handlePosherActions(data:{board:number,task_resource:Task, task:number,board_order:string,status:string,current_user:any}){
+        return this.currentBoard$.pipe(
+            switchMap(board=> this.tasks$.pipe(
+                take(1),
+                    switchMap(tasks => this._userService.user$.pipe(
+                        map(user =>{
+                            debugger;
+                            if(data.current_user !== user.id){
+                                if(+data.board === +board.id){
+                                    this.handelStatusRealTime(data.status,tasks,data.board_order,data.task_resource)
+                                }
+                            }
+                            return data.task;
+                        })
+                    ))    
+                // switchMap((tasks: any) => {
+                    //     debugger;
+                    //     if(+data.board === +board.id){
+                    //         this.handelStatusRealTime(data.status,tasks,data.board_order,data.task_resource)
+                    //     }
+                    //     return data.task;
+                    // })
+            ))
+        )
+    }
+
+    handelStatusRealTime(status:string,tasks:Task[],board_order:string, data?:any ){
+        switch(status.toLowerCase()) {
+            case "delete":
+                const deletedTaskIndex = tasks.findIndex(x=>x.id === +data);
+                if(deletedTaskIndex > -1){
+                    tasks.splice(deletedTaskIndex,1);
+                    this._tasks.next([...tasks])
+                    this._taskOrder.next(board_order)
+                }
+              break;
+            case "update":
+                const checklistIndex = tasks.findIndex(d => d.id === data.id);
+                    if(checklistIndex > -1){
+                        tasks.splice(checklistIndex,1,data);
+                    }
+                    this._tasks.next(tasks)
+                    this._taskOrder.next(board_order)
+              // code block
+              break;
+            case "add":
+                const addedId = tasks.findIndex(x=>x.id === data.id);
+                if(addedId < 0){
+                    tasks = [...tasks,data]
+                    this._tasks.next(tasks);
+                    this._taskOrder.next(board_order)
+                }
+            default:
+              
+          }
+    }
+    //vyn
+    handleSingTaskRealtimeFunction(data){
+        this.handleObservables(data).subscribe(res=>{
+            
+        })
+    }
+    //vyn
+    handleObservables(data){
+        debugger;
+        switch(data.status.toLowerCase()){
+            case "checklist":
+                return this.tasks$.pipe(
+                    switchMap(tasks=> this.taskSelected$.pipe(
+                        take(1),
+                        switchMap(task => this._userService.user$.pipe(
+                            take(1),
+                            map(user=>{
+                                if(data.current_user !== user.id){
+                                    alert("hiniktu")
+                                    if(task.id === +data.task){
+                                        this.handelStatusRealTimeSingleTime(tasks,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned,data.current_user)
+                                    }
+                                }
+                                return data.task;
+                            })
+                        )
+                    ))
+                ))
+                break;    
+            case "comment":
+                return this.taskSelectedComments$.pipe(
+                    switchMap(taskcomments=> this.taskSelected$.pipe(
+                        take(1),
+                        switchMap(task=> this._userService.user$.pipe(
+                            map(user=>{
+                                if(data.current_user !== user.id){
+                                    this.handelRealTimeComments(taskcomments,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned)
+                                }
+                                return data.task;
+                            })
+                        ))
+                    ))
+                )
+                
+                break;
+            case "assign_user":
+                return this.tasks$.pipe(
+                    switchMap(alltasks=> this.taskSelected$.pipe(
+                        take(1),
+                        switchMap(task => this._userService.user$.pipe(
+                            map(user=>{
+                                if(data.current_user !== user.id){
+
+                                    this.handelRealTimeUserAssign(alltasks,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned)
+                                }
+                                return data.task;
+
+                            })
+                        ))
+                    ))
+                )
+                break;
+        
+        }
+    }
+
+
+    handleSingTaskRealtime(data:{action:string; status:string, checklist:TaskCheckList, comments:any,task:string, users_assigned:any}){
+
+        switch(data.status.toLowerCase()){
+            case "checklist":
+                return this.tasks$.pipe(
+                    switchMap(tasks=> this.taskSelected$.pipe(
+                        take(1),
+                        switchMap((task: any) => {
+                                if(task.id === +data.task){
+                                    this.handelStatusRealTimeSingleTime(tasks,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned)
+                                }
+                                return data.task;
+                            })
+                    ))
+                )
+                break;    
+            case "comments":
+                return this.taskSelectedComments$.pipe(
+                    switchMap(taskcomments=> this.taskSelected$.pipe(
+                        take(1),
+                            map((task: any) => {
+                                debugger;
+                                this.handelRealTimeComments(taskcomments,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned)
+                                return data.task;
+                            })
+                    ))
+                )
+                
+                break;
+            case "users_assigned":
+                return this.tasks$.pipe(
+                    switchMap(alltasks=> this.taskSelected$.pipe(
+                        take(1),
+                            map((task: any) => {
+                                debugger;
+                                this.handelRealTimeUserAssign(alltasks,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned)
+                                return data.task;
+                            })
+                    ))
+                )
+                break;
+        
+        }
+
+
+
+
+        
+    }
+    //vyn
+    handelStatusRealTimeSingleTime(alltasks:Task[],task:Task,action:string ,status:string, checklist?:any, comments?:any,users_assigned?:any, current_user?:any){
+        switch(action.toLocaleLowerCase()){
+            case "add":
+                debugger;
+
+                const newCheckList = task.checklists.findIndex(x =>x.id === checklist.id);
+                if(newCheckList < 0){
+                    task.checklists = [...task.checklists, checklist]
+                    const taskIndex = alltasks.findIndex(x=>+x.id === +task.id);
+                    alltasks[taskIndex] = task;
+                }
+                this._taskSelected.next(task)
+                this._tasks.next(alltasks)
+                break;
+            case "update":
+                const updatedCheckList = task.checklists.findIndex(x =>x.id === checklist.id);
+                if(updatedCheckList > -1){
+                        const taskIndex = alltasks.findIndex(x=>+x.id === +task.id);
+                        task.checklists.splice(updatedCheckList,1,checklist);
+                        alltasks[taskIndex] = task
+                    }
+                    this._taskSelected.next(task)
+                    this._tasks.next(alltasks)
+                break;
+            
+            case "delete":
+                const deleteCheckList = task.checklists.findIndex(x =>x.id === checklist.id);
+                if(deleteCheckList > -1){
+                    const taskIndex = alltasks.findIndex(x=>+x.id === +task.id);
+                    task.checklists.splice(deleteCheckList,1)
+                    alltasks[taskIndex] = task
+                }
+                this._taskSelected.next(task)
+                this._tasks.next(alltasks)
+                break;
+            default:
+        }
+    }
+
+
+    //vyn
+    handelRealTimeComments(allcomments:Comments[],task:Task,action:string ,status:string, checklist?:any, comments?:any,users_assigned?:any ){
+        switch(action.toLocaleLowerCase()){
+            case "add":
+                debugger;
+                const newComment = allcomments.findIndex(x =>x.id === comments.id);
+                if(newComment < 0){
+                    allcomments = [...allcomments, comments]
+                    this._taskSelectedcomments.next(allcomments);
+                }
+                break;
+            case "update":
+                const updatedComment = allcomments.findIndex(x =>x.id === comments.id);
+                if(updatedComment > -1){
+                    allcomments.splice(updatedComment,1,comments);
+                    this._taskSelectedcomments.next(allcomments);
+                }
+                break;
+            
+            case "delete":
+                const deleteComment = allcomments.findIndex(x =>x.id === comments.id);
+                if(deleteComment > -1){
+                    const taskIndex = allcomments.findIndex(x=>+x.id === +task.id);
+                    allcomments.splice(deleteComment,1)
+                    this._taskSelectedcomments.next(allcomments);
+                }
+                break;
+            default:
+        }
+    }
+
+
+    
+    //vyn
+    handelRealTimeUserAssign(alltasks:Task[],task:Task,action:string ,status:string, checklist?:any, comments?:any,users_assigned?:any ){
+        switch(action.toLocaleLowerCase()){
+            case "add":
+               
+                break;
+            case "update":
+                const updatedUserAssign = task.users_assigned.findIndex(x =>x === +users_assigned);
+                if(updatedUserAssign < 0){
+                    debugger;
+                        task.users_assigned = [...task.users_assigned, +users_assigned];
+                        const taskIndex = alltasks.findIndex(x=>+x.id === +task.id);
+                        alltasks[taskIndex] = task
+                        this._taskSelected.next(task);
+                        this._tasks.next(alltasks);
+                    }else{
+                        
+                        const taskIndex = alltasks.findIndex(x=>+x.id === +task.id);
+                        task.users_assigned = task.users_assigned.splice(updatedUserAssign,1)
+                        alltasks[taskIndex] = task
+                        this._taskSelected.next(task);
+                        this._tasks.next(alltasks);
+                    }
+                break;
+            
+            case "delete":
+                
+                break;
+            default:
+        }
+    }
+
+
+
+    
 
 
 }

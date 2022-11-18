@@ -63,6 +63,7 @@ export class UserService
         return this._httpClient.get(this.apiUrl + 'api/user').pipe(
             tap((user:any) => {
                 this._user.next(user.data);
+                this.user = user.data;
                 this._user$.next(user.data);
 
             }),

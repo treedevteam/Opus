@@ -18,11 +18,15 @@ export class AppComponent implements OnInit
     /**
      * Constructor
      */
-    constructor(private pusherService: WebSocketServiceService, private _snackBar: MatSnackBar)
+    constructor( private _snackBar: MatSnackBar,
+        )
     {
     }
 
     ngOnInit(): void {
+
+          
+
 
         if(Notification.permission === "granted"){
         }

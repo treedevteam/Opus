@@ -14,6 +14,8 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { combineLatest, debounceTime, filter, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import saveAs from 'file-saver';
+import Pusher from 'pusher-js';
+import { RealtimeServiceService } from '../../real_time_services/task_realtime.services';
 
 
 @Component({
@@ -40,6 +42,9 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   url ;
   taskFile$ = this._taskService.taskSelected$
 
+
+  pusher: any;
+  channel: any;
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _normalView: NormalViewComponent,
@@ -53,7 +58,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
         private _snackBar: MatSnackBar,
-        
+        private realTimeService:RealtimeServiceService
         ) {
         }
 
@@ -64,6 +69,19 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnInit(): void {
+
+    this.realTimeService.channel$.subscribe(channel2=>{
+      channel2.bind('task-data', data => {
+        console.log(data);
+          this._taskService.handleSingTaskRealtimeFunction(data);
+        });
+    })   
+
+
+
+
+
+    
     this.taskForm = this._formBuilder.group({
       checklist:'',
       file:[''],
