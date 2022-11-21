@@ -5,6 +5,7 @@ import { environment } from 'environments/environment';
 import moment from 'moment';
 import { combineLatest, forkJoin, map, shareReplay, tap } from 'rxjs';
 import { Boards } from '../../departments/departments.types';
+import { UserBoardRealtimeServiceService } from '../real_time_services/userBoard_realtime.services';
 import { Board } from '../_models/task';
 import { TaskServiceService } from '../_services/task-service.service';
 import { AsignUsersToBoardComponent } from './asign-users-to-board/asign-users-to-board.component';
@@ -21,6 +22,7 @@ export class BoardHeaderComponent implements OnInit {
   constructor(private _taskServiceService:TaskServiceService,
     private _userService:UserService,
     private dialog: MatDialog,
+    private boardUserRealtime:UserBoardRealtimeServiceService
     ) { }
 
   currentBoard$ = this._taskServiceService.currentBoard$;
@@ -30,6 +32,14 @@ export class BoardHeaderComponent implements OnInit {
   user$ = this._userService.user$;
 
   ngOnInit(): void {
+
+    this.boardUserRealtime.channel$.subscribe(channel=>{
+      channel.bind('department-event', data => {
+        debugger;
+        this._taskServiceService.userAssignedInBoard(data);
+        });
+    })  
+
     this.currentBoard$.subscribe(res=>{
       this.currentBoard = res
     })

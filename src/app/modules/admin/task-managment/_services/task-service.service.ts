@@ -1029,7 +1029,6 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
                         switchMap(task => this._userService.user$.pipe(
                             map(user=>{
                                 if(data.current_user !== user.id){
-
                                     this.handelRealTimeUserAssign(alltasks,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned)
                                 }
                                 return data.task;
@@ -1169,6 +1168,7 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
     
     //vyn
     handelRealTimeUserAssign(alltasks:Task[],task:Task,action:string ,status:string, checklist?:any, comments?:any,users_assigned?:any ){
+        debugger;
         switch(action.toLocaleLowerCase()){
             case "add":
                
@@ -1183,7 +1183,6 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
                         this._taskSelected.next(task);
                         this._tasks.next(alltasks);
                     }else{
-                        
                         const taskIndex = alltasks.findIndex(x=>+x.id === +task.id);
                         task.users_assigned = task.users_assigned.splice(updatedUserAssign,1)
                         alltasks[taskIndex] = task
@@ -1197,6 +1196,12 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
                 break;
             default:
         }
+    }
+
+
+
+    userAssignedInBoard(data:any){
+        this._boardUsers.next(data.assigned);
     }
 
 
