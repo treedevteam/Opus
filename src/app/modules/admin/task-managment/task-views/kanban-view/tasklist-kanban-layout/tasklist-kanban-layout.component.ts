@@ -51,7 +51,6 @@ export class TasklistKanbanLayoutComponent implements OnInit {
     private _fuseConfirmationService: FuseConfirmationService) { }
 
   ngOnInit(): void {
-    alert("test")
     this.formShare = this._formBuilder.group({
         boards: ['', Validators.required],
     });
