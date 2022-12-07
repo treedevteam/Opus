@@ -18,7 +18,7 @@
             <mat-form-field class="flex-auto gt-xs:pr-3">
                 <mat-label>Board type:</mat-label>
                 <mat-select matNativeControl required name="'type"  [formControlName]="'type'" >
-                    <mat-option   >Public</mat-option>
+                    <mat-option  [value]="1" >Public</mat-option>
                     <mat-option [value]="0">Private</mat-option>
                 </mat-select>
                 <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>

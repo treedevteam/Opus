@@ -88,6 +88,15 @@ export const appRoutes: Route[] = [
         {path: 'settings', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
     ]},
 
+    {path: 'mailbox', component  : LayoutComponent,
+    resolve    : {
+        initialData: InitialDataResolver,
+    }, canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    canLoad: [AuthGuard], children: [
+        {path: '', loadChildren: () => import('app/modules/admin/mailbox/mailbox.module').then(m => m.MailboxModule)},    
+    ]},
+
     {path: 'board',component  : LayoutComponent,
     resolve    : {
         initialData: InitialDataResolver,
