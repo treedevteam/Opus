@@ -23,6 +23,9 @@ export class TasklistKanbanLayoutComponent implements OnInit {
     this._taskService.getStatus$,
     this._taskService.orderModified$
   ]).pipe(
+    tap(res=>{
+        console.log(res);
+    }),
     map(([currentBoardTasks, getStatus, getOrderTasks]) =>(
         getStatus.map(s=>(
             {

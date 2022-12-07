@@ -21,7 +21,6 @@ export class KanbanTaskCardComponent implements OnInit {
   apiUrl = environment.apiUrl
   subtasksOpened$ = this._taskServiceService.curretnSubtasksOpened$.pipe(
     tap(res=>{
-      console.log(res);
       this.showTasks = this.card.id === res;
     })
   )

@@ -141,6 +141,7 @@ export class TaskServiceService {
   }
   
   orderModified$ = this.tasksOrder$.pipe(
+    tap(res=>console.log(res)),
         map(e=>e.split(',').filter(t=>t !== '').map(e=>+e))
     );
 
@@ -167,7 +168,7 @@ export class TaskServiceService {
         this._tasks.next(data.tasks)
         console.log(data.order,"ODERRIIIIIIIK");
         console.log(data);
-        this._taskOrder.next(data.order)
+        this._taskOrder.next(data.order?data.order:"")
         return data.tasks;
     }),
     shareReplay(1),
