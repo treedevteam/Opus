@@ -30,6 +30,8 @@ export class KanbanTaskCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.card);
+    
     this.formShare = this._formBuilder.group({
       boards: ['', Validators.required],
   });

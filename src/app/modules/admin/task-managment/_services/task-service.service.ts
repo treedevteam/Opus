@@ -1,7 +1,7 @@
 /* eslint-disable  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap, mergeMap, first } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, of, scan, shareReplay, Subject, switchMap, take, tap, mergeMap, first, concatMap } from 'rxjs';
 import { Board, Comments, DueData, Logs, Task, TaskCheckList, Users } from '../_models/task';
 import { environment } from 'environments/environment';
 import { Priorities } from '../../priorities/model/priorities';
@@ -507,10 +507,17 @@ departmentsWithBoard$ = combineLatest([
 
 
     updateTaskTitle(title: any, taskId:number): Observable<Task>{
+
+
+
+        alert("teseet");
         return this.currentBoard$.pipe(
+            first(),
             switchMap(board=> this.tasks$.pipe(
-                take(1),
+                first(),
+                tap(_=>alert("testee2")),
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task_title/' + taskId ,  {title: title, board_id:board.id}).pipe(
+                    first(),
                     map((updatedTask: any) => {
                         updatedTask= updatedTask.data
                         const checklistIndex = tasks.findIndex(d => d.id === updatedTask.id);
@@ -526,11 +533,12 @@ departmentsWithBoard$ = combineLatest([
     }
 
     storeTask(form: any): Observable<Task>{
-
         return this.currentBoard$.pipe(
-            switchMap(board=> this.tasks$.pipe(
-                take(1),
-                switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task/store/board' , {...form,board_id:board.id}).pipe(
+            first(),
+            concatMap(board=> this.tasks$.pipe(
+                first(),
+                concatMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task/store/board' , {...form,board_id:board.id}).pipe(
+                    first(),
                     map((newTask: any) => {
                         this._tasks.next([newTask.task,...tasks])
                         console.log(newTask);
@@ -544,9 +552,11 @@ departmentsWithBoard$ = combineLatest([
 
     deleteTask(id: number, departments: number): Observable<Task>{
         return this.currentBoard$.pipe(
+            first(),
             switchMap(board=> this.tasks$.pipe(
-                take(1),
+                first(),
                 switchMap(tasks => this._httpClient.delete<Task>(this.apiUrl+'api/task/delete/'+id).pipe(
+                    first(),
                     map((deletedTask: any) => {
                         const taskindex = tasks.findIndex(x=>x.id === id);
                         tasks.splice(taskindex,1);
@@ -563,10 +573,12 @@ departmentsWithBoard$ = combineLatest([
 
     assignUserTask(taskId: number, userId: number): Observable<Task>{
         return this.currentBoard$.pipe(
-            switchMap(board=> this.tasks$.pipe(
+                first(),
+                switchMap(board=> this.tasks$.pipe(
                 take(1),
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task/'+ taskId+'/'+ userId, null).pipe(
-                    map((updatedTask: any) => {
+                first(),
+                map((updatedTask: any) => {
                         updatedTask= updatedTask.data
                         const taskindex = tasks.findIndex(x=>x.id === updatedTask.id);
                         if(taskindex > -1){
@@ -589,10 +601,12 @@ departmentsWithBoard$ = combineLatest([
     //TODO ID NUK PO BAN
     addFileToTask(file, id: number): Observable<Task>{
         return this.currentBoard$.pipe(
-            switchMap(board=> this.tasks$.pipe(
+                first(),
+                switchMap(board=> this.tasks$.pipe(
                 take(1),
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+`api/task_file/${id}`, file).pipe( 
-                    map((updatedTask: any) => {
+                first(),
+                map((updatedTask: any) => {
                         updatedTask= updatedTask.task
                         const taskindex = tasks.findIndex(x=>x.id === updatedTask.id);
                         if(taskindex > -1){
@@ -611,10 +625,12 @@ departmentsWithBoard$ = combineLatest([
 
     deleteFileFromTask( id: number): Observable<Task>{
         return this.currentBoard$.pipe(
-            switchMap(board=> this.tasks$.pipe(
+                first(),
+                switchMap(board=> this.tasks$.pipe(
                 take(1),
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+`api/delete_file/${id}`,'delete').pipe(
-                    map((deletedFile: any) => {
+                first(),
+                map((deletedFile: any) => {
                         const taskindex = tasks.findIndex(x=>x.id === id);
                         if(taskindex > -1){
                             tasks[taskindex].file = null
@@ -646,10 +662,12 @@ departmentsWithBoard$ = combineLatest([
 
     assignUserSubtask(taskId: number, userId: number): Observable<Task>{
         return this.currentBoard$.pipe(
-            switchMap(board=> this.subtasks$.pipe(
+                first(),
+                switchMap(board=> this.subtasks$.pipe(
                 take(1),
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/subtask/'+ taskId+'/'+ userId, null).pipe(
-                    map((updatedTask: any) => {
+                first(),
+                map((updatedTask: any) => {
                         updatedTask= updatedTask.data
                         const taskindex = tasks.findIndex(x=>x.id === updatedTask.id);
                         if(taskindex > -1){
@@ -666,10 +684,12 @@ departmentsWithBoard$ = combineLatest([
 
     updateTaskStatusOrder(statusId: any, order: string, taskId: number): Observable<Task>{
         return this.currentBoard$.pipe(
-            switchMap(board=> this.tasks$.pipe(
+                first(),
+                switchMap(board=> this.tasks$.pipe(
                 take(1),
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task_status/' + taskId ,  {board_id:board.id,status: statusId,order}).pipe(
-                    map((updatedTask: any) => {
+                first(),
+                map((updatedTask: any) => {
                         const checklistIndex = tasks.findIndex(d => d.id === updatedTask.task.id);
                         if(checklistIndex > -1){
                             tasks.splice(checklistIndex,1,updatedTask.task);
@@ -879,10 +899,12 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
     
     storeSubtask(data): Observable<Task>{
         return this.currentBoard$.pipe(
-            switchMap(board=> this.subtasks$.pipe(
+                first(),
+                switchMap(board=> this.subtasks$.pipe(
                 take(1),
                 switchMap(subtasks => this._httpClient.post<Task>(this.apiUrl+'api/subtask/store', {...data,board_id:board.id}).pipe(
-                    map((newSubTask: any) => {
+                first(),
+                map((newSubTask: any) => {
                         this._subtask.next([...subtasks, newSubTask.data])
                         return newSubTask;
                     })
@@ -924,10 +946,12 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
 
     handlePosherActions(data:{board:number,task_resource:Task, task:number,board_order:string,status:string,current_user:any}){
         return this.currentBoard$.pipe(
-            switchMap(board=> this.tasks$.pipe(
+                first(),
+                switchMap(board=> this.tasks$.pipe(
                 take(1),
                     switchMap(tasks => this._userService.user$.pipe(
-                        map(user =>{
+                    first(),
+                    map(user =>{
                             debugger;
                             if(data.current_user !== user.id){
                                 if(+data.board === +board.id){

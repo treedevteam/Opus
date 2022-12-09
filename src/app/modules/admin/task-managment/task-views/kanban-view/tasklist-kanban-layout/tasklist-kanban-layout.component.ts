@@ -151,6 +151,7 @@ export class TasklistKanbanLayoutComponent implements OnInit {
             }else{
                
             }
+            
             console.log(newTask);
             // Save the card
         }

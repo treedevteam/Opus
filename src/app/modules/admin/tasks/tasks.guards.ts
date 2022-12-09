@@ -25,7 +25,7 @@ export class CanDeactivateTasksDetails implements CanDeactivate<TasksDetailsComp
         // If the next state doesn't contain '/tasks'
         // it means we are navigating away from the
         // tasks app
-        if ( !nextState.url.includes('/tasks') )
+        if ( !nextState.url.includes('/task-managment') )
         {
             // Let it navigate
             return true;

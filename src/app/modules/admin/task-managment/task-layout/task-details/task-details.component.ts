@@ -114,6 +114,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void
   {
+    this.closeDrawer();
       // Unsubscribe from all subscriptions
       this._unsubscribeAll.next(null);
       this._unsubscribeAll.complete();
@@ -300,7 +301,7 @@ deleteFile(id){
         if(item.value){
           this._taskService.editCheckList(item.id, {value: 0, text: item.text, task_id: this.taskSeleced.id}).subscribe();
         }else{
-            this._taskService.editCheckList(item.id, {value: 1, text: item.text, task_id: this.taskSeleced.id}).subscribe();
+          this._taskService.editCheckList(item.id, {value: 1, text: item.text, task_id: this.taskSeleced.id}).subscribe();
         }
       };
     });
