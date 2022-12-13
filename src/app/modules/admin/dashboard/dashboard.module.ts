@@ -19,6 +19,7 @@ import { NgApexchartsModule } from "ng-apexcharts";
 import { DashboardResolver } from './dashboard.resolvers';
 import { StoreReplyComponent } from './store-reply/store-reply.component';
 import { DashboardInfoComponent } from './dashboard-info/dashboard-info.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 export const routes: Route[] = [
     {
         path     : '',
@@ -35,7 +36,8 @@ export const routes: Route[] = [
     DashboardComponent,
     PostsListComponent,
     StoreReplyComponent,
-    DashboardInfoComponent
+    DashboardInfoComponent,
+    UserProfileComponent
   ],
   imports: [
     RouterModule.forChild(routes),

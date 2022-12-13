@@ -23,6 +23,7 @@ export const tasksRoutes: Route[] = [
                     tags: TaskManagmentResolver
                 },
                 children:[
+                    // {path: '**', redirectTo: 'view/kanban', pathMatch: 'full'},
                     {
                         path:'view/normal',
                         component: NormalViewComponent,

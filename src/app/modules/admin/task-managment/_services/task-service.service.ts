@@ -1002,6 +1002,7 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
     }
     //vyn
     handleSingTaskRealtimeFunction(data){
+        debugger;
         this.handleObservables(data).subscribe(res=>{
             
         })
@@ -1067,7 +1068,7 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
 
 
     handleSingTaskRealtime(data:{action:string; status:string, checklist:TaskCheckList, comments:any,task:string, users_assigned:any}){
-
+        debugger;
         switch(data.status.toLowerCase()){
             case "checklist":
                 return this.tasks$.pipe(

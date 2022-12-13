@@ -1,0 +1,17 @@
+<div *ngIf="image">
+    <img [matTooltip]="name" [matTooltipPosition]="'above'"
+    style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
+    class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+    src="{{apiUrl+ 'storage/'+image}}" alt=""
+    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+</div>
+<div *ngIf="!image && color">
+<div [matTooltip]="name" [matTooltipPosition]="'above'" class="relative flex flex-0 items-center justify-center w-8 h-8" style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0;"[ngStyle]="{'background-color': color}"><div class={{wcHexIsLight(color)}}>{{name.charAt(0) | uppercase}}</div></div>
+</div>
+<div *ngIf="!color && !image">
+    <img [matTooltip]="name" [matTooltipPosition]="'above'"
+    style="width: 35px; height: 35px; border-radius: 50%; margin: 5px 0; object-fit: cover;"
+    class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+    src="/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png" alt=""
+    onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
+</div>
