@@ -1013,6 +1013,7 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
         switch(data.status.toLowerCase()){
             case "checklist":
                 return this.tasks$.pipe(
+                    first(),
                     switchMap(tasks=> this.taskSelected$.pipe(
                         take(1),
                         switchMap(task => this._userService.user$.pipe(
