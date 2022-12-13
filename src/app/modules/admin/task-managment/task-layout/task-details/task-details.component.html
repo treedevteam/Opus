@@ -218,6 +218,79 @@
                         </div>
                     </div>
                     </form>
+
+                    <ng-container
+    
+                    class="mb-3 mt-2 w-25 h-25"
+                >
+                    <div
+                        class="d-flex justify-content-center"
+        
+                    >
+                        <img
+                            class="w-50"
+                            [src]="
+                                apiUrl +
+                                'storage/' +
+                                taskSeleced.file
+                            "
+                            alt=""
+                            (click)="
+                                openImagePopup(
+                                    apiUrl + 'storage/' + taskSeleced.file
+                                )
+                            " 
+                        />
+                        <!-- <button>
+                            <a [href]="apiUrl + 'storage/' + file.file" [download]="file.file" target="_blank">Download</a>
+                        </button>
+                        <mat-icon (click)="deleteFile(task2.id)"  style="cursor: pointer;" color="warn" >delete</mat-icon>
+                        <mat-divider ></mat-divider> -->
+                     </div>
+                    <div
+                    *ngIf="taskSeleced.file !== null"
+                        class="grid grid-cols-2 gap-4 w-full mt-8"
+                    >
+                        <a
+                            class="flex-auto"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [href]="apiUrl + 'storage/' + taskSeleced.file"
+                            [download]="taskSeleced.file"
+                            target="_blank"
+                            >Download</a
+                        >
+                        <button
+                            (click)="deleteFile(taskSeleced.id)"
+                            class="flex-auto"
+                            mat-stroked-button
+                        >
+                            Delete
+                        </button>
+                    </div>
+                    <input
+                    style="display: none"
+                    type="file"
+                    class="file-input"
+                    onclick="this.value = null"
+                    (change)="onFileChange($event.target.files)"
+                    #fileUpload
+                />
+        
+                <div class="file-upload">
+                    {{ fileName }}
+        
+                    <button
+                    *ngIf="taskSeleced.file === null"
+                        mat-mini-fab
+                        color="primary"
+                        class="upload-btn"
+                        (click)="fileUpload.click()"
+                    >
+                        <mat-icon>attach_file</mat-icon>
+                    </button>
+                </div>
+                </ng-container>
                 </mat-tab>
 
                 <mat-tab label="Comments">
@@ -237,78 +310,7 @@
                     </div>
                 </mat-tab>
             </mat-tab-group>
-            <ng-container
-    
-            class="mb-3 mt-2 w-25 h-25"
-        >
-            <div
-                class="d-flex justify-content-center"
-
-            >
-                <img
-                    class="w-50"
-                    [src]="
-                        apiUrl +
-                        'storage/' +
-                        taskSeleced.file
-                    "
-                    alt=""
-                    (click)="
-                        openImagePopup(
-                            apiUrl + 'storage/' + taskSeleced.file
-                        )
-                    " 
-                />
-                <!-- <button>
-                    <a [href]="apiUrl + 'storage/' + file.file" [download]="file.file" target="_blank">Download</a>
-                </button>
-                <mat-icon (click)="deleteFile(task2.id)"  style="cursor: pointer;" color="warn" >delete</mat-icon>
-                <mat-divider ></mat-divider> -->
-             </div>
-            <div
-            *ngIf="taskSeleced.file !== null"
-                class="grid grid-cols-2 gap-4 w-full mt-8"
-            >
-                <a
-                    class="flex-auto"
-                    mat-flat-button
-                    [color]="'primary'"
-                    [href]="apiUrl + 'storage/' + taskSeleced.file"
-                    [download]="taskSeleced.file"
-                    target="_blank"
-                    >Download</a
-                >
-                <button
-                    (click)="deleteFile(taskSeleced.id)"
-                    class="flex-auto"
-                    mat-stroked-button
-                >
-                    Delete
-                </button>
-            </div>
-            <input
-            style="display: none"
-            type="file"
-            class="file-input"
-            onclick="this.value = null"
-            (change)="onFileChange($event.target.files)"
-            #fileUpload
-        />
-
-        <div class="file-upload">
-            {{ fileName }}
-
-            <button
-            *ngIf="taskSeleced.file === null"
-                mat-mini-fab
-                color="primary"
-                class="upload-btn"
-                (click)="fileUpload.click()"
-            >
-                <mat-icon>attach_file</mat-icon>
-            </button>
-        </div>
-        </ng-container>
+           
         </div>
     </div>
 </div>

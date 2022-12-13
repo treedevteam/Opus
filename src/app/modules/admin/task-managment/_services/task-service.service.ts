@@ -1020,7 +1020,6 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
                             take(1),
                             map(user=>{
                                 if(data.current_user !== user.id){
-                                    alert("hiniktu")
                                     if(task.id === +data.task){
                                         this.handelStatusRealTimeSingleTime(tasks,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned,data.current_user)
                                     }
