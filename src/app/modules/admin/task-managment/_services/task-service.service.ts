@@ -362,8 +362,6 @@ departmentsWithBoard$ = combineLatest([
     ])),
     shareReplay(1),
     );
-
-
     allSubTasks$ = combineLatest([
         this.subtasks$,
         this.getStatus$,

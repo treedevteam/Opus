@@ -92,7 +92,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy
                             id   : 'Boards',
                             title: x.name,
                             type : 'basic',
-                            link : '/task-managment/'+x.id+'/view/normal',
+                            link : '/task-managment/'+x.id+'/view/kanban',
                             admin: false,
                         }
                     )
