@@ -1,7 +1,8 @@
-<div style="background-color:rgb(241,245,249)"
-class="flex-auto p-6 sm:p-8 sm:pt-4 overflow-y-auto"
-style="min-height: 100vh;"
-cdkScrollable>
+<div 
+    class="flex-auto p-6 sm:p-8 sm:pt-4 overflow-y-auto"
+    style="background-color:rgb(241,245,249); padding: 0!important;"
+    cdkScrollable
+>
 
 <!-- Lists -->
 <div
@@ -14,12 +15,15 @@ cdkScrollable>
     <!-- Group all cdkDropList's after this point together so that the cards can be transferred between lists -->
     <div
         class="flex items-start"
+        style="height: calc(100vh - 216px);
+        overflow: auto hidden;"
         cdkDropListGroup>
 
         <!-- List -->
         <ng-container *ngFor="let list of allTasks$ | async; trackBy: trackByFn">
             <div
                 class="flex-0 w-72 p-2 rounded-2xl bg-default"
+                style="height: inherit; overflow: auto;"
                 >
 
                 <div
@@ -70,6 +74,9 @@ cdkScrollable>
                     <div
                         [id]="list.status.id"
                         class="p-3 pb-0"
+                        [style.padding-top]="!list.tasks.length? '15px!important': '0'"
+                        [style.padding-bottom]="!list.tasks.length? '15px!important': '0'"
+                    
                         cdkDropList
                         [cdkDropListData]="list.tasks"
                         (cdkDropListDropped)="cardDropped($event)">

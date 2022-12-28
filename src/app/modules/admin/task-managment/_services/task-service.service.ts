@@ -508,7 +508,7 @@ departmentsWithBoard$ = combineLatest([
 
 
 
-        alert("teseet");
+       
         return this.currentBoard$.pipe(
             first(),
             switchMap(board=> this.tasks$.pipe(
@@ -719,7 +719,6 @@ departmentsWithBoard$ = combineLatest([
     {
         return this._httpClient.get<Task>(this.apiUrl+'api/subtask/'+ id).pipe(
             map((data: any): Task => {
-                debugger;
                 this._subtaskSelected.next(data.data);
                 return data.tasks;
             }),
@@ -732,7 +731,6 @@ departmentsWithBoard$ = combineLatest([
     {
         return this._httpClient.post<Users[]>(this.apiUrl+'api/board/'+ boardId +'/'+userId,null).pipe(
             map((data: any): Users[] => {
-                debugger;
                 this.getBoard(boardId).subscribe((board: Board) => {
                 })
                 this._boardUsers.next(data.data);
@@ -765,7 +763,8 @@ departmentsWithBoard$ = combineLatest([
             return data.data;
         }),
         shareReplay(1),
-      );
+    );
+
     closeSubtasks(){
         this._curretnSubtasksOpened.next(null)
     }
@@ -782,11 +781,11 @@ departmentsWithBoard$ = combineLatest([
 
 
     taskSelectedcomments$= (id: number) => this._httpClient.get<Comments[]>(this.apiUrl+'api/comments/'+ id).pipe(
-    map((data: any): Comments[] => {
-        this._taskSelectedcomments.next(data.data)
-        return data.data;
-    }),
-    shareReplay(1),
+        map((data: any): Comments[] => {
+            this._taskSelectedcomments.next(data.data)
+            return data.data;
+        }),
+        shareReplay(1),
     );
 
 
@@ -818,7 +817,7 @@ deleteComment(id: number): Observable<any>
                 return deleted;
             })
         ))
-        );
+    );
 }
 
 
@@ -950,7 +949,6 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
                     switchMap(tasks => this._userService.user$.pipe(
                     first(),
                     map(user =>{
-                            debugger;
                             if(data.current_user !== user.id){
                                 if(+data.board === +board.id){
                                     this.handelStatusRealTime(data.status,tasks,data.board_order,data.task_resource)
@@ -1002,14 +1000,12 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
     }
     //vyn
     handleSingTaskRealtimeFunction(data){
-        debugger;
         this.handleObservables(data).subscribe(res=>{
             
         })
     }
     //vyn
     handleObservables(data){
-        debugger;
         switch(data.status.toLowerCase()){
             case "checklist":
                 return this.tasks$.pipe(
@@ -1068,7 +1064,6 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
 
 
     handleSingTaskRealtime(data:{action:string; status:string, checklist:TaskCheckList, comments:any,task:string, users_assigned:any}){
-        debugger;
         switch(data.status.toLowerCase()){
             case "checklist":
                 return this.tasks$.pipe(
@@ -1088,7 +1083,6 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
                     switchMap(taskcomments=> this.taskSelected$.pipe(
                         take(1),
                             map((task: any) => {
-                                debugger;
                                 this.handelRealTimeComments(taskcomments,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned)
                                 return data.task;
                             })
@@ -1101,7 +1095,6 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
                     switchMap(alltasks=> this.taskSelected$.pipe(
                         take(1),
                             map((task: any) => {
-                                debugger;
                                 this.handelRealTimeUserAssign(alltasks,task,data.action ,data.status, data.checklist, data.comments, data.users_assigned)
                                 return data.task;
                             })
@@ -1120,8 +1113,6 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
     handelStatusRealTimeSingleTime(alltasks:Task[],task:Task,action:string ,status:string, checklist?:any, comments?:any,users_assigned?:any, current_user?:any){
         switch(action.toLocaleLowerCase()){
             case "add":
-                debugger;
-
                 const newCheckList = task.checklists.findIndex(x =>x.id === checklist.id);
                 if(newCheckList < 0){
                     task.checklists = [...task.checklists, checklist]
@@ -1161,7 +1152,6 @@ subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task>{
     handelRealTimeComments(allcomments:Comments[],task:Task,action:string ,status:string, checklist?:any, comments?:any,users_assigned?:any ){
         switch(action.toLocaleLowerCase()){
             case "add":
-                debugger;
                 const newComment = allcomments.findIndex(x =>x.id === comments.id);
                 if(newComment < 0){
                     allcomments = [...allcomments, comments]

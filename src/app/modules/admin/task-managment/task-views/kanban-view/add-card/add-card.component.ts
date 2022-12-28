@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { TaskServiceService } from '../../../_services/task-service.service';
 export interface TaskOrSub
 {
     title: string;
@@ -29,7 +30,8 @@ export class ScrumboardBoardAddCardComponent implements OnInit
      */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
+        private _taskService: TaskServiceService
     )
     {
     }
@@ -89,13 +91,19 @@ export class ScrumboardBoardAddCardComponent implements OnInit
      */
     toggleFormVisibility(): void
     {
-        // Toggle the visibility
-        this.formVisible = !this.formVisible;
+        if( this._taskService.boardInfo.is_his !== 1){
+            this._taskService.openAssignPopup()
+            
+        }else{
+            // Toggle the visibility
+            this.formVisible = !this.formVisible;
 
-        // If the form becomes visible, focus on the title field
-        if ( this.formVisible )
-        {
-            this.titleInput.nativeElement.focus();
+            // If the form becomes visible, focus on the title field
+            if ( this.formVisible )
+            {
+                this.titleInput.nativeElement.focus();
+            }
         }
+        
     }
 }
