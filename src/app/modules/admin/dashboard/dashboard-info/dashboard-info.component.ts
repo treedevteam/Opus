@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { BoardsService } from '../../departments/boards/boards.service';
-import { Data } from '../../tasks/tasks.types';
 import { DashboardService } from '../services/dashboard.service';
 import { UserService } from '../../../../core/user/user.service';
 
