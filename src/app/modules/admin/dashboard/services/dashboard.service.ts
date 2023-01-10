@@ -13,19 +13,22 @@ import { UserService } from 'app/core/user/user.service';
 export class DashboardService {
     apiUrl = environment.apiUrl;
 
-    private _departmentPosts: BehaviorSubject<Posts[] | null> =
-        new BehaviorSubject(null);
-    private _currentDepartment: BehaviorSubject<Departments | null> =
-        new BehaviorSubject(null);
-    private _currentDepartmentId: BehaviorSubject<number | null> =
-        new BehaviorSubject(null);
-    private _currentDepartmentUsers: BehaviorSubject<Users[] | null> =
-        new BehaviorSubject(null);
-    private _likedByMe: BehaviorSubject<boolean | null> = new BehaviorSubject(
-        null
-    );
+    private _departmentPosts: BehaviorSubject<Posts[] | null> = new BehaviorSubject(null);
+    private _currentDepartment: BehaviorSubject<Departments | null> = new BehaviorSubject(null);
+    private _currentDepartmentId: BehaviorSubject<number | null> = new BehaviorSubject(null);
+    private _currentDepartmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
+    private _likedByMe: BehaviorSubject<boolean | null> = new BehaviorSubject(null);
 
-    constructor(private _httpClient: HttpClient, private _user: UserService) {}
+
+
+    private _userUnreadEmails: BehaviorSubject<any | null> = new BehaviorSubject(null);
+    private _userStatusCount: BehaviorSubject<any | null> = new BehaviorSubject(null);
+    private _adminStatusCount: BehaviorSubject<any | null> = new BehaviorSubject(null);
+    private _adminDepartmentCount: BehaviorSubject<any | null> = new BehaviorSubject(null);
+    private _adminDashboardData: BehaviorSubject<any | null> = new BehaviorSubject(null);
+
+
+    constructor(private _httpClient: HttpClient) {}
 
     get departmentPosts$(): Observable<Posts[]> {
         return this._departmentPosts.asObservable();
@@ -44,6 +47,25 @@ export class DashboardService {
     get likedByMe$(): Observable<boolean> {
         return this._likedByMe.asObservable();
     }
+
+
+
+    get userUnreadEmails$(): Observable<any> {
+        return this._userUnreadEmails.asObservable();
+    }
+    get userStatusCount$(): Observable<any> {
+        return this._userStatusCount.asObservable();
+    }
+    get adminStatusCount$(): Observable<any> {
+        return this._adminStatusCount.asObservable();
+    }
+    get adminDepartmentCount$(): Observable<any> {
+        return this._adminDepartmentCount.asObservable();
+    }
+    get adminDashboardData$(): Observable<any> {
+        return this._adminDashboardData.asObservable();
+    }
+
 
     getPostsDepartment(): Observable<Posts[]> {
         return this._httpClient.get<Posts[]>(this.apiUrl + 'api/posts').pipe(
@@ -175,5 +197,61 @@ export class DashboardService {
                     )
             )
         );
+    }
+
+
+    //Per user
+    getUserUnreadEmails(): Observable<any[]> {
+        return this._httpClient
+            .get<Users[]>(this.apiUrl + 'api/unread_emails/count')
+            .pipe(
+                map((data: any): any[] => {
+                    this._userUnreadEmails.next(data);
+                    return data;
+                })
+            );
+    }
+    getUserStatusCount(): Observable<any[]> {
+        return this._httpClient
+            .get<Users[]>(this.apiUrl + 'api/user_task_status/count')
+            .pipe(
+                map((data: any): any[] => {
+                    this._userStatusCount.next(data);
+                    return data;
+                })
+            );
+    }
+    getAdminStatusCount(): Observable<any[]> {
+        return this._httpClient
+            .get<Users[]>(this.apiUrl + 'api/status/count')
+            .pipe(
+                map((data: any): any[] => {
+                    this._adminStatusCount.next(data);
+                    return data;
+                })
+            );
+    }
+    getAdminDepartmentCount(): Observable<any[]> {
+        return this._httpClient
+            .get<any[]>(this.apiUrl + 'api/user/department/count')
+            .pipe(
+                map((data: any): any[] => {
+                    console.log(data,"dasdasdasdasdasddddd");
+                    
+                    this._adminDepartmentCount.next(data);
+                    return data;
+                })
+            );
+    }
+
+    getAdminDashboardData(): Observable<any[]> {
+        return this._httpClient
+            .get<any[]>(this.apiUrl + 'api/data')
+            .pipe(
+                map((data: any): any[] => {
+                    this._adminDashboardData.next(data);
+                    return data;
+                })
+            );
     }
 }

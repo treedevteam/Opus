@@ -9,7 +9,7 @@
             <mat-tab-group
                 [animationDuration]="'0'">
                 <!-- Home -->
-                <mat-tab >
+                <mat-tab *ngIf="($user|async).role.id === 1">
                     <ng-template matTabContent>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
                             <!-- Summary -->
@@ -61,6 +61,67 @@
                                     <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                                         <div class="text-md font-medium truncate">Subtasks:</div>
                                         <div class="ml-1.5 text-lg font-semibold" *ngIf="userCount$ | async">{{(userCount$ | async).subtasks}}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Overdue -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden" *ngFor="let stats of userStatusCount$|async;">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ stats.Name }}</div>
+  
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none " [style.color]="stats.color" >{{ stats.count }}</div>
+                                    <div class="text-lg font-medium " [style.color]="stats.color">Tasks</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Overdue -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden" *ngFor="let stats of adminDepartmentCount$|async;">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ stats.Name }}</div>
+  
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none "  >{{ stats.count }}</div>
+                                    <div class="text-lg font-medium ">Tasks</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+
+                <mat-tab *ngIf="($user|async).role.id === 2">
+                    <ng-template matTabContent>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
+                            <!-- Summary -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Unread emails</div>
+         
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500" >{{(userUnreadEmails$ | async)? (userUnreadEmails$ | async) : 0}}</div>
+                                    <div class="text-lg font-medium text-blue-600 dark:text-blue-500">Amount of unread emails</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Overdue -->
+                            <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden" *ngFor="let stats of userStatusCount$|async;">
+                                <div class="flex items-start justify-between">
+                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ stats.Name }}</div>
+  
+                                </div>
+                                <div class="flex flex-col items-center mt-2">
+                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none " [style.color]="stats.color" >{{ stats.count }}</div>
+                                    <div class="text-lg font-medium " [style.color]="stats.color">Tasks</div>
+                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
                                     </div>
                                 </div>
                             </div>

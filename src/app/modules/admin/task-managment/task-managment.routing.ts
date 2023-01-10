@@ -38,7 +38,7 @@ export const tasksRoutes: Route[] = [
                                         resolve  : {
                                             tags: TaskResolver
                                         },
-                                        data: {component: 'normal'}
+                                        data: {component: 'normal'}//mos i fshij
                                     },
                                     {
                                         path:'subtask/:subtaskId',
@@ -46,7 +46,7 @@ export const tasksRoutes: Route[] = [
                                         resolve  : {
                                             tags: SubtaskResolver
                                         },
-                                        data: {component: 'normal'}
+                                        data: {component: 'normal'}//mos i fshij
                                     }
                                 ]
                             }
@@ -66,7 +66,7 @@ export const tasksRoutes: Route[] = [
                                         resolve  : {
                                             tags: TaskResolver
                                         },
-                                        data: {component: 'kanban'}
+                                        data: {component: 'kanban'}//mos i fshij
         
                                     },
                                     {
@@ -75,7 +75,7 @@ export const tasksRoutes: Route[] = [
                                         resolve  : {
                                             tags: SubtaskResolver
                                         },
-                                        data: {component: 'kanban'}
+                                        data: {component: 'kanban'}//mos i fshij
                                     }
                                 ]
                             }
