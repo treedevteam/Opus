@@ -470,7 +470,7 @@ export class TasksListComponent implements OnInit, OnDestroy
     }
 
     collapseSubTasks(id: number){
-        alert(id);
+       
     }
 
     onOpenMenu(menu: any): void {

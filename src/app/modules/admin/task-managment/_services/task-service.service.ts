@@ -513,7 +513,7 @@ departmentsWithBoard$ = combineLatest([
             first(),
             switchMap(board=> this.tasks$.pipe(
                 first(),
-                tap(_=>alert("testee2")),
+                
                 switchMap(tasks => this._httpClient.post<Task>(this.apiUrl+'api/task_title/' + taskId ,  {title: title, board_id:board.id}).pipe(
                     first(),
                     map((updatedTask: any) => {
