@@ -463,7 +463,7 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
     }
     addItem(newItem: string) {
-        alert('Detalis comp');
+        
       }
 
     openUsersPanel(): void

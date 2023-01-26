@@ -96,7 +96,6 @@ export class AuthService
 
         return this._httpClient.post(this.apiUrl+'oauth/token', credentials).pipe(
             switchMap((response: any) => {
-                alert("1")
 
                 // Store the access token in the local storage
                 this.accessToken = response.access_token;
@@ -109,7 +108,7 @@ export class AuthService
 
                 // Return a new observable with the response
                 return this._httpClient.get(this.apiUrl+'api/user').pipe(
-                    tap(_=>alert("2")),
+                    
                     catchError(() =>
                     // Return false
                     of(false)
