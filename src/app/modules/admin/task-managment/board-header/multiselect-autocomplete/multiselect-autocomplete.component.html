@@ -15,21 +15,24 @@
   [placeholder]="placeholder"
   [matAutocomplete]="auto"
   [formControl]="selectControl"
+  (input)="filter($event.target.value)"
   >
 </mat-form-field>
 
 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-  <mat-option *ngFor="let data of (datatest$ | async).users">
-    <div (click)="optionClicked($event, data)">
-      <mat-checkbox [checked]="false" 
-        (change)="toggleSelection(data)" 
-        (click)="$event.stopPropagation()">
-        {{ data.name }}
-      </mat-checkbox>
-    </div>
-  </mat-option>
-  
-  <mat-option *ngIf="!(datatest$ | async).users.length">
-    No result
-  </mat-option>
+  <ng-container *ngIf="filteredData | async as users">
+    <mat-option *ngFor="let user of users">
+      <div (click)="optionClicked($event, data)">
+        <mat-checkbox [checked]="false" 
+          (change)="toggleSelection(user)" 
+          (click)="$event.stopPropagation()">
+          {{ user.name }}
+        </mat-checkbox>
+      </div>
+    </mat-option>
+    
+    <mat-option *ngIf="!users?.length">
+      No result
+    </mat-option>
+  </ng-container>
 </mat-autocomplete>
