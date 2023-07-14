@@ -30,7 +30,7 @@ export class KanbanTaskCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.card);
+    console.log('kariiiiii', this.card);
     
     this.formShare = this._formBuilder.group({
       boards: ['', Validators.required],
@@ -83,4 +83,5 @@ export class KanbanTaskCardComponent implements OnInit {
       this._taskServiceService.storeSubtask(newTask).subscribe()
     }
   }
+  
 }
