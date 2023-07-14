@@ -4,7 +4,7 @@ import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.co
 import { NormalViewComponent } from '../../task-views/normal-view/normal-view.component';
 import { Task, Users } from '../../_models/task';
 import { TaskServiceService } from '../../_services/task-service.service';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -27,7 +27,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
   @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
   private _tagsPanelOverlayRef: OverlayRef;
-
+  @Input() card: Task;
   apiUrl = environment.apiUrl
   taskSeleced:Task|any;
   taskOrSubtask = "";
@@ -69,7 +69,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnInit(): void {
-
+    console.log('granit baba', this.card)
     this.realTimeService.channel$.subscribe(channel2=>{
       channel2.bind('task-data', data => {
         debugger;
