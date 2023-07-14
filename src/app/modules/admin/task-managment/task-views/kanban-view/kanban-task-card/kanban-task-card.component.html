@@ -34,14 +34,14 @@
                     <form [formGroup]="formShare" (ngSubmit)="onSubmit(card.id)"  #shareTaskNgForm="ngForm">
                         <div class="form_body_popover">
                             <mat-form-field style="width: 100%;" >
-                                <mat-select multiple [formControlName]="'boards'" disableOptionCentering>
-                                <!-- <mat-optgroup label="{{department.name}}" *ngFor="let department of departmentsWithBoard$ | async">
+                                <mat-select multiple [formControlName]="'attach_boards'" disableOptionCentering>
+                                <mat-optgroup label="{{department.name}}" *ngFor="let department of departmentsWithBoard$ | async">
                                     <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
-                                </mat-optgroup> -->
+                                </mat-optgroup>
                                 </mat-select>
-                            </mat-form-field> 
+                            </mat-form-field>
                         </div>
-                        <button type="submit" mat-raised-button color="primary">Share</button>
+                        <button type="submit" mat-raised-button color="primary" (click)="shareTask()">Share</button>
                     </form>
                 </div>
             </mat-menu>

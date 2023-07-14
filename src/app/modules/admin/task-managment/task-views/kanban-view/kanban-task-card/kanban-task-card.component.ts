@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'environments/environment';
 import moment from 'moment';
 import { tap } from 'rxjs';
-import { Task } from '../../../_models/task';
+import { Task, TaskModified } from '../../../_models/task';
 import { TaskServiceService } from '../../../_services/task-service.service';
 import { TaskOrSub } from '../add-card/add-card.component';
 
@@ -14,11 +14,13 @@ import { TaskOrSub } from '../add-card/add-card.component';
 })
 export class KanbanTaskCardComponent implements OnInit {
   @Input() card: Task;
+  task: TaskModified;
   formShare: FormGroup;
   expandedSubtasks = null
   showTasks = false;
   subtask$= this._taskServiceService.allSubTasks$;
   apiUrl = environment.apiUrl
+  departmentsWithBoard$= this._taskServiceService.departmentsWithBoard$
   subtasksOpened$ = this._taskServiceService.curretnSubtasksOpened$.pipe(
     tap(res=>{
       this.showTasks = this.card.id === res;
@@ -35,6 +37,11 @@ export class KanbanTaskCardComponent implements OnInit {
     this.formShare = this._formBuilder.group({
       boards: ['', Validators.required],
   });
+  this.formShare = this._formBuilder.group({
+    attach_boards: [''],
+    detach_boards: [''],
+  });
+  
   }
 
     showSubtasks(){
@@ -53,7 +60,12 @@ export class KanbanTaskCardComponent implements OnInit {
   {
       return moment(date, moment.ISO_8601).isBefore(moment(), 'days');
   }
-
+  shareTask(){
+    console.log(this.formShare.value,"this.formShare.valuethis.formShare.valuethis.formShare.value");
+    this._taskServiceService.shareTask({attach_boards:"["+ this.formShare.controls['attach_boards'].value.map(r=>+r)+"]", detach_boards:"[]",task_id: this.card.id}).subscribe(res=>{
+      console.log(res);
+    })
+  }
   sahreTaskPopover(){
 
   }

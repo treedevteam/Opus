@@ -24,7 +24,6 @@ export class RealtimeServiceService {
       cluster: 'eu'
     });
     this._taskManagment.taskSelected$.subscribe(task=>{
-      debugger;
       if(this.taskid !== task.id){
         this.taskid = task.id
         this._channel.next(this.pusher.subscribe(""+task.id));
