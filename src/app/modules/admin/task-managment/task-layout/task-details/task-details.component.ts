@@ -16,6 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import saveAs from 'file-saver';
 import Pusher from 'pusher-js';
 import { RealtimeServiceService } from '../../real_time_services/task_realtime.services';
+import { TaskOrSub } from 'app/modules/admin/tasks/kanban-view/kanban-board/board/add-card/add-card.component';
+
 
 
 @Component({
@@ -41,7 +43,13 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   file: any = null;
   url ;
   taskFile$ = this._taskService.taskSelected$
-
+  showTasks = false;
+  subtask$ = this._taskServiceService.allSubTasksDetails$;
+  subtasksOpened$ = this._taskServiceService._currentSubtasksDetailsOpened$.pipe(
+    tap(res => {
+      this.showTasks = this.task.id === res;
+    })
+  )
 
   pusher: any;
   channel: any;
@@ -58,7 +66,9 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
         private _snackBar: MatSnackBar,
-        private realTimeService:RealtimeServiceService
+        private realTimeService:RealtimeServiceService,
+        private _taskServiceService: TaskServiceService
+
         ) {
         }
 
@@ -76,7 +86,6 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
           this._taskService.handleSingTaskRealtimeFunction(data);
         });
     })   
-
 
 
 
@@ -148,8 +157,6 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     }else{
-
-      debugger
 
       this.uploaded = true;
       this.file = pFileList[0];
@@ -311,15 +318,37 @@ deleteFile(id){
 
 
 
+// add to cart function per subtask 
+
+addCard(list: any, event: TaskOrSub){
+
+  if( this._taskServiceService.boardInfo.is_his !== 1){
+  }else{
+    const newTask = {
+      task_id: list.id,
+      title: event.title,
+      status:list.status.id
+    };
+    this._taskServiceService.storeSubtask(newTask).subscribe()
+  }
+}
 
 
 
+showSubtasks$() { 
+  console.log(this.showTasks)
+if(!this.showTasks) {
+  this._taskServiceService.getSubtasksDetails(this.card.id).subscribe(res => { 
+    console.log('testt' , res);
+    
+  })
+}
+else { 
+  this._taskServiceService.closeSubtasks();
+}
 
 
-
-
-
-
+}
 
 
 

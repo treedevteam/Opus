@@ -18,11 +18,11 @@ export class KanbanTaskCardComponent implements OnInit {
   formShare: FormGroup;
   expandedSubtasks = null
   showTasks = false;
-  subtask$= this._taskServiceService.allSubTasks$;
+  subtask$ = this._taskServiceService.allSubTasks$;
   apiUrl = environment.apiUrl
-  departmentsWithBoard$= this._taskServiceService.departmentsWithBoard$
+  departmentsWithBoard$ = this._taskServiceService.departmentsWithBoard$
   subtasksOpened$ = this._taskServiceService.curretnSubtasksOpened$.pipe(
-    tap(res=>{
+    tap(res => {
       this.showTasks = this.card.id === res;
     })
   )
@@ -32,68 +32,65 @@ export class KanbanTaskCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('kariiiiii', this.card);
-    
+
     this.formShare = this._formBuilder.group({
       boards: ['', Validators.required],
-  });
-  this.formShare = this._formBuilder.group({
-    attach_boards: [''],
-    detach_boards: [''],
-  });
-  
+    });
+    this.formShare = this._formBuilder.group({
+      attach_boards: [''],
+      detach_boards: [''],
+    });
+
   }
 
-    showSubtasks(){
-        if(!this.showTasks){
-        this._taskServiceService.getSubtasks$(this.card.id).subscribe(res=>{
+  showSubtasks() {
+    if (!this.showTasks) {
+      this._taskServiceService.getSubtasks$(this.card.id).subscribe(res => {
         console.log(res);
-        })
-    }else{
+      })
+    } else {
       this._taskServiceService.closeSubtasks();
 
     }
   }
 
 
-  isOverdue(date: string): boolean
-  {
-      return moment(date, moment.ISO_8601).isBefore(moment(), 'days');
+  isOverdue(date: string): boolean {
+    return moment(date, moment.ISO_8601).isBefore(moment(), 'days');
   }
-  shareTask(){
-    console.log(this.formShare.value,"this.formShare.valuethis.formShare.valuethis.formShare.value");
-    this._taskServiceService.shareTask({attach_boards:"["+ this.formShare.controls['attach_boards'].value.map(r=>+r)+"]", detach_boards:"[]",task_id: this.card.id}).subscribe(res=>{
+  shareTask() {
+    console.log(this.formShare.value, "this.formShare.valuethis.formShare.valuethis.formShare.value");
+    this._taskServiceService.shareTask({ attach_boards: "[" + this.formShare.controls['attach_boards'].value.map(r => +r) + "]", detach_boards: "[]", task_id: this.card.id }).subscribe(res => {
       console.log(res);
     })
   }
-  sahreTaskPopover(){
+  sahreTaskPopover() {
 
   }
 
-  onSubmit(id:number){
+  onSubmit(id: number) {
 
   }
-  toggleTableRows(id:number){
+  toggleTableRows(id: number) {
 
   }
-  
 
-  trackByFn(index: number, item: any): any
-  {
-      return item.id || index;
+
+  trackByFn(index: number, item: any): any {
+    return item.id || index;
   }
 
-  addCard(list: any, event: TaskOrSub){
+  addCard(list: any, event: TaskOrSub) {
 
-    if( this._taskServiceService.boardInfo.is_his !== 1){
-    }else{
+    if (this._taskServiceService.boardInfo.is_his !== 1) {
+    } else {
       const newTask = {
         task_id: list.id,
         title: event.title,
-        status:list.status.id
+        status: list.status.id
       };
       this._taskServiceService.storeSubtask(newTask).subscribe()
     }
   }
-  
+
 }
