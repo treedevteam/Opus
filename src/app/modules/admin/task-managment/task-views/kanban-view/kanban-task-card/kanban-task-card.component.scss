@@ -133,3 +133,26 @@
     color: #fff;
     font-weight: 600;
 }
+
+
+.editbutton{
+    display: none;
+    padding: 4px 8px;
+    background-color: #fff ;
+    color: rgba(0, 0, 0, 0.7)!important;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.editable_title_input:hover .editbutton{
+    display: block!important;
+}
+.title_task_rwo{
+    padding: 5px;
+}
+.editbutton:hover .title_task_rwo{
+    border: 1px dotted #00000070;
+}
+span{
+    color: red;
+}
