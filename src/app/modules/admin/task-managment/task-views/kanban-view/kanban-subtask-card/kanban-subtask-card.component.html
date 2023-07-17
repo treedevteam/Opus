@@ -1,19 +1,37 @@
-<a
-    class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card"
-    [routerLink]="['subtask', card.id]"
-    
-    >
+<div
+class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card hoveranimation editable_title_input"
+>
+
+
     <!-- Cover image -->
     <div (click)="openImagePopup(apiUrl+'storage/'+card.file)" class="cover-image" *ngIf="card.file ! null">
         <img class="w-100 h-25"  [src]="apiUrl+'storage/' + card.file">
     </div>
     <!-- Title -->
-    <div class="flex align-center" style="width: 100%; justify-content: space-between; align-items: center;">
-        <a 
-        [routerLink]="['task', card.id]">
-        <div class="text-lg font-medium leading-5 mb-2">{{card.title}}</div>
-        </a>
+    <div class="flex-auto ">
+        <!-- ////////////////////// -->
+        
+        <editable (update)="updateTitle()" style="display: flex; align-items: center;">
+            <ng-template viewMode>
+            <div  class="flex align-center" style="width: 100%; justify-content: space-between; align-items: center;">
+                
+                <a [routerLink]="['subtask', card.id]" class="title_task_rwo truncate">
+                    <div class="text-lg font-medium leading-5" style="white-space: pre-line; word-break: break-all;" >{{card.title}}</div>
+                </a>
+            </div> 
+            </ng-template>
+             <div editable_title_inpu> </div>
+            <ng-template editMode>
+                <div style=" word-break: break-all;" [formGroup]="myGroup">
+                    <input style="height:auto; max-width: 150px;padding: 5px; border: 1px dotted #00000070; border-radius: 5px;" [formControlName]="'title'"  focusable editableOnEnter>
+
+                </div>
+            </ng-template>
+        </editable>
+  
+        <!-- ////////////////////// -->
     </div>
+  
 
     <!-- Labels -->
     <ng-container *ngIf="card.priority">
@@ -39,5 +57,4 @@
         </div>
         
     </ng-container>
-    </a>
-   
+</div>

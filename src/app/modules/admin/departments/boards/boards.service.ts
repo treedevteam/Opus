@@ -43,7 +43,6 @@ export class BoardsService {
   }
   
   getData(): Observable<any>{
-    debugger
     this.show();
     return this._httpClient.get <any>(this.apiUrl + 'api/data').pipe(
       finalize(() => this.hide()),
