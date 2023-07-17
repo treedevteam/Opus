@@ -6,6 +6,8 @@ import { tap } from 'rxjs';
 import { Task, TaskModified } from '../../../_models/task';
 import { TaskServiceService } from '../../../_services/task-service.service';
 import { TaskOrSub } from '../add-card/add-card.component';
+import { Board } from '../scrumboard.models';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-kanban-task-card',
@@ -14,13 +16,15 @@ import { TaskOrSub } from '../add-card/add-card.component';
 })
 export class KanbanTaskCardComponent implements OnInit {
   @Input() card: Task;
-  task: TaskModified;
+  @Input() task: TaskModified;
+  apiUrl = environment.apiUrl;
+  myGroup: FormGroup;
+  board:Board;
   formShare: FormGroup;
-  expandedSubtasks = null
   showTasks = false;
-  subtask$ = this._taskServiceService.allSubTasks$;
-  apiUrl = environment.apiUrl
-  departmentsWithBoard$ = this._taskServiceService.departmentsWithBoard$
+  subtask$= this._taskServiceService.allSubTasks$;
+  departmentsWithBoard$= this._taskServiceService.departmentsWithBoard$
+  expandedSubtasks = null
   subtasksOpened$ = this._taskServiceService.curretnSubtasksOpened$.pipe(
     tap(res => {
       this.showTasks = this.card.id === res;
@@ -28,9 +32,13 @@ export class KanbanTaskCardComponent implements OnInit {
   )
   constructor(
     private _formBuilder: FormBuilder,
-    private _taskServiceService: TaskServiceService
+    private _taskServiceService: TaskServiceService,
+    private dialog: MatDialog,
+    private _dialog: MatDialog
   ) { }
-
+  statuses$ = this._taskServiceService.statuses$
+  priorities$ = this._taskServiceService.priorities$
+ 
   ngOnInit(): void {
 
     this.formShare = this._formBuilder.group({
@@ -40,6 +48,10 @@ export class KanbanTaskCardComponent implements OnInit {
       attach_boards: [''],
       detach_boards: [''],
     });
+    this.myGroup = this._formBuilder.group({
+      title: [this.card.title, Validators.required],
+      deadline: [this.card.deadline, Validators.required],
+  });
 
   }
 
@@ -64,6 +76,32 @@ export class KanbanTaskCardComponent implements OnInit {
       console.log(res);
     })
   }
+  updateField() {
+
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      this._taskServiceService.openAssignPopup()
+
+    }else{
+      this.myGroup.controls['deadline'].value
+      this._taskServiceService.updateTaskDeadline(this.convertDate(this.myGroup.controls['deadline'].value), this.card.id).subscribe(res=>{
+          console.log(res);
+      });
+    }
+  }
+  convertDate(time: any): string
+  {
+    const convert = time._i.year + '-' + (time._i.month + 1) + '-' + time._i.date + '  00:00';
+    return convert;
+  }
+  updateTitle(){
+    if( this._taskServiceService.boardInfo.is_his !== 1){
+      this._taskServiceService.openAssignPopup()
+
+    }else{
+      this._taskServiceService.updateTaskTitle(this.myGroup.controls['title'].value, this.card.id).subscribe();
+    }
+  }
+
   sahreTaskPopover() {
 
   }
