@@ -78,9 +78,9 @@
         </div>
     </ng-container> -->
     <!-- Due date -->
-    <div class="me-3">
-        <ng-container class="mt-5">
-            <div class="flex items-center  -space-x-1.5">
+    <div class="me-3" style="display: inherit;">
+        <ng-container class="mt-5" >
+            <div class="flex items-center  -space-x-1.5" style="padding-right: 15px;">
                 <ng-container *ngFor="let member of card.users_assigned; let i = index; trackBy: trackByFn">
                     <ng-container *ngIf="i < 2">
                       <app-user-profile [image]="member.image" [name]="member.name" [color]="member.color"></app-user-profile>
@@ -100,6 +100,19 @@
                 </ng-container> -->
             </div>
         </ng-container>
+        <ng-container>
+            <div class="checkListTable" style="margin-right: 15px;"
+            [ngClass]="{
+                'checkListTablegrey': card.checkListInfo.completed !== card.checkListInfo.total || card.checkListInfo.total === 0,
+                'checkListTablegreen': card.checkListInfo.completed === card.checkListInfo.total && card.checkListInfo.total !== 0}">
+                <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
+                {{card.checkListInfo.completed}}/{{card.checkListInfo.total}}
+            </div>
+        </ng-container>
+
+            <div class="mt-3 ml-5"  (click)="showSubtasks()"  matBadgeColor="warn" [matBadge]="card.subtasks_count" matBadgeSize="small" matBadgePosition="before">
+                <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+            </div>
     </div>
 
 
@@ -118,23 +131,11 @@
         
     </ng-container>
 
-    <ng-container>
-        <div class="checkListTable mr-4 mb-2"
-        [ngClass]="{
-            'checkListTablegrey': card.checkListInfo.completed !== card.checkListInfo.total || card.checkListInfo.total === 0,
-            'checkListTablegreen': card.checkListInfo.completed === card.checkListInfo.total && card.checkListInfo.total !== 0}">
-            <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
-            {{card.checkListInfo.completed}}/{{card.checkListInfo.total}}
-        </div>
-    </ng-container>
+   
 
 
 
-    <div class="">
-        <div class=" " (click)="showSubtasks()"  matBadgeColor="warn" [matBadge]="card.subtasks_count" matBadgeSize="small" matBadgePosition="before">
-            <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
-        </div>
-    </div>
+
 
 
 
