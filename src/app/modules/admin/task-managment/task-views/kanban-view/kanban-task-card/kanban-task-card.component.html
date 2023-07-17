@@ -2,7 +2,7 @@
 
 <div
     class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card position-relative"
-    [routerLink]="['task', card.id]"
+   
     
     >
     <div class="priority_card_kanban" *ngIf="card.priority" [ngStyle]="{'background-color': card.priority.color}">{{card.priority.name}}</div>
@@ -14,7 +14,7 @@
     <div class="flex align-center" style="width: 100%; justify-content: space-between; align-items: center;">
         <a 
         [routerLink]="['task', card.id]">
-        <div class="text-lg font-medium leading-5 mb-2">{{card.title}}</div>
+        <div  [routerLink]="['task', card.id]" class="text-lg font-medium leading-5 mb-2">{{card.title}}</div>
         </a>
         
         <div class="relative" style="position: relative;">
