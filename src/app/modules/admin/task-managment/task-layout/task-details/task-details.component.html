@@ -69,6 +69,7 @@
 
 
 
+<<<<<<< HEAD
                                         <div class="flex items-center m-3 mr-2">
                                             <div class="flex items-center">
                                                 <mat-icon class="icon-size-5"
@@ -76,6 +77,47 @@
                                                 <div class="ml-2">
                                                     <input class="w-full min-w-0 py-1 border-0" type="text"
                                                         placeholder="Enter user name" (input)="
+=======
+<!-- Tags -->
+<div class="mt-8">
+    <div class="flex flex-wrap items-center -m-1.5">
+        <!-- Tags -->
+        <div
+            class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
+            (click)="openTagsPanel()"
+            #tagsPanelOrigin>
+            <ng-container >
+                <div>
+                    <img
+                        class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
+                        src="assets/images/dapulse-person-column.svg"
+                        alt="Member avatar"
+                    />
+                </div>
+                <p style="margin-left: 25px !important">
+                    - users assigned
+                </p>
+            </ng-container>
+
+            <!-- Tags panel -->
+            <ng-template #tagsPanel>
+                <div
+                class="w-60 rounded border shadow-md bg-card userListSelect"
+            >
+                <!-- Tags panel header -->
+                <div class="flex items-center m-3 mr-2">
+                    <div class="flex items-center">
+                        <mat-icon
+                            class="icon-size-5"
+                            [svgIcon]="'heroicons_solid:search'"
+                        ></mat-icon>
+                        <div class="ml-2">
+                            <input
+                                class="w-full min-w-0 py-1 border-0"
+                                type="text"
+                                placeholder="Enter user name"
+                                (input)="
+>>>>>>> bb2ab79a904507dbe39265a13b9451866e3a0584
                                     filterDepartments($event)
                                 " (keydown)="
                                     filterTagsInputKeyDown(
