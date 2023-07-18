@@ -44,10 +44,6 @@ export class KanbanTaskCardComponent implements OnInit {
     this.formShare = this._formBuilder.group({
       boards: ['', Validators.required],
     });
-    this.formShare = this._formBuilder.group({
-      attach_boards: [''],
-      detach_boards: [''],
-    });
     this.myGroup = this._formBuilder.group({
       title: [this.card.title, Validators.required],
       deadline: [this.card.deadline, Validators.required],
@@ -69,12 +65,6 @@ export class KanbanTaskCardComponent implements OnInit {
 
   isOverdue(date: string): boolean {
     return moment(date, moment.ISO_8601).isBefore(moment(), 'days');
-  }
-  shareTask() {
-    console.log(this.formShare.value, "this.formShare.valuethis.formShare.valuethis.formShare.value");
-    this._taskServiceService.shareTask({ attach_boards: "[" + this.formShare.controls['attach_boards'].value.map(r => +r) + "]", detach_boards: "[]", task_id: this.card.id }).subscribe(res => {
-      console.log(res);
-    })
   }
   updateField() {
 
