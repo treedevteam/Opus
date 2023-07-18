@@ -36,35 +36,7 @@
             <!-- ////////////////////// -->
         </div>
         
-        <div class="relative" style="position: relative;">
-            <button style="position: relative;" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                <mat-icon style="position: relative !important;top: 0;left: 0;
-                bottom: 0; right: 0;" class="three-dots">more_vert</mat-icon>
-            </button>
-        </div>
-        <mat-menu #menu="matMenu">
-            <button (click)="sahreTaskPopover()"  [matMenuTriggerFor]="dateTimeMenu" mat-menu-item>Share task</button>
-            <mat-menu class="date-range-menu" #dateTimeMenu="matMenu" >
-                <div class="share_task_popover"  (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-                    <div class="share_task_popover_header">
-                        <span class="">Share task</span>
-                        <a href="#" class=""></a>
-                    </div>
-                    <form [formGroup]="formShare" (ngSubmit)="onSubmit(card.id)"  #shareTaskNgForm="ngForm">
-                        <div class="form_body_popover">
-                            <mat-form-field style="width: 100%;" >
-                                <mat-select multiple [formControlName]="'attach_boards'" disableOptionCentering>
-                                <mat-optgroup label="{{department.name}}" *ngFor="let department of departmentsWithBoard$ | async">
-                                    <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
-                                </mat-optgroup>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <button type="submit" mat-raised-button color="primary" (click)="shareTask()">Share</button>
-                    </form>
-                </div>
-            </mat-menu>
-        </mat-menu>
+       
     </div>
 
     <!-- Labels -->
@@ -101,7 +73,7 @@
             </div>
         </ng-container>
         <ng-container>
-            <div class="checkListTable" style="margin-right: 15px;"
+            <div class="checkListTable" style="margin-right: 5px;"
             [ngClass]="{
                 'checkListTablegrey': card.checkListInfo.completed !== card.checkListInfo.total || card.checkListInfo.total === 0,
                 'checkListTablegreen': card.checkListInfo.completed === card.checkListInfo.total && card.checkListInfo.total !== 0}">
@@ -113,6 +85,35 @@
             <div class="mt-3 ml-5"  (click)="showSubtasks()"  matBadgeColor="warn" [matBadge]="card.subtasks_count" matBadgeSize="small" matBadgePosition="before">
                 <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
             </div>
+            <div class="relative" style="position: relative;">
+                <button style="position: relative;" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                    <mat-icon style="position: relative !important;top: 0;left: 0;
+                    bottom: 0; right: 0;" class="three-dots">more_vert</mat-icon>
+                </button>
+            </div>
+            <mat-menu #menu="matMenu">
+                <button (click)="sahreTaskPopover()"  [matMenuTriggerFor]="dateTimeMenu" mat-menu-item>Share task</button>
+                <mat-menu class="date-range-menu" #dateTimeMenu="matMenu" >
+                    <div class="share_task_popover"  (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                        <div class="share_task_popover_header">
+                            <span class="">Share task</span>
+                            <a href="#" class=""></a>
+                        </div>
+                        <form [formGroup]="formShare" (ngSubmit)="onSubmit(card.id)"  #shareTaskNgForm="ngForm">
+                            <div class="form_body_popover">
+                                <mat-form-field style="width: 100%;" >
+                                    <mat-select multiple [formControlName]="'attach_boards'" disableOptionCentering>
+                                    <mat-optgroup label="{{department.name}}" *ngFor="let department of departmentsWithBoard$ | async">
+                                        <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
+                                    </mat-optgroup>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <button type="submit" mat-raised-button color="primary" (click)="shareTask()">Share</button>
+                        </form>
+                    </div>
+                </mat-menu>
+            </mat-menu>
     </div>
 
 
