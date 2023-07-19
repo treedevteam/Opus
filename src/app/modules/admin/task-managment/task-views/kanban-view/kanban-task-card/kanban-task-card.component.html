@@ -75,6 +75,9 @@
         <div class="me-3" style="display: inherit">
             <ng-container class="mt-5">
                 <div class="flex items-center" style="width: 175px;">
+                    <ng-container *ngIf="card.users_assigned.length < 1">
+                        <strong class="pl-1">None Assigned</strong>
+                    </ng-container>
                     <ng-container
                         *ngFor="
                             let member of card.users_assigned;
