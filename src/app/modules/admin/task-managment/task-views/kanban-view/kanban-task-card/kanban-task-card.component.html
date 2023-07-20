@@ -10,9 +10,11 @@
         </div>
         <!-- Cover image -->
         <div
-            
+            (click)="openImagePopup(apiUrl + 'storage/' + card.file)"
+            class="cover-image"
+            *ngIf="card.file !== null"
         >
-            
+            <img class="w-100 h-25" [src]="apiUrl + 'storage/' + card.file" />
         </div>
         <!-- Title -->
         <div

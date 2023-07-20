@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'environments/environment';
 import moment from 'moment';
@@ -14,8 +14,6 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './kanban-task-card.component.html',
   styleUrls: ['./kanban-task-card.component.scss']
 })
-
-
 export class KanbanTaskCardComponent implements OnInit {
   @Input() card: Task;
   @Input() task: TaskModified;
@@ -24,17 +22,12 @@ export class KanbanTaskCardComponent implements OnInit {
   board:Board;
   formShare: FormGroup;
   showTasks = false;
-  subtask$= this._taskServiceService.allSubTasks$.pipe(
-    tap(res => {
-      this.card.subtasks_count = res.length;
-    })
-  );
+  subtask$= this._taskServiceService.allSubTasks$;
   departmentsWithBoard$= this._taskServiceService.departmentsWithBoard$
   expandedSubtasks = null
   subtasksOpened$ = this._taskServiceService.curretnSubtasksOpened$.pipe(
     tap(res => {
       this.showTasks = this.card.id === res;
-      
     })
   )
   constructor(
