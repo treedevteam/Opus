@@ -1,11 +1,10 @@
 .editbutton{
-    display: none;
     padding: 4px 8px;
-    background: #fff;
-    color: rgba(0, 0, 0, 0.7)!important;
-    border-radius: 5px;
+    color: #fff !important;
+    border-radius: 10px;
     cursor: pointer;
     margin-left: 10px;
+    display: block !important;
 }
 .editable_title_input:hover .editbutton{
     display: block!important;
