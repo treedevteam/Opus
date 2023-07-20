@@ -132,13 +132,13 @@
 
 
                 <div class="row" *ngFor="let replies of post.replies">
-                    <mat-menu #appMenu="matMenu">
-                        <ng-template matMenuContent >
+                    <mat-menu #appMenu="matMenu" >
+                        <ng-template  matMenuContent>
                           <button   mat-menu-item  (click)="deleteReply(replies.id ,post.id)">Delete Post</button>
                         </ng-template>
                     </mat-menu>
-                      <button *ngIf="post.is_his" class="delete-post" mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Sally'}">
-                        <mat-icon>more_vert</mat-icon>
+                      <button  *ngIf="post.is_his" class="delete-postReplay" mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Sally'}">
+                        <mat-icon   >more_vert</mat-icon>
                       </button>
                     <div class="col-1">
                         
