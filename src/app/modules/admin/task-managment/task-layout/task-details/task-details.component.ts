@@ -4,7 +4,7 @@ import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.co
 import { NormalViewComponent } from '../../task-views/normal-view/normal-view.component';
 import { Task, Users } from '../../_models/task';
 import { TaskServiceService } from '../../_services/task-service.service';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -17,6 +17,9 @@ import saveAs from 'file-saver';
 import Pusher from 'pusher-js';
 import { RealtimeServiceService } from '../../real_time_services/task_realtime.services';
 import { TaskOrSub } from 'app/modules/admin/tasks/kanban-view/kanban-board/board/add-card/add-card.component';
+import { SubtaskDetailsComponent } from '../subtask-details/subtask-details.component';
+import { createHostListener } from '@angular/compiler/src/core';
+
 
 
 
@@ -28,6 +31,7 @@ import { TaskOrSub } from 'app/modules/admin/tasks/kanban-view/kanban-board/boar
 export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
   @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
+  
   private _tagsPanelOverlayRef: OverlayRef;
   @Input() card: Task;
   apiUrl = environment.apiUrl
@@ -44,7 +48,8 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   url ;
   taskFile$ = this._taskService.taskSelected$
   showTasks = false;
-  subtask$ = this._taskServiceService.allSubTasksDetails$;
+  showBox = true; 
+  subtask$ = this._taskServiceService.allSubTasksDetails$; 
   subtasksOpened$ = this._taskServiceService._currentSubtasksDetailsOpened$.pipe(
     tap(res => {
       this.showTasks = this.task.id === res;
@@ -53,6 +58,15 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   pusher: any;
   channel: any;
+  public text: String;
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    if(!this.eRef.nativeElement.contains(event.target)) {
+        this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+        this.closeDrawer();
+    }
+  }
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _normalView: NormalViewComponent,
@@ -67,26 +81,27 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         private _viewContainerRef: ViewContainerRef,
         private _snackBar: MatSnackBar,
         private realTimeService:RealtimeServiceService,
-        private _taskServiceService: TaskServiceService
-
+        private _taskServiceService: TaskServiceService,
+        private eRef: ElementRef
         ) {
         }
 
+
+  
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   filteredUsers$ = this._taskService.users$;
   
   taskSelected$ = this._taskService.taskSelectedDetails$
-
+  
 
   ngOnInit(): void {
-    console.log('granit baba', this.card)
+    console.log( this.card)
     this.realTimeService.channel$.subscribe(channel2=>{
       channel2.bind('task-data', data => {
         debugger;
           this._taskService.handleSingTaskRealtimeFunction(data);
         });
     })   
-
 
 
 
@@ -115,6 +130,22 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   }
+  
+  // onClickedOutside(e: Event) {
+  //   if (this.showBox = false){ 
+  //     this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+  //   }
+  // }
+  // onClickedOutside(e: Event) { 
+  //   this.showBox = false; 
+  //   if(this.showBox ) {
+  //       alert('ts')
+  //         this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+  //       this.closeDrawer();
+      
+    
+  //   }
+  // }
 
   ngAfterViewInit(): void
   {
@@ -150,6 +181,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+ 
   onFileChange(pFileList: File): void {
 
     if( this._taskService.boardInfo.is_his !== 1){
@@ -336,9 +368,8 @@ addCard(list: any, event: TaskOrSub){
 
 
 showSubtasks$() { 
-  console.log(this.showTasks)
 if(!this.showTasks) {
-  this._taskServiceService.getSubtasksDetails(this.card.id).subscribe(res => { 
+  this._taskServiceService.getSubtasksDetails(this.task.id).subscribe(res => { 
     console.log('testt' , res);
     
   })
@@ -349,9 +380,6 @@ else {
 
 
 }
-
-
-
 
 
 

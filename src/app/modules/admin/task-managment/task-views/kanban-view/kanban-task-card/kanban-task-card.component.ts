@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'environments/environment';
 import moment from 'moment';
@@ -14,6 +14,8 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './kanban-task-card.component.html',
   styleUrls: ['./kanban-task-card.component.scss']
 })
+
+
 export class KanbanTaskCardComponent implements OnInit {
   @Input() card: Task;
   @Input() task: TaskModified;

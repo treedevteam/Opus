@@ -369,7 +369,7 @@ export class TaskServiceService {
             ])),
         shareReplay(1),
         tap(res => {
-            console.log(res);
+            console.log('test i allsubtaks',res);
         })
     );
     allSubTasksDetails$ = combineLatest([
@@ -391,7 +391,7 @@ export class TaskServiceService {
             ])),
         shareReplay(1),
         tap(res => {
-            console.log(res);
+            console.log('123123',res);
         })
     );
     updateTaskPriority(priorityId: any, taskId: number): Observable<Task> {
@@ -917,6 +917,7 @@ export class TaskServiceService {
                 switchMap(subtasks => this._httpClient.post<Task>(this.apiUrl + 'api/subtask/store', { ...data, board_id: board.id }).pipe(
                     first(),
                     map((newSubTask: any) => {
+                        debugger;
                         this._subtask.next([...subtasks, newSubTask.data])
                         return newSubTask;
                     })
