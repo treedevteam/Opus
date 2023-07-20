@@ -1,5 +1,5 @@
-<div  class="flex flex-auto" *ngIf="taskSelected$ | async as task">
-    <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto" (clickOutSide) = "onClickedOutside" *ngIf="showBox">
+<div class="flex flex-auto" *ngIf="taskSelected$ | async as task">
+    <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
 
         <!-- Header -->
         <div class="flex items-center justify-between -mt-3 -ml-4">
@@ -228,16 +228,27 @@
                 </mat-tab>
                 <mat-tab label="Subtasks">
 
-                    
+                    <!-- <scrumboard-board-add-card (saved)="addCard(task, $event)" [taskType]="'subtask'"
+                            [buttonTitle]="'Add a subtask'">
+                        </scrumboard-board-add-card>
+
+                        <button (click)="subtasksOpened$">Show Subtasks
+
+
+                            <app-kanban-subtask-card *ngIf="showSubtasks$ | async" style="padding-top: 20px;"
+                                [card]="subtask"></app-kanban-subtask-card>
+
+
+                        </button> -->
                     <scrumboard-board-add-card (saved)="addCard(task, $event)" [taskType]="'subtask'"
                         [buttonTitle]="'Add a subtask'">
                     </scrumboard-board-add-card>
-                
-                  
-                    <!-- ky funksion i kthen subtaks po tani po gjun error veq loading -->
-                </mat-tab> 
 
-                
+                    <!-- <ng-container>        *ngFor="let subtask of subtask$ | async; let firsttt = first; let lasttt = last; trackBy: trackByFn;">
+                                <app-kanban-subtask-card [card]="subtask"></app-kanban-subtask-card>
+                            </ng-container> -->
+
+                </mat-tab>
             </mat-tab-group>
 
         </div>

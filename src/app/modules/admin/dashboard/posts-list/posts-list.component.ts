@@ -177,7 +177,7 @@ export class PostsListComponent implements OnInit {
         });
     }
 
-    deleteReplyPost(id: number, postId: number) {
+    deleteReply(id: number, postId: number) {
         this._dashboardService.deleteReply(id, postId).subscribe((res) => {});
     }
 
