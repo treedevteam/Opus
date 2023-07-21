@@ -79,15 +79,15 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnInit(): void {
-    console.log('granit baba', this.card)
+    
     this.realTimeService.channel$.subscribe(channel2=>{
       channel2.bind('task-data', data => {
         debugger;
           this._taskService.handleSingTaskRealtimeFunction(data);
         });
     })   
-
-
+    
+    
 
 
     
@@ -107,9 +107,12 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         this._kanbanView.matDrawer.open();
       }
     })
+
+    
     this._taskService.taskSelectedDetails$.subscribe(res=>{
       this.taskSeleced = res;
       this.task = res
+      console.log(this.task, 'taskkkk')
     })
     
 
@@ -349,15 +352,6 @@ else {
 
 
 }
-
-
-
-
-
-
-
-
-
 
 
   addUsersToTask(userId: number): void{
