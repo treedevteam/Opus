@@ -50,6 +50,8 @@ export class SubtaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           this.closeDrawer();
       }
     }
+   
+    
     ngOnInit(): void {
        this._taskService.subtaskSelected$.subscribe(res=>{
         this.subtasks = res

@@ -65,8 +65,9 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
         this.closeDrawer();
     }
+  
   }
-
+ 
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _normalView: NormalViewComponent,
@@ -87,12 +88,10 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
 
-  
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   filteredUsers$ = this._taskService.users$;
   
   taskSelected$ = this._taskService.taskSelectedDetails$
-  
 
   ngOnInit(): void {
     console.log( this.card)
@@ -104,8 +103,6 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     })   
 
 
-
-    
     this.taskForm = this._formBuilder.group({
       checklist:'',
       file:[''],
