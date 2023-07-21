@@ -1,5 +1,5 @@
 import {  Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ChangeDetectorRef, HostListener } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.component';
@@ -9,7 +9,6 @@ import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { Task } from '../../_models/task';
 import { FuseConfirmationService } from '../../../../../../@fuse/services/confirmation/confirmation.service';
 import { TemplatePortal } from '@angular/cdk/portal';
-
 @Component({
   selector: 'app-subtask-details',
   templateUrl: './subtask-details.component.html',
@@ -25,6 +24,9 @@ export class SubtaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     taskOrSubtask = "";
     subtasks:Task
 
+
+
+  
     subtaskSelected$ = this._taskService.subtaskSelected$;
     constructor(
         private _normalView: NormalViewComponent,
@@ -36,10 +38,18 @@ export class SubtaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-
+        private eRef : ElementRef,
+        private _activatedRoute : ActivatedRoute
 
     ) { }
-
+    public text: String;
+    @HostListener('document:click', ['$event'])
+    clickout(event: { target: any; }) {
+      if(!this.eRef.nativeElement.contains(event.target)) {
+          this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+          this.closeDrawer();
+      }
+    }
     ngOnInit(): void {
        this._taskService.subtaskSelected$.subscribe(res=>{
         this.subtasks = res
