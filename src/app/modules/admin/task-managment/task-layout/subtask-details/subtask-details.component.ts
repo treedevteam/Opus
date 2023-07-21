@@ -1,5 +1,5 @@
 import {  Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ChangeDetectorRef, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ChangeDetectorRef,HostListener,Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.component';
@@ -31,10 +31,8 @@ export class SubtaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     boardUsers$= this._taskService.boardUsers$;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     taskOrSubtask = "";
-    subtask:any
-    subtaskDeadline: Date | null;
+    subtasks:Task
 
-    subtask$ = this._taskService.allSubTasks$;
     subtaskSelected$ = this._taskService.subtaskSelected$;
 
    
@@ -49,21 +47,13 @@ export class SubtaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-        private _formBuilder:FormBuilder
+
 
     ) { }
 
-    ngOnInit(): void {  
-      
-      this._taskService.subtaskSelected$.subscribe(res=>{
-        this.subtask = res
-        console.log(this.subtask, 'subtaskkk')
-      })
-
-       this._taskService.subtaskSelectedDetails$.subscribe(res=>{
-        this.subtask = res
-        this.subtaskDeadline = this.subtask.deadline;
-        console.log(this.subtask, 'subtaskkk')
+    ngOnInit(): void {
+       this._taskService.subtaskSelected$.subscribe(res=>{
+        this.subtasks = res
       })
         
         //dont touch

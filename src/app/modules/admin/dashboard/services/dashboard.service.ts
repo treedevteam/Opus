@@ -11,6 +11,13 @@ import { UserService } from 'app/core/user/user.service';
     providedIn: 'root',
 })
 export class DashboardService {
+    boardInfo: any;
+    updateTaskTitle(value: any, id: any) {
+        throw new Error('Method not implemented.');
+    }
+    openAssignPopup() {
+        throw new Error('Method not implemented.');
+    }
     apiUrl = environment.apiUrl;
 
     private _departmentPosts: BehaviorSubject<Posts[] | null> = new BehaviorSubject(null);

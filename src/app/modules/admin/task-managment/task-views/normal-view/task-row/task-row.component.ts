@@ -26,7 +26,11 @@ export class TaskRowComponent implements OnInit {
   board:Board;
   formShare: FormGroup;
   showTasks = false;
-  subtask$= this._taskServiceService.allSubTasks$;
+  subtask$= this._taskServiceService.allSubTasks$.pipe(
+    tap(res => { 
+      this.task.subtasks_count = res.length; 
+    })
+  )
   departmentsWithBoard$= this._taskServiceService.departmentsWithBoard$
 
   constructor(private _taskServiceService:TaskServiceService,
