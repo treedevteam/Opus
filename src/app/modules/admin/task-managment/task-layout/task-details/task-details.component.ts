@@ -61,11 +61,27 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   public text: String;
   @HostListener('document:click', ['$event'])
   clickout(event) {
-    if(!this.eRef.nativeElement.contains(event.target)) {
-        this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
-        this.closeDrawer();
-    }
+    const clickedElement = event.target as HTMLElement;
   
+    // Check if the clicked element is a link
+    if (clickedElement.tagName.toLowerCase() === 'a') {
+      // Close the current sidebar
+      this.closeDrawer();
+  
+      // Open the new sidebar with the details from the new link
+      const taskDetailsUrl = clickedElement.getAttribute('href');
+      if (taskDetailsUrl) {
+        // Delay the navigation slightly to avoid immediate closing
+        setTimeout(() => this._router.navigateByUrl(taskDetailsUrl), 10);
+  
+        // Prevent event propagation to document level
+        event.stopPropagation();
+        event.preventDefault();
+      }
+    } else if (!this.eRef.nativeElement.contains(clickedElement)) {
+      this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+      this.closeDrawer();
+    }
   }
  
   constructor(
