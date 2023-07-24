@@ -41,23 +41,18 @@
        <!-- Tags -->
        <div
            class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
-           (click)="openTagsPanel()"
-           #tagsPanelOrigin>
-
-          
-
-           <ng-container >
-               <div>
-                   <img
-                       class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                       src="assets/images/dapulse-person-column.svg"
-                       alt="Member avatar"
-                   />
-               </div>
-               <p style="margin-left: 25px !important">
-                   - users assigned
-               </p>
-           </ng-container>
+           (click)="openTagsPanel()" #tagsPanelOrigin>
+           <ng-container>
+            <div class="flex items-center  -space-x-1.5">
+                <ng-container *ngFor="let member of subtask.users_assigned; trackBy: trackByFn">
+                    <app-user-profile [image]="member.image" [name]="member.name"
+                        [color]="member.color"></app-user-profile>
+                </ng-container>
+            </div>
+            <p style="margin-left: 25px !important">
+                - users assigned
+            </p>
+            </ng-container>
 
            <!-- Tags panel -->
            <ng-template #tagsPanel>
@@ -141,7 +136,35 @@
    </div>
 </div>
 
+<div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
+                
+   [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !task.deadline,
+           'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task.deadline && !isOverdue(task.deadline) || task.status?.name === 'Done',
+           'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task.deadline && isOverdue(task.deadline) && task.status?.name !== 'Done' }"
+           (click)="dueDatePicker.open()">
+   <mat-icon class="icon-size-5 text-current"
+       [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+   <span class="ml-2 text-md font-medium">
+       <ng-container *ngIf="subtaskDeadline">{{subtaskDeadline |
+           date:'LLL dd yyyy'}}</ng-container>
+       <ng-container *ngIf="!subtask.deadline">Not set</ng-container>
+   </span>
 
+   <mat-form-field
+       class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
+       <div [formGroup]="myGroup">
+           <input matInput [formControlName]="'deadline'" [matDatepicker]="dueDatePicker">
+         </div>
+       <mat-datepicker #dueDatePicker>
+           <mat-datepicker-actions>
+               <button class="" mat-flat-button [color]="'primary'"
+               (click)="updateField()"
+                   matDatepickerApply>Select
+               </button>
+           </mat-datepicker-actions>
+       </mat-datepicker>
+   </mat-form-field>
+</div>
 
    </div>
 </div>
