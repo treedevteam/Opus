@@ -1,5 +1,5 @@
-<div class="flex flex-auto" style="overflow-x: hidden;" *ngIf="taskSelected$ | async as task">
-    <div  class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
+<div class="flex flex-auto" style="overflow-x: hidden; height: 90vh;" *ngIf="taskSelected$ | async as task">
+    <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
 
         <!-- Header -->
         <div class="flex items-center justify-between -mt-3 -ml-4">
@@ -33,7 +33,7 @@
 
         <div class="mt-5 body_content">
 
-            <mat-tab-group class="mt-5" #logsTab>
+            <mat-tab-group  class="mt-5" #logsTab>
                 <mat-tab label="Checklists" class="overflow-y-auto">
 
 
@@ -48,27 +48,23 @@
                     <div class="mt-8">
                         <div class="flex flex-wrap items-center -m-1.5">
                             <!-- Tags -->
-                            <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
-                                (click)="openTagsPanel()" #tagsPanelOrigin>
+                            
                                 <ng-container>
-                                    <div class="flex items-center  -space-x-1.5">
+                                    <div  class="flex items-center  -space-x-1.5">
                                         <ng-container *ngFor="let member of task.users_assigned; trackBy: trackByFn">
                                             <app-user-profile [image]="member.image" [name]="member.name"
                                                 [color]="member.color"></app-user-profile>
                                         </ng-container>
                                     </div>
-                                    <p style="margin-left: 25px !important">
+                                    <p style = "margin-left: 25px !important">
                                         - users assigned
                                     </p>
                                 </ng-container>
 
                                 <!-- Tags panel -->
-                                <ng-template #tagsPanel>
+                                <ng-template #tagsPanel onclick="onClickPanel($event)">
                                     <div class="w-60 rounded border shadow-md bg-card userListSelect">
                                         <!-- Tags panel header -->
-
-
-
                                         <div class="flex items-center m-3 mr-2">
                                             <div class="flex items-center">
                                                 <mat-icon class="icon-size-5"
@@ -122,7 +118,7 @@
                                 </ng-template>
                             </div>
                         </div>
-                    </div>
+                  
 
                     <form class="" [formGroup]="taskForm">
                         <div class="checklists_section">
@@ -184,11 +180,6 @@
                                     apiUrl + 'storage/' + taskSeleced.file
                                 )
                             " />
-                            <!-- <button>
-                            <a [href]="apiUrl + 'storage/' + file.file" [download]="file.file" target="_blank">Download</a>
-                        </button>
-                        <mat-icon (click)="deleteFile(task2.id)"  style="cursor: pointer;" color="warn" >delete</mat-icon>
-                        <mat-divider ></mat-divider> -->
                         </div>
                         <div *ngIf="taskSeleced.file !== null" class="grid grid-cols-2 gap-4 w-full mt-8">
                             <a class="flex-auto" mat-flat-button [color]="'primary'"
@@ -249,6 +240,63 @@
                             </ng-container> -->
 
                 </mat-tab>
+                
+                <mat-tab label="Assign User to Board"> 
+                    <div class="mt-8">
+                        <div class="flex flex-wrap items-center -m-1.5">
+                            <!-- Tags -->
+                        
+
+                                <!-- Tags panel -->
+                                <ng-container #tagsPanel onclick="onClickPanel($event)">
+                                    <div class="w-60 rounded border shadow-md bg-card userListSelect">
+                                        <!-- Tags panel header -->
+                                        <div class="flex items-center m-3 mr-2">
+                                            <div class="flex items-center">
+                                                <mat-icon class="icon-size-5"
+                                                    [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                                <div class="ml-2">
+                                                    <input class="w-full min-w-0 py-1 border-0" type="text"
+                                                        placeholder="Enter user name" (input)="
+                                    filterDepartments($event)
+                                " (keydown)="
+                                    filterTagsInputKeyDown(
+                                        $event
+                                    )
+                                " [maxLength]="30" #newTagInput />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="flex flex-col max-h-64 py-2 border-t">
+                                            <!-- Tags -->
+                                            <ng-container *ngFor="
+                            let tag of boardUsers$ | async;
+                            trackBy: trackByFn
+                        ">
+                                                <div class="flex items-center h-10 min-h-10 px-4">
+
+                                                    <mat-checkbox [checked]="userCheck(tag.id)"
+                                                        (change)="toggleTaskUser(tag.id)"
+                                                        class="flex items-center h-10 min-h-10" [color]="'primary'">
+                                                    </mat-checkbox>
+                                                    <div class="ml-1">
+                                                        {{ tag.name }}
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngIf="filteredUsers?.length === 0" class="pl-3">No
+                                                result</ng-container>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+              
+                </mat-tab>
+                
+
+                
             </mat-tab-group>
 
         </div>
