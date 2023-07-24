@@ -26,7 +26,7 @@
             >
                 <mat-form-field class="fuse-mat-textarea w-full">
                     <textarea
-                    maxlength="600"
+             
                         matInput
                         
                         [formControlName]="'description'"
@@ -108,7 +108,29 @@
                       <button *ngIf="post.is_his" class="delete-post" mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Sally'}">
                         <mat-icon>more_vert</mat-icon>
                       </button>
-                <p class="description">{{ post.description }}</p>
+
+
+
+
+
+      
+           <!--      <p class="description">{{ post.description }}</p> -->
+
+
+                    
+                        <p *ngIf="post.description.length <= maxLength" class="description">{{ post.description }}</p>
+                        <p *ngIf="post.description.length > maxLength && !isCollapsed" class="description">
+                          {{ post.description }}
+                          <a class="readmore"  (click)="toggleCollapse()">Read less</a>
+                        </p>
+                        <p *ngIf="post.description.length > maxLength && isCollapsed" class="description">
+                          {{ post.description | slice:0:maxLength }}...
+                          <a class="readmore" (click)="toggleCollapse()">Read more</a>
+                        </p>
+                    
+                      
+            
+                  
                 <hr />
                 <div class="row file">
                     <img

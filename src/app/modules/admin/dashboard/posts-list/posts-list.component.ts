@@ -22,8 +22,25 @@ import { UserService } from 'app/core/user/user.service';
     styleUrls: ['./posts-list.component.scss'],
 })
 export class PostsListComponent implements OnInit {
-    isShowDivIf = true;
 
+
+    //   maxLength = 130;
+    //   isCollapsed = true;
+    
+    //   toggleCollapse(id,postId) {
+    //     this.isCollapsed = !this.isCollapsed;
+    //   }
+
+
+      maxLength = 150;
+      isCollapsed = true;
+    
+      toggleCollapse(id,postId) {
+        this.isCollapsed = !this.isCollapsed;
+      }
+
+
+    isShowDivIf = true;
     toggleDisplayDivIf() {
         this.isShowDivIf = !this.isShowDivIf;
     }

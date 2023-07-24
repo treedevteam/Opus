@@ -70,9 +70,8 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
  
   
-
   
- 
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _normalView: NormalViewComponent,
