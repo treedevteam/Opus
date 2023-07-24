@@ -22,7 +22,11 @@ export class KanbanTaskCardComponent implements OnInit {
   board:Board;
   formShare: FormGroup;
   showTasks = false;
-  subtask$= this._taskServiceService.allSubTasks$;
+  subtask$= this._taskServiceService.allSubTasks$.pipe(
+    tap(res => { 
+      this.card.subtasks_count = res.length; 
+    })
+  )
   departmentsWithBoard$= this._taskServiceService.departmentsWithBoard$
   expandedSubtasks = null
   subtasksOpened$ = this._taskServiceService.curretnSubtasksOpened$.pipe(
