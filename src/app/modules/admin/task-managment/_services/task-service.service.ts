@@ -193,7 +193,7 @@ export class TaskServiceService {
         shareReplay(1),
     );
     getUsersData$ = this._httpClient.get<Users[]>(this.apiUrl + 'api/users').pipe(
-        map((data: any): Users[] => {
+        map((data: any): Users[] => {   
             this._users.next(data);
             return data;
         }),
@@ -268,10 +268,29 @@ export class TaskServiceService {
         map(([tasksBoard, users]) => (
             {
                 ...tasksBoard,
-                users_assigned: tasksBoard.users_assigned?.map(u => (
+                users_assigned: tasksBoard.users_assigned.map(u => (
                     users.find(user => u === user.id)
                 )),
                 checkListcompleted: tasksBoard.checklists.filter(x => x.value === 1).length
+            }
+        )),
+        shareReplay(1),
+        tap(res => {
+            console.log(res);
+        })
+    );
+
+    subtaskSelectedDetails$ = combineLatest([
+        this.subtaskSelected$,
+        this.getUsersData$
+    ]).pipe(
+        map(([subTasksBoard, users]) =>(
+            {
+                ...subTasksBoard,
+                users_assigned: subTasksBoard.users_assigned?.map(u => (
+                    users.find(user => u === user.id)
+                )),
+                checkListcompleted: subTasksBoard.checklists?.filter(x => x.value === 1).length
             }
         )),
         shareReplay(1),
@@ -894,14 +913,14 @@ export class TaskServiceService {
     subtaskUpdateTaskDeadline(deadline: any, subtaskId: number): Observable<Task> {
         return this.subtasks$.pipe(
             take(1),
-            switchMap(subtasks => this._httpClient.post<Task>(this.apiUrl + 'api/subtask_deadline/' + subtaskId, { deadline: deadline }).pipe(
+            switchMap(subtasks => this._httpClient.post<any>(this.apiUrl + 'api/subtask_deadline/' + subtaskId, { deadline: deadline }).pipe(
                 map((updatedSubTask: any) => {
                     updatedSubTask = updatedSubTask.data
-                    const index = subtasks.findIndex(d => d.id === updatedSubTask.id);
-                    if (index > -1) {
-                        subtasks.splice(index, 1, updatedSubTask);
-                    }
-                    this._subtask.next(subtasks)
+                    // const index = subtasks.findIndex(d => d.id === updatedSubTask.id);
+                    // if (index > -1) {
+                    //     subtasks.splice(index, 1, updatedSubTask);
+                    // }
+                    this._subtask.next(updatedSubTask)
                     return updatedSubTask;
                 })
             ))
