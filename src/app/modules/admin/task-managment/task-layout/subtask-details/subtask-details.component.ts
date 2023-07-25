@@ -1,5 +1,5 @@
 import {  Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ChangeDetectorRef, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, TemplateRef, ViewChild, ViewContainerRef, ChangeDetectorRef, Input, HostListener } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.component';
@@ -49,10 +49,21 @@ export class SubtaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
-        private _formBuilder:FormBuilder
+        private _formBuilder:FormBuilder,
+        private eRef : ElementRef,
+        private _activatedRoute : ActivatedRoute,
 
-    ) { }
-
+        
+        ) { }
+    
+    // public text: String;
+    // @HostListener('document:click', ['$event'])
+    // clickout(event) {
+    //   if(!this.eRef.nativeElement.contains(event.target)) {
+    //       this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+    //       this.closeDrawer();
+    //   }
+    // }
     ngOnInit(): void {  
       
       this._taskService.subtaskSelected$.subscribe(res=>{

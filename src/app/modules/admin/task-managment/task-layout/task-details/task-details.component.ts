@@ -18,7 +18,6 @@ import Pusher from 'pusher-js';
 import { RealtimeServiceService } from '../../real_time_services/task_realtime.services';
 import { TaskOrSub } from 'app/modules/admin/tasks/kanban-view/kanban-board/board/add-card/add-card.component';
 import { SubtaskDetailsComponent } from '../subtask-details/subtask-details.component';
-import { createHostListener } from '@angular/compiler/src/core';
 
 
 
@@ -60,30 +59,19 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   channel: any;
   public text: String;
   @HostListener('document:click', ['$event'])
-  clickout(event) {
-    const clickedElement = event.target as HTMLElement;
-  
-    // Check if the clicked element is a link
-    if (clickedElement.tagName.toLowerCase() === 'a') {
-      // Close the current sidebar
-      this.closeDrawer();
-  
-      // Open the new sidebar with the details from the new link
-      const taskDetailsUrl = clickedElement.getAttribute('href');
-      if (taskDetailsUrl) {
-        // Delay the navigation slightly to avoid immediate closing
-        setTimeout(() => this._router.navigateByUrl(taskDetailsUrl), 10);
-  
-        // Prevent event propagation to document level
-        event.stopPropagation();
-        event.preventDefault();
-      }
-    } else if (!this.eRef.nativeElement.contains(clickedElement)) {
-      this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
-      this.closeDrawer();
+  onDocumentClick(event) {
+    console.log(event.target);
+    if(!this.eRef.nativeElement.contains(event.target)) {
+        this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+        this.closeDrawer();
+        
     }
-  }
+  } 
+
  
+  
+  
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _normalView: NormalViewComponent,
@@ -149,22 +137,6 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   }
-  
-  // onClickedOutside(e: Event) {
-  //   if (this.showBox = false){ 
-  //     this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
-  //   }
-  // }
-  // onClickedOutside(e: Event) { 
-  //   this.showBox = false; 
-  //   if(this.showBox ) {
-  //       alert('ts')
-  //         this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
-  //       this.closeDrawer();
-      
-    
-  //   }
-  // }
 
   ngAfterViewInit(): void
   {
@@ -401,15 +373,6 @@ else {
 }
 
 
-
-
-
-
-
-
-
-
-
   addUsersToTask(userId: number): void{
     if( this._taskService.boardInfo.is_his !== 1){
       this._taskService.openAssignPopup()
@@ -443,11 +406,22 @@ else {
     }
 }
 
-  openTagsPanel(): void
+  onClickPanel(event) : void 
   {
+    console.log(event);
+    event.stopPropagation();
+  }
+
+  openTagsPanel(event : MouseEvent): void
+  {
+
     if( this._taskService.boardInfo.is_his !== 1){
       this._taskService.openAssignPopup()
-    }else{
+
+    }
+    
+    else{
+      
       // Create the overlay
       this._tagsPanelOverlayRef = this._overlay.create({
         backdropClass   : '',
@@ -505,6 +479,7 @@ else {
         }
       });
     }
+    
   }
     /**
      * Toggle the tags edit mode
@@ -581,4 +556,8 @@ else {
   {
       return item.id || index;
   }
+}
+
+function onDatePickerClick(event: any, clickout: (event: any) => void) {
+  throw new Error('Function not implemented.');
 }
