@@ -32,11 +32,12 @@ export class PostsListComponent implements OnInit {
     //   }
 
 
-      maxLength = 150;
+
+      maxLength = 200;
       isCollapsed = true;
     
-      toggleCollapse(id,postId) {
-        this.isCollapsed = !this.isCollapsed;
+      toggleCollapse(post: any) {
+        post.isCollapsed = !post.isCollapsed;
       }
 
 
@@ -69,6 +70,7 @@ export class PostsListComponent implements OnInit {
                     user: users.find((x) => x.id === rep.user_id),
                     isHis: +myUser.id === rep.user_id,
                 })),
+                isCollapsed: true
             }))
         ),
         tap((res) => {

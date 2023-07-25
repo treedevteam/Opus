@@ -28,7 +28,7 @@
                     <textarea
              
                         matInput
-                        
+                        maxlength="3500"
                         [formControlName]="'description'"
                         [required]="true"
                         [rows]="5"
@@ -119,13 +119,13 @@
 
                     
                         <p *ngIf="post.description.length <= maxLength" class="description">{{ post.description }}</p>
-                        <p *ngIf="post.description.length > maxLength && !isCollapsed" class="description">
+                        <p *ngIf="post.description.length > maxLength && !post.isCollapsed" class="description">
                           {{ post.description }}
-                          <a class="readmore"  (click)="toggleCollapse()">Read less</a>
+                          <a class="readmore"  (click)="toggleCollapse(post)">Read less</a>
                         </p>
-                        <p *ngIf="post.description.length > maxLength && isCollapsed" class="description">
+                        <p *ngIf="post.description.length > maxLength && post.isCollapsed" class="description">
                           {{ post.description | slice:0:maxLength }}...
-                          <a class="readmore" (click)="toggleCollapse()">Read more</a>
+                          <a class="readmore" (click)="toggleCollapse(post)">Read more</a>
                         </p>
                     
                       
