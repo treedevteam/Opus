@@ -3,7 +3,7 @@
     mat-icon-button
     (click)="openPanel()"
     #notificationsOrigin>
-    <ng-container *ngIf="unreadCount > 0 ">
+    <ng-container *ngIf="unreadCount > 0">
         <span class="absolute top-0 right-0 left-0 flex items-center justify-center h-3">
             <span class="flex items-center justify-center shrink-0 min-w-4 h-4 px-1 ml-4 mt-2.5 rounded-full bg-teal-600 text-indigo-50 text-xs font-medium">
                 {{unreadCount}}
@@ -31,16 +31,15 @@
             </div>
             <div class="text-lg font-medium leading-10">Notifications</div>
             <div class="ml-auto">
-                <!-- <button
+                <button
                     mat-icon-button
                     [matTooltip]="'Mark all as read'"
                     [disabled]="unreadCount === 0"
-                    (click)="markAllAsRead()"
-                    >
+                    (click)="markAllAsRead()">
                     <mat-icon
                         class="icon-size-5 text-current"
                         [svgIcon]="'heroicons_solid:mail-open'"></mat-icon>
-                </button> -->
+                </button>
             </div>
         </div>
 
@@ -102,7 +101,7 @@
                             [matTooltip]="'Remove'">
                             <mat-icon
                                 class="icon-size-4"
-                                [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                         </button> 
                     </div>
 
