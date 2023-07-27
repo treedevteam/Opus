@@ -11,7 +11,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { combineLatest, debounceTime, filter, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, debounceTime, filter, map, Observable, of, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import saveAs from 'file-saver';
 import Pusher from 'pusher-js';
@@ -41,6 +41,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   tagsEditMode: boolean = false;
   tags: Task[];
   boardUsers$= this._taskService.boardUsers$;
+  filteredUsers$ = this._taskService.filteredUsers$;
   task;
   uploaded: boolean;
   file: any = null;
@@ -91,12 +92,12 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         ) {
         }
 
-
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-  filteredUsers$ = this._taskService.users$;
+   
   
   taskSelected$ = this._taskService.taskSelectedDetails$
-
+  rawData: Array<Users> = [];
+  selectData: Array<Users> = [];
   ngOnInit(): void {
     console.log('granit baba', this.card)
     this.realTimeService.channel$.subscribe(channel2=>{
@@ -105,10 +106,12 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
           this._taskService.handleSingTaskRealtimeFunction(data);
         });
     })   
+    // this._taskServiceService.getFilteredUsers()
 
 
+ 
 
-
+    
     
     this.taskForm = this._formBuilder.group({
       checklist:'',
@@ -162,13 +165,12 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       return this.taskOrSubtask === "normal" ? this._normalView.matDrawer.close() : this._kanbanView.matDrawer.close()
   }
-
   uploadTaskImage() {
     const formData = new FormData();
     const result = Object.assign({}, this.taskForm.value);
     formData.append('file', this.taskForm.get('file').value);
     this._taskService.addFileToTask(formData, this.task.id).subscribe((res) => {
-      console.log(res, 'EEWRWERWERWERw');
+      console.log(res, '');
     });
   }
 
@@ -508,14 +510,18 @@ else {
      *
      * @param event
      */
-    //  filterDepartments(event): void 
-    //  {
-    //      // Get the value
-    //      const value = event.target.value.toLowerCase();
+     filterDepartments(event): void 
+     {
+         // Get the value
+         const value = event.target.value.toLowerCase();
+         console.log(value);
+         this._taskServiceService.filteredUsersData(value)
  
-    //      // Filter the tags
-    //      this.filteredUsers = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
-    //  }
+         // Filter the tags
+        //  this.filteredUsers$ = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
+        
+         
+     }
  
      /**
       * Filter tags input key down event

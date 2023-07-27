@@ -38,7 +38,7 @@ export class TaskServiceService {
     private _users: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
     private _boardUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
     private _departmentUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null);
-
+    private _filteredUsers: BehaviorSubject<Users[] | null> = new BehaviorSubject(null); 
 
     private _subtask: BehaviorSubject<Task[] | null> = new BehaviorSubject(null);
     private _curretnSubtasksOpened: BehaviorSubject<number | null> = new BehaviorSubject(null);
@@ -66,8 +66,7 @@ export class TaskServiceService {
     // public channelIdFilter$ = new BehaviorSubject<string | null>(null);
     // public teamIdFilter$ = new BehaviorSubject<string | null>(null);
     // public idFilter$ = new BehaviorSubject<string[] | null>(null);
-
-
+    
 
 
 
@@ -83,6 +82,10 @@ export class TaskServiceService {
     }
     get currentBoard$(): Observable<Board> {
         return this._currentBoard.asObservable();
+    }
+    get filteredUsers$(): Observable<Users[]>{
+        return this._filteredUsers.asObservable();
+
     }
 
     get subtasks$(): Observable<Task[]> {
@@ -208,6 +211,27 @@ export class TaskServiceService {
         shareReplay(1),
     );
 
+    getFilteredUsers(boardId : number){
+        console.log(boardId, 'altin' )
+     this._httpClient.get<Users[]>(this.apiUrl + `api/board/${boardId}/users`).pipe(
+        map((data: any): Users[] => {
+            this._filteredUsers.next(data.data);
+            return data;
+            
+        }),
+        
+        shareReplay(1),
+        
+    );
+    }
+    
+    filteredUsersData(value) { 
+        this.filteredUsers$.pipe(
+            map(users => users.filter(tag => tag.name.toLowerCase().includes(value)))).subscribe(filteredUsers => {
+              this._filteredUsers.next(filteredUsers);
+            });
+           
+    }
 
     boardUsersData(): Observable<Users[]> {
         return this.currentBoard$.pipe(
