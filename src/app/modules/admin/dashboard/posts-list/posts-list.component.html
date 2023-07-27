@@ -173,7 +173,21 @@
                         <div class="box">
                             
                             <h1 class="fw-bold p-2">{{replies.user.name}}</h1>
-                            <p class="descriptioni">{{ replies.text }}</p>
+
+                            <!-- <p class="descriptioni">{{ replies.text }}</p> -->
+
+                            <p *ngIf="replies.text.length <= maxLength" class="description">{{ replies.text }}</p>
+                        <p *ngIf="replies.text.length > maxLength && !replies.isCollapsedi" class="descriptioni">
+                          {{replies.text }}
+                          <a class="readmore"  (click)="toggleCollapseNew(replies)">Read less</a>
+                        </p>
+                        <p *ngIf="replies.text.length > maxLength && replies.isCollapsedi" class="descriptioni">
+                          {{ replies.text | slice:0:maxLength }}...
+                          <a class="readmore" (click)="toggleCollapseNew(replies)">Read more</a>
+                        </p>
+
+
+
                         </div>
                         <p class="mt-1 ms-2 date">
                             {{ replies.created_at | date: "fullDate" }}

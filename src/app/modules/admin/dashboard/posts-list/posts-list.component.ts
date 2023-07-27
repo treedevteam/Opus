@@ -40,6 +40,11 @@ export class PostsListComponent implements OnInit {
         post.isCollapsed = !post.isCollapsed;
       }
 
+      isCollapsedi = true;
+      toggleCollapseNew(replies: any ) {
+        replies.isCollapsedi = !replies.isCollapsedi;
+      }
+
 
     isShowDivIf = true;
     toggleDisplayDivIf() {
@@ -70,7 +75,8 @@ export class PostsListComponent implements OnInit {
                     user: users.find((x) => x.id === rep.user_id),
                     isHis: +myUser.id === rep.user_id,
                 })),
-                isCollapsed: true
+                isCollapsed: true,
+                isCollapsedi: true
             }))
         ),
         tap((res) => {
