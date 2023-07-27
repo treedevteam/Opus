@@ -158,7 +158,7 @@
                 <div class="row" *ngFor="let replies of post.replies">
                     <mat-menu #appMenu="matMenu" >
                         <ng-template  matMenuContent>
-                          <button   mat-menu-item  (click)="deleteReply(replies.id ,post.id)">Delete Post</button>
+                          <button   mat-menu-item  (click)="deleteReply(replies.id ,post.id)">Delete Reply</button>
                         </ng-template>
                     </mat-menu>
                       <button  *ngIf="replies.isHis" class="delete-postReplay" mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{name: 'Sally'}">
@@ -166,7 +166,7 @@
                       </button>
                     <div class="col-1">
                         
-                    <app-user-profile [image]="replies.user.user_image" [name]="post.user.name"  [color]="replies.user.color"></app-user-profile>
+                    <app-user-profile [image]="replies.user.user_image" [name]="replies.user.name"  [color]="replies.user.color"></app-user-profile>
 
                     </div>
                     <div class="col-10">
@@ -176,12 +176,23 @@
 
                             <!-- <p class="descriptioni">{{ replies.text }}</p> -->
 
-                            <p  *ngIf="replies.text.length <= maxLengthi"  class="descriptioni">{{ replies.text }}</p>
-                        <p *ngIf="replies.text.length > maxLengthi && !replies.isCollapsedi" class="description">
+                            <!-- <p  *ngIf="replies.text.length <= maxLengthi"  class="descriptioni">{{ replies.text }}</p>
+                        <p *ngIf="replies.text.length > maxLengthi && !replies.isCollapsedi" class="descriptioni">
                           {{replies.text }}
                           <a class="readmore"  (click)="toggleCollapseNew(replies)">Read less</a>
                         </p>
-                        <p *ngIf="replies.text.lengthi > maxLengthi && replies.isCollapsedi" class="description">
+                        <p *ngIf="replies.text.lengthi > maxLengthi && replies.isCollapsedi" class="descriptioni">
+                          {{ replies.text | slice:0:maxLength }}...
+                          <a class="readmore" (click)="toggleCollapseNew(replies)">Read more</a>
+                        </p> -->
+
+
+                        <p *ngIf="replies.text.length <= maxLength" class="description">{{ replies.text }}</p>
+                        <p *ngIf="replies.text.length > maxLength && !replies.isCollapsedi" class="description">
+                          {{ replies.text }}
+                          <a class="readmore"  (click)="toggleCollapseNew(replies)">Read less</a>
+                        </p>
+                        <p *ngIf="replies.text.length > maxLength && replies.isCollapsedi" class="description">
                           {{ replies.text | slice:0:maxLength }}...
                           <a class="readmore" (click)="toggleCollapseNew(replies)">Read more</a>
                         </p>

@@ -35,11 +35,10 @@ export class PostsListComponent implements OnInit {
 
       maxLength = 200;
       isCollapsed = true;
-    
       toggleCollapse(post: any) {
         post.isCollapsed = !post.isCollapsed;
       }
-      maxLengthi = 200;
+   
       isCollapsedi = true;
       toggleCollapseNew(replies: any ) {
         replies.isCollapsedi = !replies.isCollapsedi;
@@ -75,9 +74,11 @@ export class PostsListComponent implements OnInit {
                     ...rep,
                     user: users.find((x) => x.id === rep.user_id),
                     isHis: myUser.id === rep.user_id,
+                    isCollapsedi: true
                 })),
                 isCollapsed: true,
-                isCollapsedi: true
+               
+                
             }))
         ),
         tap((res) => {
@@ -85,6 +86,7 @@ export class PostsListComponent implements OnInit {
             console.log(res);
         }),
         shareReplay(1)
+        
     );
 
     // departmentPostsWithReplies$ = combineLatest([
