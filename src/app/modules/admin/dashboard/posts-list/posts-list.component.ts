@@ -39,7 +39,7 @@ export class PostsListComponent implements OnInit {
       toggleCollapse(post: any) {
         post.isCollapsed = !post.isCollapsed;
       }
-
+      maxLengthi = 200;
       isCollapsedi = true;
       toggleCollapseNew(replies: any ) {
         replies.isCollapsedi = !replies.isCollapsedi;
@@ -60,6 +60,7 @@ export class PostsListComponent implements OnInit {
     alert: any;
     // departmentPosts$ = this._dashboardService.departmentPosts$;
     // currentDepartmentUsers$ = this._dashboardService.currentDepartmentUsers$;
+    
     postsWithReplies$ = combineLatest([
         this._dashboardService.departmentPosts$,
         this._dashboardService.currentDepartmentUsers$,
@@ -73,7 +74,7 @@ export class PostsListComponent implements OnInit {
                 replies: post.replies.map((rep) => ({
                     ...rep,
                     user: users.find((x) => x.id === rep.user_id),
-                    isHis: +myUser.id === rep.user_id,
+                    isHis: myUser.id === rep.user_id,
                 })),
                 isCollapsed: true,
                 isCollapsedi: true
