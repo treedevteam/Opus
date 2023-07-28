@@ -210,26 +210,6 @@ export class TaskServiceService {
         }),
         shareReplay(1),
     );
-
-    getFilteredUsers(boardId : number){
-        console.log(boardId, 'altin' )
-     this._httpClient.get<Users[]>(this.apiUrl + `api/board/${boardId}/users`).pipe(
-        map((data: any): Users[] => {
-            this._filteredUsers.next(data.data);
-            return data;
-            
-        }),
-        
-        shareReplay(1),
-        
-    );
-    }
-    
-    filteredUsersData(value) { 
-      
-           
-    }
-
     boardUsersData(): Observable<Users[]> {
         return this.currentBoard$.pipe(
             switchMap(board => this._httpClient.get<Users[]>(this.apiUrl + `api/board/${board.id}/users`).pipe(

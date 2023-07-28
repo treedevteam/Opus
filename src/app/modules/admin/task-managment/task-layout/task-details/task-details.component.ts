@@ -104,8 +104,6 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
           this._taskService.handleSingTaskRealtimeFunction(data);
         });
     })   
-    // this._taskServiceService.getFilteredUsers(boardId)
-
   this.filteredUsers$ = this._taskService.boardUsers$.pipe(
        users => { 
         return users
@@ -113,10 +111,6 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     );
 
- 
-
-    
-    
     this.taskForm = this._formBuilder.group({
       checklist:'',
       file:[''],
