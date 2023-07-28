@@ -18,6 +18,7 @@ import Pusher from 'pusher-js';
 import { RealtimeServiceService } from '../../real_time_services/task_realtime.services';
 import { TaskOrSub } from 'app/modules/admin/tasks/kanban-view/kanban-board/board/add-card/add-card.component';
 import { SubtaskDetailsComponent } from '../subtask-details/subtask-details.component';
+import { User } from 'app/core/user/user.types';
 
 
 
@@ -61,14 +62,11 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   public text: String;
   @HostListener('document:click', ['$event'])
   onDocumentClick(event) {
-    console.log(event.target);
     if(!this.eRef.nativeElement.contains(event.target)) {
         this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
         this.closeDrawer();
-        
     }
   } 
-
  
   
   
@@ -106,8 +104,14 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
           this._taskService.handleSingTaskRealtimeFunction(data);
         });
     })   
-    // this._taskServiceService.getFilteredUsers()
+    // this._taskServiceService.getFilteredUsers(boardId)
 
+  this.filteredUsers$ = this._taskService.boardUsers$.pipe(
+       users => { 
+        return users
+       } 
+
+    );
 
  
 
@@ -515,11 +519,17 @@ else {
          // Get the value
          const value = event.target.value.toLowerCase();
          console.log(value);
-         this._taskServiceService.filteredUsersData(value)
  
          // Filter the tags
         //  this.filteredUsers$ = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
-        
+       
+           this.filteredUsers$ = this.boardUsers$.pipe(
+            map(users => {
+              const filteredUsers = users.filter(tag => tag.name.toLowerCase().includes(value))
+              console.log(filteredUsers);
+              return filteredUsers;
+            }
+            ));
          
      }
  
@@ -532,26 +542,6 @@ else {
      {
        
      }
-
-   
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   /**
    * Track by function for ngFor loops
    *

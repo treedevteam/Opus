@@ -221,17 +221,14 @@
                             </ng-container> -->
                 </mat-tab>
                 <mat-tab label="Assign User">
-                    <div class="mt-8">
-                        <div class="flex flex-wrap items-center -m-1.5">
-                            <ng-container >
-                                <div class="w-60 rounded border shadow-md bg-card userListSelect">
-                                    <!-- Tags panel header -->
-                                    <div class="flex items-center m-3 mr-2">
-                                        <div class="flex items-center">
-                                            <mat-icon class="icon-size-5"
-                                                [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                                            <div class="ml-2">
-                                                <input class="w-full min-w-0 py-1 border-0" type="text"
+                    <form class="" [formGroup]="taskForm">
+                        <div class="checklists_section"  >
+                            <div class="col-md-12 align-items-center mt-5">
+                                <ul class="list-group">
+                                    <div class="w-full py-4">
+                                        <div    class="ml-2"  style="border: 2px solid rgb(110, 109, 109); border-radius: 5px; padding: 5px" >
+                                          
+                                                <input   class="w-full min-w-0 py-1 border-0" type="text"
                                                     placeholder="Enter user name" (input)="
                                     filterDepartments($event)
                                 " (keydown)="
@@ -239,14 +236,14 @@
                                         $event
                                     )
                                 " [maxLength]="30" #newTagInput />
-                                            </div>
+                                         
                                         </div>
-
                                     </div>
-                                    <div class="flex flex-col max-h-64 py-2 border-t">
-                                        <!-- Tags -->
-                                        <ng-container *ngFor="
-                            let tag of boardUsers$ | async;
+                                </ul>
+                            <div class="col-md-12 align-items-center mt-5">
+
+                                <ng-container *ngFor="
+                            let tag of filteredUsers$ | async;
                             trackBy: trackByFn
                         ">
                                             <div class="flex items-center h-10 min-h-10 px-4">
@@ -261,11 +258,12 @@
                                         </ng-container>
                                         <ng-container *ngIf="filteredUsers$?.length === 0" class="pl-3">No
                                             result</ng-container>
-                                    </div>
-                                </div>
-                            </ng-container>
+                            </div>
+                    
                         </div>
                     </div>
+                    </form>
+                    
                 </mat-tab>
             </mat-tab-group>
 

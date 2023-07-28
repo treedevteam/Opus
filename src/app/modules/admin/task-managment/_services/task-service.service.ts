@@ -226,10 +226,7 @@ export class TaskServiceService {
     }
     
     filteredUsersData(value) { 
-        this.filteredUsers$.pipe(
-            map(users => users.filter(tag => tag.name.toLowerCase().includes(value)))).subscribe(filteredUsers => {
-              this._filteredUsers.next(filteredUsers);
-            });
+      
            
     }
 
