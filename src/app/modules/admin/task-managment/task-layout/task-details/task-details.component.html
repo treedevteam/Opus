@@ -1,6 +1,6 @@
 <div class="flex flex-auto" style="overflow-x: hidden; height: 90vh;" *ngIf="taskSelected$ | async as task">
-    <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
-
+    <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10">
+        
         <!-- Header -->
         <div class="flex items-center justify-between -mt-3 -ml-4">
             <!-- Mark as ... button -->
@@ -30,38 +30,14 @@
         <mat-divider class="mt-6"></mat-divider>
 
         <!-- Users Assign -->
-
-        <div class="mt-5 body_content">
-
             <mat-tab-group class="mt-5" #logsTab>
-                <mat-tab label="Checklists" class="overflow-y-auto">
-
-
-                    <!--                     
-                    <ng-container *ngIf="showTasks" >
-                        <ng-container *ngFor="let subtask of subtask$ | async; let firsttt = first; let lasttt = last; trackBy: trackByFn;" >
-                            <app-kanban-subtask-card [card]="subtask"></app-kanban-subtask-card>
-                        </ng-container> -->
-
-
-                    <!-- Tags -->
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                      <mat-icon [svgIcon]="'check'"></mat-icon>
+                    </ng-template>
+                    <!-- Your tab content here -->
                     <div class="mt-8">
                         <div class="flex flex-wrap items-center -m-1.5">
-                            <!-- Tags -->
-<!-- 
-                            <ng-container>
-                                <div class="flex items-center  -space-x-1.5">
-                                    <ng-container *ngFor="let member of task.users_assigned; trackBy: trackByFn">
-                                        <app-user-profile [image]="member.image" [name]="member.name"
-                                            [color]="member.color"></app-user-profile>
-                                    </ng-container>
-                                </div>
-                                <p style="margin-left: 25px !important">
-                                    - users assigned
-                                </p>
-                            </ng-container> -->
-
-                            <!-- Tags panel -->
                             <ng-template #tagsPanel onclick="onClickPanel($event)">
                                 <div class="w-60 rounded border shadow-md bg-card userListSelect">
                                     <!-- Tags panel header -->
@@ -75,19 +51,6 @@
                                     filterDepartments($event)" [maxLength]="30" #newTagInput />
                                             </div>
                                         </div>
-                                        <!-- <button
-                        class="ml-1"
-                        mat-icon-button
-                        (click)="toggleTagsEditMode()"
-                    >
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="
-                                'heroicons_solid:pencil-alt'
-                            "
-                        >
-                        </mat-icon>
-                    </button> -->
                                     </div>
                                     <div class="flex flex-col max-h-64 py-2 border-t">
                                         <!-- Tags -->
@@ -198,29 +161,38 @@
                     </ng-container>
                 </mat-tab>
 
-                <mat-tab label="Comments">
+                <mat-tab class="overflow-y-auto">
+                    <ng-template mat-tab-label>
+                      <mat-icon [svgIcon]="'comment'"></mat-icon>
+                    </ng-template>
                     <div class="flex flex-auto">
                         <div class="flex flex-col flex-auto p-3 pt-10 sm:p-4 sm:pt-10 overflow-y-auto">
                             <app-task-comments [taskId]="taskSeleced.id"></app-task-comments>
                         </div>
                     </div>
                 </mat-tab>
-                <mat-tab label="Logs">
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                      <mat-icon [svgIcon]="'change_history'"></mat-icon>
+                    </ng-template>
                     <div class="flex flex-auto">
                         <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
                             <app-task-logs [taskId]="taskSeleced.id"></app-task-logs>
                         </div>
                     </div>
                 </mat-tab>
-                <mat-tab label="Subtasks" style="overflow-y: hidden;">
+                <mat-tab style="overflow-y:hidden">
+                    <ng-template mat-tab-label>
+                      <mat-icon [svgIcon]="'task'"></mat-icon>
+                    </ng-template>
                     <scrumboard-board-add-card (saved)="addCard(task, $event)" [taskType]="'subtask'"
                         [buttonTitle]="'Add a subtask'">
                     </scrumboard-board-add-card>
-                    <!-- <ng-container>        *ngFor="let subtask of subtask$ | async; let firsttt = first; let lasttt = last; trackBy: trackByFn;">
-                                <app-kanban-subtask-card [card]="subtask"></app-kanban-subtask-card>
-                            </ng-container> -->
                 </mat-tab>
-                <mat-tab label="Assign User">
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                      <mat-icon [svgIcon]="'assignment'"></mat-icon>
+                    </ng-template>
                     <form class="" [formGroup]="taskForm">
                         <div class="checklists_section"  >
                             <div class="col-md-12 align-items-center mt-5">
@@ -269,4 +241,3 @@
 
         </div>
     </div>
-</div>

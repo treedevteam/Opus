@@ -22,7 +22,7 @@
                         <!-- ////////////////////// -->
                         <editable (update)="updateTitle()" style="display: flex; align-items: center; width: fit-content;">
                             <ng-template viewMode>
-                                <a [routerLink]="'subtask/' + task.id" class="title_task_rwo truncate">
+                                <a [routerLink]="'subtask/' + task.id" class="title_task_rwo truncate" style="max-width:500px">
                                     {{task.title}} 
                                 </a>
                             </ng-template>
