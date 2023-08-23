@@ -142,6 +142,10 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void
   {
     // this._normal.matDrawer.open();
+        if (this.task) {
+      // Trigger a page refresh
+      location.reload();
+    }
   }
 
   ngOnDestroy(): void
