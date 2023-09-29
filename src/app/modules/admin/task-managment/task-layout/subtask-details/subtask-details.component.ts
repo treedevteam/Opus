@@ -56,14 +56,14 @@ export class SubtaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         
         ) { }
     
-    // public text: String;
-    // @HostListener('document:click', ['$event'])
-    // clickout(event) {
-    //   if(!this.eRef.nativeElement.contains(event.target)) {
-    //       this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
-    //       this.closeDrawer();
-    //   }
-    // }
+    public text: String;
+    @HostListener('document:click', ['$event'])
+    clickout(event) {
+      if(!this.eRef.nativeElement.contains(event.target)) {
+          this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+          this.closeDrawer();
+      }
+    }
     ngOnInit(): void {  
       
       this._taskService.subtaskSelected$.subscribe(res=>{
