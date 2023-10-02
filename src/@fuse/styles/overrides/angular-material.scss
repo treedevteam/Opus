@@ -1324,7 +1324,7 @@
         border-bottom: none !important;
 
         .mat-tab-label-container {
-            padding: 0 24px;
+            padding: 0 5px;
 
             .mat-tab-list {
 
@@ -1360,7 +1360,9 @@
     }
 
     .mat-tab-body-content {
-        padding: 24px;
+        padding-left: 8px;
+        padding-right: 15px;
+      
     }
 }
 

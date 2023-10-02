@@ -22,8 +22,30 @@ import { UserService } from 'app/core/user/user.service';
     styleUrls: ['./posts-list.component.scss'],
 })
 export class PostsListComponent implements OnInit {
-    isShowDivIf = true;
 
+
+    //   maxLength = 130;
+    //   isCollapsed = true;
+    
+    //   toggleCollapse(id,postId) {
+    //     this.isCollapsed = !this.isCollapsed;
+    //   }
+
+
+
+      maxLength = 200;
+      isCollapsed = true;
+      toggleCollapse(post: any) {
+        post.isCollapsed = !post.isCollapsed;
+      }
+   
+      isCollapsedi = true;
+      toggleCollapseNew(replies: any ) {
+        replies.isCollapsedi = !replies.isCollapsedi;
+      }
+
+
+    isShowDivIf = true;
     toggleDisplayDivIf() {
         this.isShowDivIf = !this.isShowDivIf;
     }
@@ -37,6 +59,7 @@ export class PostsListComponent implements OnInit {
     alert: any;
     // departmentPosts$ = this._dashboardService.departmentPosts$;
     // currentDepartmentUsers$ = this._dashboardService.currentDepartmentUsers$;
+    
     postsWithReplies$ = combineLatest([
         this._dashboardService.departmentPosts$,
         this._dashboardService.currentDepartmentUsers$,
@@ -50,8 +73,12 @@ export class PostsListComponent implements OnInit {
                 replies: post.replies.map((rep) => ({
                     ...rep,
                     user: users.find((x) => x.id === rep.user_id),
-                    isHis: +myUser.id === rep.user_id,
+                    isHis: myUser.id === rep.user_id,
+                    isCollapsedi: true
                 })),
+                isCollapsed: true,
+               
+                
             }))
         ),
         tap((res) => {
@@ -59,6 +86,7 @@ export class PostsListComponent implements OnInit {
             console.log(res);
         }),
         shareReplay(1)
+        
     );
 
     // departmentPostsWithReplies$ = combineLatest([
@@ -177,7 +205,7 @@ export class PostsListComponent implements OnInit {
         });
     }
 
-    deleteReplyPost(id: number, postId: number) {
+    deleteReply(id: number, postId: number) {
         this._dashboardService.deleteReply(id, postId).subscribe((res) => {});
     }
 

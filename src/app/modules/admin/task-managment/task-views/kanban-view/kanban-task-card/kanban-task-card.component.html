@@ -1,134 +1,152 @@
 <div cdkDrag>
-
-<div
-    class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card position-relative"
-    [routerLink]="['task', card.id]"
-    
-    >
-    <div class="priority_card_kanban" *ngIf="card.priority" [ngStyle]="{'background-color': card.priority.color}">{{card.priority.name}}</div>
-    <!-- Cover image -->
-    <div (click)="openImagePopup(apiUrl+'storage/'+card.file)" class="cover-image" *ngIf="card.file !== null">
-        <img class="w-100 h-25"  [src]="apiUrl+'storage/' + card.file">
-    </div>
-    <!-- Title -->
-    <div class="flex align-center" style="width: 100%; justify-content: space-between; align-items: center;">
-        <a 
-        [routerLink]="['task', card.id]">
-        <div class="text-lg font-medium leading-5 mb-2">{{card.title}}</div>
-        </a>
-        
-        <div class="relative" style="position: relative;">
-            <button style="position: relative;" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                <mat-icon style="position: relative !important;top: 0;left: 0;
-                bottom: 0; right: 0;" class="three-dots">more_vert</mat-icon>
-            </button>
-        </div>
-        <mat-menu #menu="matMenu">
-            <button (click)="sahreTaskPopover()"  [matMenuTriggerFor]="dateTimeMenu" mat-menu-item>Share task</button>
-            <mat-menu class="date-range-menu" #dateTimeMenu="matMenu" >
-                <div class="share_task_popover"  (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-                    <div class="share_task_popover_header">
-                        <span class="">Share task</span>
-                        <a href="#" class=""></a>
-                    </div>
-                    <form [formGroup]="formShare" (ngSubmit)="onSubmit(card.id)"  #shareTaskNgForm="ngForm">
-                        <div class="form_body_popover">
-                            <mat-form-field style="width: 100%;" >
-                                <mat-select multiple [formControlName]="'boards'" disableOptionCentering>
-                                <!-- <mat-optgroup label="{{department.name}}" *ngFor="let department of departmentsWithBoard$ | async">
-                                    <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
-                                </mat-optgroup> -->
-                                </mat-select>
-                            </mat-form-field> 
-                        </div>
-                        <button type="submit" mat-raised-button color="primary">Share</button>
-                    </form>
-                </div>
-            </mat-menu>
-        </mat-menu>
-    </div>
-
-    <!-- Labels -->
-    <!-- <ng-container *ngIf="card.priority">
-        <div >
-            <div class="flex flex-wrap -mx-1 -mb-2 mb-2">
-                    <div class="mx-1 mb-2 py-0.5 px-3 rounded-full text-sm font-medium text-gray-500  dark:text-gray-300 " style="color: #000!important;" [ngStyle]="{'background-color': card.priority.color + '80'}">
-                        {{card.priority.name}}
-                    </div>
-            </div>
-        </div>
-    </ng-container> -->
-    <!-- Due date -->
-    <div class="me-3">
-        <ng-container class="mt-5">
-            <div class="flex items-center  -space-x-1.5">
-                <ng-container
-                    *ngFor="let member of card.users_assigned; trackBy: trackByFn">
-                    <app-user-profile [image]="member.image" [name]="member.name" [color]="member.color"></app-user-profile>
-                </ng-container>
-                <!-- <ng-container *ngIf="card.users_assigned.length > 3">
-                    <div
-                        class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent bg-gray-200 text-gray-500">
-                        <div class="text-md font-semibold">
-                            +{{ (card.users_assigned.slice(3)).length }}
-                        </div>
-                    </div>
-                </ng-container> -->
-            </div>
-        </ng-container>
-    </div>
-
-
-
-    <ng-container *ngIf="card.deadline">
+    <div
+        class="flex flex-col items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card position-relative editable_title_input">
         <div
-            class="flex items-center rounded text-sm font-medium leading-5 text-secondary mb-2"
-            [ngClass]="{'text-red-600': isOverdue(card.deadline)}">
-            <mat-icon
-                class="icon-size-4 text-current"
-                [svgIcon]="'heroicons_outline:clock'"></mat-icon>
-            <div class="ml-1">
-                {{card.deadline | date: 'longDate'}}
+            class="priority_card_kanban"
+            *ngIf="card.priority"
+            [ngStyle]="{ 'background-color': card.priority.color }"
+        >
+            {{ card.priority.name }}
+        </div>
+        <!-- Cover image -->
+        <div
+            (click)="openImagePopup(apiUrl + 'storage/' + card.file)"
+            class="cover-image"
+            *ngIf="card.file !== null"
+        >
+            <img class="w-100 h-25" [src]="apiUrl + 'storage/' + card.file" />
+        </div>
+        <!-- Title -->
+        <div
+            class="flex align-center"
+            style="
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+            "
+        >
+            <div class="flex-auto mr-2">
+                <!-- ////////////////////// -->
+                <editable
+                    (update)="updateTitle()"
+                    style="
+                        display: flex;
+                        align-items: center;
+                        width: fit-content;
+                    "
+                >
+                    <ng-template viewMode>
+                        <a
+                            [routerLink]="['task', card.id]"
+                            class="title_task_rwo truncate"
+                        >
+                            <div
+                                class="text-lg font-medium leading-5"
+                                style="
+                                    white-space: pre-line;
+                                    word-break: break-all;
+                                    width: 149px;
+                                    max-height: 4em; 
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: 3;
+                                    -webkit-box-orient: vertical;
+                                    overflow: hidden; 
+                                    text-overflow: ellipsis;
+                                "
+                            >
+                                {{ card.title }}
+                            </div>
+                        </a>
+                    </ng-template>
+                    <ng-template editMode>
+                        <div
+                            style="word-break: break-all"
+                            [formGroup]="myGroup"
+                        >
+                            <input
+                                style="
+                                    padding: 5px;
+                                    border: 1px dotted #00000070;
+                                "
+                                [formControlName]="'title'"
+                                focusable
+                                editableOnEnter
+                            />
+                        </div>
+                    </ng-template>
+                </editable>
+                <!-- ////////////////////// -->
             </div>
         </div>
-        
-    </ng-container>
+        <div class="me-3" style="display: inherit">
+            <ng-container class="mt-5">
+                <div class="flex items-center" style="width: 175px;">
+                    <ng-container *ngIf="card.users_assigned.length < 1">
+                        <strong class="pl-1">
+                            None Assigned
+                        </strong>
+                    </ng-container>
+                    <ng-container
+                        *ngFor="
+                            let member of card.users_assigned;
+                            let i = index;
+                            trackBy: trackByFn
+                        "
+                    >
+                        <ng-container *ngIf="i < 2">
+                            <app-user-profile
+                                [image]="member.image"
+                                [name]="member.name"
+                                [color]="member.color"
+                            ></app-user-profile>
+                        </ng-container>
+                    </ng-container>
 
-    <ng-container>
-        <div class="checkListTable mr-4 mb-2"
-        [ngClass]="{
-            'checkListTablegrey': card.checkListInfo.completed !== card.checkListInfo.total || card.checkListInfo.total === 0,
-            'checkListTablegreen': card.checkListInfo.completed === card.checkListInfo.total && card.checkListInfo.total !== 0}">
-            <mat-icon svgIcon="heroicons_outline:clipboard-check"></mat-icon>
-            {{card.checkListInfo.completed}}/{{card.checkListInfo.total}}
-        </div>
-    </ng-container>
+                    <ng-container
+                        *ngIf="card.users_assigned.length > 2"
+                        class="plus-count"
+                        style="font-weight: 600"
+                    >
+                        <strong class="pl-1">
+                            +{{ card.users_assigned.length - 2 }}
+                        </strong>
+                    </ng-container>
+                </div>
+            </ng-container>
 
-
-
-    <div class="">
-        <div class=" " (click)="showSubtasks()"  matBadgeColor="warn" [matBadge]="card.subtasks_count" matBadgeSize="small" matBadgePosition="before">
-            <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
+            <div
+                class="mt-3"
+                (click)="showSubtasks()"
+                matBadgeColor="warn"
+                [matBadge]="card.subtasks_count"
+                matBadgeSize="small"
+                matBadgePosition="before"
+            >
+                <mat-icon
+                    [matTooltip]="'Subtasks'"
+                    [matTooltipPosition]="'above'"
+                    svgIcon="mat_solid:playlist_add"
+                ></mat-icon>
+            </div>
         </div>
     </div>
-
-
-
-    
-</div>
-<ng-container *ngIf="subtasksOpened$ | async"></ng-container>
+    <ng-container *ngIf="subtasksOpened$ | async"></ng-container>
     <ng-container *ngIf="showTasks">
-        <ng-container *ngFor="let subtask of subtask$ | async; let firsttt = first; let lasttt = last; trackBy: trackByFn;" >
+        <ng-container
+            *ngFor="
+                let subtask of subtask$ | async;
+                let firsttt = first;
+                let lasttt = last;
+                trackBy: trackByFn
+            "
+        >
             <app-kanban-subtask-card [card]="subtask"></app-kanban-subtask-card>
         </ng-container>
-        <scrumboard-board-add-card 
+        <scrumboard-board-add-card
             (saved)="addCard(card, $event)"
             [taskType]="'subtask'"
-            [buttonTitle]="'Add a subtask'">
+            [buttonTitle]="'Add a subtask'"
+        >
         </scrumboard-board-add-card>
     </ng-container>
-
 </div>
-
-
-

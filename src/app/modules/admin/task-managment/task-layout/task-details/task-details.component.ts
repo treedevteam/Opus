@@ -4,18 +4,23 @@ import { KanbanViewComponent } from '../../task-views/kanban-view/kanban-view.co
 import { NormalViewComponent } from '../../task-views/normal-view/normal-view.component';
 import { Task, Users } from '../../_models/task';
 import { TaskServiceService } from '../../_services/task-service.service';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { combineLatest, debounceTime, filter, map, shareReplay, Subject, takeUntil, tap } from 'rxjs';
+import { combineLatest, debounceTime, filter, map, Observable, of, shareReplay, Subject, takeUntil, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import saveAs from 'file-saver';
 import Pusher from 'pusher-js';
 import { RealtimeServiceService } from '../../real_time_services/task_realtime.services';
+import { TaskOrSub } from 'app/modules/admin/tasks/kanban-view/kanban-board/board/add-card/add-card.component';
+import { SubtaskDetailsComponent } from '../subtask-details/subtask-details.component';
+import { User } from 'app/core/user/user.types';
+
+
 
 
 @Component({
@@ -26,8 +31,9 @@ import { RealtimeServiceService } from '../../real_time_services/task_realtime.s
 export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
   @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
+  
   private _tagsPanelOverlayRef: OverlayRef;
-
+  @Input() card: Task;
   apiUrl = environment.apiUrl
   taskSeleced:Task|any;
   taskOrSubtask = "";
@@ -36,15 +42,35 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   tagsEditMode: boolean = false;
   tags: Task[];
   boardUsers$= this._taskService.boardUsers$;
+  filteredUsers$ = this._taskService.filteredUsers$;
   task;
   uploaded: boolean;
   file: any = null;
   url ;
   taskFile$ = this._taskService.taskSelected$
-
+  showTasks = false;
+  showBox = true; 
+  subtask$ = this._taskServiceService.allSubTasksDetails$; 
+  subtasksOpened$ = this._taskServiceService._currentSubtasksDetailsOpened$.pipe(
+    tap(res => {
+      this.showTasks = this.task.id === res;
+    })
+  )
 
   pusher: any;
   channel: any;
+  public text: String;
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event) {
+    if(!this.eRef.nativeElement.contains(event.target)) {
+        this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
+        this.closeDrawer();
+    }
+  } 
+ 
+  
+  
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _normalView: NormalViewComponent,
@@ -58,30 +84,33 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
         private _snackBar: MatSnackBar,
-        private realTimeService:RealtimeServiceService
+        private realTimeService:RealtimeServiceService,
+        private _taskServiceService: TaskServiceService,
+        private eRef: ElementRef
         ) {
         }
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-  filteredUsers$ = this._taskService.users$;
+   
   
   taskSelected$ = this._taskService.taskSelectedDetails$
-
-
+  rawData: Array<Users> = [];
+  selectData: Array<Users> = [];
   ngOnInit(): void {
-
+    console.log('granit baba', this.card)
     this.realTimeService.channel$.subscribe(channel2=>{
       channel2.bind('task-data', data => {
         debugger;
           this._taskService.handleSingTaskRealtimeFunction(data);
         });
     })   
+  this.filteredUsers$ = this._taskService.boardUsers$.pipe(
+       users => { 
+        return users
+       } 
 
+    );
 
-
-
-
-    
     this.taskForm = this._formBuilder.group({
       checklist:'',
       file:[''],
@@ -98,9 +127,12 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         this._kanbanView.matDrawer.open();
       }
     })
+
+    
     this._taskService.taskSelectedDetails$.subscribe(res=>{
       this.taskSeleced = res;
       this.task = res
+      console.log(this.task, 'taskkkk')
     })
     
 
@@ -110,6 +142,10 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void
   {
     // this._normal.matDrawer.open();
+        if (this.task) {
+      // Trigger a page refresh
+      location.reload();
+    }
   }
 
   ngOnDestroy(): void
@@ -131,16 +167,16 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       return this.taskOrSubtask === "normal" ? this._normalView.matDrawer.close() : this._kanbanView.matDrawer.close()
   }
-
   uploadTaskImage() {
     const formData = new FormData();
     const result = Object.assign({}, this.taskForm.value);
     formData.append('file', this.taskForm.get('file').value);
     this._taskService.addFileToTask(formData, this.task.id).subscribe((res) => {
-      console.log(res, 'EEWRWERWERWERw');
+      console.log(res, '');
     });
   }
 
+ 
   onFileChange(pFileList: File): void {
 
     if( this._taskService.boardInfo.is_his !== 1){
@@ -148,8 +184,6 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     }else{
-
-      debugger
 
       this.uploaded = true;
       this.file = pFileList[0];
@@ -311,24 +345,36 @@ deleteFile(id){
 
 
 
+// add to cart function per subtask 
+
+addCard(list: any, event: TaskOrSub){
+
+  if( this._taskServiceService.boardInfo.is_his !== 1){
+  }else{
+    const newTask = {
+      task_id: list.id,
+      title: event.title,
+      status:list.status.id
+    };
+    this._taskServiceService.storeSubtask(newTask).subscribe()
+  }
+}
 
 
 
+showSubtasks$() { 
+if(!this.showTasks) {
+  this._taskServiceService.getSubtasksDetails(this.task.id).subscribe(res => { 
+    console.log('testt' , res);
+    
+  })
+}
+else { 
+  this._taskServiceService.closeSubtasks();
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
   addUsersToTask(userId: number): void{
@@ -364,11 +410,22 @@ deleteFile(id){
     }
 }
 
-  openTagsPanel(): void
+  onClickPanel(event) : void 
   {
+    console.log(event);
+    event.stopPropagation();
+  }
+
+  openTagsPanel(event : MouseEvent): void
+  {
+
     if( this._taskService.boardInfo.is_his !== 1){
       this._taskService.openAssignPopup()
-    }else{
+
+    }
+    
+    else{
+      
       // Create the overlay
       this._tagsPanelOverlayRef = this._overlay.create({
         backdropClass   : '',
@@ -426,6 +483,7 @@ deleteFile(id){
         }
       });
     }
+    
   }
     /**
      * Toggle the tags edit mode
@@ -454,14 +512,24 @@ deleteFile(id){
      *
      * @param event
      */
-    //  filterDepartments(event): void 
-    //  {
-    //      // Get the value
-    //      const value = event.target.value.toLowerCase();
+     filterDepartments(event): void 
+     {
+         // Get the value
+         const value = event.target.value.toLowerCase();
+         console.log(value);
  
-    //      // Filter the tags
-    //      this.filteredUsers = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
-    //  }
+         // Filter the tags
+        //  this.filteredUsers$ = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
+       
+           this.filteredUsers$ = this.boardUsers$.pipe(
+            map(users => {
+              const filteredUsers = users.filter(tag => tag.name.toLowerCase().includes(value))
+              console.log(filteredUsers);
+              return filteredUsers;
+            }
+            ));
+         
+     }
  
      /**
       * Filter tags input key down event
@@ -472,26 +540,6 @@ deleteFile(id){
      {
        
      }
-
-   
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   /**
    * Track by function for ngFor loops
    *
@@ -502,4 +550,8 @@ deleteFile(id){
   {
       return item.id || index;
   }
+}
+
+function onDatePickerClick(event: any, clickout: (event: any) => void) {
+  throw new Error('Function not implemented.');
 }

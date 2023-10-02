@@ -49,7 +49,8 @@ export class NotificationsComponent implements OnInit, OnDestroy
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
         private pusherService: WebSocketServiceService,
-        private _snackBar: MatSnackBar
+        private _snackBar: MatSnackBar,
+        private cdr: ChangeDetectorRef
     )
     {
     }
@@ -188,7 +189,9 @@ export class NotificationsComponent implements OnInit, OnDestroy
     // markAllAsRead(): void
     // {
     //     // Mark all as read
-    //     this._notificationsService.markAllAsRead().subscribe();
+    //     this._notificationsService.markAllAsRead().subscribe((res)=>
+    //     console.log(res)
+    //     );
     // }
 
     /**
@@ -199,16 +202,6 @@ export class NotificationsComponent implements OnInit, OnDestroy
         // Update the notification
         this._notificationsService.update(notification).subscribe();
     }
-
-    /**
-     * Delete the given notification
-     */
-    // delete(notification: Notification): void
-    // {
-    //     // Delete the notification
-    //     this._notificationsService.delete(notification.id).subscribe();
-    // }
-
     /**
      * Track by function for ngFor loops
      *
@@ -298,9 +291,10 @@ export class NotificationsComponent implements OnInit, OnDestroy
     }
 
     ///Delete
-    delete(id:any){
-        this._notificationsService.delete(id).subscribe((res)=>{ 
-            console.log(res,'res from vservice');
-        })
-    }
+    delete(id: any) {
+        this._notificationsService.delete(id).subscribe((res) => {
+          this.notifications$ = this._notificationsService.getAllNotifications(); // Update the observable with the new list
+          this.cdr.detectChanges(); // Manually trigger change detection
+        });
+      }
 }

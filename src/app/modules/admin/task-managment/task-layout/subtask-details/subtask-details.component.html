@@ -29,119 +29,40 @@
          </div>
      </div>
      <br />
-     <h1 style="font-size: 22px">{{ task.title }}</h1>
+     <h1 style="font-size: 22px;word-break: break-all;">{{ task.title }}</h1>
      <mat-divider class="mt-6"></mat-divider>
 
 
+<!-- 
+<div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
+                
+   [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !task.deadline,
+           'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task.deadline && !isOverdue(task.deadline) || task.status?.name === 'Done',
+           'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task.deadline && isOverdue(task.deadline) && task.status?.name !== 'Done' }"
+           (click)="dueDatePicker.open()">
+   <mat-icon class="icon-size-5 text-current"
+       [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+   <span class="ml-2 text-md font-medium">
+       <ng-container *ngIf="subtaskDeadline">{{subtaskDeadline |
+           date:'LLL dd yyyy'}}</ng-container>
+       <ng-container *ngIf="!subtask.deadline">Not set</ng-container>
+   </span>
 
-     
-<!-- Tags -->
-<div class="mt-8">
-   <div class="flex flex-wrap items-center -m-1.5">
-       <!-- Tags -->
-       <div
-           class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
-           (click)="openTagsPanel()"
-           #tagsPanelOrigin>
-
-          
-
-           <ng-container >
-               <div>
-                   <img
-                       class="flex-0 w-8 h-8 rounded-full ring ring-offset-1 ring-bg-card ring-offset-transparent object-cover"
-                       src="assets/images/dapulse-person-column.svg"
-                       alt="Member avatar"
-                   />
-               </div>
-               <p style="margin-left: 25px !important">
-                   - users assigned
-               </p>
-           </ng-container>
-
-           <!-- Tags panel -->
-           <ng-template #tagsPanel>
-               <div
-               class="w-60 rounded border shadow-md bg-card userListSelect"
-           >
-               <!-- Tags panel header -->
-               <div class="flex items-center m-3 mr-2">
-                   <div class="flex items-center">
-                       <mat-icon
-                           class="icon-size-5"
-                           [svgIcon]="'heroicons_solid:search'"
-                       ></mat-icon>
-                       <div class="ml-2">
-                           <input
-                               class="w-full min-w-0 py-1 border-0"
-                               type="text"
-                               placeholder="Enter user name"
-                               (input)="
-                                   filterDepartments($event)
-                               "
-                               (keydown)="
-                                   filterTagsInputKeyDown(
-                                       $event
-                                   )
-                               "
-                               [maxLength]="30"
-                               #newTagInput
-                           />
-                       </div>
-                   </div>
-                   <!-- <button
-                       class="ml-1"
-                       mat-icon-button
-                       (click)="toggleTagsEditMode()"
-                   >
-                       <mat-icon
-                           class="icon-size-5"
-                           [svgIcon]="
-                               'heroicons_solid:pencil-alt'
-                           "
-                       >
-                       </mat-icon>
-                   </button> -->
-               </div>
-               <div
-                   class="flex flex-col max-h-64 py-2 border-t"
-               >
-                   <!-- Tags -->
-                   <ng-container
-                       *ngFor="
-                           let tag of boardUsers$ | async;
-                           trackBy: trackByFn
-                       "
-                   >
-                       <div
-                           class="flex items-center h-10 min-h-10 px-4"
-                       >
-
-                           <mat-checkbox
-                               [checked]="userCheck(tag.id)"
-                               (change)="toggleTaskUser(tag.id)"
-                               class="flex items-center h-10 min-h-10"
-                               [color]="'primary'"
-                           >
-                           </mat-checkbox>
-                           <div class="ml-1">
-                               {{ tag.name }}
-                           </div>
-                       </div>
-                   </ng-container>
-                   <ng-container
-                       *ngIf="filteredUsers?.length === 0"
-                       class="pl-3"
-                       >No result</ng-container
-                   >
-               </div>
-           </div>
-           </ng-template>
-       </div>
-   </div>
-</div>
-
-
+   <mat-form-field
+       class="fuse-mat-no-subscript fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none">
+       <div [formGroup]="myGroup">
+           <input matInput [formControlName]="'deadline'" [matDatepicker]="dueDatePicker">
+         </div>
+       <mat-datepicker #dueDatePicker>
+           <mat-datepicker-actions>
+               <button class="" mat-flat-button [color]="'primary'"
+               (click)="updateField()"
+                   matDatepickerApply>Select
+               </button>
+           </mat-datepicker-actions>
+       </mat-datepicker>
+   </mat-form-field>
+</div> -->
 
    </div>
 </div>

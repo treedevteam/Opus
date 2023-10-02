@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'environments/environment';
 import { combineLatest, map, shareReplay, tap } from 'rxjs';

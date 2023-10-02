@@ -1,7 +1,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Users } from '../../_models/task';
 import { TaskServiceService } from '../../_services/task-service.service';
@@ -31,17 +31,22 @@ export class MultiselectAutocompleteComponent implements OnInit {
   rawData: Array<Users> = [];
   selectData: Array<Users> = [];
 
-  filteredData: Observable<Array<Users>>;
+  filteredData: Observable<Array<Users>> = this._taskService.usersAssigned$.pipe(
+    map(data => {
+      return data.users;
+    })
+  );
+
   filterString: string = '';
 
   constructor(private _taskService: TaskServiceService) {
-    this.filteredData = this.selectControl.valueChanges.pipe(
-      startWith<string>(''),
-      map(value => typeof value === 'string' ? value : this.filterString),
-      map(filter => this.filter(filter)),
-      tap(t=>console.log(t)
-      )
-    );
+    // this.filteredData = this.selectControl.valueChanges.pipe(
+    //   startWith<string>(''),
+    //   map(value => typeof value === 'string' ? value : this.filterString),
+    //   map(filter => this.filter(filter)),
+    //   tap(t=>console.log(t)
+    //   )
+    // );
 
   }
 
@@ -53,12 +58,15 @@ export class MultiselectAutocompleteComponent implements OnInit {
     });
   }
 
-  filter = (filter: string): Array<Users> => {
+  filter = (filter: string): void => {
     this.filterString = filter;
     if (filter.length > 0) {
-      return this.rawData.filter(option => option.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0);
+      console.log(this.rawData);
+      const data = this.rawData.filter(option => option.name.toLowerCase().includes(filter.toLowerCase()));
+      console.log(data);
+      this.filteredData = of(data);
     } else {
-      return this.rawData.slice();
+      this.filteredData = of(this.rawData.slice());
     }
   };
 

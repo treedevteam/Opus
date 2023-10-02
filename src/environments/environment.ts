@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    apiUrl: 'http://opus-api.fibrasec.net/'
+    apiUrl: 'https://opus-api.workatbambus.com/'
 };
 
 /*
