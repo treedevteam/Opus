@@ -31,7 +31,7 @@ import { User } from 'app/core/user/user.types';
 export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
   @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
-  
+
   private _tagsPanelOverlayRef: OverlayRef;
   @Input() card: Task;
   apiUrl = environment.apiUrl
@@ -49,8 +49,8 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   url ;
   taskFile$ = this._taskService.taskSelected$
   showTasks = false;
-  showBox = true; 
-  subtask$ = this._taskServiceService.allSubTasksDetails$; 
+  showBox = true;
+  subtask$ = this._taskServiceService.allSubTasksDetails$;
   subtasksOpened$ = this._taskServiceService._currentSubtasksDetailsOpened$.pipe(
     tap(res => {
       this.showTasks = this.task.id === res;
@@ -66,10 +66,10 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         this._router.navigate(['../../'], { relativeTo: this._activatedRoute });
         this.closeDrawer();
     }
-  } 
- 
-  
-  
+  }
+
+
+
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -91,8 +91,8 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-   
-  
+
+
   taskSelected$ = this._taskService.taskSelectedDetails$
   rawData: Array<Users> = [];
   selectData: Array<Users> = [];
@@ -103,11 +103,11 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         debugger;
           this._taskService.handleSingTaskRealtimeFunction(data);
         });
-    })   
+    })
   this.filteredUsers$ = this._taskService.boardUsers$.pipe(
-       users => { 
+       users => {
         return users
-       } 
+       }
 
     );
 
@@ -128,13 +128,13 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     })
 
-    
+
     this._taskService.taskSelectedDetails$.subscribe(res=>{
       this.taskSeleced = res;
       this.task = res
       console.log(this.task, 'taskkkk')
     })
-    
+
 
 
   }
@@ -142,10 +142,6 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void
   {
     // this._normal.matDrawer.open();
-        if (this.task) {
-      // Trigger a page refresh
-      location.reload();
-    }
   }
 
   ngOnDestroy(): void
@@ -176,7 +172,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
- 
+
   onFileChange(pFileList: File): void {
 
     if( this._taskService.boardInfo.is_his !== 1){
@@ -253,7 +249,7 @@ deleteFile(id){
       this.ngOnInit();
   });
   }
-  
+
 }
 
 
@@ -273,10 +269,10 @@ deleteFile(id){
     }
   }
 
-  
+
   deleteTask(): void
   {
-    
+
     if( this._taskService.boardInfo.is_his !== 1){
       this._taskService.openAssignPopup()
     }else{
@@ -340,12 +336,12 @@ deleteFile(id){
       };
     });
   }
-   
 
 
 
 
-// add to cart function per subtask 
+
+// add to cart function per subtask
 
 addCard(list: any, event: TaskOrSub){
 
@@ -362,14 +358,14 @@ addCard(list: any, event: TaskOrSub){
 
 
 
-showSubtasks$() { 
+showSubtasks$() {
 if(!this.showTasks) {
-  this._taskServiceService.getSubtasksDetails(this.task.id).subscribe(res => { 
+  this._taskServiceService.getSubtasksDetails(this.task.id).subscribe(res => {
     console.log('testt' , res);
-    
+
   })
 }
-else { 
+else {
   this._taskServiceService.closeSubtasks();
 }
 
@@ -393,7 +389,7 @@ else {
         console.log(this.taskForm.get('users_assigned').value);
     });
     }
-    
+
   }
 
   toggleTaskUser(user: number): void
@@ -410,7 +406,7 @@ else {
     }
 }
 
-  onClickPanel(event) : void 
+  onClickPanel(event) : void
   {
     console.log(event);
     event.stopPropagation();
@@ -423,9 +419,9 @@ else {
       this._taskService.openAssignPopup()
 
     }
-    
+
     else{
-      
+
       // Create the overlay
       this._tagsPanelOverlayRef = this._overlay.create({
         backdropClass   : '',
@@ -483,7 +479,7 @@ else {
         }
       });
     }
-    
+
   }
     /**
      * Toggle the tags edit mode
@@ -512,15 +508,15 @@ else {
      *
      * @param event
      */
-     filterDepartments(event): void 
+     filterDepartments(event): void
      {
          // Get the value
          const value = event.target.value.toLowerCase();
          console.log(value);
- 
+
          // Filter the tags
         //  this.filteredUsers$ = this.usersList.filter(tag => tag.name.toLowerCase().includes(value));
-       
+
            this.filteredUsers$ = this.boardUsers$.pipe(
             map(users => {
               const filteredUsers = users.filter(tag => tag.name.toLowerCase().includes(value))
@@ -528,9 +524,9 @@ else {
               return filteredUsers;
             }
             ));
-         
+
      }
- 
+
      /**
       * Filter tags input key down event
       *
@@ -538,7 +534,7 @@ else {
       */
      filterTagsInputKeyDown(event): void
      {
-       
+
      }
   /**
    * Track by function for ngFor loops
