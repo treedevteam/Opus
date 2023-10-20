@@ -19,6 +19,7 @@ import { RealtimeServiceService } from '../../real_time_services/task_realtime.s
 import { TaskOrSub } from 'app/modules/admin/tasks/kanban-view/kanban-board/board/add-card/add-card.component';
 import { SubtaskDetailsComponent } from '../subtask-details/subtask-details.component';
 import { User } from 'app/core/user/user.types';
+import {Priorities} from "../../../priorities/model/priorities";
 
 
 
@@ -38,7 +39,8 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   taskSeleced:Task|any;
   taskOrSubtask = "";
   taskForm: FormGroup;
-  filteredTags: Task[];
+  myGroup: FormGroup;
+    filteredTags: Task[];
   tagsEditMode: boolean = false;
   tags: Task[];
   boardUsers$= this._taskService.boardUsers$;
@@ -93,6 +95,7 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
 
+  priorities$ = this._taskServiceService.priorities$
   taskSelected$ = this._taskService.taskSelectedDetails$
   rawData: Array<Users> = [];
   selectData: Array<Users> = [];
@@ -138,7 +141,32 @@ export class TaskDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   }
+    updateField() {
 
+        if( this._taskServiceService.boardInfo.is_his !== 1){
+            this._taskServiceService.openAssignPopup()
+
+        }else{
+            this.myGroup.controls['deadline'].value
+            this._taskServiceService.updateTaskDeadline(this.convertDate(this.myGroup.controls['deadline'].value), this.task.id).subscribe(res=>{
+                console.log(res);
+            });
+        }
+    }
+
+    convertDate(time: any): string
+    {
+        const convert = time._i.year + '-' + (time._i.month + 1) + '-' + time._i.date + '  00:00';
+        return convert;
+    }
+    selectPriority(priority: Priorities){
+        if( this._taskServiceService.boardInfo.is_his !== 1){
+            this._taskServiceService.openAssignPopup()
+        }else{
+            this._taskServiceService.updateTaskPriority(priority.id, this.task.id).subscribe(res=>{
+            })
+        }
+    }
   ngAfterViewInit(): void
   {
     // this._normal.matDrawer.open();
