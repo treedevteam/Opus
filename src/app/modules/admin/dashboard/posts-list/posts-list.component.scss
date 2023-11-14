@@ -38,8 +38,8 @@
 }
 .descriptioni {
     padding: 20px;
-    word-break: break-all;
-    
+    word-break: break-word;
+
 }
 .name {
     font-weight: bold;
@@ -94,9 +94,9 @@
     margin-top: 70px;
 }
 .description{
-    word-break: break-all;
+    word-break: break-word;
 }
-   
+
 .readmore{
     color: rgb(174, 89, 253);
     cursor: pointer;

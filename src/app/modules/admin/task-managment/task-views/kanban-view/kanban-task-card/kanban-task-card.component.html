@@ -32,7 +32,7 @@
                     style="
                         display: flex;
                         align-items: center;
-                        width: fit-content;
+                        width: 200px;
                     "
                 >
                     <ng-template viewMode>
@@ -44,13 +44,13 @@
                                 class="text-lg font-medium leading-5"
                                 style="
                                     white-space: pre-line;
-                                    word-break: break-all;
+                                    word-break: break-word;
                                     width: 149px;
-                                    max-height: 4em; 
+                                    max-height: 4em;
                                     display: -webkit-box;
                                     -webkit-line-clamp: 3;
                                     -webkit-box-orient: vertical;
-                                    overflow: hidden; 
+                                    overflow: hidden;
                                     text-overflow: ellipsis;
                                 "
                             >
@@ -60,13 +60,13 @@
                     </ng-template>
                     <ng-template editMode>
                         <div
-                            style="word-break: break-all"
+                            style="word-break: break-word"
                             [formGroup]="myGroup"
                         >
                             <input
                                 style="
                                     padding: 5px;
-                                    border: 1px dotted #00000070;
+                                    border: 1px solid #00000070;
                                 "
                                 [formControlName]="'title'"
                                 focusable

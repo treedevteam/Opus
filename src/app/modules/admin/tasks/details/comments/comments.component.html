@@ -8,7 +8,7 @@
                 <form [formGroup]="commentForm" class=" w-full">
                     <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded fuse-mat-bold w-full">
                         <textarea
-                            [mention]="items" 
+                            [mention]="items"
                             [mentionConfig]="{triggerChar:'@',maxItems:10,labelKey:'name'}"
                             [(ngModel)]="data"
                             class="min-h-5 my-0 resize-none"
@@ -32,7 +32,7 @@
                 </div>
 
             </div>
-            
+
             <!-- Message field -->
             <div class="py-4">
                 <!-- {{taskComments | json}} -->
@@ -99,7 +99,7 @@
                             <!-- Message -->
                             <div
                                 class="leading-5 cursor-pointer text_container"
-                                style="word-break: break-all;"
+                                style="word-break: break-word;"
                             >
                                 {{ comment.text }}
                                 <mat-icon

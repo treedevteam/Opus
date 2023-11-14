@@ -18,8 +18,8 @@
                     <!-- Title -->
                     <div>
 
-                        <div class="text-4xl font-extrabold tracking-tight leading-none" *ngIf="departmentTasksWithStatusPriority$ | async">{{(departmentTasksWithStatusPriority$ | async).name}}'s Tasks</div> 
-                        
+                        <div class="text-4xl font-extrabold tracking-tight leading-none" *ngIf="departmentTasksWithStatusPriority$ | async">{{(departmentTasksWithStatusPriority$ | async).name}}'s Tasks</div>
+
                         <div class="kanban_view_button">
                             <a [routerLink]="['kanban/view']" mat-flat-button [color]="'primary'" >Kanban View</a>
                         </div>
@@ -43,7 +43,7 @@
                                         </div>
                                     </div>
                                 </ng-container>
-                                
+
                             </div>
 
              <!-- Filter -->
@@ -63,7 +63,7 @@
                             <img
                             class="w-full h-full rounded-full"
                             style="object-fit: cover;"
-             
+
                             alt="User avatar"
                             onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                          asdsadsadsa
@@ -75,16 +75,16 @@
                             <img
                             class="w-full h-full rounded-full"
                             style="object-fit: cover;"
-             
+
                             alt="User avatar"
                             onError="this.onerror=null;this.src='/assets/images/143086968_2856368904622192_1959732218791162458_n (1).png';">
                      sadsad
                         </mat-list-option>
                       </mat-selection-list>
-                      
+
                       <mat-label>Labels</mat-label>
                       <mat-selection-list>
-                        <mat-list-option > 
+                        <mat-list-option >
                           dsadasd
                         </mat-list-option>
                       </mat-selection-list>
@@ -100,7 +100,7 @@
                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                 <span class="ml-2 mr-1">Invite</span>
                             </button>
-                            
+
                             <button  *ngIf="(boardData$ | async).is_his === 0  "  class="ml-3" mat-flat-button [color]="'primary'" (click)="assignUserToBoard(userId)">
                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                 <span class="ml-2 mr-1">Join</span>
@@ -108,8 +108,8 @@
 
 
 
-               
-                              
+
+
                         </div>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                             class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover border-t h-12 text-lg font-semibold bg-gray-50 dark:bg-transparent ng-star-inserted mt-5"
                             >
 
-                            
+
 
                             <!-- Task content -->
                             <div class="relative flex items-center h-full pl-10">
@@ -128,7 +128,7 @@
                                     <div class="flex-auto mr-2 truncate">
                                         <span>{{(departmentTasksWithStatusPriority$ | async).name}}</span>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -162,7 +162,7 @@
                                                             <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
                                                         </mat-optgroup>
                                                         </mat-select>
-                                                    </mat-form-field> 
+                                                    </mat-form-field>
                                                 </div>
                                                 <button type="submit" mat-raised-button color="primary">Share {{tas.id}}</button>
                                             </form>
@@ -174,7 +174,7 @@
                                  <div class="subtasks" (click)="toggleTableRows(tas.id)" matBadgeColor="warn" [matBadge]="tas.subtasks_count" matBadgeSize="small" matBadgePosition="before">
                                     <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
                                 </div>
-                                         
+
 
                                         <!-- Selected indicator -->
                                         <div>
@@ -194,7 +194,7 @@
                                             <!-- Title & Placeholder -->
                                             <div class="flex-auto mr-2 editable_title_input">
                                                 <!-- ////////////////////// -->
-                                                <editable  (update)="updateField(index, 'title',tas.id)" style="display: flex; align-items: center; width: fit-content;">
+                                                <editable  (update)="updateField(index, 'title',tas.id)" style="display: flex; align-items: center; width: 200.75px;">
                                                     <ng-template viewMode>
                                                         <a [routerLink]="tas.id" (click)="reloadMatdrawer()" class="title_task_rwo truncate">
                                                             {{tas.title}}
@@ -206,7 +206,7 @@
                                                 </editable>
 
                                                 <!-- ////////////////////// -->
-                                                
+
                                             </div>
                                         </div>
                                         <!-- Task file -->
@@ -306,7 +306,7 @@
                                                     [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
                                                 <span class="ml-2 mr-1 text-md " style="color: #000;">Choose priority</span>
                                             </div>
-                                        </ng-container> 
+                                        </ng-container>
                                         <!-- Priority -->
                                         <!-- Status -->
 
@@ -327,10 +327,10 @@
                                                     [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
                                                 <span class="ml-2 mr-1 text-md " style="color: #000;">Choose status</span>
                                             </div>
-                                        </ng-container> 
+                                        </ng-container>
                                     </div>
                                 </div>
-                            
+
                                 <div style="overflow: hidden;" class="subtask_list not_collapsed" [@detailExpand]="expandedSubtasks !== null && expandedSubtasks === tas.id ? 'expanded' : 'collapsed'" >
                                         <div *ngIf="expandedSubtasks === tas.id">
                                             <ng-container class="mt-5" *ngFor="let subtaskTask of subtasksData$ | async; let index1 = index; let first = first; trackBy: trackByFn;">
@@ -338,10 +338,10 @@
                                                     class="cdk-drag group w-full select-none hover:bg-gray-100 dark:hover:bg-hover h-16 ng-star-inserted"
                                                     [class.border-t]="first">
                                                     <!-- Task content -->
-                                                    
+
                                                     <div class="relative flex items-center h-full pl-4">
                                                         <!-- Selected indicator -->
-                                                        
+
                                                         <div>
                                                             <div
                                                                 class="z-10 absolute -top-px right-0 -bottom-px flex flex-0 w-1 bg-primary">
@@ -359,7 +359,7 @@
                                                             <!-- Title & Placeholder -->
                                                             <div class="flex-auto mr-2 editable_title_input">
                                                                 <!-- ////////////////////// -->
-                                                                <editable  (update)="updateSubtaskField(index1, 'title',subtaskTask.id)" style="display: flex; align-items: center; width: fit-content;">
+                                                                <editable  (update)="updateSubtaskField(index1, 'title',subtaskTask.id)" style="display: flex; align-items: center; width: 200px;">
                                                                     <ng-template viewMode>
                                                                         <a [routerLink]="subtaskTask.id" class="title_task_rwo truncate">
                                                                             {{subtaskTask.title}}
@@ -370,10 +370,10 @@
                                                                     </ng-template>
                                                                 </editable>
                                                                 <!-- ////////////////////// -->
-                                                                
+
                                                             </div>
                                                         </div>
-                                                        
+
                                                         <ng-container
                                                             *ngFor="let subtaskitem of subtaskTask.users_assigned">
                                                             <img [matTooltip]="subtaskitem.name" [matTooltipPosition]="'above'"
@@ -431,7 +431,7 @@
                                                                     [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
                                                                 <span class="ml-2 mr-1 text-md " style="color: #000;">Choose priority</span>
                                                             </div>
-                                                        </ng-container> 
+                                                        </ng-container>
                                                         <!-- Priority -->
                                                         <!-- Status -->
                                                         <div [ngStyle]="{'background-color': subtaskTask.status.color + '80'}"
@@ -462,17 +462,17 @@
                                                 No subtasks created
                                             </div>
                                         </ng-container> -->
-                                        <app-store-task-row 
+                                        <app-store-task-row
                                         [taskId]="tas.id"></app-store-task-row>
                                 </div>
                             </ng-container>
-                            
+
                             <app-store-task-row></app-store-task-row>
-                            
-                        
+
+
                         </div>
                 </div>
-                
+
 
             </div>
 
@@ -532,17 +532,17 @@
         </button>
     </mat-menu>
 
-  
 
 
-       
-    
-    
 
-   
 
-    
 
-    
+
+
+
+
+
+
+
 
 </div>

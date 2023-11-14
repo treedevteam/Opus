@@ -45,7 +45,7 @@
                                     <mat-option value="{{board.id}}" *ngFor="let board of department.boards">{{board.name}}</mat-option>
                                 </mat-optgroup>
                                 </mat-select>
-                            </mat-form-field> 
+                            </mat-form-field>
                         </div>
                         <button type="submit" mat-raised-button color="primary" (click)="shareTask()">Share</button>
                     </form>
@@ -56,7 +56,7 @@
         <div class="subtasks" matBadgeColor="warn" (click)="showSubtasks()" [matBadge]="task.subtasks_count" matBadgeSize="small" matBadgePosition="before">
             <mat-icon  [matTooltip]="'Subtasks'" [matTooltipPosition]="'above'" svgIcon="mat_solid:playlist_add" ></mat-icon>
         </div>
-                    
+
 
                 <!-- Selected indicator -->
                 <div>
@@ -73,11 +73,11 @@
                     <!-- Title & Placeholder -->
                     <div class="flex-auto mr-2 editable_title_input">
                         <!-- ////////////////////// -->
-                        <editable (update)="updateTitle()" style="display: flex; align-items: center; width: fit-content;">
+                        <editable (update)="updateTitle()" style="display: flex; align-items: center; width: 200px;">
                             <ng-template viewMode>
                                 <a [routerLink]="'task/' + task.id" class="title_task_rwo truncate">
-                                    {{task.title}} 
-                                   
+                                    {{task.title}}
+
                                 </a>
                             </ng-template>
                             <ng-template editMode>
@@ -153,7 +153,7 @@
                             [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
                         <span class="ml-2 mr-1 text-md " style="color: #000;">Choose priority</span>
                     </div>
-                </ng-container> 
+                </ng-container>
                 <!-- Priority -->
                 <!-- Status -->
                 <div [ngStyle]="{'background-color': task.status.color + '80'}"
@@ -173,7 +173,7 @@
                             [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
                         <span class="ml-2 mr-1 text-md " style="color: #000;">Choose status</span>
                     </div>
-                </ng-container> 
+                </ng-container>
 
                 <!-- Due date -->
                 <div  class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
@@ -181,7 +181,7 @@
                         'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task.deadline && !isOverdue(task.deadline) || task.status?.name ==='Done',
                         'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task.deadline && isOverdue(task.deadline) && task.status?.name !=='Done'}"
                         (click)="dueDatePicker.open()">
-                        
+
                 <mat-icon class="icon-size-5 text-current"
                     [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                 <span class="ml-2 text-md font-medium">
@@ -217,7 +217,7 @@
 
 
 
-        
+
 <mat-menu #stautsMenu="matMenu">
     <!-- Low -->
     <button *ngFor="let status of statuses$ | async" mat-menu-item (click)="selectStatus(status)">

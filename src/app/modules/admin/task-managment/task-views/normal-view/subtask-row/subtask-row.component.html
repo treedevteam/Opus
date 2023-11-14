@@ -10,7 +10,7 @@
     *cdkDragPreview></div>
     <!-- Task content -->
     <div class="relative flex items-center h-full pl-4 ">
-        
+
                 <!-- User -->
                 <div class="flex items-center justify-center inset-y-0 left-0 me-3">
                     <app-user-profile [image]="task.user.user_image" [name]="task.user.name" [color]="task.user.color"></app-user-profile>
@@ -20,10 +20,10 @@
                     <!-- Title & Placeholder -->
                     <div class="flex-auto mr-2 editable_title_input">
                         <!-- ////////////////////// -->
-                        <editable (update)="updateTitle()" style="display: flex; align-items: center; width: fit-content;">
+                        <editable (update)="updateTitle()" style="display: flex; align-items: center; width: 200px;">
                             <ng-template viewMode>
                                 <a [routerLink]="'subtask/' + task.id" class="title_task_rwo truncate" style="max-width:500px">
-                                    {{task.title}} 
+                                    {{task.title}}
                                 </a>
                             </ng-template>
                             <ng-template editMode>
@@ -88,7 +88,7 @@
                             [svgIcon]="'heroicons_outline:view-grid-add'"></mat-icon>
                         <span class="ml-2 mr-1 text-md " style="color: #000;">Choose priority</span>
                     </div>
-                </ng-container> 
+                </ng-container>
                 <!-- Priority -->
                 <!-- Status -->
                 <div [ngStyle]="{'background-color': task.status.color + '80'}"
@@ -108,12 +108,12 @@
                             [svgIcon]="'heroicons_outline:clipboard-check'"></mat-icon>
                         <span class="ml-2 mr-1 text-md " style="color: #000;">Choose status</span>
                     </div>
-                </ng-container> 
+                </ng-container>
 
 
                 <!-- Due date -->
                 <div class="relative flex items-center mt-1.5 px-4 mx-2 leading-9 rounded-full priority_class"
-                
+
                 [ngClass]="{'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700': !task.deadline,
                         'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500': task.deadline && !isOverdue(task.deadline) || task.status?.name === 'Done',
                         'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500': task.deadline && isOverdue(task.deadline) && task.status?.name !== 'Done' }"
